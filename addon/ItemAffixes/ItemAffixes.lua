@@ -1144,39 +1144,106 @@ local function TryHookCritDisplay()
 end
 
 -- ============================================================================
--- Comparison tooltip hooks (ShoppingTooltip1/2)
+-- Comparison tooltip hooks
 -- ============================================================================
 
--- Hook SetBagItem and SetInventoryItem on the two comparison tooltip frames that
--- WoW shows alongside GameTooltip when Shift is held over an item.
--- Data is already cached for equipped/bag items by ALLDATA, so no retrigger state needed.
-local _shoppingTooltipsHooked = false
-local function TryHookShoppingTooltips()
-    if _shoppingTooltipsHooked then return end
-    local st1 = _G["ShoppingTooltip1"]
-    if not st1 then return end
-    _shoppingTooltipsHooked = true
-    local function HookComparisonTooltip(tt)
-        if not tt then return end
-        pcall(function()
-            hooksecurefunc(tt, "SetBagItem", function(self, bag, slot)
-                AddAffixLines(self, bag, slot)
-            end)
+-- Given an item link, find the equipped slot (1-19) whose link shares the same
+-- uniqueId.  Returns nil if no match.  Used by the SetHyperlink path to map a
+-- comparison tooltip back to a cache[255][slot] entry without a server round-trip.
+local function FindEquippedSlotByLink(link)
+    local uid = GetItemUniqueId(link)
+    if not uid or uid == 0 then return nil end
+    for slot = 1, 19 do
+        local elink = GetInventoryItemLink("player", slot)
+        if elink and GetItemUniqueId(elink) == uid then
+            return slot
+        end
+    end
+    return nil
+end
+
+-- Hook all three tooltip entry-points on a comparison tooltip frame.
+-- Guards against double-hooking with a flag on the frame itself.
+local function HookComparisonTooltip(tt)
+    if not tt or tt._affixCompareHooked then return end
+    tt._affixCompareHooked = true
+    -- Path 1: SetInventoryItem("player", slot) — direct slot reference.
+    pcall(function()
+        hooksecurefunc(tt, "SetInventoryItem", function(self, unit, slot)
+            if unit == "player" then
+                AddAffixLines(self, 255, slot)
+            elseif UnitIsPlayer(unit) then
+                AddInspectLines(self, unit, slot)
+            end
         end)
+    end)
+    -- Path 2: SetBagItem(bag, slot) — comparison against another bag item.
+    pcall(function()
+        hooksecurefunc(tt, "SetBagItem", function(self, bag, slot)
+            AddAffixLines(self, bag, slot)
+        end)
+    end)
+    -- Path 3: SetHyperlink(link) — WoW 3.3.5a comparison often uses the item
+    -- link rather than a unit+slot reference.  Match back to equipped slot by
+    -- uniqueId so we can use the already-cached bag=255 data.
+    pcall(function()
+        hooksecurefunc(tt, "SetHyperlink", function(self, link)
+            if not link then return end
+            local slot = FindEquippedSlotByLink(link)
+            if slot then
+                AddAffixLines(self, 255, slot)
+            else
+                -- Not an equipped item link — fall back to PEEK by uniqueId.
+                local uid = GetItemUniqueId(link)
+                if uid and uid ~= 0 then
+                    AddPeekLines(self, uid)
+                end
+            end
+        end)
+    end)
+    if AFX_DEBUG then
+        local name = (tt.GetName and tt:GetName()) or "(unnamed)"
+        print("|cff44DDFF[ItemAffixes]|r Hooked comparison tooltip: " .. name)
+    end
+end
+
+local _shoppingTooltipsHooked  = false
+local _compareItemFnHooked     = false
+
+local function TryHookShoppingTooltips()
+    -- Try all known frame names for the comparison tooltip in WoW 3.3.5a.
+    -- ShoppingTooltip1/2 is the common name; GameTooltipCompareItem1/2 appears in
+    -- some builds.  We hook any we find and mark done once at least one is found.
+    local candidates = {
+        "ShoppingTooltip1", "ShoppingTooltip2",
+        "GameTooltipCompareItem1", "GameTooltipCompareItem2",
+    }
+    for _, name in ipairs(candidates) do
+        local tt = _G[name]
+        if tt then
+            HookComparisonTooltip(tt)
+            _shoppingTooltipsHooked = true
+        end
+    end
+
+    -- GameTooltip_ShowCompareItem is called by Blizzard with the actual tooltip
+    -- frame references as arguments — hook it as a reliable fallback so we can
+    -- discover frames whatever their global name (or even if anonymous).
+    if not _compareItemFnHooked and _G["GameTooltip_ShowCompareItem"] then
+        _compareItemFnHooked = true
         pcall(function()
-            hooksecurefunc(tt, "SetInventoryItem", function(self, unit, slot)
-                if unit == "player" then
-                    AddAffixLines(self, 255, slot)
-                elseif UnitIsPlayer(unit) then
-                    AddInspectLines(self, unit, slot)
+            hooksecurefunc("GameTooltip_ShowCompareItem", function(...)
+                for i = 1, select('#', ...) do
+                    local tt = select(i, ...)
+                    if type(tt) == "table" and tt.AddLine then
+                        HookComparisonTooltip(tt)
+                    end
                 end
             end)
         end)
-    end
-    HookComparisonTooltip(st1)
-    HookComparisonTooltip(_G["ShoppingTooltip2"])
-    if AFX_DEBUG then
-        print("|cff44DDFF[ItemAffixes]|r Hooked ShoppingTooltip1/2 for comparison display")
+        if AFX_DEBUG then
+            print("|cff44DDFF[ItemAffixes]|r Hooked GameTooltip_ShowCompareItem")
+        end
     end
 end
 
@@ -1309,18 +1376,60 @@ local function Init()
     end
 
     -- Trade window tooltips.
-    -- Item links in the trade window preserve real GUIDs (unlike AH), so PEEK by uniqueId works
-    -- for both the player's own items and the trading partner's items.
+    --
+    -- WoW 3.3.5a trade links often carry uniqueId=0 (the trade protocol strips
+    -- GUIDs).  For the player's own offered items the item is still locked in a
+    -- bag slot, so we scan for a locked bag item with the matching template ID as
+    -- a fallback.  For the partner's items uniqueId=0 means we cannot identify the
+    -- specific instance client-side; a server-side TRADEPEEK command would be needed.
+
+    -- Scan all bag slots for a locked item whose template ID matches itemId.
+    -- Returns bag, slot on first match; nil, nil if not found.
+    local function FindLockedItemInBags(itemId)
+        for bag = 0, 4 do
+            for slot = 1, GetContainerNumSlots(bag) do
+                local _, _, locked = GetContainerItemInfo(bag, slot)
+                if locked then
+                    local link = GetContainerItemLink(bag, slot)
+                    local tid  = link and tonumber(link:match("|Hitem:(%d+):"))
+                    if tid == itemId then
+                        return bag, slot
+                    end
+                end
+            end
+        end
+        return nil, nil
+    end
+
     local function AddTradeLines(self, link, isPlayer, tradeSlot)
         _lastTradeTooltipIsPlayer = isPlayer
         _lastTradeTooltipSlot     = tradeSlot
         _lastBagTooltipBag        = nil
         _lastBagTooltipSlot       = nil
         _lastEquipTooltipSlot     = nil
+        if AFX_DEBUG then
+            print("|cff44DDFF[ItemAffixes]|r AddTradeLines isPlayer=" .. tostring(isPlayer)
+                .. " slot=" .. tostring(tradeSlot)
+                .. " link=" .. tostring(link)
+                .. " uid=" .. tostring(link and GetItemUniqueId(link)))
+        end
         local uid = GetItemUniqueId(link)
         if uid and uid ~= 0 then
+            -- Normal path: link has a real GUID.
             AddPeekLines(self, uid)
+        elseif isPlayer and link then
+            -- uid=0 fallback for own trade items: find the locked bag slot.
+            local itemId = tonumber(link:match("|Hitem:(%d+):"))
+            if itemId then
+                local bag, slot = FindLockedItemInBags(itemId)
+                if bag and slot then
+                    _lastBagTooltipBag  = bag
+                    _lastBagTooltipSlot = slot
+                    AddAffixLines(self, bag, slot)
+                end
+            end
         end
+        -- Partner items with uid=0: cannot identify without server-side support.
     end
     pcall(function()
         hooksecurefunc(GameTooltip, "SetTradePlayerItem", function(self, tradeSlot)
