@@ -54,6 +54,13 @@ local auctionCache = {}       -- ["ah:owner:itemId"] = { slotCount, slots, talen
 local pendingAuctionReq = {}  -- ["ah:owner:itemId"] = timestamp of last PEEKAUCTION request
 local AUCTION_COOLDOWN = 2.0
 
+-- Trade window affix cache for the partner's items (uid=0, resolved server-side via TRADEPEEK).
+-- Keyed by the Lua trade slot number (1-6, matching SetTradeTargetItem/GetTradeTargetItemLink).
+-- Wiped when any target slot changes or the trade window closes.
+local tradeCache      = {}  -- [tradeSlot] = { slotCount, slots, talentTexts }
+local pendingTradeReq = {}  -- [tradeSlot] = timestamp of last TRADEPEEK request sent
+local TRADE_COOLDOWN  = 2.0
+
 -- Tracks which inspect tooltip the player is currently hovering so INSPECTDATA can
 -- retrigger SetInventoryItem in-place (avoiding the "move off and back" requirement).
 local _lastInspectTooltipUnit = nil
@@ -519,6 +526,33 @@ function AFXM:OnServerMsg(msg)
             end)
         elseif GameTooltip:IsVisible() then
             GameTooltip:Hide(); GameTooltip:Show()
+        end
+
+    elseif cmd == "TRADEDATA" then
+        local tradeSlot = tonumber(parts[2])
+        local slotCount = tonumber(parts[3])
+        if not tradeSlot or not slotCount then return end
+        pendingTradeReq[tradeSlot] = nil  -- allow re-request if slot changes later
+        tradeCache[tradeSlot] = { slotCount = slotCount, slots = {}, talentTexts = {} }
+        for i = 4, #parts do
+            local idx, state, text = parts[i]:match("^s(%d+):([UPEA%-]):(.*)")
+            if idx then
+                tradeCache[tradeSlot].slots[tonumber(idx) + 1] = { state = state, text = text }
+            else
+                local taText = parts[i]:match("^ta:(.+)$")
+                if taText then
+                    tradeCache[tradeSlot].talentTexts[#tradeCache[tradeSlot].talentTexts + 1] = taText
+                end
+            end
+        end
+        if AFX_DEBUG then
+            print("|cff44DDFF[ItemAffixes]|r TRADEDATA slot=" .. tradeSlot .. " slotCount=" .. slotCount)
+        end
+        -- Retrigger tooltip in-place if the player is still hovering this trade slot.
+        if GameTooltip:IsVisible()
+                and _lastTradeTooltipIsPlayer == false
+                and _lastTradeTooltipSlot == tradeSlot then
+            pcall(function() GameTooltip:SetTradeTargetItem(tradeSlot) end)
         end
 
     elseif cmd == "IMPRINT_DESC_CLEAR" then
@@ -1430,7 +1464,44 @@ local function Init()
                 end
             end
         end
-        -- Partner items with uid=0: cannot identify without server-side support.
+        -- uid=0 for partner's items: request from server via TRADEPEEK, render from tradeCache.
+        elseif not isPlayer and link and tradeSlot then
+            local data = tradeCache[tradeSlot]
+            if data then
+                if data.slotCount == 0 then return end
+                local addedSep = false
+                for _, s in ipairs(data.slots) do
+                    if not addedSep then self:AddLine(" "); addedSep = true end
+                    if s.state == "U" or s.state == "P" then
+                        self:AddLine("|cff888888[Affix slot not yet rolled]|r")
+                    elseif s.state == "A" and s.text and s.text ~= "" then
+                        if s.text:sub(1, 1) == "!" then
+                            self:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
+                        else
+                            self:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+                        end
+                    end
+                end
+                if data.talentTexts then
+                    for _, taText in ipairs(data.talentTexts) do
+                        if not addedSep then self:AddLine(" "); addedSep = true end
+                        self:AddLine("|cffd4af37" .. taText .. "|r", 0.83, 0.69, 0.22)
+                    end
+                end
+                if addedSep then self:Show() end
+            else
+                -- Cache miss — ask server.  Rate-limited so rapid re-hovers don't spam.
+                local now = GetTime()
+                local last = pendingTradeReq[tradeSlot]
+                if not last or (now - last) > TRADE_COOLDOWN then
+                    pendingTradeReq[tradeSlot] = now
+                    AFXM:SendToServer("TRADEPEEK|" .. tradeSlot)
+                    if AFX_DEBUG then
+                        print("|cff44DDFF[ItemAffixes]|r TRADEPEEK sent slot=" .. tradeSlot)
+                    end
+                end
+            end
+        end
     end
     pcall(function()
         hooksecurefunc(GameTooltip, "SetTradePlayerItem", function(self, tradeSlot)
@@ -1489,6 +1560,8 @@ frame:RegisterEvent("BAG_UPDATE_DELAYED")
 frame:RegisterEvent("ITEM_LOCK_CHANGED")
 frame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 frame:RegisterEvent("INSPECT_READY")
+frame:RegisterEvent("TRADE_TARGET_ITEM_CHANGED")
+frame:RegisterEvent("TRADE_CLOSED")
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...
@@ -1562,6 +1635,27 @@ frame:SetScript("OnEvent", function(self, event, ...)
         ClearBagCache()
         AFXM:RebuildTalentBonuses()
         AFXM:RequestAllData()
+
+    elseif event == "TRADE_TARGET_ITEM_CHANGED" then
+        -- Partner swapped an item in or out of a trade slot.  Clear that slot's
+        -- cached affix data so the next hover re-requests from the server.
+        -- The argument is the 1-based slot (1-6); if absent, wipe all slots.
+        local slot = ...
+        if AFX_DEBUG then print("|cff44DDFF[ItemAffixes]|r EVENT: TRADE_TARGET_ITEM_CHANGED slot=" .. tostring(slot)) end
+        if type(slot) == "number" then
+            tradeCache[slot]      = nil
+            pendingTradeReq[slot] = nil
+        else
+            tradeCache      = {}
+            pendingTradeReq = {}
+        end
+
+    elseif event == "TRADE_CLOSED" then
+        -- Trade window closed (accepted, cancelled, or interrupted).
+        -- Wipe all cached trade data — it belongs to the now-gone session.
+        if AFX_DEBUG then print("|cff44DDFF[ItemAffixes]|r EVENT: TRADE_CLOSED") end
+        tradeCache      = {}
+        pendingTradeReq = {}
     end
 end)
 

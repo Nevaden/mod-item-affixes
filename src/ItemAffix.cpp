@@ -2371,6 +2371,95 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
         return;
     }
 
+    // TRADEPEEK — read-only affix lookup for an item in the trade partner's trade window.
+    // WoW 3.3.5a trade protocol strips item GUIDs (uid=0), so PEEK cannot be used.
+    // Client sends TRADEPEEK|slot (1-based Lua slot 1-6); server reads the partner's
+    // TradeData, loads affix rows for that item, and replies with TRADEDATA|slot|...
+    if (cmd == "TRADEPEEK")
+    {
+        if (parts.size() < 2)
+            return;
+
+        auto slotOpt = Acore::StringTo<uint8>(parts[1]);
+        if (!slotOpt || *slotOpt < 1 || *slotOpt > TRADE_SLOT_TRADED_COUNT)
+            return;
+
+        uint8 luaSlot  = *slotOpt;
+        uint8 cppSlot  = luaSlot - 1;  // Lua slots are 1-based, TradeSlots are 0-based
+
+        TradeData* myTrade = player->GetTradeData();
+        if (!myTrade)
+        {
+            SendAddonMsg(player, Acore::StringFormat("TRADEDATA|{}|0", luaSlot));
+            return;
+        }
+
+        TradeData* partnerTrade = myTrade->GetTraderData();
+        if (!partnerTrade)
+        {
+            SendAddonMsg(player, Acore::StringFormat("TRADEDATA|{}|0", luaSlot));
+            return;
+        }
+
+        Item* item = partnerTrade->GetItem(TradeSlots(cppSlot));
+        if (!item)
+        {
+            SendAddonMsg(player, Acore::StringFormat("TRADEDATA|{}|0", luaSlot));
+            return;
+        }
+
+        uint64 rawGuid = item->GetGUID().GetRawValue();
+        auto slots = LoadAffixSlots(rawGuid);
+
+        LOG_DEBUG("module", "mod-item-affixes: TRADEPEEK from {} luaSlot={} guid={} affixSlots={}",
+            player->GetName(), luaSlot, rawGuid, slots.size());
+
+        std::string msg = Acore::StringFormat("TRADEDATA|{}|{}", luaSlot, slots.size());
+
+        for (size_t i = 0; i < slots.size(); ++i)
+        {
+            AffixSlotInfo const& s = slots[i];
+            char stateChar;
+            std::string text;
+            switch (s.rollState)
+            {
+                case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
+                case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
+                case AFFIX_ROLL_APPLIED:
+                    stateChar = 'A';
+                    if (auto const* def = GetAffixDef(s.affixId))
+                    {
+                        text = BuildAffixDisplayString(def, s.rolledValue);
+                        if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
+                            text = "!" + text;
+                    }
+                    break;
+                default: stateChar = '-'; break;
+            }
+            msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
+        }
+
+        QueryResult talentResult = CharacterDatabase.Query(
+            "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
+            rawGuid);
+        if (talentResult)
+        {
+            do
+            {
+                Field* f       = talentResult->Fetch();
+                uint32 affixId = f[0].Get<uint32>();
+                int32  rv      = f[1].Get<int32>();
+                auto it = _talentDefs.find(affixId);
+                if (it != _talentDefs.end())
+                    msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
+            } while (talentResult->NextRow());
+        }
+
+        LOG_DEBUG("module", "mod-item-affixes: TRADEPEEK sending: {}", msg);
+        SendAddonMsg(player, msg);
+        return;
+    }
+
     if (cmd == "IMPRINT_APPLY")
     {
         if (parts.size() < 5)
