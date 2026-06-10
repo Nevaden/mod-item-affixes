@@ -1166,6 +1166,7 @@ end
 -- Guards against double-hooking with a flag on the frame itself.
 local function HookComparisonTooltip(tt)
     if not tt or tt._affixCompareHooked then return end
+    if tt == GameTooltip then return end  -- already fully hooked in Init(); never double-hook
     tt._affixCompareHooked = true
     -- Path 1: SetInventoryItem("player", slot) — direct slot reference.
     pcall(function()
