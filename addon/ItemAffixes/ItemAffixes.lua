@@ -122,6 +122,9 @@ local function AddPeekLines(tooltip, uniqueId)
         return
     end
     if data.slotCount == 0 then return end  -- item carries no affix system
+    local renderKey = "peek:" .. uniqueId
+    if tooltip._affixLinesKey == renderKey then return end
+    tooltip._affixLinesKey = renderKey
     local addedSep = false
     for _, s in ipairs(data.slots) do
         if not addedSep then tooltip:AddLine(" "); addedSep = true end
@@ -184,6 +187,9 @@ local function AddInspectLines(tooltip, unit, slot)
         return
     end
     if data.slotCount == 0 then return end  -- item has no affix slots (cached miss)
+    local renderKey = "inspect:" .. key
+    if tooltip._affixLinesKey == renderKey then return end
+    tooltip._affixLinesKey = renderKey
     local addedSep = false
     for _, s in ipairs(data.slots) do
         if not addedSep then tooltip:AddLine(" "); addedSep = true end
@@ -238,6 +244,9 @@ local function AddAuctionLines(tooltip, owner, itemId)
     RequestPeekAuction(owner, itemId)
     if not data then return end
     if data.slotCount == 0 then return end
+    local renderKey = "ah:" .. key
+    if tooltip._affixLinesKey == renderKey then return end
+    tooltip._affixLinesKey = renderKey
     local addedSep = false
     for _, s in ipairs(data.slots) do
         if not addedSep then tooltip:AddLine(" "); addedSep = true end
@@ -617,6 +626,12 @@ local function AddAffixLines(tooltip, bag, slot)
         end
         return
     end
+    -- Guard: each Set* hook clears tooltip._affixLinesKey before calling us.
+    -- If the key already matches, we already added lines for this item since the
+    -- last tooltip reset — bail out so we never stack duplicate affix groups.
+    local renderKey = bag .. ":" .. slot
+    if tooltip._affixLinesKey == renderKey then return end
+    tooltip._affixLinesKey = renderKey
     local addedSep = false
     for _, s in ipairs(data.slots) do
         if s.state == "U" or s.state == "P" then
@@ -1205,6 +1220,7 @@ local function HookComparisonTooltip(tt)
     -- Path 1: SetInventoryItem("player", slot) — direct slot reference.
     pcall(function()
         hooksecurefunc(tt, "SetInventoryItem", function(self, unit, slot)
+            self._affixLinesKey = nil
             if unit == "player" then
                 AddAffixLines(self, 255, slot)
             elseif UnitIsPlayer(unit) then
@@ -1215,6 +1231,7 @@ local function HookComparisonTooltip(tt)
     -- Path 2: SetBagItem(bag, slot) — comparison against another bag item.
     pcall(function()
         hooksecurefunc(tt, "SetBagItem", function(self, bag, slot)
+            self._affixLinesKey = nil
             AddAffixLines(self, bag, slot)
         end)
     end)
@@ -1223,6 +1240,7 @@ local function HookComparisonTooltip(tt)
     -- uniqueId so we can use the already-cached bag=255 data.
     pcall(function()
         hooksecurefunc(tt, "SetHyperlink", function(self, link)
+            self._affixLinesKey = nil
             if not link then return end
             local slot = FindEquippedSlotByLink(link)
             if slot then
@@ -1333,6 +1351,7 @@ local function Init()
     end)
 
     hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
+        self._affixLinesKey       = nil
         _lastBagTooltipBag        = bag
         _lastBagTooltipSlot       = slot
         _lastEquipTooltipSlot     = nil
@@ -1341,6 +1360,7 @@ local function Init()
         AddAffixLines(self, bag, slot)
     end)
     hooksecurefunc(GameTooltip, "SetInventoryItem", function(self, unit, slot)
+        self._affixLinesKey = nil
         if unit == "player" then
             _lastEquipTooltipSlot     = slot
             _lastBagTooltipBag        = nil
@@ -1376,6 +1396,7 @@ local function Init()
     -- Fall back to PEEKAUCTION (seller name + item template) for the lookup.
     local auctionHookOk, auctionHookErr = pcall(function()
         hooksecurefunc(GameTooltip, "SetAuctionItem", function(self, auctionType, index)
+            self._affixLinesKey      = nil
             _lastAuctionTooltipType  = auctionType
             _lastAuctionTooltipIndex = index
             local link = GetAuctionItemLink(auctionType, index)
@@ -1469,6 +1490,9 @@ local function Init()
             local data = tradeCache[tradeSlot]
             if data then
                 if data.slotCount == 0 then return end
+                local renderKey = "trade:" .. tradeSlot
+                if self._affixLinesKey == renderKey then return end
+                self._affixLinesKey = renderKey
                 local addedSep = false
                 for _, s in ipairs(data.slots) do
                     if not addedSep then self:AddLine(" "); addedSep = true end
@@ -1505,11 +1529,13 @@ local function Init()
     end
     pcall(function()
         hooksecurefunc(GameTooltip, "SetTradePlayerItem", function(self, tradeSlot)
+            self._affixLinesKey = nil
             AddTradeLines(self, GetTradePlayerItemLink(tradeSlot), true, tradeSlot)
         end)
     end)
     pcall(function()
         hooksecurefunc(GameTooltip, "SetTradeTargetItem", function(self, tradeSlot)
+            self._affixLinesKey = nil
             AddTradeLines(self, GetTradeTargetItemLink(tradeSlot), false, tradeSlot)
         end)
     end)
