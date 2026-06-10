@@ -1,0 +1,169 @@
+{
+  "_comment": "Druid — Restoration tree (spec_tree=2). IDs 360–379.",
+  "_notes": {
+    "tree": "Restoration",
+    "class": "DRUID",
+    "spec_tree": 2,
+    "id_range": "360–379",
+    "spell_family": "DRUID (7)",
+    "note_main_file": [
+      "id=92 Improved Rejuvenation (spec_tree=-1) — flags=[16,0,0] CONFIRMED CORRECT via .spellinfo all 774.",
+      "id=93 Empowered Rejuvenation (spec_tree=-1) — flags=[16,0,0] CONFIRMED CORRECT. Same carrier/flags as id=92."
+    ],
+    "note_no_shared_bits": "No shared Druid family marker bits across all verified carrier spells. No exclusions required.",
+    "note_all_ones": "Subtlety (id=362) uses all-ones — Restoration spells are not addressable as a sub-type of Druid family SpellMod; acceptable scope for Restoration spec affixes.",
+    "confirmed_flags": {
+      "Mark_of_the_Wild_1126": "[262144,0,0] = 0x00040000 (mask0 bit18)",
+      "Healing_Touch_5185":    "[32,0,0] = 0x00000020 (mask0 bit5)",
+      "Regrowth_8936":         "[64,0,0] = 0x00000040 (mask0 bit6)",
+      "Rejuvenation_774":      "[16,0,0] = 0x00000010 (mask0 bit4) — verifies main-file id=92 and id=93 CORRECT"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 360,
+      "name": "Improved Mark of the Wild",
+      "class": "DRUID",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "DRUID",
+      "family_flags": [262144, 0, 0],
+      "carrier_spell": 1126,
+      "carrier_name": "Mark of the Wild",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 7,
+      "notes": "flags=[262144,0,0]=0x00040000 (mask0 bit18). No shared Druid marker bits. MoW stat EFFECT1 +7%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Furor (5r, tier 1) — 10/20/30/40/50% chance to gain 10 Energy or 40 Rage when shapeshifting. Proc on shapeshift event, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 361,
+      "name": "Naturalist",
+      "class": "DRUID",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [32, 0, 0],
+      "carrier_spell": 5185,
+      "carrier_name": "Healing Touch",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[32,0,0]=0x00000020 (mask0 bit5). No shared Druid marker bits. Healing Touch cast time -100ms/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 362,
+      "name": "Subtlety",
+      "class": "DRUID",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 774,
+      "carrier_name": "Rejuvenation",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -4,
+      "notes": "Reduces threat from Restoration spells by 4%/rank. All-ones used — Restoration spells are not addressable as a sub-type via Druid family SpellMod; acceptable scope for Restoration spec affixes.",
+      "verified": true
+    },
+
+    {"_todo": "Nature's Focus (3r, tier 2) — Reduces pushback chance while channeling healing spells. Pushback resistance, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 363,
+      "name": "Improved Regrowth",
+      "class": "DRUID",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [64, 0, 0],
+      "carrier_spell": 8936,
+      "carrier_name": "Regrowth",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 1000,
+      "notes": "flags=[64,0,0]=0x00000040 (mask0 bit6). No shared Druid marker bits. Regrowth crit chance +10%/rank (CRIT_CHANCE FLAT: 1000=10%).",
+      "verified": true
+    },
+
+    {"_todo": "Tranquil Spirit (5r, tier 3) — Reduces mana cost of Healing Touch, Nourish, and Tranquility by 2%/rank. Could be a combined-mask COST PCT — HT=[32,0,0], Nourish=[0,33554432,0], Tranquility flags unknown. Deferring."},
+    {"_todo": "Improved Tranquility (2r, tier 3) — Reduces cooldown of Tranquility by 50/100% and reduces threat. Cooldown reduction on Tranquility(740) could work once flags verified. Deferring."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Gift of Nature (5r, tier 4) — Increases healing done by your healing spells by 2%/rank. Could be all-ones DAMAGE PCT (if DAMAGE covers healing in AzerothCore SpellMod). Deferring — verify in-game."},
+    {
+      "id": 92,
+      "name": "Improved Rejuvenation",
+      "class": "DRUID",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "DRUID",
+      "family_flags": [16, 0, 0],
+      "carrier_spell": 774,
+      "carrier_name": "Rejuvenation",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[16,0,0]=0x00000010 (mask0 bit4). Rejuvenation healing +5%/rank.",
+      "verified": true, "verify_command": ".spellinfo all 774"
+    },
+    {
+      "id": 93,
+      "name": "Empowered Rejuvenation",
+      "class": "DRUID",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [16, 0, 0],
+      "carrier_spell": 774,
+      "carrier_name": "Rejuvenation",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[16,0,0]=0x00000010 (mask0 bit4). Same carrier/flags as id=92. HoT healing +2%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Living Spirit (3r, tier 5) — Increases total Spirit by 5/10/15%. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Improved Barkskin (2r, tier 5) — Reduces physical damage while Barkskin is active. Conditional mitigation, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Swiftmend (1r, tier 6) — Single-rank talent, excluded by design."},
+    {"_todo": "Natural Perfection (3r, tier 6) — Your crits have a chance to grant 1/2/3% physical damage mitigation. Proc-based mitigation, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Empowered Touch (2r, tier 7) — Increases spell power bonus of Healing Touch and Nourish by 10/20%. DAMAGE PCT on HT[32,0,0]|Nourish[0,33554432,0] → flags=[32,33554432,0]. Deferring — add as separate entry once ready."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Lifebloom (3r, tier 8) — Increases healing done by Lifebloom by 5/10/15%. DAMAGE PCT on Lifebloom(33763) — flags not yet verified. Run .spellinfo all 33763 when ready."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Gift of the Earthmother (5r, tier 9) — Increases your spell haste by 2%/rank AND Rejuvenation instantly heals on application. Haste is passive stat; instant heal is a proc on cast; not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Tree of Life (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

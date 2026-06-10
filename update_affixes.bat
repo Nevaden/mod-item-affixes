@@ -1,0 +1,82 @@
+@echo off
+setlocal
+
+set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
+set USER=acore
+set PASS=UnlimitedCosmicPower
+set SCRIPT_DIR=%~dp0
+set SQL_WORLD=%SCRIPT_DIR%data\sql\db-world\affix_template.sql
+set SQL_CHARS=%SCRIPT_DIR%data\sql\db-characters\item_affix.sql
+set SQL_TALENT_WORLD=%SCRIPT_DIR%data\sql\db-world\talent_affix_def.sql
+set SQL_TALENT_CHARS=%SCRIPT_DIR%data\sql\db-characters\item_talent_affix.sql
+set WORLDSERVER=E:\servers\Wow\Standard\bin\worldserver.exe
+set WS_CONFIG=E:\servers\Wow\Standard\bin\configs\worldserver.conf
+set WS_DIR=E:\servers\Wow\Standard\bin
+
+echo ============================================================
+echo  mod-item-affixes -- FULL UPDATE
+echo.
+echo  Steps:
+echo    1. Regenerate SQL from affixes.json
+echo    2. Apply SQL to databases
+echo    3. Sync DBC entries + rebuild client MPQ
+echo ============================================================
+echo.
+
+REM ── Step 1: Regenerate SQL ──────────────────────────────────────────────
+echo [1/4] Generating SQL from JSON files...
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build_affixes.ps1"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: build_affixes.ps1 failed. Check affixes.json for syntax errors.
+    pause & exit /b 1
+)
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build_talent_affixes.ps1"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: build_talent_affixes.ps1 failed. Check affixes/talent_affixes.json for syntax errors.
+    pause & exit /b 1
+)
+echo.
+
+REM ── Step 2: Apply SQL ───────────────────────────────────────────────────
+echo [2/4] Applying SQL to databases...
+%MYSQL% -u %USER% -p%PASS% acore_characters < "%SQL_CHARS%"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Failed to apply item_affix.sql
+    pause & exit /b 1
+)
+%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_WORLD%"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Failed to apply affix_template.sql
+    pause & exit /b 1
+)
+%MYSQL% -u %USER% -p%PASS% acore_characters < "%SQL_TALENT_CHARS%"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Failed to apply item_talent_affix.sql
+    pause & exit /b 1
+)
+%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_TALENT_WORLD%"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Failed to apply talent_affix_def.sql
+    pause & exit /b 1
+)
+echo   SQL applied successfully.
+echo.
+
+REM ── Step 3: Patch DBC + rebuild client MPQ ──────────────────────────────
+echo [3/4] Syncing DBC entries and rebuilding client MPQ patch files...
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%patch_dbc.ps1"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: patch_dbc.ps1 failed. Check that tools\mpqbuild.exe exists.
+    pause & exit /b 1
+)
+echo.
+
+echo [3/3] Done. Restart the worldserver manually to apply the DB and DBC changes.
+echo.
+
+echo ============================================================
+echo  Done! All steps completed successfully.
+echo ============================================================
+echo.
+pause
+endlocal

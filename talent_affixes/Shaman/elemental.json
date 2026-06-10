@@ -1,0 +1,186 @@
+{
+  "_comment": "Shaman — Elemental tree (spec_tree=0). IDs 560–579.",
+  "_notes": {
+    "tree": "Elemental",
+    "class": "SHAMAN",
+    "spec_tree": 0,
+    "id_range": "560–579",
+    "spell_family": "SHAMAN (11)",
+    "note_main_file": [
+      "id=70 'Improved Lightning Bolt' (spec_tree=-1) — CORRECTED: renamed to 'Lightning Mastery', flags [1,0,0]→[3,0,0] (LB+CL combined), verified=true. LB=[1,0,0] and CL=[2,0,0] confirmed.",
+      "id=71 'Concussion' (spec_tree=-1) — CORRECTED: flags [1,0,0]→[3,0,0] (LB+CL combined), verified=true. WotLK Concussion also affects Thunderstorm — add Thunderstorm flags once spell ID and family confirmed."
+    ],
+    "note_no_shared_bits": "All Elemental spells have unique SHAMAN family bits. No shared bits found. No exclusions required.",
+    "note_shock_shared_bit": "None — Earth Shock(bit20), Flame Shock(bit28), Frost Shock(bit31) are all unique. The combined shock mask [2416967680,0,0]=0x90100000 targets only these three.",
+    "confirmed_flags": {
+      "LightningBolt_403":   "[1,0,0] = mask0 bit0 (0x00000001) — SPELLFAMILY_SHAMAN confirmed",
+      "ChainLightning_421":  "[2,0,0] = mask0 bit1 (0x00000002)",
+      "EarthShock_8042":     "[1048576,0,0] = mask0 bit20 (0x00100000)",
+      "FlameShock_8050":     "[268435456,0,0] = mask0 bit28 (0x10000000)",
+      "FrostShock_8056":     "[2147483648,0,0] = mask0 bit31 (0x80000000)"
+    },
+    "computed_combined_flags": {
+      "LB_CL":               "[3,0,0] — LB bit0(1)|CL bit1(2). Targets LB and CL.",
+      "AllShocks_ES_Fl_Fr":  "[2416967680,0,0] = 0x90100000 — ES bit20(1048576)|Flame bit28(268435456)|Frost bit31(2147483648). Targets all three shocks.",
+      "FlameFrost_Only":     "[2415919104,0,0] = 0x90000000 — Flame bit28|Frost bit31. Targets Flame and Frost Shock only."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 560,
+      "name": "Elemental Precision",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "SHAMAN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 403,
+      "carrier_name": "Lightning Bolt",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -10,
+      "notes": "All-ones — Fire/Frost/Nature spell sub-group not isolatable via SpellMod. Acceptable scope for Elemental spec affix. Carrier Lightning Bolt(403) confirmed SPELLFAMILY_SHAMAN. Threat from all Shaman spells -10%/rank (THREAT PCT: -10). WotLK: 3r at -10/-20/-30%.",
+      "verified": true
+    },
+
+    {
+      "id": 561,
+      "name": "Convection",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [2416967680, 0, 0],
+      "carrier_spell": 8042,
+      "carrier_name": "Earth Shock",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -2,
+      "notes": "flags=[2416967680,0,0]=0x90100000. OR of EarthShock(8042) bit20(1048576)|FlameShock(8050) bit28(268435456)|FrostShock(8056) bit31(2147483648). No shared bits — all three shocks have unique bits. Carrier Earth Shock(8042) confirmed SPELLFAMILY_SHAMAN. Shock spell mana cost -2%/rank (COST PCT: -2). WotLK: 5r at -2/-4/-6/-8/-10%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Elemental Warding (3r, tier 2) — Reduces damage taken from Fire, Frost, and Nature effects by 4/7/10%. Passive damage mitigation, not implementable as SpellMod."},
+
+    {
+      "id": 562,
+      "name": "Call of Thunder",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [3, 0, 0],
+      "carrier_spell": 403,
+      "carrier_name": "Lightning Bolt",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "flags=[3,0,0]=0x00000003. OR of LightningBolt(403) bit0(1)|ChainLightning(421) bit1(2). No shared bits. Carrier Lightning Bolt(403) confirmed SPELLFAMILY_SHAMAN. LB and CL crit chance +1%/rank (CRIT_CHANCE FLAT: 100). WotLK: 5r at +1/+2/+3/+4/+5%.",
+      "verified": true
+    },
+
+    {"_todo": "Elemental Devastation (3r, tier 2) — Spell crits increase melee crit chance by 3/6/9% for 10 sec. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 563,
+      "name": "Reverberation",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [2416967680, 0, 0],
+      "carrier_spell": 8042,
+      "carrier_name": "Earth Shock",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -200,
+      "notes": "flags=[2416967680,0,0]=0x90100000. Same combined shock flags as id=561. Shock spell cooldown -0.2s/rank (COOLDOWN FLAT: -200ms). WotLK: 5r at -0.2/-0.4/-0.6/-0.8/-1.0s.",
+      "verified": true
+    },
+
+    {"_todo": "Elemental Focus (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Fire Nova (2r, tier 4) — Reduces cooldown of Fire Nova by 3/6s. COOLDOWN FLAT -3000ms/rank on Fire Nova — add after verifying Fire Nova spell ID and SPELLFAMILY_SHAMAN with .spellinfo."},
+    {"_todo": "Eye of the Storm (3r, tier 4) — Reduces pushback suffered while casting from damage by 17/33/50%. Passive pushback reduction, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 71,
+      "name": "Concussion",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [3, 0, 0],
+      "carrier_spell": 403,
+      "carrier_name": "Lightning Bolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "flags=[3,0,0]=0x00000003. OR of LightningBolt(403) bit0(1)|ChainLightning(421) bit1(2). LB and CL damage +1%/rank. NOTE: WotLK Concussion also affects Thunderstorm — add Thunderstorm flags once spell ID verified.",
+      "verified": true
+    },
+
+    {
+      "id": 564,
+      "name": "Lightning Mastery",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [3, 0, 0],
+      "carrier_spell": 403,
+      "carrier_name": "Lightning Bolt",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[3,0,0]=0x00000003. Same LB+CL flags as id=562. LB and CL cast time -0.1s/rank (CASTING_TIME FLAT: -100ms). Spec_tree=0 version; cross-tree version is main-file id=70 (corrected to LB+CL). WotLK: 5r at -0.1/-0.2/-0.3/-0.4/-0.5s.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Elemental Mastery (1r, tier 6) — Single-rank talent, excluded by design."},
+    {"_todo": "Astral Shift (3r, tier 6) — Reduces damage taken by 10/20/30% while casting. Passive mitigation during cast, not implementable as SpellMod."},
+
+    {
+      "id": 565,
+      "name": "Booming Echoes",
+      "class": "SHAMAN",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "SHAMAN",
+      "family_flags": [2415919104, 0, 0],
+      "carrier_spell": 8050,
+      "carrier_name": "Flame Shock",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -1000,
+      "notes": "flags=[2415919104,0,0]=0x90000000. OR of FlameShock(8050) bit28(268435456)|FrostShock(8056) bit31(2147483648). Subset of full shock flags — excludes Earth Shock. Carrier Flame Shock(8050) confirmed SPELLFAMILY_SHAMAN. Flame Shock and Frost Shock cooldown -1s/rank (COOLDOWN FLAT: -1000ms). WotLK: 2r at -1/-2s.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Storm, Earth and Fire (3r, tier 7) — Increases LB damage by 2/4/6%. DAMAGE PCT +2/rank on LightningBolt(403) flags=[1,0,0] — implementable. Add as id=566 if desired. CL jump count and Earthquake CD parts of the talent are not SpellMod."},
+    {"_todo": "Unrelenting Storm (3r, tier 7) — Regenerates 2/4/6% mana every 5 sec from Intellect while in combat. Passive mana regen, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Thunderstorm (1r, tier 8) — Single-rank talent, excluded by design."}
+
+  ],
+
+  "removedTalentAffixes": [70]
+}

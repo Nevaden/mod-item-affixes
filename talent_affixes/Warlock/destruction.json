@@ -1,0 +1,172 @@
+{
+  "_comment": "Warlock — Destruction tree (spec_tree=2). IDs 300–319.",
+  "_notes": {
+    "tree": "Destruction",
+    "class": "WARLOCK",
+    "spec_tree": 2,
+    "id_range": "300–319",
+    "spell_family": "WARLOCK (5)",
+    "note_main_file": [
+      "id=80 Improved Shadow Bolt (spec_tree=-1) — Shadow Bolt flags=[1,0,0] CONFIRMED CORRECT via .spellinfo all 686.",
+      "id=82 Cataclysm (spec_tree=-1) — all-ones, carrier SB(686) confirmed Warlock family."
+    ],
+    "note_no_shared_bits": "No shared Warlock family marker bits across all verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Shadow_Bolt_686":   "[1,0,0] = 0x00000001 (mask0 bit0) — verifies main-file id=80 CORRECT",
+      "Immolate_348":      "[4,0,0] = 0x00000004 (mask0 bit2)",
+      "Chaos_Bolt_50796":  "[0,131072,0] = mask1 bit17 (0x00020000)",
+      "Searing_Pain_5676": "[256,0,0] = 0x00000100 (mask0 bit8)",
+      "Conflagrate_17962": "[0,8388608,0] = mask1 bit23 (0x00800000)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 80,
+      "name": "Improved Shadow Bolt",
+      "class": "WARLOCK",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [1, 0, 0],
+      "carrier_spell": 686,
+      "carrier_name": "Shadow Bolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "flags=[1,0,0]=0x00000001 (mask0 bit0). Shadow Bolt damage +1%/rank. NOTE: talent also applies a debuff to target; this entry only models the DAMAGE bonus.",
+      "verified": true
+    },
+    {"_todo": "Bane — see id=300 below."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Aftermath (2r, tier 2) — Your Fire spells have a 7/14% chance to daze the target. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Improved Firebolt (2r, tier 2) — Reduces cast time of Imp's Firebolt by 0.5/1 sec. Pet ability, not player SpellMod."},
+    {"_todo": "Improved Lash of Pain (2r, tier 2) — Reduces cooldown of Succubus's Lash of Pain. Pet ability, not player SpellMod."},
+    {"_todo": "Molten Skin (3r, tier 2) — Reduces all damage taken by 2/4/6%. Passive mitigation, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 300,
+      "name": "Bane",
+      "class": "WARLOCK",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [5, 131072, 0],
+      "carrier_spell": 686,
+      "carrier_name": "Shadow Bolt",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[5,131072,0]: OR of SB(686) mask0 bit0(0x1=1)|Immolate(348) mask0 bit2(0x4=4)|Chaos Bolt(50796) mask1 bit17(0x20000=131072). No shared Warlock marker bits. Cast time -100ms/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 82,
+      "name": "Cataclysm",
+      "class": "WARLOCK",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 686,
+      "carrier_name": "Shadow Bolt",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -1,
+      "notes": "All Warlock spell mana cost -1%/rank — all-ones mask matches every Warlock family spell. Carrier SB(686) confirmed Warlock family.",
+      "verified": true
+    },
+    {"_todo": "Shadowburn (1r, tier 3) — Single-rank talent, excluded by design."},
+    {"_todo": "Destructive Reach (2r, tier 3) — Increases range of Destruction spells by 10/20%. RANGE units unclear; deferring until confirmed in-game."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 301,
+      "name": "Improved Searing Pain",
+      "class": "WARLOCK",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "WARLOCK",
+      "family_flags": [256, 0, 0],
+      "carrier_spell": 5676,
+      "carrier_name": "Searing Pain",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 400,
+      "notes": "flags=[256,0,0]=0x00000100 (mask0 bit8). No shared Warlock marker bits. Searing Pain crit chance +4%/rank (CRIT_CHANCE FLAT: 400=4%).",
+      "verified": true
+    },
+
+    {"_todo": "Pyroclasm (2r, tier 4) — Your Rain of Fire, Hellfire, and Soul Fire have a 13/26% chance to stun the target. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Shadowfury (1r, tier 4) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 302,
+      "name": "Emberstorm",
+      "class": "WARLOCK",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 686,
+      "carrier_name": "Shadow Bolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "Fire spell damage +3%/rank. All-ones used — 'Fire school' cannot be targeted by Warlock family SpellMod as a subset; acceptable scope for Destruction spec affixes.",
+      "verified": true
+    },
+
+    {"_todo": "Backlash (3r, tier 5) — Being hit by a physical attack has a 8/16/25% chance to make your next Incinerate or Shadow Bolt instant. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 303,
+      "name": "Fire and Brimstone",
+      "class": "WARLOCK",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [4, 8388608, 0],
+      "carrier_spell": 348,
+      "carrier_name": "Immolate",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 4,
+      "notes": "flags=[4,8388608,0]: OR of Immolate(348) mask0 bit2(0x4=4)|Conflagrate(17962) mask1 bit23(0x800000=8388608). No shared Warlock marker bits. Immolate/Conflagrate damage +4%/rank. NOTE: talent also reduces mana cost — a second entry (COST PCT -4%/rank, same flags) can be added if desired.",
+      "verified": true
+    },
+
+    {"_todo": "Conflagrate (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Soul Leech (3r, tier 7) — Your Shadowburn, Shadow Bolt, and Incinerate crits restore 20/30/40% of damage done as health. Proc-based self-heal, not implementable as SpellMod."},
+    {"_todo": "Empowered Imp (3r, tier 7) — Increases spell power of Imp by 10/20/30% and after Imp crits your next spell crit is guaranteed. Proc/pet bonus, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Backdraft (3r, tier 8) — When Conflagrate is cast, reduces cast time of next 3 Incinerate/Chaos Bolt by 10/20/30%. Proc-based next-cast modifier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Empowered Chaos Bolt (verify name/rank) — if multi-rank, add after spellinfo verification."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Chaos Bolt (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

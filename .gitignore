@@ -1,0 +1,32 @@
+# Internal notes — never committed
+CLAUDE.md
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE/editor directories
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Build artifacts
+*.o
+*.a
+*.lib
+*.dll
+*.exp
+*.pdb
+
+# Generated SQL — rebuilt by build_affixes.ps1 / build_talent_affixes.ps1
+data/sql/db-world/affix_template.sql
+data/sql/db-world/talent_affix_def.sql
+
+# Stale addon copy — edits go in the live client path
+addon/
+
+# Client patch build output
+client-patch/
+Client

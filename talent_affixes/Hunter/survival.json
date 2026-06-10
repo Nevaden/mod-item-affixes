@@ -1,0 +1,98 @@
+{
+  "_comment": "Hunter — Survival tree (spec_tree=2). IDs 480–499.",
+  "_notes": {
+    "tree": "Survival",
+    "class": "HUNTER",
+    "spec_tree": 2,
+    "id_range": "480–499",
+    "spell_family": "HUNTER (9)",
+    "note_main_file": [],
+    "note_no_shared_bits": "No shared Hunter marker bits across new carrier spells. No exclusions required.",
+    "note_shared_trap_bit": "All queried traps (Frost/Immolation/Explosive) share the same flags [128,0,0] = 0x00000080 (mask0 bit7). This is the Hunter trap family bit — a single bit addresses all trap types. Freezing Trap (14310) was not queried but almost certainly shares this bit; verify optionally with .spellinfo all 14310.",
+    "confirmed_flags": {
+      "Frost_Trap_13809":      "[128,0,0] = 0x00000080 (mask0 bit7) — shared trap bit",
+      "Immolation_Trap_13795": "[128,0,0] = 0x00000080 — same shared trap bit",
+      "Explosive_Trap_13813":  "[128,0,0] = 0x00000080 — same shared trap bit"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Hawk Eye (3r, tier 1) — Increases the range of ranged weapons by 2/4/6 yards. RANGE is a valid spellmod_op but applies to weapon range not a specific spell — likely requires a different approach. Deferring."},
+    {"_todo": "Savage Strikes (2r, tier 1) — Increases critical strike chance with melee attacks by 5/10%. Passive melee crit, not implementable as SpellMod."},
+    {"_todo": "Improved Wing Clip (3r, tier 1) — Gives Wing Clip a 4/8/12% chance to root target. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Entrapment (3r, tier 2) — Your Frost Trap and Immolation Trap have a 4/7/10% chance to entrap targets. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Survival Instincts (2r, tier 2) — Reduces the chance you will be hit by a critical strike by 1/2%. Passive mitigation, not implementable as SpellMod."},
+
+    {
+      "id": 480,
+      "name": "Resourcefulness",
+      "class": "HUNTER",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "HUNTER",
+      "family_flags": [128, 0, 0],
+      "carrier_spell": 13809,
+      "carrier_name": "Frost Trap",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[128,0,0]=0x00000080 (mask0 bit7). Shared Hunter trap bit — single flag addresses all trap types. Trap cooldown -2s/rank (COOLDOWN FLAT: -2000ms). NOTE: WotLK Resourcefulness also reduces mana cost of traps — a second entry (COST PCT -X/rank, same flags) can be added if desired.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Expose Weakness (3r, tier 3) — Your ranged crits trigger Expose Weakness, increasing AP of your and party members' melee attackers. Proc/aura, not implementable as SpellMod."},
+
+    {
+      "id": 481,
+      "name": "Trap Mastery",
+      "class": "HUNTER",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "HUNTER",
+      "family_flags": [128, 0, 0],
+      "carrier_spell": 13809,
+      "carrier_name": "Frost Trap",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[128,0,0]=0x00000080 (mask0 bit7). Same shared trap bit as id=480. Trap duration +10%/rank (DURATION PCT: 10). NOTE: talent also increases trap radius — RADIUS is a valid spellmod_op and can be added as a second entry (RADIUS PCT +10/rank, same flags) if desired.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Hunter vs. Wild (3r, tier 4) — Increases your AP by 10/20/30% of total Stamina. Stat conversion, not implementable as SpellMod."},
+    {"_todo": "Killer Instinct (3r, tier 4) — Increases your crit chance by 1/2/3% when below 20% mana. Conditional passive, not implementable as flat SpellMod."},
+    {"_todo": "Counterattack (1r, tier 4) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Noxious Stings (5r, tier 5) — Increases Serpent Sting damage on targets also affected by Wyvern Sting by 7/14/21/28/35%. Conditional (target has aura), not implementable as flat SpellMod."},
+    {"_todo": "Point of No Escape (2r, tier 5) — Increases crit chance against targets in Frost Trap, Wing Clipped, or Concussive Shot by 2/4%. Conditional (target debuff), not implementable as flat SpellMod."},
+    {"_todo": "Wyvern Sting (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "T.N.T. (3r, tier 6) — Your Explosive Trap and Explosive Shot have a 6/12/18% chance to stun the target. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Lock and Load (3r, tier 6) — When your trap triggers, 33/66/100% chance to get Lock and Load procs. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Black Arrow (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Hunting Party (3r, tier 7) — Your periodic damage has a 3/7/10% chance to restore 1% mana to party members. Proc-based mana restore, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Sniper Training (3r, tier 8) — When you have not moved for 6 sec, increases damage of Steady Shot, Chimera Shot, and Explosive Shot by 2/4/6%. Conditional (not-moving state), not implementable as flat SpellMod."},
+    {"_todo": "Explosive Shot (1r, tier 8) — Single-rank talent, excluded by design."}
+
+  ]
+}

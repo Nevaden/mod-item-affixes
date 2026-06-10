@@ -1,0 +1,104 @@
+{
+  "_comment": "Hunter — Beast Mastery tree (spec_tree=0). IDs 440–459.",
+  "_notes": {
+    "tree": "Beast Mastery",
+    "class": "HUNTER",
+    "spec_tree": 0,
+    "id_range": "440–459",
+    "spell_family": "HUNTER (9)",
+    "note_main_file": [
+      "id=31 Efficiency (spec_tree=-1) — all-ones, carrier=13165 (Aspect of the Hawk). AotH confirmed SPELLFAMILY_HUNTER [1048576,0,0]. All-ones acceptable — WotLK Efficiency reduces pet attack mana costs; pet spells are SPELLFAMILY_GENERIC and cannot be targeted by Hunter SpellMod; all-ones reduces all Hunter player spell costs as the only viable approximation."
+    ],
+    "note_no_shared_bits": "No shared Hunter family marker bits across all verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Revive_Pet_982":      "[16777216,0,0] = 0x01000000 (mask0 bit24)",
+      "Bestial_Wrath_19574": "[0,33554432,0] = mask1 bit25 (0x02000000)",
+      "Intimidation_19577":  "[0,0,8] = mask2 bit3 (0x00000008)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Endurance Training (5r, tier 1) — Increases HP of pet and player by 1/2/3/4/5%. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Improved Aspect of the Hawk (5r, tier 1) — Passive ranged attack speed buff in Aspect of the Hawk. Aura-conditional passive, not implementable as SpellMod."},
+    {"_todo": "Thick Hide (3r, tier 1) — Increases armor of pet and player by 4/7/10%. Passive stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_notes": "Efficiency (5r, tier 2) is id=31 in talent_affixes.json. All-ones, carrier AotH(13165) confirmed SPELLFAMILY_HUNTER. verified=true."},
+    {"_todo": "Improved Aspect of the Monkey (2r, tier 2) — Increases dodge bonus from AotM. Aura-conditional passive, not implementable as SpellMod."},
+    {"_todo": "Pathfinding (2r, tier 2) — Increases movement speed in Aspect of the Cheetah/Pack. Movement speed passive, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 440,
+      "name": "Improved Revive Pet",
+      "class": "HUNTER",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "HUNTER",
+      "family_flags": [16777216, 0, 0],
+      "carrier_spell": 982,
+      "carrier_name": "Revive Pet",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[16777216,0,0]=0x01000000 (mask0 bit24). No shared Hunter marker bits. Revive Pet cast time -2s/rank (CASTING_TIME FLAT: -2000ms).",
+      "verified": true
+    },
+
+    {"_todo": "Aspect Mastery (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Unleashed Fury (5r, tier 4) — Increases pet damage by 4/8/12/16/20%. Passive pet stat, not implementable as player SpellMod."},
+    {"_todo": "Ferocity (5r, tier 4) — Increases crit chance of pet by 2/4/6/8/10%. Passive pet stat, not implementable as player SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Spirit Bond (2r, tier 5) — Regenerates 1/2% HP for you and your pet every 10 sec while in combat. Passive regen, not implementable as SpellMod."},
+    {"_todo": "Intimidation (1r, tier 5) — Single-rank talent, excluded by design."},
+    {"_todo": "Bestial Discipline (2r, tier 5) — Increases Focus regeneration of pet by 25/50%. Pet stat, not implementable as player SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Animal Handler (2r, tier 6) — Increases max number of pet training points by 4/8. Passive pet stat, not implementable as SpellMod."},
+    {"_todo": "Frenzy (5r, tier 6) — After your pet crits, it gains 8/16/24/32/40% attack speed for next 8 sec. Proc-based attack speed, not implementable as SpellMod."},
+    {"_todo": "Ferocious Inspiration (3r, tier 6) — Your pet's crits increase your and party's damage by 1/2/3%. Proc/aura buff, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Bestial Wrath (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Serpent's Swiftness (5r, tier 7) — Increases ranged and pet attack speed by 2/4/6/8/10%. Passive attack speed, not implementable as SpellMod."},
+
+    {
+      "id": 441,
+      "name": "Longevity",
+      "class": "HUNTER",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "HUNTER",
+      "family_flags": [0, 33554432, 8],
+      "carrier_spell": 19574,
+      "carrier_name": "Bestial Wrath",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "PCT",
+      "value_per_rank": -10,
+      "notes": "flags=[0,33554432,8]: OR of BestialWrath(19574) mask1 bit25(0x02000000=33554432)|Intimidation(19577) mask2 bit3(0x00000008=8). Spans all three masks — no shared Hunter marker bits. Bestial Wrath and Intimidation cooldown -10%/rank (COOLDOWN PCT: -10).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "The Beast Within (1r, tier 8) — Single-rank talent, excluded by design."},
+    {"_todo": "Cobra Strikes (3r, tier 8) — Your crits have a 20/40/60% chance to grant your pet 2 charges of Cobra Strikes. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Beast Mastery (1r, tier 9) — Single-rank talent, excluded by design."}
+
+  ]
+}

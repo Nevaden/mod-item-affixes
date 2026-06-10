@@ -1,0 +1,176 @@
+{
+  "_comment": "Paladin — Protection tree (spec_tree=1). IDs 220–239.",
+  "_notes": {
+    "tree": "Protection",
+    "class": "PALADIN",
+    "spec_tree": 1,
+    "id_range": "220–239",
+    "spell_family": "PALADIN (10)",
+    "note_guardian_favor": "Guardian's Favor (2r) reduces Hand of Protection cooldown by 60s/rank AND increases Hand of Freedom duration by 3s/rank. Split into two entries (id=222 and id=223).",
+    "note_no_shared_bits": "No shared Paladin family marker bits identified across all 14 verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Devotion_Aura_465":       "[64,0,32] = mask0 bit6(0x40=64)|mask2 bit5(0x20=32)",
+      "Hand_of_Protection_1022": "[128,0,0] = 0x00000080 (mask0 bit7)",
+      "Hand_of_Freedom_1044":    "[16,0,0] = 0x00000010 (mask0 bit4)",
+      "Hammer_of_Justice_853":   "[2048,0,0] = 0x00000800 (mask0 bit11)",
+      "Divine_Shield_642":       "[4194304,0,0] = 0x00400000 (mask0 bit22)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 220,
+      "name": "Divinity",
+      "class": "PALADIN",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 465,
+      "carrier_name": "Devotion Aura",
+      "spellmod_op": "ALL_EFFECTS",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "All healing done and received +1%/rank. All-ones matches every Paladin family spell. Carrier DA(465) confirmed Paladin family via spellinfo.",
+      "verified": true
+    },
+
+    {"_todo": "Divine Strength (5r, tier 1) — Increases total Strength by 3/6/9/12/15%. Passive stat bonus, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 221,
+      "name": "Improved Devotion Aura",
+      "class": "PALADIN",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [64, 0, 32],
+      "carrier_spell": 465,
+      "carrier_name": "Devotion Aura",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 17,
+      "notes": "flags=[64,0,32]: DA(465) mask0 bit6(0x40=64)|mask2 bit5(0x20=32). mask2 bit5 appears unique to DA among verified Paladin spells. Devotion Aura armor EFFECT1 +17%/rank. Healing bonus portion of the talent (aura-based) not captured here.",
+      "verified": true
+    },
+
+    {
+      "id": 222,
+      "name": "Guardian's Favor",
+      "class": "PALADIN",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [128, 0, 0],
+      "carrier_spell": 1022,
+      "carrier_name": "Hand of Protection",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -60000,
+      "notes": "flags=[128,0,0]=0x80 (mask0 bit7). No shared Paladin marker bits. Hand of Protection cooldown -60s/rank. See id=223 for the Hand of Freedom duration half of this talent.",
+      "verified": true
+    },
+
+    {
+      "id": 223,
+      "name": "Guardian's Favor",
+      "class": "PALADIN",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [16, 0, 0],
+      "carrier_spell": 1044,
+      "carrier_name": "Hand of Freedom",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 3000,
+      "notes": "flags=[16,0,0]=0x10 (mask0 bit4). No shared Paladin marker bits. Hand of Freedom duration +3s/rank. Second half of Guardian's Favor — see id=222 for the Hand of Protection cooldown half.",
+      "verified": true
+    },
+
+    {"_todo": "Toughness (5r, tier 2) — Increases armor value from equipped items by 2/4/6/8/10%. Passive armor stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Blessing of Kings (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 224,
+      "name": "Improved Hammer of Justice",
+      "class": "PALADIN",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [2048, 0, 0],
+      "carrier_spell": 853,
+      "carrier_name": "Hammer of Justice",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -10000,
+      "notes": "flags=[2048,0,0]=0x800 (mask0 bit11). No shared Paladin marker bits. HoJ cooldown -10s/rank (verify exact in-game value; WotLK base HoJ CD is 40s).",
+      "verified": true
+    },
+
+    {"_todo": "Divine Sacrifice (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Righteous Fury (3r, tier 4) — While RF is active, reduces damage taken by 2/4/6% and increases threat generated by RF. Aura-conditional damage reduction, not implementable as SpellMod."},
+    {"_todo": "Shield of the Templar (3r, tier 4) — Grants Holy Shield, Avenger's Shield, and Shield of Righteousness a 33/66/100% chance to silence the target. Proc/chance mechanic, not implementable as SpellMod."},
+    {"_todo": "Anticipation (5r, tier 4) — Increases dodge rating by 10/20/30/40/50. Passive rating stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 225,
+      "name": "Sacred Duty",
+      "class": "PALADIN",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [4194304, 0, 0],
+      "carrier_spell": 642,
+      "carrier_name": "Divine Shield",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -60000,
+      "notes": "flags=[4194304,0,0]=0x400000 (mask0 bit22). No shared Paladin marker bits. Divine Shield cooldown -60s/rank. Stamina bonus portion of Sacred Duty not captured here.",
+      "verified": true
+    },
+
+    {"_todo": "One-Handed Weapon Specialization (3r, tier 5) — Increases all damage dealt by 2/4/6% while wielding a one-handed weapon. Weapon-type conditional melee modifier, not implementable as SpellMod."},
+    {"_todo": "Spiritual Attunement (2r, tier 5) — Gives 5/10% of mana when healed. Mana-on-heal proc, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Holy Shield (1r, tier 6) — Single-rank talent, excluded by design."},
+    {"_todo": "Ardent Defender (5r, tier 6) — When below 35% health, damage taken is reduced by 6/12/18/24/30%. HP-threshold conditional mitigation, not implementable as SpellMod."},
+    {"_todo": "Redoubt (2r, tier 6) — Increases block value by 15/30% when you block. Proc-based block value bonus, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Combat Expertise (3r, tier 7) — Increases expertise by 3/6/10 and total health by 2/4/6%. Passive stat bonuses, not implementable as SpellMod."},
+    {"_todo": "Touched by the Light (3r, tier 7) — Increases spell power by 20/40/60% of Stamina. Passive stat conversion (Stamina → SP), not implementable as SpellMod."},
+    {"_todo": "Guarded by the Light (2r, tier 7) — Reduces spell damage taken by 3/6% and makes Divine Plea undispellable. Complex damage reduction and aura interaction, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Judgements of the Wise (verify rank count and effect) — If proc-based mana return, not implementable as SpellMod."},
+    {"_todo": "Avenger's Shield (1r, tier 8) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Shield of Righteousness (1r, tier 9) — Single-rank talent, excluded by design."},
+    {"_todo": "Divine Guardian (2r, tier 9) — Increases the radius of Divine Sacrifice and reduces damage taken by party/raid members by 10/20%. Aura effect, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Hammer of the Righteous (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

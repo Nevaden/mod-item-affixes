@@ -1,0 +1,1400 @@
+{
+    "_comment": "HUNTER affixes (family 9). Edit this file, then run build_affixes.ps1.",
+    "family": 9,
+    "family_name": "HUNTER",
+    "affixes": [
+        {
+            "id": 5000,
+            "name": "Arcane Shot: +15% Damage",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4094,
+                "display_name": "Arcane Shot: +15% Damage"
+            }
+        },
+        {
+            "id": 5001,
+            "name": "Arcane Shot: +5% Crit",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4095,
+                "display_name": "Arcane Shot: +5% Crit"
+            }
+        },
+        {
+            "id": 5002,
+            "name": "Arcane Shot: -1s Cooldown",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -1000
+            },
+            "tooltip": {
+                "enchant_id": 4096,
+                "display_name": "Arcane Shot: -1s Cooldown"
+            }
+        },
+        {
+            "id": 5003,
+            "name": "Arcane Shot: +20% Dmg, +5% Crit",
+            "weight": 10,
+            "spec_tree": 1,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4097,
+                "display_name": "Arcane Shot: +20% Dmg, +5% Crit"
+            }
+        },
+        {
+            "id": 5004,
+            "name": "Multi-Shot: +15% Damage",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2643,
+                "flags": [
+                    4096,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2643"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4098,
+                "display_name": "Multi-Shot: +15% Damage"
+            }
+        },
+        {
+            "id": 5005,
+            "name": "Multi-Shot: +5% Crit",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2643,
+                "flags": [
+                    4096,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2643"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4099,
+                "display_name": "Multi-Shot: +5% Crit"
+            }
+        },
+        {
+            "id": 5006,
+            "name": "Multi-Shot: -1s Cooldown",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2643,
+                "flags": [
+                    4096,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2643"
+            },
+            "effect": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -1000
+            },
+            "tooltip": {
+                "enchant_id": 4100,
+                "display_name": "Multi-Shot: -1s Cooldown"
+            }
+        },
+        {
+            "id": 5007,
+            "name": "Multi-Shot: +20% Dmg, -1s CD",
+            "weight": 10,
+            "spec_tree": 1,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2643,
+                "flags": [
+                    4096,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2643"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -1000
+            },
+            "tooltip": {
+                "enchant_id": 4101,
+                "display_name": "Multi-Shot: +20% Dmg, -1s CD"
+            }
+        },
+        {
+            "id": 5008,
+            "name": "Steady Shot: +15% Damage",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 56641,
+                "flags": [
+                    0,
+                    1,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 56641"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4102,
+                "display_name": "Steady Shot: +15% Damage"
+            }
+        },
+        {
+            "id": 5009,
+            "name": "Steady Shot: +5% Crit",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 56641,
+                "flags": [
+                    0,
+                    1,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 56641"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4103,
+                "display_name": "Steady Shot: +5% Crit"
+            }
+        },
+        {
+            "id": 5010,
+            "name": "Steady Shot: -500ms Cast",
+            "weight": 80,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 56641,
+                "flags": [
+                    0,
+                    1,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 56641"
+            },
+            "effect": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -500
+            },
+            "tooltip": {
+                "enchant_id": 4104,
+                "display_name": "Steady Shot: -500ms Cast"
+            }
+        },
+        {
+            "id": 5011,
+            "name": "Steady Shot: Instant Cast",
+            "weight": 20,
+            "spec_tree": 1,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 56641,
+                "flags": [
+                    0,
+                    1,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 56641"
+            },
+            "effect": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -10000
+            },
+            "tooltip": {
+                "enchant_id": 4105,
+                "display_name": "Steady Shot: Instant Cast"
+            }
+        },
+        {
+            "id": 5012,
+            "name": "Steady Shot: +20% Dmg, Instant Cast",
+            "weight": 5,
+            "spec_tree": 1,
+            "min_quality": 3,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 56641,
+                "flags": [
+                    0,
+                    1,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 56641"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -10000
+            },
+            "tooltip": {
+                "enchant_id": 4106,
+                "display_name": "Steady Shot: +20% Dmg, Instant Cast"
+            }
+        },
+        {
+            "id": 5013,
+            "name": "Aimed Shot: +15% Damage",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 19434,
+                "flags": [
+                    131072,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 19434"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4107,
+                "display_name": "Aimed Shot: +15% Damage"
+            }
+        },
+        {
+            "id": 5014,
+            "name": "Aimed Shot: +5% Crit",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 19434,
+                "flags": [
+                    131072,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 19434"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4108,
+                "display_name": "Aimed Shot: +5% Crit"
+            }
+        },
+        {
+            "id": 5018,
+            "name": "Kill Shot: +15% Damage",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53351,
+                "flags": [
+                    0,
+                    8388608,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53351"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4112,
+                "display_name": "Kill Shot: +15% Damage"
+            }
+        },
+        {
+            "id": 5019,
+            "name": "Kill Shot: +5% Crit",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53351,
+                "flags": [
+                    0,
+                    8388608,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53351"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4113,
+                "display_name": "Kill Shot: +5% Crit"
+            }
+        },
+        {
+            "id": 5020,
+            "name": "Kill Shot: +25% Dmg, +5% Crit",
+            "weight": 5,
+            "spec_tree": 1,
+            "min_quality": 3,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53351,
+                "flags": [
+                    0,
+                    8388608,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53351"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 25
+            },
+            "effect2": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4114,
+                "display_name": "Kill Shot: +25% Dmg, +5% Crit"
+            }
+        },
+        {
+            "id": 5021,
+            "name": "Explosive Shot: +15% Damage",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53301,
+                "flags": [
+                    0,
+                    2147483648,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53301"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4115,
+                "display_name": "Explosive Shot: +15% Damage"
+            }
+        },
+        {
+            "id": 5022,
+            "name": "Explosive Shot: +5% Crit",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53301,
+                "flags": [
+                    0,
+                    2147483648,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53301"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4116,
+                "display_name": "Explosive Shot: +5% Crit"
+            }
+        },
+        {
+            "id": 5023,
+            "name": "Explosive Shot: -2s Cooldown",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53301,
+                "flags": [
+                    0,
+                    2147483648,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53301"
+            },
+            "effect": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -2000
+            },
+            "tooltip": {
+                "enchant_id": 4117,
+                "display_name": "Explosive Shot: -2s Cooldown"
+            }
+        },
+        {
+            "id": 5024,
+            "name": "Explosive Shot: +20% Dmg, -2s CD",
+            "weight": 10,
+            "spec_tree": 2,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 53301,
+                "flags": [
+                    0,
+                    2147483648,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 53301"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -2000
+            },
+            "tooltip": {
+                "enchant_id": 4118,
+                "display_name": "Explosive Shot: +20% Dmg, -2s CD"
+            }
+        },
+        {
+            "id": 5025,
+            "name": "Serpent Sting: +15% DoT",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 1978,
+                "flags": [
+                    16384,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 1978"
+            },
+            "effect": {
+                "op": 22,
+                "op_name": "DOT",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4119,
+                "display_name": "Serpent Sting: +15% DoT"
+            }
+        },
+        {
+            "id": 5026,
+            "name": "Serpent Sting: +3s Duration",
+            "weight": 100,
+            "spec_tree": 1,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 1978,
+                "flags": [
+                    16384,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 1978"
+            },
+            "effect": {
+                "op": 1,
+                "op_name": "DURATION",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 3000
+            },
+            "tooltip": {
+                "enchant_id": 4120,
+                "display_name": "Serpent Sting: +3s Duration"
+            }
+        },
+        {
+            "id": 5027,
+            "name": "Serpent Sting: +20% DoT, +3s Duration",
+            "weight": 10,
+            "spec_tree": 1,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 1978,
+                "flags": [
+                    16384,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 1978"
+            },
+            "effect": {
+                "op": 22,
+                "op_name": "DOT",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 1,
+                "op_name": "DURATION",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 3000
+            },
+            "tooltip": {
+                "enchant_id": 4121,
+                "display_name": "Serpent Sting: +20% DoT, +3s Duration"
+            }
+        },
+        {
+            "id": 5028,
+            "name": "Black Arrow: +15% DoT",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3674,
+                "flags": [
+                    128,
+                    134217728,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3674"
+            },
+            "effect": {
+                "op": 22,
+                "op_name": "DOT",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4122,
+                "display_name": "Black Arrow: +15% DoT"
+            }
+        },
+        {
+            "id": 5029,
+            "name": "Black Arrow: -3s Cooldown",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3674,
+                "flags": [
+                    128,
+                    134217728,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3674"
+            },
+            "effect": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -3000
+            },
+            "tooltip": {
+                "enchant_id": 4123,
+                "display_name": "Black Arrow: -3s Cooldown"
+            }
+        },
+        {
+            "id": 5030,
+            "name": "Black Arrow: +20% DoT, -3s CD",
+            "weight": 10,
+            "spec_tree": 2,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 3674,
+                "flags": [
+                    128,
+                    134217728,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3674"
+            },
+            "effect": {
+                "op": 22,
+                "op_name": "DOT",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -3000
+            },
+            "tooltip": {
+                "enchant_id": 4124,
+                "display_name": "Black Arrow: +20% DoT, -3s CD"
+            }
+        },
+        {
+            "id": 5031,
+            "name": "Raptor Strike: +15% Damage",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2973,
+                "flags": [
+                    2,
+                    0,
+                    65536
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2973"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 15
+            },
+            "tooltip": {
+                "enchant_id": 4125,
+                "display_name": "Raptor Strike: +15% Damage"
+            }
+        },
+        {
+            "id": 5032,
+            "name": "Raptor Strike: +5% Crit",
+            "weight": 100,
+            "spec_tree": 2,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2973,
+                "flags": [
+                    2,
+                    0,
+                    65536
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2973"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4126,
+                "display_name": "Raptor Strike: +5% Crit"
+            }
+        },
+        {
+            "id": 5033,
+            "name": "Raptor Strike: +20% Dmg, +5% Crit",
+            "weight": 10,
+            "spec_tree": 2,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 2973,
+                "flags": [
+                    2,
+                    0,
+                    65536
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 2973"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": 5
+            },
+            "tooltip": {
+                "enchant_id": 4127,
+                "display_name": "Raptor Strike: +20% Dmg, +5% Crit"
+            }
+        }
+    ],
+    "affix_examples": [
+        {
+            "id": 104,
+            "name": "Arcane Shot: -15% Mana Cost",
+            "_purpose": "Arcane Shot costs 15% less mana. Useful â€” Hunters spend mana on every shot.",
+            "weight": 0,
+            "min_quality": 2,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 14,
+                "op_name": "COST",
+                "_op_note": "op=14 (SPELLMOD_COST). Reduces the mana cost of each cast.",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "_modifier_note": "108=PCT. value=-15 = 15% cheaper.",
+                "value": -15,
+                "_value_note": "-15% mana cost across all ranks."
+            },
+            "tooltip": {
+                "enchant_id": 0
+            }
+        },
+        {
+            "id": 105,
+            "name": "Arcane Shot: +5% Crit Chance",
+            "_purpose": "Arcane Shot has a 5% higher crit chance. Synergizes with Hunter crit talents.",
+            "weight": 0,
+            "min_quality": 2,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "CRITICAL_CHANCE",
+                "_op_note": "op=7 (SPELLMOD_CRITICAL_CHANCE). FLAT adds percentage points of crit chance.",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "_modifier_note": "107=FLAT. +5 = five percentage points of additional crit chance for this spell only.",
+                "value": 5,
+                "_value_note": "+5% crit. If Hunter has 25% ranged crit, Arcane Shot now crits at 30%."
+            },
+            "tooltip": {
+                "enchant_id": 0
+            }
+        },
+        {
+            "id": 106,
+            "name": "Arcane Shot: +1000ms Cast Time",
+            "_purpose": "Adds a 1-second cast time to Arcane Shot, which is normally instant. This is an example of adding cast time to an instant spell â€” useful as a downside/balance affix.",
+            "weight": 0,
+            "min_quality": 2,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "_op_note": "op=10 (SPELLMOD_CASTING_TIME). FLAT in milliseconds. Positive value ADDS cast time.",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "_modifier_note": "107=FLAT. Positive value adds cast time to an otherwise instant spell.",
+                "value": 1000,
+                "_value_note": "+1000ms = adds a 1-second cast to an instant spell. Note: instant spells have a base cast of 0ms, so this makes them take 1 second to cast."
+            },
+            "tooltip": {
+                "enchant_id": 0
+            }
+        },
+        {
+            "id": 107,
+            "name": "Arcane Shot: +20% Damage",
+            "_purpose": "Arcane Shot deals 20% more damage on each hit. Affects all ranks.",
+            "weight": 0,
+            "min_quality": 2,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "_op_note": "op=0 (SPELLMOD_DAMAGE). Scales the direct damage of the spell by a percentage.",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "_modifier_note": "108=PCT. value=20 means the spell hits for 120% of its normal damage.",
+                "value": 20,
+                "_value_note": "+20%. Arcane Shot Rank 10 (49045) deals 816-1050 base; with affix: ~979-1260."
+            },
+            "tooltip": {
+                "enchant_id": 0
+            }
+        },
+        {
+            "id": 108,
+            "name": "Arcane Shot: +100% Cost, +100% Damage",
+            "_purpose": "Dual-effect affix: costs double mana, deals double damage. NOTE: SPELLMOD_CASTING_TIME cannot add cast time to instant spells â€” use COST or COOLDOWN as a penalty instead.",
+            "weight": 0,
+            "min_quality": 1,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": true,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 14,
+                "op_name": "COST",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 100,
+                "_value_note": "+100% mana cost."
+            },
+            "effect2": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 100,
+                "_value_note": "+100% damage."
+            },
+            "tooltip": {
+                "enchant_id": 0
+            }
+        },
+        {
+            "id": 109,
+            "name": "Arcane Shot: -5s Cooldown",
+            "_purpose": "Arcane Shot cooldown reduced by 5 seconds. Base cooldown is 6s; with affix: 1s.",
+            "weight": 0,
+            "min_quality": 2,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "_op_note": "op=11 (SPELLMOD_COOLDOWN). FLAT unit is milliseconds. Negative value reduces cooldown.",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -5000,
+                "_value_note": "-5000ms = -5 seconds. Arcane Shot base cooldown is 6000ms; with affix: 1000ms (1s)."
+            },
+            "tooltip": {
+                "enchant_id": 0
+            }
+        }
+    ],
+    "removedAffixes": [
+        {
+            "id": 108,
+            "name": "Arcane Shot: 50% Crit Chance, +100% Damage",
+            "_purpose": "Dual-effect affix: Arcane Shot costs double mana but deals double damage. High-risk, high-reward. Cast-time penalty skipped â€” SPELLMOD_CASTING_TIME cannot add time to instant spells (base cast=0ms, modifier fires after instant check).",
+            "weight": 100,
+            "min_quality": 1,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": true,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 7,
+                "op_name": "COST",
+                "_op_note": "op=14 (SPELLMOD_COST). PCT with positive value increases mana cost.",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 50,
+                "_value_note": "+50% more crit chance"
+            },
+            "effect2": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "_op_note": "op=0 (SPELLMOD_DAMAGE). Doubles damage as the payoff for the mana penalty.",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 100,
+                "_value_note": "+100% damage. Both effects share the same flags/carrier so both apply to Arcane Shot."
+            },
+            "tooltip": {
+                "enchant_id": 3888,
+                "display_name": "Arcane Shot: +50% Crit, +100% Damage"
+            }
+        },
+        {
+            "id": 109,
+            "name": "Arcane Shot: -5s Cooldown",
+            "_purpose": "Arcane Shot cooldown reduced by 5 seconds. Base cooldown is 6s; with affix: 1s.",
+            "weight": 100,
+            "min_quality": 1,
+            "target": {
+                "description": "Hunter - Arcane Shot (all ranks)",
+                "family": 9,
+                "carrier_spell_id": 3044,
+                "flags": [
+                    2048,
+                    0,
+                    0
+                ],
+                "flags_hex": [
+                    "0x00000800",
+                    "0x00000000",
+                    "0x00000000"
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 3044"
+            },
+            "effect": {
+                "op": 11,
+                "op_name": "COOLDOWN",
+                "_op_note": "op=11 (SPELLMOD_COOLDOWN). FLAT unit is milliseconds. Negative value reduces cooldown.",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -5000,
+                "_value_note": "-5000ms = -5 seconds. Arcane Shot base cooldown is 6000ms; with affix: 1000ms (1s)."
+            },
+            "tooltip": {
+                "enchant_id": 3889
+            }
+        },
+        {
+            "id": 5015,
+            "name": "Aimed Shot: -1s Cast",
+            "weight": 80,
+            "min_quality": 1,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 19434,
+                "flags": [
+                    131072,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 19434"
+            },
+            "effect": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -1000
+            },
+            "tooltip": {
+                "enchant_id": 4109,
+                "display_name": "Aimed Shot: -1s Cast"
+            }
+        },
+        {
+            "id": 5016,
+            "name": "Aimed Shot: Instant Cast",
+            "weight": 20,
+            "min_quality": 2,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 19434,
+                "flags": [
+                    131072,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 19434"
+            },
+            "effect": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -10000
+            },
+            "tooltip": {
+                "enchant_id": 4110,
+                "display_name": "Aimed Shot: Instant Cast"
+            }
+        },
+        {
+            "id": 5017,
+            "name": "Aimed Shot: +20% Dmg, Instant Cast",
+            "weight": 5,
+            "min_quality": 3,
+            "target": {
+                "family": 9,
+                "family_name": "HUNTER",
+                "carrier_spell_id": 19434,
+                "flags": [
+                    131072,
+                    0,
+                    0
+                ],
+                "verified": false,
+                "verify_command": ".spellinfo all 19434"
+            },
+            "effect": {
+                "op": 0,
+                "op_name": "DAMAGE",
+                "modifier": 108,
+                "modifier_name": "PCT",
+                "value": 20
+            },
+            "effect2": {
+                "op": 10,
+                "op_name": "CASTING_TIME",
+                "modifier": 107,
+                "modifier_name": "FLAT",
+                "value": -10000
+            },
+            "tooltip": {
+                "enchant_id": 4111,
+                "display_name": "Aimed Shot: +20% Dmg, Instant Cast"
+            }
+        }
+    ]
+}

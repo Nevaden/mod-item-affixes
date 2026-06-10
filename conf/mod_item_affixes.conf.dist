@@ -1,0 +1,55 @@
+#############################################
+# mod-item-affixes configuration
+#############################################
+
+# Allow class skill (SpellMod) affixes to roll. 0 = only stat affixes roll; the "Stats vs Class Skills"
+# type toggle in the roll menu is hidden. 1 = class skill affixes are available (default).
+ItemAffixes.EnableClassSkillAffixes = 1
+
+# Allow talent affixes to roll (passive bonus ranks in a class talent). 0 = talent affix rows are
+# never generated; the spec tree selector is hidden when class skills are also disabled. 1 = enabled (default).
+ItemAffixes.EnableTalentAffixes = 1
+
+# Show stat family (role) selector in the roll menu (Any / Tank / Physical / Caster / Healer / Ranged).
+# Keeping this on lets players steer their roll toward role-appropriate stats, which is recommended for
+# servers with custom classes or non-standard builds where automatic class filtering may not apply.
+# 0 = hidden (rolls from the full eligible pool), 1 = shown (default).
+ItemAffixes.EnableRoleSelection = 1
+
+# Show main stat selector in the roll menu (Any / Strength / Agility / Intellect / Spirit).
+# Useful for custom builds (e.g. a tanking Rogue that needs Stamina over Agility).
+# 0 = hidden, 1 = shown (default).
+ItemAffixes.EnableMainStatSelection = 1
+
+# Number of extra affix slots granted to two-handed weapons to compensate for the dual-wield slot
+# advantage (dual wielders get two 1H weapon slot rolls vs one 2H roll).
+# 0 = no bonus, 1 = one extra slot (default), 2 = two extra slots, etc.
+ItemAffixes.TwoHanderBonusSlots = 1
+
+# WotLK item budget fractions — share of the item's total stat budget allocated to one affix roll.
+# The stat exchange rates (AP=0.5x cost, SP=0.86x cost, others=1x) do the balancing automatically.
+# Green items roll one affix, blue two, purple three — smaller fractions per affix keep epics fair.
+ItemAffixes.BudgetFractionGreen  = 0.18
+ItemAffixes.BudgetFractionBlue   = 0.13
+ItemAffixes.BudgetFractionPurple = 0.10
+
+# Minimum roll as a fraction of the computed maximum (variance floor). Valid range: 0.0 to 1.0.
+# 1.0  = always the exact max (no variance) — use this instead of StatMultiplier for consistent max rolls.
+# 0.75 = rolls land between 75% and 100% of the budget-computed max value (default).
+# 0.0  = rolls anywhere from 1 to max (very high variance).
+# Values above 1.0 are clamped to 1.0. To increase roll magnitudes, use StatMultiplier instead.
+ItemAffixes.BudgetMinRoll = 0.75
+
+# Global stat multiplier applied to all stat affix rolls.
+# 1.0 = default (WotLK-accurate budget values).
+# 1.5 = 50% stronger (power fantasy mode).
+# 2.0 = double values (high-power server).
+# Does not affect SpellMod affixes (class skill bonuses).
+ItemAffixes.StatMultiplier = 3.0
+
+# Percentage chance (0-100) that one of the roll options is replaced with a class-eligible
+# Imprint option.  Selecting it applies the Imprint to the item and grants a Rune to bags;
+# the affix slot is returned to UNROLLED so it can still be filled with a normal affix.
+# Once an item has an Imprint (from any source) the option will never appear again on that item.
+# 0 = Imprint options never appear in rolls.  30 = 30% chance (default).
+ItemAffixes.ImprintRollChance = 30

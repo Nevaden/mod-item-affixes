@@ -1,0 +1,192 @@
+{
+  "_comment": "Druid — Balance tree (spec_tree=0). IDs 320–339.",
+  "_notes": {
+    "tree": "Balance",
+    "class": "DRUID",
+    "spec_tree": 0,
+    "id_range": "320–339",
+    "spell_family": "DRUID (7)",
+    "note_main_file": [
+      "id=90 Starlight Wrath (spec_tree=-1) — flags were [4,0,0] (Starfire only). Wrath=[1,0,0] has a different bit. CORRECTED to [5,0,0] = Wrath(1)|Starfire(4).",
+      "id=91 Moonfury (spec_tree=-1) — flags were [4,0,0] (Starfire only). Wrath=[1] and Moonfire=[2] both different. CORRECTED to [7,0,0] = Wrath(1)|Moonfire(2)|Starfire(4)."
+    ],
+    "note_no_shared_bits": "No shared Druid family marker bits across all verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Wrath_5176":         "[1,0,0] = 0x00000001 (mask0 bit0) — updates main-file id=90, id=91",
+      "Starfire_2912":      "[4,0,0] = 0x00000004 (mask0 bit2) — updates main-file id=90, id=91",
+      "Moonfire_8921":      "[2,0,0] = 0x00000002 (mask0 bit1) — updates main-file id=91",
+      "Healing_Touch_5185": "[32,0,0] = 0x00000020 (mask0 bit5)",
+      "Nourish_50464":      "[0,33554432,0] = mask1 bit25 (0x02000000)"
+    },
+    "note_starfall": "Starfall flags not yet verified (.spellinfo all 48505 or current ID). Nature's Majesty (id=321) currently excludes Starfall — OR in its bit once confirmed."
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 90,
+      "name": "Starlight Wrath",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [5, 0, 0],
+      "carrier_spell": 2912,
+      "carrier_name": "Starfire",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[5,0,0]: OR of Wrath(5176) mask0 bit0(0x1=1)|Starfire(2912) mask0 bit2(0x4=4). Cast time -100ms/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 320,
+      "name": "Moonglow",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "DRUID",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 2912,
+      "carrier_name": "Starfire",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -3,
+      "notes": "All Druid spell mana cost -3%/rank. All-ones used — 'all Druid spells' is not addressable as a sub-type via family SpellMod; acceptable scope for Balance spec affixes.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 321,
+      "name": "Nature's Majesty",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "DRUID",
+      "family_flags": [37, 33554432, 0],
+      "carrier_spell": 2912,
+      "carrier_name": "Starfire",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 200,
+      "notes": "flags=[37,33554432,0]: OR of Wrath(5176) mask0 bit0(0x1=1)|Starfire(2912) mask0 bit2(0x4=4)|HealingTouch(5185) mask0 bit5(0x20=32)|Nourish(50464) mask1 bit25(0x2000000=33554432). Starfall not yet included — OR in once flags confirmed. Crit +2%/rank (CRIT_CHANCE FLAT: 200=2%).",
+      "verified": true
+    },
+
+    {"_todo": "Improved Moonfire (2r, tier 2) — Two effects: DAMAGE PCT +5%/rank AND CRIT_CHANCE +5%/rank on Moonfire. See id=322 (DAMAGE PCT primary). A second entry for CRIT_CHANCE FLAT +500/rank on flags=[2,0,0] can be added if desired."},
+
+    {
+      "id": 322,
+      "name": "Improved Moonfire",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "DRUID",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 8921,
+      "carrier_name": "Moonfire",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[2,0,0]=0x00000002 (mask0 bit1). No shared Druid marker bits. Moonfire damage +5%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Nature's Grace (3r, tier 3) — Your spell crits reduce the cast time of your next spell by 0.5/1/1.5s. Proc-based next-cast modifier, not implementable as SpellMod."},
+    {"_todo": "Nature's Splendor (1r, tier 3) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Insect Swarm (3r, tier 3) — Increases Wrath damage when Insect Swarm is active on target. Target-debuff conditional, not implementable as SpellMod."},
+    {"_todo": "Brambles (3r, tier 3) — Increases damage of Thorns and Wild Growth. Thorns proc + Wild Growth are complex interactions, not implementable as SpellMod."},
+    {"_todo": "Omen of Clarity (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Balance of Power (2r, tier 4) — Reduces the effect of hit reduction on your spells. Resist/mechanic stat, not implementable as SpellMod."},
+    {"_todo": "Celestial Focus (3r, tier 4) — Increases spell haste and reduces stun duration. Passive stat + mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Lunar Guidance (3r, tier 5) — Increases spell power by 6/12/20% of Intellect. Stat conversion, not implementable as SpellMod."},
+    {"_todo": "Earth and Moon (3r, tier 5) — Increases magic damage taken by the target by 4/7/13%. Target debuff, not implementable as SpellMod."},
+
+    {
+      "id": 323,
+      "name": "Empowered Moonfire",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 8921,
+      "carrier_name": "Moonfire",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 4,
+      "notes": "flags=[2,0,0]=0x00000002 (mask0 bit1). Same carrier as id=322. No shared Druid marker bits. Moonfire spell power bonus +4%/rank (modeled as DAMAGE PCT).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Faerie Fire (3r, tier 6) — Your Faerie Fire reduces target's chance to hit by 1/2/3% and increases your hit chance with spells. Target debuff component + passive hit. Complex; deferring."},
+    {"_todo": "Dreamstate (3r, tier 6) — Restores 4/7/10% of base mana every 5 sec while in combat. Passive mana regen, not implementable as SpellMod."},
+    {
+      "id": 91,
+      "name": "Moonfury",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [7, 0, 0],
+      "carrier_spell": 2912,
+      "carrier_name": "Starfire",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[7,0,0]: OR of Wrath(5176) mask0 bit0(0x1=1)|Moonfire(8921) mask0 bit1(0x2=2)|Starfire(2912) mask0 bit2(0x4=4). Damage +2%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Master Shapeshifter (2r, tier 7) — Grants bonus based on current form. Aura-conditional form bonus, not implementable as SpellMod."},
+    {"_todo": "Insect Swarm (1r, tier 7) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 324,
+      "name": "Genesis",
+      "class": "DRUID",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 2912,
+      "carrier_name": "Starfire",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "Druid periodic spell damage/healing +1%/rank. All-ones used — 'periodic Druid spells' cannot be targeted as a sub-type; acceptable scope for Balance spec affixes.",
+      "verified": true
+    },
+
+    {"_todo": "Owlkin Frenzy (3r, tier 8) — Being struck by a harmful spell while in Moonkin form gives a 15% chance to grant Owlkin Frenzy proc. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Eclipse (3r, tier 8) — When you critically hit with Starfire/Wrath, you gain a proc that boosts the other. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Moonkin Form (3r, tier 9) — Moonkin Form grants haste and passive benefit. Passive aura, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Starfall (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "_comment": "Mage — Fire tree (spec_tree=1). IDs 520–539.",
+  "_notes": {
+    "tree": "Fire",
+    "class": "MAGE",
+    "spec_tree": 1,
+    "id_range": "520–539",
+    "spell_family": "MAGE (3)",
+    "note_main_file": [
+      "id=2 Improved Fireball (spec_tree=-1) — flags=[1,0,8] confirmed. SCOPE NOTE: mask2=8 is a shared MAGE marker bit (see note_shared_mask2_bit3). With [1,0,8], the CASTING_TIME FLAT modifier also matches Frostfire Bolt, Pyroblast, PoM, Arcane Power, and Evocation via mask2=8. Instant-cast spells (PoM, AP) are unaffected; Frostfire Bolt and Pyroblast will also have cast time reduced. Acceptable scope — cross-tree affix, verified=true.",
+      "id=4 'Empowered Fireball' (spec_tree=-1) — REVISED: renamed to 'Empowered Fire', flags corrected to [4194305,4096,0] (Fireball|FrostfireBolt|Pyroblast unique bits, mask2 dropped), max_rank corrected 5→3, value_per_rank corrected 2→5. See main-file patch."
+    ],
+    "note_shared_mask2_bit3": "mask2 bit3 (=8) is a SHARED MAGE marker bit on: Fireball, FrostfireBolt, Pyroblast, PoM, Arcane Power, Evocation. Combined-flag entries always drop mask2 to avoid false matches.",
+    "note_no_other_shared_bits": "All Fire/Frost spell unique bits in mask0/mask1 are distinct. No exclusions required beyond dropping mask2.",
+    "confirmed_flags": {
+      "Fireball_133":       "[1,0,8] = mask0 bit0 (0x00000001) + shared mask2 bit3 — from main-file id=2 (verified=true)",
+      "FireBlast_2136":     "[2,0,0] = mask0 bit1 (0x00000002)",
+      "Scorch_2948":        "[16,0,0] = mask0 bit4 (0x00000010)",
+      "FrostfireBolt_44614":"[0,4096,8] = mask1 bit12 (0x00001000) + shared mask2 bit3",
+      "Pyroblast_11366":    "[4194304,0,8] = mask0 bit22 (0x00400000) + shared mask2 bit3"
+    },
+    "computed_combined_flags": {
+      "Incineration_FB_Scorch":          "[18,0,0] — FireBlast mask0_bit1(2)|Scorch mask0_bit4(16). No shared bits.",
+      "EmpoweredFire_Fireball_FFB_Pyro": "[4194305,4096,0] — Fireball mask0_bit0(1)|Pyroblast mask0_bit22(4194304)|FFB mask1_bit12(4096). mask2 dropped."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 521,
+      "name": "Improved Fire Blast",
+      "class": "MAGE",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "MAGE",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 2136,
+      "carrier_name": "Fire Blast",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[2,0,0]=mask0 bit1 (0x00000002). Fire Blast(2136) confirmed SPELLFAMILY_MAGE. No shared MAGE marker bits. Fire Blast cooldown -2s/rank (COOLDOWN FLAT: -2000ms). WotLK: 2r at -2/-4s.",
+      "verified": true
+    },
+
+    {"_todo": "Ignite (5r, tier 1) — When your fire spell crits, the target burns for 20/40/60/80/100% of crit bonus damage over 4 sec. Proc-based DoT, not implementable as SpellMod."},
+
+    {
+      "id": 522,
+      "name": "Incineration",
+      "class": "MAGE",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "MAGE",
+      "family_flags": [18, 0, 0],
+      "carrier_spell": 2136,
+      "carrier_name": "Fire Blast",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 200,
+      "notes": "flags=[18,0,0]=0x00000012. OR of FireBlast(2136) mask0 bit1(2)|Scorch(2948) mask0 bit4(16). No shared bits between these two spells. Fire Blast and Scorch crit chance +2%/rank (CRIT_CHANCE FLAT: 200 = 2%). WotLK: 2r at +2/+4%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 2,
+      "name": "Improved Fireball",
+      "class": "MAGE",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "MAGE",
+      "family_flags": [1, 0, 8],
+      "carrier_spell": 133,
+      "carrier_name": "Fireball",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[1,0,8]. mask2=8 is the shared MAGE marker bit — the CASTING_TIME modifier also matches FrostfireBolt, Pyroblast via mask2=8, but instant-cast spells are unaffected. Acceptable scope. Fireball cast time -100ms/rank.",
+      "verified": true, "verify_command": ".spellinfo all 133"
+    },
+    {"_todo": "Pyrogenics (2r, tier 2) — Fire spells reduce target's fire resistance by 5/10. Debuff mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 524,
+      "name": "Critical Mass",
+      "class": "MAGE",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "MAGE",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 133,
+      "carrier_name": "Fireball",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 200,
+      "notes": "All-ones — Fire spell sub-family not isolatable via SpellMod (no confirmed shared Fire-only bit). Acceptable scope for Fire spec affix. Carrier Fireball(133) confirmed SPELLFAMILY_MAGE. All Mage spell crit chance +2%/rank (CRIT_CHANCE FLAT: 200 = 2%). WotLK: 3r at +2/+4/+6%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 520,
+      "name": "Playing with Fire",
+      "class": "MAGE",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "MAGE",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 133,
+      "carrier_name": "Fireball",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "All-ones — Fire spell sub-family not isolatable via SpellMod; all-ones is accepted scope for Fire spec affix. Carrier Fireball(133) confirmed SPELLFAMILY_MAGE. All Mage spell damage +1%/rank (DAMAGE PCT: 1). WotLK: 3r at +1/+2/+3%.",
+      "verified": true
+    },
+
+    {"_todo": "Pyromaniac (3r, tier 4) — When you crit with fire spells 3 times in a row, reduces mana cost by 9/18/27% until you cast a non-crit. Proc/conditional, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 523,
+      "name": "Empowered Fire",
+      "class": "MAGE",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "MAGE",
+      "family_flags": [4194305, 4096, 0],
+      "carrier_spell": 133,
+      "carrier_name": "Fireball",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[4194305,4096,0]. OR of: Fireball(133) mask0 bit0(1)|Pyroblast(11366) mask0 bit22(4194304)|FrostfireBolt(44614) mask1 bit12(4096). mask2=8 dropped from all three spells to avoid shared-bit contamination. Carrier Fireball(133) confirmed SPELLFAMILY_MAGE. Fireball, Pyroblast, and Frostfire Bolt damage +5%/rank (DAMAGE PCT: 5). WotLK talent: 3r at +5/+10/+15%. NOTE: corrects main-file id=4 which had wrong name ('Empowered Fireball'), flags ([1,0,8] covering only Fireball), max_rank(5→3), and value_per_rank(2→5).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Firestarter (2r, tier 6) — Scorch and Flamestrike reduce cast time of next Flamestrike by 0.5/1s. Proc-based cast time conditional, not implementable as flat SpellMod."},
+    {"_todo": "Dragon's Breath (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Burnout (5r, tier 7) — Increases fire crit chance by 1/2/3/4/5% but crits consume 5/10/15/20/25% of base mana. Mixed passive stat + drawback — not modeled to avoid half-implementing a drawback talent."},
+    {"_todo": "Improved Hot Streak (2r, tier 7) — Increases the chance to trigger Hot Streak by 33/66%. Proc rate modifier, not implementable as SpellMod."},
+    {"_todo": "Molten Fury (2r, tier 7) — Increases damage against targets below 35% health by 4/8%. Conditional (target HP threshold), not implementable as flat SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Blazing Speed (2r, tier 8) — 13/26% chance when hit to gain 150% movement speed for 1.5 sec. Proc-based on being hit, not implementable as SpellMod."},
+    {"_todo": "Hot Streak (3r, tier 8) — After 2 consecutive non-periodic fire crits, next Pyroblast is instant. Proc chain mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Living Bomb (1r, tier 9) — Single-rank talent, excluded by design."}
+
+  ],
+
+  "removedTalentAffixes": [4]
+}

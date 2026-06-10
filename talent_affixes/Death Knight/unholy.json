@@ -1,0 +1,172 @@
+{
+  "_comment": "Death Knight — Unholy tree (spec_tree=2). IDs 660–679.",
+  "_notes": {
+    "tree": "Unholy",
+    "class": "DK",
+    "spec_tree": 2,
+    "id_range": "660–679",
+    "spell_family": "DK",
+    "note_main_file": [
+      "id=63 'Improved Death Coil' (spec_tree=-1) — flags=[8192,0,0] CORRECT. DeathCoil(47541)=0x00002000=bit13=8192. verified=true.",
+      "id=62 'Virulence' (spec_tree=-1) — all-ones, carrier=IcyTouch(45477) confirmed DK family. verified=true."
+    ],
+    "note_epidemic_shared_bits": "Blood Plague(55078) and Frost Fever(55095) both share mask1 bit11(2048)=0x00000800 and mask2 bit1(2). These are dropped from the Epidemic combined mask. Unique bits: BP mask1 bit25(33554432), FF mask1 bit26(67108864). Combined [0,100663296,0] targets both diseases without shared-bit false matches.",
+    "note_morbidity_split": "Morbidity reduces Death Coil and Death and Decay CDs by DIFFERENT amounts. Two separate entries required: id=662 for Death Coil (-2.5s/rank) and id=663 for DnD (-5s/rank). Verify actual values in-game and adjust value_per_rank if needed.",
+    "confirmed_flags": {
+      "DeathCoil_47541":     "[8192, 0, 0] = mask0 bit13 (0x00002000) — SPELLFAMILY_DK confirmed",
+      "PlagueStrike_45462":  "[1, 0, 0] = mask0 bit0 (0x00000001) — SPELLFAMILY_DK confirmed",
+      "ScourgeStrike_55090": "[0, 134217728, 0] = mask1 bit27 (0x08000000) — SPELLFAMILY_DK confirmed",
+      "DeathandDecay_43265": "[32, 0, 0] = mask0 bit5 (0x00000020) — SPELLFAMILY_DK confirmed",
+      "BloodPlague_55078":   "[0, 33556480, 2] = mask1 bit25(33554432)+bit11(2048); mask2 bit1(2) — SPELLFAMILY_DK confirmed",
+      "FrostFever_55095":    "[0, 67110912, 2] = mask1 bit26(67108864)+bit11(2048); mask2 bit1(2) — SPELLFAMILY_DK confirmed"
+    },
+    "computed_combined_flags": {
+      "ViciousStrikes_PS_SS":   "[1, 134217728, 0] — PS mask0 bit0(1)|SS mask1 bit27(134217728). No shared bits.",
+      "Epidemic_BP_FF_unique":  "[0, 100663296, 0] — BP unique bit25(33554432)|FF unique bit26(67108864). Shared bit11 and mask2 bit1 dropped. 0x06000000."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 660,
+      "name": "Vicious Strikes",
+      "class": "DK",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "DK",
+      "family_flags": [1, 134217728, 0],
+      "carrier_spell": 45462,
+      "carrier_name": "Plague Strike",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 500,
+      "notes": "flags=[1,134217728,0]. mask0: PlagueStrike(45462) bit0(1) (0x00000001). mask1: ScourgeStrike(55090) bit27(134217728) (0x08000000). No shared bits across different masks. Carrier PlagueStrike(45462) confirmed SPELLFAMILY_DK. Plague Strike and Scourge Strike crit chance +5%/rank (CRIT_CHANCE FLAT: 500). WotLK: 2r at +5/+10%.",
+      "verified": true
+    },
+
+    {
+      "id": 62,
+      "name": "Virulence",
+      "class": "DK",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 45477,
+      "carrier_name": "Icy Touch",
+      "spellmod_op": "RESIST_MISS_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "All-ones — DK spell hit +1%/rank. Carrier IcyTouch(45477) confirmed SPELLFAMILY_DK.",
+      "verified": true
+    },
+    {"_todo": "Anticipation (5r, tier 1) — Increases dodge chance by 1/2/3/4/5%. Passive defense stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 661,
+      "name": "Epidemic",
+      "class": "DK",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "DK",
+      "family_flags": [0, 100663296, 0],
+      "carrier_spell": 55078,
+      "carrier_name": "Blood Plague",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 3000,
+      "notes": "flags=[0,100663296,0]=0x06000000 in mask1. BP unique bit25(33554432)|FF unique bit26(67108864)=100663296. Shared bits dropped: mask1 bit11(2048) and mask2 bit1(2) both appear on BP and FF — excluding prevents false matches on other spells with those shared bits. Carrier BloodPlague(55078) confirmed SPELLFAMILY_DK. Blood Plague and Frost Fever duration +3s/rank (DURATION FLAT: 3000ms). WotLK: 2r at +3/+6s.",
+      "verified": true
+    },
+
+    {
+      "id": 662,
+      "name": "Morbidity",
+      "class": "DK",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [8192, 0, 0],
+      "carrier_spell": 47541,
+      "carrier_name": "Death Coil",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2500,
+      "notes": "flags=[8192,0,0]=mask0 bit13 (0x00002000). DeathCoil(47541) confirmed SPELLFAMILY_DK. Death Coil part of Morbidity — see id=663 for Death and Decay. value_per_rank=-2500ms per rank; verify actual reduction in-game (WotLK tooltip: -2.5/5/7.5s). Death Coil cooldown -2.5s/rank (COOLDOWN FLAT: -2500ms). WotLK: 3r.",
+      "verified": true
+    },
+
+    {
+      "id": 663,
+      "name": "Morbidity (Death and Decay)",
+      "class": "DK",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [32, 0, 0],
+      "carrier_spell": 43265,
+      "carrier_name": "Death and Decay",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -5000,
+      "notes": "flags=[32,0,0]=mask0 bit5 (0x00000020). DeathandDecay(43265) confirmed SPELLFAMILY_DK. Death and Decay part of Morbidity — separate entry because per-rank CD reduction differs from Death Coil (id=662). value_per_rank=-5000ms per rank; verify actual reduction in-game (WotLK tooltip: -5/10/15s). Death and Decay cooldown -5s/rank (COOLDOWN FLAT: -5000ms). WotLK: 3r.",
+      "verified": true
+    },
+
+    {
+      "id": 63,
+      "name": "Improved Death Coil",
+      "class": "DK",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [8192, 0, 0],
+      "carrier_spell": 47541,
+      "carrier_name": "Death Coil",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[8192,0,0]=mask0 bit13 (0x00002000). DeathCoil(47541) confirmed SPELLFAMILY_DK. Death Coil damage +5%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Unholy Command (2r, tier 2) — Reduces cooldown of Death Grip by 5/10s. COOLDOWN FLAT -5000ms/rank on DeathGrip(49576) — implementable if SPELLFAMILY_DK. Add after verifying .spellinfo all 49576."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Unholy Blight (1r, tier 3) — Single-rank talent, excluded by design."},
+    {"_todo": "Impurity (5r, tier 3) — Increases attack power bonus of spells by 4/8/12/16/20%. Stat conversion (AP to spell damage), not implementable as SpellMod."},
+    {"_todo": "Dirge (2r, tier 3) — Scourge Strike and Obliterate generate 2.5/5 additional Runic Power. Resource generation on ability use, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Magic Suppression (3r, tier 4) — Reduces all magic damage taken by 2/4/6%. Passive mitigation, not implementable as SpellMod."},
+    {"_todo": "Corpse Explosion (1r, tier 4) — Single-rank talent, excluded by design."},
+    {"_todo": "On a Pale Horse (2r, tier 4) — Increases mounted speed and reduces duration of movement-impairing effects. Passive movement stats, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Necrosis (5r, tier 5) — Auto attacks also deal 4/8/12/16/20% weapon damage as Shadow. Passive auto-attack proc, not implementable as SpellMod."},
+    {"_todo": "Desecration (2r, tier 5) — Plague Strike and Scourge Strike apply Desecration, reducing movement speed. Mechanic modifier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Wandering Plague (3r, tier 6) — Disease crits deal 33/66/100% of damage to nearby enemies. Crit proc mechanic, not implementable as SpellMod."},
+    {"_todo": "Ebon Plaguebringer (3r, tier 6) — Increases crit chance of diseases and Frost/Shadow spells by 1/2/3%. Split multi-type crit buff — disease crit is a debuff modifier, not cleanly a single SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Unholy Presence (2r, tier 7) — In Unholy Presence, movement speed increased by 5/10%. Conditional presence passive, not implementable as SpellMod."},
+    {"_todo": "Rage of Rivendare (5r, tier 7) — Attacks deal 2/4/6/8/10% more damage to diseased targets. Conditional on target state, not implementable as flat SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Summon Gargoyle (1r, tier 8) — Single-rank talent, excluded by design."}
+
+  ]
+}

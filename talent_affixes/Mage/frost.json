@@ -1,0 +1,177 @@
+{
+  "_comment": "Mage — Frost tree (spec_tree=2). IDs 540–559.",
+  "_notes": {
+    "tree": "Frost",
+    "class": "MAGE",
+    "spec_tree": 2,
+    "id_range": "540–559",
+    "spell_family": "MAGE (3)",
+    "note_main_file": [
+      "id=1 Improved Frostbolt (spec_tree=-1) — flags=[32,0,0] carrier=Frostbolt(116). max_rank=5, value_per_rank=-100ms. Confirmed correct — no changes.",
+      "id=3 Empowered Frostbolt (spec_tree=-1) — flags=[32,0,0] carrier=Frostbolt(116). max_rank=5, value_per_rank=2 (DAMAGE PCT). Confirmed correct — marked verified=true.",
+      "id=5 Piercing Ice (spec_tree=-1) — flags updated from [32,0,0] to all-ones. All-ones chosen because no shared Frost-only bit exists; previous narrow flags only targeted Frostbolt while the talent buffs all Frost spell damage. Marked verified=true."
+    ],
+    "note_shared_mask2_bit3": "mask2 bit3 (=8) is a SHARED MAGE marker bit on: Fireball, FrostfireBolt, Pyroblast, PoM, Arcane Power, Evocation. Combined-flag entries always drop mask2 to avoid false matches.",
+    "note_no_frost_shared_bit": "No confirmed shared bit exists across all Frost spells. Frost Nova, CoC, Ice Lance, Blizzard, and Frostbolt all have unique mask0 bits. FrostfireBolt uses mask1 bit12. Broad Frost affixes use all-ones (e.g. Piercing Ice) or targeted unique-bit OR's.",
+    "confirmed_flags": {
+      "Frostbolt_116":      "[32,0,0] = mask0 bit5 (0x00000020) — from main-file id=1 (verified=true)",
+      "FrostNova_122":      "[64,0,0] = mask0 bit6 (0x00000040)",
+      "ConeOfCold_120":     "[512,0,0] = mask0 bit9 (0x00000200)",
+      "IceLance_30455":     "[131072,0,0] = mask0 bit17 (0x00020000)",
+      "Blizzard_10":        "[524416,0,0] = mask0 bit7+bit19 (0x00080080 = 524288+128)",
+      "FrostfireBolt_44614":"[0,4096,8] = mask1 bit12 (0x00001000) + shared mask2 bit3"
+    },
+    "computed_combined_flags": {
+      "ArcticReach_FB_FN_CoC_Bliz": "[525024,0,0] — Frostbolt bit5(32)|FrostNova bit6(64)|CoC bit9(512)|Blizzard bit7+bit19(524416). No shared bits. 32+64+512+524416=525024.",
+      "ChilledToBone_FB_FFB_IL":    "[131104,4096,0] — Frostbolt mask0 bit5(32)|IceLance mask0 bit17(131072)|FFB mask1 bit12(4096). mask2 dropped. 32+131072=131104."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 1,
+      "name": "Improved Frostbolt",
+      "class": "MAGE",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "MAGE",
+      "family_flags": [32, 0, 0],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[32,0,0]=mask0 bit5 (0x00000020). Frostbolt cast time -100ms/rank.",
+      "verified": true, "verify_command": ".spellinfo all 116"
+    },
+
+    {
+      "id": 542,
+      "name": "Improved Frost Nova",
+      "class": "MAGE",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "MAGE",
+      "family_flags": [64, 0, 0],
+      "carrier_spell": 122,
+      "carrier_name": "Frost Nova",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -4000,
+      "notes": "flags=[64,0,0]=mask0 bit6 (0x00000040). Frost Nova(122) confirmed SPELLFAMILY_MAGE. No shared MAGE marker bits. Frost Nova cooldown -4s/rank (COOLDOWN FLAT: -4000ms). WotLK: 2r at -4/-8s.",
+      "verified": true
+    },
+
+    {"_todo": "Frostbite (3r, tier 1) — Chilling effects have a 5/10/15% chance to freeze the target for 5 sec. Proc-based freeze, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Shatter (5r, tier 2) — Increases crit chance of spells against frozen targets by 10/20/30/40/50%. Conditional (target is frozen), not implementable as flat SpellMod."},
+
+    {
+      "id": 543,
+      "name": "Arctic Reach",
+      "class": "MAGE",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "MAGE",
+      "family_flags": [525024, 0, 0],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "RANGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[525024,0,0]=0x000802E0. OR of Frostbolt mask0 bit5(32)|FrostNova mask0 bit6(64)|CoC mask0 bit9(512)|Blizzard mask0 bit7+bit19(524416). No shared bits — all bits are unique to each spell. Carrier Frostbolt(116) confirmed SPELLFAMILY_MAGE. Range/radius of Frostbolt, Frost Nova, Cone of Cold, and Blizzard +10%/rank (RANGE PCT: 10). WotLK: 2r at +10/+20%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 540,
+      "name": "Piercing Ice",
+      "class": "MAGE",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "MAGE",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "All-ones — no confirmed shared Frost-only bit exists across all frost spells. All-ones is accepted scope for Frost spec affix. Carrier Frostbolt(116) confirmed SPELLFAMILY_MAGE. All Mage spell damage +2%/rank (DAMAGE PCT: 2). Mirrors corrected main-file id=5. WotLK: 3r at +2/+4/+6%.",
+      "verified": true
+    },
+
+    {"_todo": "Icy Veins (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Permafrost (3r, tier 4) — Increases duration of Chill effects by 1/2/3s and reduces target's movement speed by an additional 4/7/10%. Non-linear movement reduction and aura duration modifier — not implementable as a single flat SpellMod."},
+    {"_todo": "Ice Floes (3r, tier 4) — Reduces cooldown of Frost Nova, Cone of Cold, Ice Block by 7/14/20%. Non-linear progression (not equal increments) and includes Ice Block — not modelable with linear value_per_rank."},
+    {"_todo": "Winter's Chill (3r, tier 4) — Frost damage spells have a 33/66/100% chance to apply Winter's Chill, increasing target's spell crit chance taken by 1%. Proc-based debuff application, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 541,
+      "name": "Empowered Frostbolt",
+      "class": "MAGE",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "MAGE",
+      "family_flags": [32, 0, 0],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[32,0,0]=mask0 bit5 (0x00000020). Frostbolt(116) confirmed SPELLFAMILY_MAGE from main-file id=1. No shared MAGE marker bits. Frostbolt damage +2%/rank (DAMAGE PCT: 2). Mirrors main-file id=3 (now verified=true). WotLK: 5r at +2/+4/+6/+8/+10%. NOTE: talent also gives +5% crit coefficient per rank — a second entry (CRIT_CHANCE FLAT +500/rank, same flags) can be added if desired.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Cold Snap (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 544,
+      "name": "Chilled to the Bone",
+      "class": "MAGE",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "MAGE",
+      "family_flags": [131104, 4096, 0],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "flags=[131104,4096,0]. OR of: Frostbolt mask0 bit5(32)|IceLance(30455) mask0 bit17(131072)|FrostfireBolt(44614) mask1 bit12(4096). mask2=8 dropped from FrostfireBolt to avoid shared-bit contamination. Carrier Frostbolt(116) confirmed SPELLFAMILY_MAGE. Frostbolt, Frostfire Bolt, and Ice Lance damage +1%/rank (DAMAGE PCT: 1). WotLK: 5r at +1/+2/+3/+4/+5%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Ice Barrier (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Shattered Barrier (2r, tier 7) — When Ice Barrier is destroyed, 50/100% chance to freeze nearby enemies. Proc on barrier break, not implementable as SpellMod."},
+    {"_todo": "Arctic Winds (5r, tier 7) — Frost spell damage +1/2/3/4/5% and melee hit chance against you -1/2/3/4/5%. Mixed passive damage + defense — DAMAGE PCT part partially overlaps with id=540 (Piercing Ice); not modeled to avoid redundant stacking."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Fingers of Frost (2r, tier 8) — Chill effects have a 5/10% chance to trigger Fingers of Frost, causing next 2 spells to act as if target is frozen. Proc-based trigger, not implementable as SpellMod."},
+    {"_todo": "Brain Freeze (3r, tier 8) — Frost spells have a 5/10/15% chance to cause next Fireball or Frostfire Bolt to be instant and free. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Summon Water Elemental (1r, tier 9) — Single-rank talent, excluded by design."},
+    {"_todo": "Deep Freeze (1r, tier 9) — Single-rank talent, excluded by design."}
+
+  ],
+
+  "removedTalentAffixes": [3, 5]
+}

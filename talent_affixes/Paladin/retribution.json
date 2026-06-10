@@ -1,0 +1,189 @@
+{
+  "_comment": "Paladin — Retribution tree (spec_tree=2). IDs 240–259.",
+  "_notes": {
+    "tree": "Retribution",
+    "class": "PALADIN",
+    "spec_tree": 2,
+    "id_range": "240–259",
+    "spell_family": "PALADIN (10)",
+    "note_main_file": [
+      "id=20 Improved Judgements (spec_tree=-1) is a Ret-tree talent — not duplicated here. Flags confirmed correct.",
+      "id=23 Conviction (spec_tree=-1) is a Ret-tree talent — not duplicated here. Carrier spell confirmed Paladin family."
+    ],
+    "note_no_shared_bits": "No shared Paladin family marker bits identified across all 14 verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Judgement_of_Light_20271": "[8388608,0,0] = 0x00800000 (mask0 bit23) — confirms main-file id=20 flags are CORRECT",
+      "Blessing_of_Might_19740":  "[2,0,0] = 0x00000002 (mask0 bit1)",
+      "Seal_of_Righteousness_20154": "[134217728,536870912,0] = mask0 bit27|mask1 bit29 — same as Holy id=200",
+      "Crusader_Strike_35395":    "[0,32768,0] = mask1 bit15(0x8000) — confirms Paladin family; carrier for all-ones entries"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 20,
+      "name": "Improved Judgements",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [8388608, 0, 0],
+      "carrier_spell": 20271,
+      "carrier_name": "Judgement of Light",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -500,
+      "notes": "flags=[8388608,0,0]=0x800000 (mask0 bit23). Judgement cooldown -0.5s/rank.",
+      "verified": true, "verify_command": ".spellinfo all 20271"
+    },
+    {"_todo": "Benediction (5r, tier 1) — Reduces mana cost of Judgements by 5%/rank and Seals by 5%/rank. Now that JoL flags [8388608,0,0] and SoR flags [134217728,536870912,0] are known, these could be two separate entries (one for Judgements, one for Seals). Deferring — add if needed."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Heart of the Crusader (3r, tier 2) — Your Judgements increase the target's chance to be critically hit by all attacks by 1/2/3%. Debuff applied to target, not a caster SpellMod."},
+
+    {
+      "id": 240,
+      "name": "Improved Blessing of Might",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 19740,
+      "carrier_name": "Blessing of Might",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[2,0,0]=0x2 (mask0 bit1). No shared Paladin marker bits. BoM attack-power EFFECT1 +10%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 23,
+      "name": "Conviction",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 35395,
+      "carrier_name": "Crusader Strike",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "All paladin spell crit +1% per rank — all-ones mask matches every Paladin family spell. Carrier Crusader Strike(35395) confirmed Paladin family.",
+      "verified": true, "verify_command": ".spellinfo all 35395"
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Seal of Command (1r, tier 3) — Single-rank talent, excluded by design."},
+    {"_todo": "Pursuit of Justice (2r, tier 3) — Increases movement speed by 5/10% and reduces the duration of fear effects by 10/20%. Movement speed and mechanic resistance, not implementable as SpellMod."},
+    {"_todo": "Eye for an Eye (2r, tier 3) — When struck by a critical hit, 20/40% of the damage is reflected. Proc-based damage reflect, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 241,
+      "name": "Sanctified Seals",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [134217728, 536870912, 0],
+      "carrier_spell": 20154,
+      "carrier_name": "Seal of Righteousness",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "flags=[134217728,536870912,0]: same as Holy id=200 Seals of the Pure — SoR mask0 bit27|mask1 bit29. NOTE: Seal of Vengeance(31801) not yet run. Seal crit +1%/rank (CRIT_CHANCE FLAT: 100=1%). Dispel resistance not implementable.",
+      "verified": true
+    },
+
+    {
+      "id": 242,
+      "name": "Crusade",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PALADIN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 35395,
+      "carrier_name": "Crusader Strike",
+      "spellmod_op": "ALL_EFFECTS",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "All Paladin spell damage and healing +1%/rank. All-ones used — talent affects Crusader Strike, Hammer of the Righteous, and all Holy spells; Holy school cannot be targeted via family SpellMod. All-ones is slightly broad but acceptable for Ret spec affixes.",
+      "verified": true
+    },
+
+    {"_todo": "Two-Handed Weapon Specialization (3r, tier 4) — Increases all damage dealt by 2/4/6% while wielding a two-handed weapon. Weapon-type conditional melee stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 243,
+      "name": "Fanaticism",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PALADIN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 35395,
+      "carrier_name": "Crusader Strike",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -10,
+      "notes": "Reduces threat from all Paladin spells by 10%/rank. All-ones matches every Paladin family spell. NOTE: talent also increases crit chance on Judgements — the Judgements-specific crit portion could use flags=[8388608,0,0] (JoL confirmed) as a separate entry if needed.",
+      "verified": true
+    },
+
+    {"_todo": "Repentance (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Swift Retribution (3r, tier 6) — Increases attack speed and spell casting speed by 1/2/3% for all party/raid members. Aura haste buff, not implementable as a personal SpellMod."},
+    {"_todo": "Sanctified Retribution (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 244,
+      "name": "Vengeance",
+      "class": "PALADIN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 35395,
+      "carrier_name": "Crusader Strike",
+      "spellmod_op": "CRIT_DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "Holy spell critical strike damage bonus +3%/rank. All-ones used — Holy school cannot be targeted via Paladin family SpellMod; acceptable for Ret spec affixes.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Divine Purpose (2r, tier 7) — Reduces enemy chance to resist Holy spells by 2/4%. Could be RESIST_MISS_CHANCE FLAT (-200=-2%), but 'Holy school' resist requires knowing which spells carry it. Deferring."},
+    {"_todo": "The Art of War (4r, tier 7 — verify rank count) — After a melee crit, reduces cast time of next Exorcism/Flash of Light. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Judgements of the Wise (3r, tier 7) — After using a Judgement ability, restores 15/30/45% of base mana. Proc-based mana return, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Righteous Vengeance (3r, tier 8) — Your Judgement and Divine Storm critical hits cause additional damage equal to 10/20/30% of total damage over 8 sec. Proc-based DoT on crit, not implementable as SpellMod."},
+    {"_todo": "Sheath of Light (3r, tier 8) — Grants 30/60/90% of attack power as bonus spell power, and your critical heals grant a HoT equal to 30% of the heal. Stat conversion + heal proc, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Tier 9 talent — verify name and rank count for 3.3.5a."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Divine Storm (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

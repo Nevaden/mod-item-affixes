@@ -1,0 +1,158 @@
+{
+  "_comment": "Warrior — Protection tree (spec_tree=2). IDs 420–439.",
+  "_notes": {
+    "tree": "Protection",
+    "class": "WARRIOR",
+    "spec_tree": 2,
+    "id_range": "420–439",
+    "spell_family": "WARRIOR (4)",
+    "note_main_file": [],
+    "note_no_shared_bits": "No shared Warrior family marker bits across all verified carrier spells. No exclusions required.",
+    "note_focused_rage": "Focused Rage (id=420) uses all-ones — rage-costing Warrior attacks cannot be targeted as a sub-type of Warrior family SpellMod; acceptable scope for Protection spec affixes.",
+    "confirmed_flags": {
+      "Bloodrage_2687":          "[256,0,0] = 0x00000100 (mask0 bit8) — confirms SPELLFAMILY_WARRIOR; carrier for id=420 and id=421",
+      "Sunder_Armor_7386":       "[16384,0,0] = 0x00004000 (mask0 bit14)",
+      "Shield_Block_2565":       "[4096,0,0] = 0x00001000 (mask0 bit12)",
+      "Spell_Reflection_23920":  "[0,2,0] = mask1 bit1 (0x00000002)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Shield Specialization (5r, tier 1) — Increases block chance and block value. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Anticipation (5r, tier 1) — Increases defense skill by 4/8/12/16/20. Passive stat, not implementable as SpellMod."},
+
+    {
+      "id": 421,
+      "name": "Improved Bloodrage",
+      "class": "WARRIOR",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [256, 0, 0],
+      "carrier_spell": 2687,
+      "carrier_name": "Bloodrage",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 20,
+      "notes": "flags=[256,0,0]=0x00000100 (mask0 bit8). No shared Warrior marker bits. Bloodrage instant rage generation +20%/rank (EFFECT1 PCT: 20).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 420,
+      "name": "Focused Rage",
+      "class": "WARRIOR",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "WARRIOR",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 2687,
+      "carrier_name": "Bloodrage",
+      "spellmod_op": "COST",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -10,
+      "notes": "All-ones used — rage-costing Warrior attacks cannot be targeted as a sub-type via family SpellMod; acceptable scope for Protection spec affixes. Bloodrage(2687) confirmed SPELLFAMILY_WARRIOR. Rage cost of all Warrior attacks -1/rank (COST FLAT: -10, rage stored 10x internally).",
+      "verified": true
+    },
+
+    {"_todo": "Improved Thunder Clap (3r, tier 2) — Reduces rage cost of Thunder Clap by 1/2/3. COST FLAT -1/rank on Thunder Clap (1161) — add after verifying flags with .spellinfo all 1161."},
+    {"_todo": "Toughness (5r, tier 2) — Increases armor value from items by 2/4/6/8/10%. Passive item stat multiplier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 422,
+      "name": "Improved Sunder Armor",
+      "class": "WARRIOR",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "WARRIOR",
+      "family_flags": [16384, 0, 0],
+      "carrier_spell": 7386,
+      "carrier_name": "Sunder Armor",
+      "spellmod_op": "COST",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -10,
+      "notes": "flags=[16384,0,0]=0x00004000 (mask0 bit14). No shared Warrior marker bits. Sunder Armor rage cost -1/rank (COST FLAT: -10, rage stored 10x internally).",
+      "verified": true
+    },
+
+    {"_todo": "Improved Revenge (2r, tier 3) — Increases Revenge damage by 10/20%. DAMAGE PCT +10/rank on Revenge(6572) flags=[1024,0,0] (verified in arms.json). Add entry here when ready."},
+    {"_todo": "Improved Disarm (2r, tier 3) — Increases Disarm duration by 25/50%. DURATION PCT +25/rank on Disarm(676) — add after verifying flags with .spellinfo all 676."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Taunt (2r, tier 4) — Reduces cooldown of Taunt by 1/2s. COOLDOWN FLAT -1000ms/rank on Taunt(355) — add after verifying flags with .spellinfo all 355."},
+    {"_todo": "Improved Defensive Stance (3r, tier 4) — Reduces damage taken in Defensive Stance. Passive aura-conditional mitigation, not implementable as SpellMod."},
+
+    {
+      "id": 423,
+      "name": "Shield Mastery",
+      "class": "WARRIOR",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [4096, 0, 0],
+      "carrier_spell": 2565,
+      "carrier_name": "Shield Block",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -5000,
+      "notes": "flags=[4096,0,0]=0x00001000 (mask0 bit12). No shared Warrior marker bits. Shield Block cooldown -5s/rank (COOLDOWN FLAT: -5000ms). NOTE: talent also increases block value by 15/30% — a second entry (EFFECT1 PCT +15/rank, same flags) can be added if desired.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Hold the Line (2r, tier 5) — After parrying an attack your next Cleave or Heroic Strike deals 5/10% more damage. Proc-based conditional, not implementable as SpellMod."},
+    {"_todo": "Warbringer (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 424,
+      "name": "Improved Spell Reflection",
+      "class": "WARRIOR",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [0, 2, 0],
+      "carrier_spell": 23920,
+      "carrier_name": "Spell Reflection",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -1000,
+      "notes": "flags=[0,2,0]=mask1 bit1 (0x00000002). No shared Warrior marker bits. Spell Reflection cooldown -1s/rank (COOLDOWN FLAT: -1000ms).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Vitality (5r, tier 6) — Increases total Stamina by 1/2/3/4/5% and expertise by 2/4/6/8/10. Passive stats, not implementable as SpellMod."},
+    {"_todo": "Safeguard (2r, tier 6) — Your Intervene reduces damage taken by party member by 10/20%. Conditional mitigation modifier on Intervene, not implementable as flat SpellMod."},
+    {"_todo": "Damage Shield (3r, tier 6) — When you block, you deal 10/20/30% of block value as damage. Proc on block, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Vigilance (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Devastate (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Gag Order (2r, tier 7) — Heroic Throw and Shield Bash have a 50/100% chance to silence target. Proc/mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Concussion Blow (1r, tier 8) — Single-rank talent, excluded by design."},
+    {"_todo": "Last Stand (1r, tier 8) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Shield Wall (1r, tier 9) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Shockwave (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

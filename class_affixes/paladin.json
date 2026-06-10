@@ -1,0 +1,1417 @@
+{
+    "_comment":  "PALADIN affixes (family 10). Edit this file, then run build_affixes.ps1.",
+    "family":  10,
+    "family_name":  "PALADIN",
+    "affixes":  [
+                    {
+                        "id":  4000,
+                        "name":  "Crusader Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  35395,
+                                       "flags":  [
+                                                     0,
+                                                     32768,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 35395"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4050,
+                                        "display_name":  "Crusader Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4001,
+                        "name":  "Crusader Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  35395,
+                                       "flags":  [
+                                                     0,
+                                                     32768,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 35395"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4051,
+                                        "display_name":  "Crusader Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4002,
+                        "name":  "Crusader Strike: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  35395,
+                                       "flags":  [
+                                                     0,
+                                                     32768,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 35395"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4052,
+                                        "display_name":  "Crusader Strike: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  4003,
+                        "name":  "Crusader Strike: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  35395,
+                                       "flags":  [
+                                                     0,
+                                                     32768,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 35395"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4053,
+                                        "display_name":  "Crusader Strike: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  4004,
+                        "name":  "Divine Storm: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53385,
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53385"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4054,
+                                        "display_name":  "Divine Storm: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4005,
+                        "name":  "Divine Storm: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53385,
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53385"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4055,
+                                        "display_name":  "Divine Storm: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4006,
+                        "name":  "Divine Storm: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53385,
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53385"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4056,
+                                        "display_name":  "Divine Storm: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  4007,
+                        "name":  "Divine Storm: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53385,
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53385"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4057,
+                                        "display_name":  "Divine Storm: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  4008,
+                        "name":  "Holy Shock: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  20473,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20473"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4058,
+                                        "display_name":  "Holy Shock: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4009,
+                        "name":  "Holy Shock: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  20473,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20473"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4059,
+                                        "display_name":  "Holy Shock: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4010,
+                        "name":  "Holy Shock: -1s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  20473,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20473"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4060,
+                                        "display_name":  "Holy Shock: -1s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  4011,
+                        "name":  "Holy Shock: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  20473,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20473"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4061,
+                                        "display_name":  "Holy Shock: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4012,
+                        "name":  "Exorcism: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  879,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 879"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4062,
+                                        "display_name":  "Exorcism: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4013,
+                        "name":  "Exorcism: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  879,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 879"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4063,
+                                        "display_name":  "Exorcism: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4014,
+                        "name":  "Exorcism: -750ms Cast",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  879,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 879"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -750
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4064,
+                                        "display_name":  "Exorcism: -750ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  4015,
+                        "name":  "Exorcism: Instant Cast",
+                        "weight":  20,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  879,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 879"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4065,
+                                        "display_name":  "Exorcism: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  4016,
+                        "name":  "Exorcism: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  879,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 879"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4066,
+                                        "display_name":  "Exorcism: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  4017,
+                        "name":  "Hammer of Wrath: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  24275,
+                                       "flags":  [
+                                                     0,
+                                                     128,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 24275"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4067,
+                                        "display_name":  "Hammer of Wrath: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4018,
+                        "name":  "Hammer of Wrath: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  24275,
+                                       "flags":  [
+                                                     0,
+                                                     128,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 24275"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4068,
+                                        "display_name":  "Hammer of Wrath: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4019,
+                        "name":  "Hammer of Wrath: +25% Dmg, +5% Crit",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  24275,
+                                       "flags":  [
+                                                     0,
+                                                     128,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 24275"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4069,
+                                        "display_name":  "Hammer of Wrath: +25% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4020,
+                        "name":  "Consecration: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  26573,
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 26573"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4070,
+                                        "display_name":  "Consecration: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4021,
+                        "name":  "Consecration: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  26573,
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 26573"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4071,
+                                        "display_name":  "Consecration: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  4022,
+                        "name":  "Consecration: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  26573,
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 26573"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4072,
+                                        "display_name":  "Consecration: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  4023,
+                        "name":  "Judgement: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  54158,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 54158"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4073,
+                                        "display_name":  "Judgement: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4024,
+                        "name":  "Judgement: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  54158,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 54158"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4074,
+                                        "display_name":  "Judgement: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4025,
+                        "name":  "Judgement: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  54158,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 54158"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4075,
+                                        "display_name":  "Judgement: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  4026,
+                        "name":  "Judgement: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  54158,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 54158"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4076,
+                                        "display_name":  "Judgement: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  4027,
+                        "name":  "Flash of Light: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  19750,
+                                       "flags":  [
+                                                     1073741824,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19750"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4077,
+                                        "display_name":  "Flash of Light: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  4028,
+                        "name":  "Flash of Light: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  19750,
+                                       "flags":  [
+                                                     1073741824,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19750"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4078,
+                                        "display_name":  "Flash of Light: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4029,
+                        "name":  "Flash of Light: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  19750,
+                                       "flags":  [
+                                                     1073741824,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19750"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4079,
+                                        "display_name":  "Flash of Light: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  4030,
+                        "name":  "Flash of Light: +20% Healing, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  19750,
+                                       "flags":  [
+                                                     1073741824,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19750"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4080,
+                                        "display_name":  "Flash of Light: +20% Healing, -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  4031,
+                        "name":  "Holy Light: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  635,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 635"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4081,
+                                        "display_name":  "Holy Light: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  4032,
+                        "name":  "Holy Light: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  635,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 635"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4082,
+                                        "display_name":  "Holy Light: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4033,
+                        "name":  "Holy Light: -1s Cast",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  635,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 635"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4083,
+                                        "display_name":  "Holy Light: -1s Cast"
+                                    }
+                    },
+                    {
+                        "id":  4034,
+                        "name":  "Holy Light: +20% Healing, -1s Cast",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  635,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 635"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -1000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4084,
+                                        "display_name":  "Holy Light: +20% Healing, -1s Cast"
+                                    }
+                    },
+                    {
+                        "id":  4035,
+                        "name":  "Avenger\u0027s Shield: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  31935,
+                                       "flags":  [
+                                                     16384,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 31935"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4085,
+                                        "display_name":  "Avenger\u0027s Shield: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4036,
+                        "name":  "Avenger\u0027s Shield: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  31935,
+                                       "flags":  [
+                                                     16384,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 31935"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4086,
+                                        "display_name":  "Avenger\u0027s Shield: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4037,
+                        "name":  "Avenger\u0027s Shield: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  31935,
+                                       "flags":  [
+                                                     16384,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 31935"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4087,
+                                        "display_name":  "Avenger\u0027s Shield: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  4038,
+                        "name":  "Shield of Righteousness: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53600,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53600"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4088,
+                                        "display_name":  "Shield of Righteousness: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4039,
+                        "name":  "Shield of Righteousness: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53600,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53600"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4089,
+                                        "display_name":  "Shield of Righteousness: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4040,
+                        "name":  "Shield of Righteousness: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53600,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53600"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4090,
+                                        "display_name":  "Shield of Righteousness: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4041,
+                        "name":  "Hammer of the Righteous: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53595,
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53595"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4091,
+                                        "display_name":  "Hammer of the Righteous: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  4042,
+                        "name":  "Hammer of the Righteous: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53595,
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53595"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4092,
+                                        "display_name":  "Hammer of the Righteous: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  4043,
+                        "name":  "Hammer of the Righteous: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  10,
+                                       "family_name":  "PALADIN",
+                                       "carrier_spell_id":  53595,
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53595"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4093,
+                                        "display_name":  "Hammer of the Righteous: +20% Dmg, +5% Crit"
+                                    }
+                    }
+                ],
+    "affix_examples":  [
+
+                       ],
+    "removedAffixes":  [
+
+                       ]
+}

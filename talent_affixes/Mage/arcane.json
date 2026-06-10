@@ -1,0 +1,135 @@
+{
+  "_comment": "Mage — Arcane tree (spec_tree=0). IDs 500–519.",
+  "_notes": {
+    "tree": "Arcane",
+    "class": "MAGE",
+    "spec_tree": 0,
+    "id_range": "500–519",
+    "spell_family": "MAGE (3)",
+    "note_main_file": [
+      "ids 1–5 are all spec_tree=-1 cross-tree entries. None are Arcane spec. No corrections required from this file."
+    ],
+    "note_shared_mask2_bit3": "mask2 bit3 (=8) is a SHARED MAGE marker bit that appears on: Fireball(133), FrostfireBolt(44614), Pyroblast(11366), Presence of Mind(12043), Arcane Power(12042), Evocation(12051). Any combined-flag entry that includes mask2=8 would accidentally match all of these spells via (mask[i] & spell[i]) != 0. RULE: always drop mask2 from OR'd combined entries involving any of these spells; use only their unique mask0 and mask1 bits.",
+    "confirmed_flags": {
+      "Frostbolt_116":       "[32,0,0] = mask0 bit5 (0x00000020) — from main-file id=1 (verified=true)",
+      "ArcaneBlast_30451":   "[536870912,0,0] = mask0 bit29 (0x20000000)",
+      "ArcaneMissiles_5143": "[2048,0,0] = mask0 bit11 (0x00000800)",
+      "PresenceOfMind_12043":"[0,32,8] = mask1 bit5 (0x00000020) + shared mask2 bit3",
+      "ArcanePower_12042":   "[0,524288,8] = mask1 bit19 (0x00080000) + shared mask2 bit3",
+      "Evocation_12051":     "[67108864,0,8] = mask0 bit26 (0x04000000) + shared mask2 bit3"
+    },
+    "computed_combined_flags": {
+      "ArcaneFlows_PoM_AP_Evoc": "[67108864, 524320, 0] — PoM mask1_bit5(32)|AP mask1_bit19(524288)|Evoc mask0_bit26(67108864). mask2 dropped to avoid shared-bit contamination."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 500,
+      "name": "Arcane Subtlety",
+      "class": "MAGE",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "MAGE",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -20,
+      "notes": "All-ones — Arcane spell sub-family not isolatable via SpellMod; acceptable scope for Arcane spec affix. Carrier Frostbolt(116) confirmed SPELLFAMILY_MAGE. Threat from all Mage spells -20%/rank (THREAT PCT: -20). WotLK: 2r at -20/-40%.",
+      "verified": true
+    },
+
+    {
+      "id": 503,
+      "name": "Magic Attunement",
+      "class": "MAGE",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "MAGE",
+      "family_flags": [2048, 0, 0],
+      "carrier_spell": 5143,
+      "carrier_name": "Arcane Missiles",
+      "spellmod_op": "RANGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[2048,0,0]=mask0 bit11 (0x00000800). Arcane Missiles(5143) confirmed SPELLFAMILY_MAGE. Arcane Missiles range +10%/rank (RANGE PCT: 10). NOTE: talent also increases area of Arcane Explosion — a second entry (RADIUS PCT +10/rank on Arcane Explosion flags) can be added once Arcane Explosion spell ID and flags are verified with .spellinfo all 1449.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 501,
+      "name": "Arcane Instability",
+      "class": "MAGE",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "MAGE",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 116,
+      "carrier_name": "Frostbolt",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "All-ones — affects all Mage spells. Carrier Frostbolt(116) confirmed SPELLFAMILY_MAGE. Spell damage +1%/rank (DAMAGE PCT: 1). NOTE: WotLK Arcane Instability also increases crit chance by 1%/rank — a second entry (CRIT_CHANCE FLAT +100/rank, same flags/carrier) can be added as id=504 if desired.",
+      "verified": true
+    },
+
+    {"_todo": "Arcane Concentration (5r, tier 2) — Damaging spells have a 2/4/6/8/10% chance to grant Clearcasting (next spell free). Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Arcane Meditation (3r, tier 3) — Allows 5/10/15% of mana regeneration to continue while casting. Passive regen modifier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Presence of Mind (1r, tier 4) — Single-rank talent, excluded by design."},
+    {"_todo": "Arcane Mind (5r, tier 4) — Increases total Intellect by 3/6/9/12/15%. Passive stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 502,
+      "name": "Arcane Flows",
+      "class": "MAGE",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "MAGE",
+      "family_flags": [67108864, 524320, 0],
+      "carrier_spell": 12051,
+      "carrier_name": "Evocation",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "PCT",
+      "value_per_rank": -15,
+      "notes": "flags=[67108864,524320,0]. OR of: PoM(12043) mask1 bit5(32) + ArcanePower(12042) mask1 bit19(524288) + Evocation(12051) mask0 bit26(67108864). mask2=8 dropped from all three spells to avoid shared-bit contamination (see note_shared_mask2_bit3). Carrier Evocation(12051) confirmed SPELLFAMILY_MAGE. Cooldown of Presence of Mind, Arcane Power, and Evocation -15%/rank (COOLDOWN PCT: -15). WotLK: 3r at -15/-30/-45%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Mind Mastery (5r, tier 6) — Increases spell power by 3/6/9/12/15% of total Intellect. Stat conversion, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Slow (1r, tier 7) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Torment the Weak (3r, tier 8) — Increases damage to targets with movement impairing effects by 2/4/6%. Conditional (target has debuff), not implementable as flat SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Arcane Power (1r, tier 9) — Single-rank talent, excluded by design."},
+    {"_todo": "Spell Power (3r, tier 9) — On spell crit, increases spell damage by 5/10/15% for 6 sec. Proc-based conditional, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Arcane Barrage (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "_comment": "Death Knight — Frost tree (spec_tree=1). IDs 640–659.",
+  "_notes": {
+    "tree": "Frost",
+    "class": "DK",
+    "spec_tree": 1,
+    "id_range": "640–659",
+    "spell_family": "DK",
+    "note_main_file": [
+      "id=60 'Improved Icy Touch' (spec_tree=-1) — CORRECTED: flags [2,0,0]→[66,0,0]. IcyTouch(45477) is 0x00000042 = bit1(2)+bit6(64) = 66. Old [2,0,0] was partial (captured bit1 only). verified=true.",
+      "id=62 'Virulence' (spec_tree=-1) — all-ones, carrier=IcyTouch(45477) confirmed SPELLFAMILY_DK. verified=true."
+    ],
+    "note_icy_touch_two_bits": "Icy Touch(45477) has TWO mask0 bits set: bit1(2)+bit6(64)=0x42=66. Both bits appear unique to Icy Touch — no other queried DK spell has bit1 or bit6 in mask0. Full mask [66,0,0] used for accuracy.",
+    "note_chains_of_ice_two_bits": "Chains of Ice(45524) has mask0 bit2(4) AND mask1 bit14(16384)+bit15(32768)=49152. All bits appear unique among queried DK spells.",
+    "note_black_ice": "Black Ice increases Frost and Shadow DK spell damage. No confirmed shared DK frost-or-shadow bit exists. All-ones used — accepted scope for Frost spec affix.",
+    "confirmed_flags": {
+      "IcyTouch_45477":    "[66, 0, 0] = mask0 bit1(2)+bit6(64) = 0x00000042 — SPELLFAMILY_DK confirmed",
+      "ChainsOfIce_45524": "[4, 49152, 0] = mask0 bit2(4) + mask1 bit14(16384)+bit15(32768) = 0x00000004/0x0000C000 — SPELLFAMILY_DK confirmed",
+      "FrostStrike_49143": "[0, 4, 0] = mask1 bit2 (0x00000004) — SPELLFAMILY_DK confirmed",
+      "BloodStrike_45902": "[4194304, 0, 0] = mask0 bit22 (0x00400000) — SPELLFAMILY_DK confirmed"
+    },
+    "computed_combined_flags": {
+      "IcyReach_IT_CoI":       "[70, 49152, 0] — IT mask0 bit1+bit6(66)|CoI mask0 bit2(4)=70; CoI mask1 bit14+bit15(49152). No shared bits.",
+      "BotN_BS_FS":            "[4194304, 4, 0] — BS mask0 bit22(4194304)|FS mask1 bit2(4). No shared bits."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 640,
+      "name": "Improved Icy Touch",
+      "class": "DK",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [66, 0, 0],
+      "carrier_spell": 45477,
+      "carrier_name": "Icy Touch",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[66,0,0]=0x00000042. IcyTouch(45477) confirmed SPELLFAMILY_DK. mask0 bit1(2)+bit6(64)=66. Both bits unique to Icy Touch. Mirrors main-file id=60 (spec_tree=-1, corrected to [66,0,0]) but scoped to Frost spec. Icy Touch damage +5%/rank (DAMAGE PCT: 5). WotLK: 3r at +5/+10/+15%.",
+      "verified": true
+    },
+
+    {"_todo": "Runic Power Mastery (2r, tier 1) — Increases maximum Runic Power by 10/20. Passive resource cap stat, not implementable as SpellMod."},
+    {"_todo": "Toughness (5r, tier 1) — Increases armor value from items by 2/4/6/8/10%. Passive item stat multiplier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 641,
+      "name": "Icy Reach",
+      "class": "DK",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "DK",
+      "family_flags": [70, 49152, 0],
+      "carrier_spell": 45477,
+      "carrier_name": "Icy Touch",
+      "spellmod_op": "RANGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[70,49152,0]. mask0: IT bit1+bit6(66)|CoI bit2(4)=70 (0x00000046). mask1: CoI bit14+bit15(49152) (0x0000C000). No shared bits between IT and CoI. Carrier IcyTouch(45477) confirmed SPELLFAMILY_DK. Icy Touch and Chains of Ice range +10%/rank (RANGE PCT: 10). WotLK: 2r at +10/+20%.",
+      "verified": true
+    },
+
+    {
+      "id": 642,
+      "name": "Black Ice",
+      "class": "DK",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "DK",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 45477,
+      "carrier_name": "Icy Touch",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "All-ones — Black Ice increases Frost and Shadow DK spell damage, but no confirmed shared DK frost-or-shadow bit exists. All-ones accepted scope for Frost spec affix. Carrier IcyTouch(45477) confirmed SPELLFAMILY_DK. All DK spell damage +2%/rank (DAMAGE PCT: 2). WotLK: 5r at +2/+4/+6/+8/+10%.",
+      "verified": true
+    },
+
+    {"_todo": "Nerves of Cold Steel (3r, tier 2) — Increases hit chance with one-handed weapons by 1/2/3% and off-hand weapon damage by 8/16/25%. Passive melee stats, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Icy Talons (5r, tier 3) — Increases melee attack speed by 4/8/12/16/20%. Passive melee haste aura, not implementable as SpellMod."},
+    {"_todo": "Annihilation (3r, tier 3) — Obliterate has 33/66/100% chance to not consume diseases. Mechanic modifier, not implementable as SpellMod."},
+    {"_todo": "Killing Machine (5r, tier 3) — Melee attacks have a 3/6/9/12/15% chance to make next Icy Touch or Obliterate a guaranteed crit. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Chill of the Grave (2r, tier 4) — Icy Touch and Howling Blast generate 2.5/5 additional Runic Power. Resource generation mechanic, not implementable as SpellMod."},
+    {"_todo": "Endless Winter (2r, tier 4) — Removes Runic Power cost of Chains of Ice. Cost removal/mechanic change, not implementable as SpellMod."},
+    {"_todo": "Frigid Dreadplate (3r, tier 4) — Reduces chance melee attacks hit you by 1/2/3%. Passive defense stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Glacier Rot (3r, tier 5) — Diseased enemies take 7/13/20% more damage from Icy Touch, Howling Blast, and Frost Strike. Conditional on target state, not implementable as flat SpellMod."},
+    {"_todo": "Deathchill (1r, tier 5) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Icy Talons (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Merciless Combat (2r, tier 6) — Increases damage of Icy Touch, Obliterate, and Frost Strike by 6/12% when target is at or below 35% health. Conditional on target HP, not implementable as flat SpellMod."},
+    {"_todo": "Rime (3r, tier 6) — Obliterate has 5/10/15% chance to reset Howling Blast cooldown and make it free. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Chilblains (3r, tier 6) — Victims of Frost Fever are chilled, reducing movement speed. Mechanic modifier on disease, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Hungering Cold (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Frost Presence (2r, tier 7) — Increases Stamina while in Frost Presence by 4/8%. Passive conditional stat, not implementable as SpellMod."},
+    {"_todo": "Threat of Thassarian (3r, tier 7) — Off-hand attacks have 30/60/100% chance to also apply diseases. Passive proc mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 643,
+      "name": "Blood of the North",
+      "class": "DK",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [4194304, 4, 0],
+      "carrier_spell": 45902,
+      "carrier_name": "Blood Strike",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "flags=[4194304,4,0]. mask0: BloodStrike(45902) bit22(4194304) (0x00400000). mask1: FrostStrike(49143) bit2(4) (0x00000004). No shared bits across different masks. Carrier BloodStrike(45902) confirmed SPELLFAMILY_DK. Blood Strike and Frost Strike damage +3%/rank (DAMAGE PCT: 3). NOTE: talent also converts Blood Runes to Death Runes — rune mechanic part not implementable. WotLK: 3r at +3/+6/+9%.",
+      "verified": true
+    },
+
+    {"_todo": "Unbreakable Armor (1r, tier 8) — Single-rank talent, excluded by design."},
+    {"_todo": "Howling Blast (1r, tier 8) — Single-rank talent, excluded by design."}
+
+  ]
+}

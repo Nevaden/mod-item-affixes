@@ -1,0 +1,383 @@
+{
+  "_comment": [
+    "Rogue — Assassination tree talent affixes (spec_tree = 0).",
+    "Run update_affixes.bat after any changes.",
+    "",
+    "Each talent has a _notes block documenting the talent itself, scaling behaviour,",
+    "and implementation details. Talents that cannot be expressed as a SpellModifier",
+    "have a _todo block instead of an id entry.",
+    "",
+    "family_flags verified with: .spellinfo all <carrier_spell> on a GM character.",
+    "Unverified entries are marked  verified: false  — test before shipping."
+  ],
+
+  "talent_affixes": [
+
+    {"_section": "══════════════════════════════════════════════════════════════════"},
+    {"_section": " ROGUE  Assassination  (class_mask=8  spell_family=ROGUE=8)       "},
+    {"_section": " Tree index 0 — Assassination is the leftmost tab in WoW 3.3.5a  "},
+    {"_section": "══════════════════════════════════════════════════════════════════"},
+
+    {"_section": "── Tier 1 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Improved Eviscerate",
+      "_notes": {
+        "talent_description": "Increases the damage dealt by your Eviscerate ability by 5/10/15%.",
+        "max_talent_rank": 3,
+        "affix_effect": "Each bonus rank adds another 5% to Eviscerate damage on top of however many talent points the player already has invested.",
+        "scaling": "Linear. value_per_rank=5 means +5% per bonus rank. A 3-rank affix doubles the 3-point investment value.",
+        "implementation": "Pattern 1 — specific spell. family_flags matches Eviscerate's SpellClassMask."
+      }
+    },
+    {
+      "id": 40, "name": "Improved Eviscerate",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [131072, 0, 0],
+      "carrier_spell": 2098, "carrier_name": "Eviscerate",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 5,
+      "notes": "Eviscerate damage +5% per bonus rank. Eviscerate=0x00820000 (bits 17,23) — using unique bit 17 only (0x00020000=131072). Bit 23 is shared with SS/Backstab/Ambush/Hemorrhage and excluded.",
+      "verified": true, "verify_command": ".spellinfo all 2098"
+    },
+
+    {
+      "_talent": "Remorseless Attacks",
+      "_todo": {
+        "talent_description": "After killing a target that yields honor or experience, your next Sinister Strike, Backstab, Ambush, or Gouge has a 20/40% increased critical strike chance.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Proc-based conditional — triggered by a kill event, lasts until the next qualifying attack lands. SpellModifiers are stateless; they cannot be toggled on/off per event without a dedicated script. Requires an OnPlayerKill hook that temporarily applies a high-value CRIT_CHANCE mod and removes it after the next qualifying ability hits.",
+        "future_path": "Implement as a custom aura applied in OnPlayerKill, removed in a spell proc hook. Not complex, but needs C++ work outside the SpellMod path. value_per_rank would be 2000 (20%) in FLAT units."
+      }
+    },
+
+    {"_section": "── Tier 2 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Malice",
+      "_notes": {
+        "talent_description": "Increases your critical strike chance with all attacks by 1% per rank.",
+        "max_talent_rank": 5,
+        "affix_effect": "Each bonus rank adds +1% crit to all Rogue abilities.",
+        "scaling": "Linear. 100 FLAT units = 1% crit. A 5-rank affix grants +5% crit, stacking with the 5 invested talent points.",
+        "implementation": "Pattern 2 — all-ones mask. Every Rogue family spell gets the crit bonus.",
+        "character_sheet": "The addon patches the PaperDoll crit display — Malice is in AFXM_CRIT_DATA (100 units = 1%) so the character sheet shows the correct inflated value when the item is equipped. New CRIT_CHANCE talents must be added to AFXM_CRIT_DATA in ItemAffixes.lua to get the same treatment."
+      }
+    },
+    {
+      "id": 42, "name": "Malice",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 5,
+      "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 100,
+      "notes": "All Rogue ability crit +1% per bonus rank — all-ones mask matches every Rogue family spell",
+      "verified": true, "verify_command": ".spellinfo all 1752"
+    },
+
+    {
+      "_talent": "Ruthlessness",
+      "_todo": {
+        "talent_description": "Gives your finishing moves a 20/40/60% chance to add a combo point to your target.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Proc-based — triggers after a finishing move (Eviscerate, Rupture, etc.) lands. SpellModifiers have no mechanism for generating combo points conditionally. Requires an OnSpellHit or spell proc hook that calls Player::AddComboPoints.",
+        "future_path": "Script hook on finishing move cast; roll the proc chance per rank and award the combo point. Over 100% (5 bonus ranks on top of 3 invested = 160%) should guarantee 1 combo point and give a 60% chance at a second — this requires the hook to award multiple points based on floor/remainder logic.",
+        "over_100_note": "At 160%: award floor(1.6)=1 guaranteed, then 60% chance to award a second. Requires custom proc logic."
+      }
+    },
+
+    {"_section": "── Tier 3 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Blood Spatter",
+      "_notes": {
+        "talent_description": "Increases the damage dealt by your Garrote and Rupture abilities by 15% per rank.",
+        "max_talent_rank": 2,
+        "affix_effect": "Each bonus rank adds another +15% damage to Garrote and Rupture independently. Two separate entries are used because Garrote and Rupture have different SpellClassMask bits.",
+        "scaling": "Linear. value_per_rank=15 for each. 2-rank roll = +30% to Garrote or Rupture.",
+        "implementation": "Pattern 1 — specific spell per entry. Flags NEED in-game verification with .spellinfo all before marking verified."
+      }
+    },
+    {
+      "id": 45, "name": "Blood Spatter (Garrote)",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [256, 0, 0],
+      "carrier_spell": 703, "carrier_name": "Garrote",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 15,
+      "notes": "Garrote damage +15% per bonus rank. flags=0x00000100=256 confirmed via .spellinfo all 703",
+      "verified": true, "verify_command": ".spellinfo all 703"
+    },
+    {
+      "id": 46, "name": "Blood Spatter (Rupture)",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [1048576, 0, 0],
+      "carrier_spell": 1943, "carrier_name": "Rupture",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 15,
+      "notes": "Rupture damage +15% per bonus rank. flags=0x00100000=1048576 confirmed via .spellinfo all 1943",
+      "verified": true, "verify_command": ".spellinfo all 1943"
+    },
+
+    {"_section": "── Tier 4 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Puncturing Wounds",
+      "_notes": {
+        "talent_description": "Increases the critical strike chance of Backstab by 10% per rank, and Mutilate by 5% per rank.",
+        "max_talent_rank": 3,
+        "affix_effect": "Single entry using OR'd flags for both Backstab and Mutilate. Both abilities get the same +10% crit per bonus rank (Mutilate gets a slight bonus over the talent's actual 5% — acceptable simplification for a single-roll affix).",
+        "scaling": "Linear. 1000 FLAT = 10% crit per bonus rank on both Backstab and Mutilate.",
+        "flags": "family_flags = Backstab [4,0,0] OR Mutilate [0,2097152,0] = [4,2097152,0]. Mutilate is mask1=0x00200000, confirmed via .spellinfo all 1329.",
+        "implementation": "Pattern 1. Both flags confirmed. Single SpellMod fires when mask0 bit 2 (Backstab) OR mask1 bit 21 (Mutilate) is set."
+      }
+    },
+    {
+      "id": 43, "name": "Puncturing Wounds",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [4, 2097152, 0],
+      "carrier_spell": 53, "carrier_name": "Backstab",
+      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 1000,
+      "item_category": 8,
+      "notes": "Backstab + Mutilate crit +10% per bonus rank. flags=[4,2097152,0] confirmed: Backstab=0x00000004, Mutilate=0x00200000 (mask1)",
+      "verified": true, "verify_command": ".spellinfo all 53 then .spellinfo all 1329"
+    },
+
+    {"_section": "── Tier 5 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Vigor",
+      "_todo": {
+        "talent_description": "Increases your maximum Energy by 10.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent (max_rank < 2) — excluded by design. Additionally, increasing maximum Energy is a base stat change (ModMaxPower), not a SpellModifier. Would require a custom GenericStatOp entry and engine handling for MAX_ENERGY.",
+        "future_path": "Add STAT_OP_MAX_ENERGY to GenericStatOp in ItemAffix.h. Handle it in ApplyGenericStat via player->SetMaxPower / ModifyPower. value_per_rank=10 (energy units). Since max_rank=1 this would only ever roll as a fixed +10 energy boost — still fun for stacking across slots."
+      }
+    },
+
+    {
+      "_talent": "Improved Expose Armor",
+      "_notes": {
+        "talent_description": "Reduces the Energy cost of Expose Armor by 5 per rank.",
+        "max_talent_rank": 2,
+        "affix_effect": "Each bonus rank reduces Expose Armor's energy cost by 5 more. 2-rank affix = -10 energy on top of the invested points.",
+        "scaling": "Linear. COST FLAT -5 per rank.",
+        "implementation": "Pattern 1. SpellFamilyFlags verified via .spellinfo all 8647: 0x00080000 = 524288. SpellFamilyName = 8 (ROGUE) confirmed."
+      }
+    },
+    {
+      "id": 47, "name": "Improved Expose Armor",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [524288, 0, 0],
+      "carrier_spell": 8647, "carrier_name": "Expose Armor",
+      "spellmod_op": "COST", "spellmod_type": "FLAT", "value_per_rank": -5,
+      "notes": "Expose Armor energy cost -5 per bonus rank (0x00080000 = 524288 confirmed via .spellinfo all 8647)",
+      "verified": true, "verify_command": ".spellinfo all 8647"
+    },
+
+    {"_section": "── Tier 6 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Lethality",
+      "_notes": {
+        "talent_description": "Increases the critical strike damage bonus of all combo point generating attacks that do not require stealth by 6% per rank.",
+        "max_talent_rank": 5,
+        "affix_effect": "Each bonus rank adds +6% to crit strike damage on all non-stealth combo generators (Sinister Strike, Mutilate, Hemorrhage, etc.).",
+        "scaling": "Linear. PCT 6 per rank. 5-rank affix = +30% crit damage bonus.",
+        "implementation": "Pattern 2 — all-ones mask used. The SpellMod will fire on ALL Rogue family spells (slightly broader than the talent's stealth exclusion, but functionally close for the non-stealth abilities that dominate normal gameplay).",
+        "limitation": "CRIT_DAMAGE SpellMod applies at spell crit calculation time. Physical rogue abilities go through spell processing in WoW 3.3.5a so the mod does apply — verify with combat log comparing crit hit sizes with and without the item equipped."
+      }
+    },
+    {
+      "id": 48, "name": "Lethality",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 5,
+      "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "CRIT_DAMAGE", "spellmod_type": "PCT", "value_per_rank": 6,
+      "notes": "Combo attack crit damage +6% per bonus rank — all-ones mask (slightly broader than talent; no stealth exclusion)",
+      "verified": true, "verify_command": ".spellinfo all 1752"
+    },
+
+    {"_section": "── Tier 7 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Vile Poisons",
+      "_notes": {
+        "talent_description": "Increases the damage dealt by your poisons and Envenom by 7% per rank.",
+        "max_talent_rank": 5,
+        "affix_effect": "Each bonus rank adds +7% to all poison damage and Envenom.",
+        "scaling": "Linear. PCT 7 per rank. 5-rank affix = +35% poison/Envenom damage.",
+        "implementation": "Pattern 2 — all-ones mask. Individual poison spell flags are spread across many bits; all-ones is the reliable catch-all. This is slightly broader than the talent (applies to all Rogue spells) but the damage uplift only matters for poison DoTs and Envenom in practice.",
+        "limitation": "DoT tick damage (Deadly Poison, Rupture) may not be amplified — DAMAGE SpellMod sometimes applies only to the initial spell damage, not periodic ticks. If poison ticks are unaffected, consider adding a DOT_DURATION or DOT_DAMAGE entry for those spells specifically."
+      }
+    },
+    {
+      "id": 49, "name": "Vile Poisons",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 5,
+      "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 7,
+      "notes": "Poison and Envenom damage +7% per bonus rank — all-ones mask (broader than talent; verify DoT ticks apply)",
+      "verified": true, "verify_command": ".spellinfo all 2818"
+    },
+
+    {
+      "_talent": "Improved Poisons",
+      "_todo": {
+        "talent_description": "Increases the chance to apply Deadly Poison by 4% per rank, and the frequency at which Instant Poison applies by 10% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Poison proc rate is stored in the weapon proc chance of the poison enchantment, not in a SpellModifier. There is no PROC_CHANCE SpellModOp in the engine. Changing the proc rate requires modifying the enchantment's PPM or proc percentage value at equip time.",
+        "future_path": "On item equip, look up the player's active poison enchantments, scale their proc chance by the affix bonus, and restore the base value on unequip. Complex to implement reliably (enchantment reapplication can reset the scaled value). Flag for later."
+      }
+    },
+
+    {"_section": "── Tier 8 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Fleet Footed",
+      "_todo": {
+        "talent_description": "Reduces the duration of all movement impairing effects by 15% per rank, and increases movement speed by 8% per rank.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Movement speed and snare resistance are not SpellModifiers. Movement speed uses Player::SetSpeed / UpdateSpeed; snare duration would require modifying every snare aura's duration on application. Neither maps to the SpellMod system.",
+        "future_path": "Movement speed: add STAT_OP_MOVE_SPEED_PCT to GenericStatOp, handle in ApplyGenericStat via SetSpeed. Snare resistance: hook OnSpellAuraApplied, reduce duration of snare auras by the affix bonus percent. Both are doable but require C++ additions outside the current affix engine."
+      }
+    },
+
+    {
+      "_talent": "Improved Kidney Shot",
+      "_todo": {
+        "talent_description": "While your target is affected by Kidney Shot, all damage you deal is increased by 3% per rank.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Conditional damage bonus — the bonus only applies while the target has Kidney Shot debuff. SpellModifiers are unconditional on the caster side. Implementing this requires hooking damage calculation and applying a multiplier only when the target unit has the Kidney Shot aura.",
+        "future_path": "Hook OnCalcDamageAndHealing or a damage-dealt script hook. Check if the target has aura 408 (Kidney Shot). If yes, multiply outgoing damage by (1 + rank * 0.03). This bypasses the SpellMod system entirely and would need C++ implementation."
+      }
+    },
+
+    {"_section": "── Tier 9 ──────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Quick Recovery",
+      "_todo": {
+        "talent_description": "All healing effects on you are increased by 10% per rank. Your finishing moves refund 40% of their energy cost when they fail to hit.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Two separate effects, neither mappable to SpellMod: (1) Incoming healing increase requires modifying the heal amount received by the player — not a caster-side SpellMod. (2) Energy refund on miss is a proc triggered by the spell miss event. Both need custom script hooks.",
+        "future_path": "Incoming healing: hook OnHeal, scale the heal amount by (1 + rank * 0.10) if the target is the player. Energy refund: hook OnSpellMiss for finishing moves, award energy = base_cost * 0.40 * rank. Over 100% refund (rank bonus > 2) could award full or more energy — cap at base cost to avoid energy generation exploits."
+      }
+    },
+
+    {
+      "_talent": "Seal Fate",
+      "_todo": {
+        "talent_description": "Your critical strikes from combo point generating abilities have a 20% per rank chance to generate an additional combo point.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Proc on crit — requires hooking the spell crit event for combo-generating attacks and calling Player::AddComboPoints conditionally. No SpellMod covers this.",
+        "future_path": "Hook OnSpellCrit (or OnDealDamage with crit flag). Check that the spell is a combo-point generator (Sinister Strike, Backstab, Mutilate, etc.). Roll against (rank * 20)% proc chance. Award 1 combo point. Over 100% (5+ bonus ranks): guarantee 1, roll remainder for a second — same logic as Ruthlessness."
+      }
+    },
+
+    {"_section": "── Tier 10 ─────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Murder",
+      "_notes": {
+        "talent_description": "Increases all damage you deal by 2% per rank.",
+        "max_talent_rank": 2,
+        "affix_effect": "Each bonus rank adds +2% to all Rogue spell damage.",
+        "scaling": "Linear. PCT 2 per rank. 2-rank affix = +4% all damage.",
+        "implementation": "Pattern 2 — all-ones mask. Applies to every Rogue family spell."
+      }
+    },
+    {
+      "id": 95, "name": "Murder",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 2,
+      "notes": "All Rogue damage +2% per bonus rank — all-ones mask",
+      "verified": true, "verify_command": ".spellinfo all 1752"
+    },
+
+    {
+      "_talent": "Deadly Brew",
+      "_todo": {
+        "talent_description": "When you apply Instant, Wound, or Mind-Numbing Poison, you have a 50% per rank chance to also apply Crippling Poison.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Proc on poison application — triggers when a poison enchantment procs and applies its debuff. No SpellMod covers a 'when applying X, also apply Y' effect. Requires hooking the poison enchantment hit event.",
+        "future_path": "Hook OnSpellProc or enchantment application. When the player's Instant/Wound/Mind-Numbing Poison procs, roll (rank * 50)% and if successful, call Unit::CastSpell to apply Crippling Poison. Over 100% gives guaranteed application — fine, no exploit since Crippling is a single debuff."
+      }
+    },
+
+    {"_section": "── Tier 11 ─────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Deadened Nerves",
+      "_todo": {
+        "talent_description": "Reduces all damage taken by 2% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Incoming damage reduction is not a caster-side SpellMod. It would need to hook the damage received calculation on the player. The closest engine approach is applying a damage reduction aura, but SpellMod system operates on spells the player casts.",
+        "future_path": "Add STAT_OP_DAMAGE_TAKEN_PCT to GenericStatOp. In ApplyGenericStat, call player->ApplyDamageTakenMod or similar. Alternatively hook OnDamageTaken and multiply by (1 - rank * 0.02). value_per_rank = -2 (percent reduction per rank)."
+      }
+    },
+
+    {
+      "_talent": "Focused Attacks",
+      "_todo": {
+        "talent_description": "Your melee critical strikes have a 33/66/100% chance to give you 2 Energy.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Proc on melee crit — awards Energy on a crit event, not a SpellMod effect. Requires hooking melee crit calculation.",
+        "future_path": "Hook OnDealDamage with melee crit flag. Roll against (rank * 33)% proc chance. If proc fires, call player->ModifyPower(POWER_ENERGY, 2). Over 100% (4+ bonus ranks at max invested): guarantee 2 energy and roll remainder for another 2 — same floor/remainder logic as Ruthlessness/Seal Fate."
+      }
+    },
+
+    {"_section": "── Tier 12 ─────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Find Weakness",
+      "_notes": {
+        "talent_description": "Your offensive abilities deal 2% increased damage per rank.",
+        "max_talent_rank": 3,
+        "affix_effect": "Each bonus rank adds +2% to all Rogue ability damage.",
+        "scaling": "Linear. PCT 2 per rank. Same mechanism as Murder — stacks additively with it.",
+        "implementation": "Pattern 2 — all-ones mask. Functionally identical to Murder as a SpellMod; the talent distinction (Assassination vs another tree) is preserved via spec_tree."
+      }
+    },
+    {
+      "id": 96, "name": "Find Weakness",
+      "class": "ROGUE", "spec_tree": 0, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 2,
+      "notes": "All Rogue offensive ability damage +2% per bonus rank — all-ones mask",
+      "verified": true, "verify_command": ".spellinfo all 1752"
+    },
+
+    {"_section": "── Tier 13 ─────────────────────────────────────────────────────"},
+
+    {
+      "_talent": "Master Poisoner",
+      "_todo": {
+        "talent_description": "Increases the critical hit chance of all attacks against any target that has one of your active poisons by 1% per rank. Reduces the duration of Poison effects applied to you by 17% per rank. Gives your Envenom a 33/66/100% chance per rank to not consume Deadly Poison.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Three separate effects, all conditional or proc-based: (1) Crit vs poisoned target = conditional crit bonus that depends on the target's debuff state — not a caster-side SpellMod. (2) Poison resistance = duration reduction on debuffs applied to the player. (3) Envenom non-consume = proc that suppresses the poison-consume mechanic in Envenom's script.",
+        "future_path": "Each effect needs a separate hook. (1) Hook OnDamageCalculate, check target has player's poison, apply crit bonus. (2) Hook OnSpellAuraApplied for poison categories on the player, reduce duration. (3) Hook Envenom's spell script to roll the non-consume chance. Complex multi-part implementation — prioritize after simpler procs are done."
+      }
+    },
+
+    {
+      "_talent": "Turn the Tables",
+      "_todo": {
+        "talent_description": "When anyone in your party or raid blocks, dodges, or parries an attack, your chance to critically hit with all combo moves is increased by 2% per rank for 8 seconds.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Proc triggered by a party/raid member's defensive event, not by the player's own actions. Requires hooking the group-member block/dodge/parry event and applying a temporary buff to the player. Well outside the SpellMod system.",
+        "future_path": "Hook OnSpellHitResult or melee dodge/parry events for party members within range. When any triggers, apply a temporary CRIT_CHANCE aura (similar to a Trinket proc) to the player for 8 seconds with magnitude (rank * 200) in FLAT units. Requires C++ aura application outside the affix engine."
+      }
+    },
+
+    {
+      "_talent": "Cut to the Chase",
+      "_todo": {
+        "talent_description": "Your Eviscerate and Envenom abilities have a 20% per rank chance to refresh your Slice and Dice duration to its 5 combo point maximum.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Proc on Eviscerate/Envenom cast — refreshes a separate buff (Slice and Dice) to full duration. Cannot be done with SpellMod; it requires an OnSpellHit hook that checks whether the casted spell is Eviscerate or Envenom, rolls the proc, then calls the equivalent of CastSpell or SetAuraDuration on the player's Slice and Dice aura.",
+        "future_path": "Hook OnSpellHit for Eviscerate (2098) and Envenom (32645). Roll (rank * 20)%. On proc, find the player's Slice and Dice aura and call SetDuration(max_5cp_duration). Over 100%: guaranteed refresh plus possible double-duration (rank * 20 > 100 = extra 20% per overflow rank applied as duration bonus). Cap at a reasonable multiple to avoid permanent Slice and Dice."
+      }
+    }
+
+  ]
+}

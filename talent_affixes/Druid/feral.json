@@ -1,0 +1,183 @@
+{
+  "_comment": "Druid — Feral tree (spec_tree=1). IDs 340–359.",
+  "_notes": {
+    "tree": "Feral",
+    "class": "DRUID",
+    "spec_tree": 1,
+    "id_range": "340–359",
+    "spell_family": "DRUID (7)",
+    "note_main_file": [
+      "id=94 Improved Mangle (spec_tree=-1) — flags were [0,0,524288] (mask2 bit19 — completely wrong). Mangle(Bear)=[0,64,0] mask1 bit6 and Mangle(Cat)=[0,1024,0] mask1 bit10. CORRECTED to [0,1088,0]."
+    ],
+    "note_no_shared_bits": "No shared Druid family marker bits across all verified carrier spells. No exclusions required.",
+    "note_energy_cost": "COST FLAT SpellMod for energy spells uses the same op as mana — value is the energy reduction. Verify in-game that COST FLAT fires correctly for energy-costing abilities before deploying.",
+    "confirmed_flags": {
+      "Mangle_Cat_33876":    "[0,1024,0] = mask1 bit10 (0x00000400) — updates main-file id=94",
+      "Mangle_Bear_33878":   "[0,64,0] = mask1 bit6 (0x00000040) — updates main-file id=94",
+      "Rake_1822":           "[4096,0,0] = 0x00001000 (mask0 bit12)",
+      "Shred_5221":          "[32768,0,0] = 0x00008000 (mask0 bit15)",
+      "Maul_6807":           "[2048,0,0] = 0x00000800 (mask0 bit11)",
+      "Ferocious_Bite_22568":"[8388608,0,0] = 0x00800000 (mask0 bit23)",
+      "Bash_5211":           "[8192,0,0] = 0x00002000 (mask0 bit13)",
+      "Pounce_9005":         "[131072,0,0] = 0x00020000 (mask0 bit17)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 340,
+      "name": "Feral Aggression",
+      "class": "DRUID",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "DRUID",
+      "family_flags": [8388608, 0, 0],
+      "carrier_spell": 22568,
+      "carrier_name": "Ferocious Bite",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "flags=[8388608,0,0]=0x00800000 (mask0 bit23). No shared Druid marker bits. Ferocious Bite damage +3%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Feral Aggression — Demoralizing Roar portion (reduces AP by 8/16/24/32/40%) — target debuff, not implementable as SpellMod."},
+    {"_todo": "Ferocity (5r, tier 1) — Reduces mana cost of Cat Form abilities by 2/4/6/8/10%. Pet/form ability energy costs; complex to implement without specific form-ability flags."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Feral Instinct (3r, tier 2) — Increases threat in Bear Form and reduces stealth detection chance in Cat Form. Mechanic/passive, not implementable as SpellMod."},
+    {"_todo": "Thick Hide (3r, tier 2) — Increases armor value from items by 4/7/10%. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Feral Swiftness (2r, tier 2) — Increases movement speed in Cat Form and reduces movement impair duration. Movement speed + mechanic, not implementable as SpellMod."},
+
+    {
+      "id": 341,
+      "name": "Savage Fury",
+      "class": "DRUID",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "DRUID",
+      "family_flags": [6144, 1088, 0],
+      "carrier_spell": 1822,
+      "carrier_name": "Rake",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[6144,1088,0]: OR of Rake(1822) mask0 bit12(0x1000=4096)|Maul(6807) mask0 bit11(0x800=2048)|Mangle(Cat)(33876) mask1 bit10(0x400=1024)|Mangle(Bear)(33878) mask1 bit6(0x40=64). No shared Druid marker bits. Rake/Mangle damage +2%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 342,
+      "name": "Sharpened Claws",
+      "class": "DRUID",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "DRUID",
+      "family_flags": [4096, 1024, 0],
+      "carrier_spell": 1822,
+      "carrier_name": "Rake",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 200,
+      "notes": "flags=[4096,1024,0]: OR of Rake(1822) mask0 bit12(0x1000=4096)|Mangle(Cat)(33876) mask1 bit10(0x400=1024). No shared Druid marker bits. Crit chance +2%/rank on Rake/Mangle (CRIT_CHANCE FLAT: 200=2%).",
+      "verified": true
+    },
+
+    {
+      "id": 343,
+      "name": "Brutal Impact",
+      "class": "DRUID",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "DRUID",
+      "family_flags": [139264, 0, 0],
+      "carrier_spell": 5211,
+      "carrier_name": "Bash",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 500,
+      "notes": "flags=[139264,0,0]: OR of Bash(5211) mask0 bit13(0x2000=8192)|Pounce(9005) mask0 bit17(0x20000=131072). No shared Druid marker bits. Bash/Pounce stun duration +0.5s/rank (DURATION FLAT: 500ms).",
+      "verified": true
+    },
+
+    {"_todo": "Primal Fury (2r, tier 3) — Rage generation on crits in Dire Bear Form; combo point generation on crits in Cat Form. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Predatory Instincts (3r, tier 3) — Reduces AoE damage taken; increases damage of crits from stealth in Cat Form. Passive mitigation + conditional, not implementable as SpellMod."},
+    {"_todo": "Blood Frenzy (2r, tier 3) — Rake and Lacerate cause the target to take 2/4% extra physical damage. Target debuff, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Primal Precision (2r, tier 4) — Increases expertise and refunds energy on dodged/parried attacks. Passive stat + proc, not implementable as SpellMod."},
+
+    {
+      "id": 345,
+      "name": "Shredding Attacks",
+      "class": "DRUID",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "DRUID",
+      "family_flags": [32768, 0, 0],
+      "carrier_spell": 5221,
+      "carrier_name": "Shred",
+      "spellmod_op": "COST",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -9,
+      "notes": "flags=[32768,0,0]=0x00008000 (mask0 bit15). No shared Druid marker bits. Shred energy cost -9/rank (COST FLAT: -9). NOTE: verify that COST FLAT SpellMod fires correctly for energy-costing abilities in AzerothCore before deploying.",
+      "verified": true
+    },
+
+    {"_todo": "Feral Charge (1r, tier 4) — Single-rank talent, excluded by design."},
+    {"_todo": "Nurturing Instinct (2r, tier 4) — Increases spell power by 35/70% of Strength. Stat conversion, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Heart of the Wild (5r, tier 5) — Increases Intellect; while in Bear Form increases Stamina; while in Cat Form increases AP. Conditional form bonus, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Predatory Strikes (3r, tier 6) — Increases melee AP in Cat/Bear/Moonkin/Tree Form. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Primal Tenacity (3r, tier 6) — Reduces damage and fear duration in Cat/Bear Form. Passive mitigation + mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 94,
+      "name": "Improved Mangle",
+      "class": "DRUID",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "DRUID",
+      "family_flags": [0, 1088, 0],
+      "carrier_spell": 33878,
+      "carrier_name": "Mangle (Bear)",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -500,
+      "notes": "flags=[0,1088,0]: OR of Mangle(Bear)(33878) mask1 bit6(0x40=64)|Mangle(Cat)(33876) mask1 bit10(0x400=1024). Mangle cooldown -500ms/rank.",
+      "verified": true
+    },
+    {"_todo": "King of the Jungle (3r, tier 7) — Your Tiger's Fury restores mana; your Enrage increases AP. Proc-based mana return + conditional AP, not implementable as SpellMod."},
+    {"_todo": "Leader of the Pack (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Mangle (1r, tier 7) — Single-rank talent, excluded by design. (The Mangle ability itself, not Improved Mangle.)"},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Leader of the Pack (2r, tier 8) — LotP also restores health on melee crit. Proc-based heal, not implementable as SpellMod."},
+    {"_todo": "Primal Gore (1r, tier 8) — Single-rank talent, excluded by design."},
+    {"_todo": "Rend and Tear (5r, tier 8) — Increases damage of Maul/Shred on bleeding targets and Ferocious Bite crit on bleeding targets. Conditional (target bleeding), not implementable as flat SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Survival Instincts (1r, tier 9) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Berserk (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

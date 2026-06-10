@@ -1,0 +1,301 @@
+{
+  "_comment": "Priest — Discipline tree (spec_tree=0). IDs 140–159.",
+  "_notes": {
+    "tree": "Discipline",
+    "class": "PRIEST",
+    "spec_tree": 0,
+    "id_range": "140–159",
+    "spell_family": "PRIEST (6)",
+    "carrier_for_all_ones": 17,
+    "carrier_name_for_all_ones": "Power Word: Shield",
+    "note_main_file": [
+      "id=50 Improved Power Word: Shield (spec_tree=-1) — Disc tier 5, should eventually be spec_tree=0.",
+      "id=53 Improved Flash Heal (spec_tree=-1) — Disc tier 7, should eventually be spec_tree=0.",
+      "Both are already in talent_affixes.json; those entries are NOT duplicated here."
+    ],
+    "note_bit_sharing": [
+      "Priest spells may share bits similar to Rogue bit-23 issue.",
+      "All specific-spell entries use all-ones as TEMP placeholder until .spellinfo verification.",
+      "After verification: use only unique identifying bits, OR'd for multi-spell entries.",
+      "Run '.spellinfo all <spell_id>' in-game and read SpellFamilyFlags hex → convert to decimal."
+    ],
+    "verify_queue": {
+      "priority_1_single_spells": [
+        ".spellinfo all 588   -- Inner Fire (id=142)",
+        ".spellinfo all 8129  -- Mana Burn (id=143)",
+        ".spellinfo all 1243  -- Power Word: Fortitude (id=144)"
+      ],
+      "priority_2_spot_checks": [
+        ".spellinfo all 17    -- Power Word: Shield (spot-check main-file id=50)",
+        ".spellinfo all 139   -- Renew (spot-check main-file id=52)"
+      ],
+      "priority_3_multi_spell": [
+        ".spellinfo all 988   -- Dispel Magic (id=145 Absolution)",
+        ".spellinfo all 528   -- Cure Disease (id=145 Absolution)",
+        ".spellinfo all 552   -- Abolish Disease (id=145 Absolution)",
+        ".spellinfo all 2060  -- Greater Heal (id=148 Renewed Hope)",
+        ".spellinfo all 47540 -- Penance (id=148 Renewed Hope)",
+        ".spellinfo all 2061  -- Flash Heal (id=148 Renewed Hope; also spot-checks main-file id=53)"
+      ],
+      "priority_4_aspiration": [
+        ".spellinfo all 33206 -- Pain Suppression (id=149 Aspiration)",
+        ".spellinfo all 89    -- Inner Focus (id=149 Aspiration)"
+      ]
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Unbreakable Will (5r, tier 1) — Reduces duration of Stun/Fear/Silence/Polymorph/Banish by 6%/rank. Mechanic resistance, not implementable as SpellMod."},
+
+    {
+      "id": 140,
+      "name": "Twin Disciplines",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "ALL_EFFECTS",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "Instant spell damage+healing +1%/rank. All-ones matches every Priest spell.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 141,
+      "name": "Silent Resolve",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -20,
+      "notes": "Spell threat -20%/rank. All-ones matches every Priest spell.",
+      "verified": true
+    },
+
+    {
+      "id": 142,
+      "name": "Improved Inner Fire",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 588,
+      "carrier_name": "Inner Fire",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 15,
+      "notes": "flags=[2,0,0]: Inner Fire mask0 bit1(0x2=2). Exclude mask2=1024 — shared by PW:Shield/PW:Fortitude/Cure Disease/Abolish Disease. EFFECT1=armor bonus. +15%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 143,
+      "name": "Improved Mana Burn",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [16, 0, 0],
+      "carrier_spell": 8129,
+      "carrier_name": "Mana Burn",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -250,
+      "notes": "flags=[16,0,0]: Mana Burn mask0 bit4(0x10=16). No shared bits. Cast time -250ms/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Meditation (3r, tier 3) — Allows 10/20/30% mana regen to continue while casting. Regeneration system mechanic, not implementable as SpellMod."},
+    {"_todo": "Inner Focus (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 144,
+      "name": "Improved Power Word: Fortitude",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [8, 0, 0],
+      "carrier_spell": 1243,
+      "carrier_name": "Power Word: Fortitude",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 15,
+      "notes": "flags=[8,0,0]: PW:Fortitude mask0 bit3(0x8=8). Exclude mask2=1024 — shared. EFFECT1=stamina value. +15%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Martyrdom (2r, tier 4) — Proc-based: after being hit, gain reduced threat and crit chance bonus. Requires hit-taken trigger, not implementable as SpellMod."},
+
+    {
+      "id": 145,
+      "name": "Absolution",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [0, 1, 0],
+      "carrier_spell": 988,
+      "carrier_name": "Dispel Magic",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -5,
+      "notes": "flags=[0,1,0]: Dispel Magic(988) mask1 bit0(1) | Cure Disease(528) mask1 bit0(1) | Abolish Disease(552) mask1 bit0(1) — all confirmed. mask2=1024 excluded (shared Priest marker). Cost -5%/rank.",
+      "verified": true,
+      "verify_command": ".spellinfo all 552"
+    },
+
+    {"_todo": "Power Infusion (1r, tier 4) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 146,
+      "name": "Mental Agility",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -2,
+      "notes": "Instant spell mana cost -2%/rank. All-ones is slightly broader than just instants but acceptable.",
+      "verified": true
+    },
+
+    {
+      "id": 50,
+      "name": "Improved Power Word: Shield",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [1, 0, 0],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "Power Word: Shield absorb +5% per rank — flags confirmed: 0x1=1 (mask0 bit0). Exclude mask2=1024 (shared Priest marker).",
+      "verified": true, "verify_command": ".spellinfo all 17"
+    },
+
+    {"_todo": "Mental Strength (5r, tier 5) — Increases Intellect by 3%/rank. Passive stat bonus, not a SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Soul Warding (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 147,
+      "name": "Focused Power",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "ALL_EFFECTS",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "Damage and healing done +2%/rank. All-ones matches every Priest spell.",
+      "verified": true
+    },
+
+    {"_todo": "Enlightenment (3r, tier 6) — Increases Spirit, haste, and crit strike chance. Passive multi-stat bonus, not SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Focused Will (2r, tier 7) — Proc-based: after being critically hit, increases crit chance by 3%/rank. Requires hit-taken trigger, not implementable as SpellMod."},
+
+    {
+      "id": 148,
+      "name": "Renewed Hope",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [6144, 8388608, 0],
+      "carrier_spell": 2061,
+      "carrier_name": "Flash Heal",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 400,
+      "notes": "flags=[6144,8388608,0]: Flash Heal(2061) mask0 bit11(0x800=2048) | Greater Heal(2060) mask0 bit12(0x1000=4096)=6144; Penance(47540) mask1 bit23(0x800000=8388608). Crit +4%/rank (CRIT_CHANCE FLAT: 400=4%).",
+      "verified": true
+    },
+
+    {
+      "id": 53,
+      "name": "Improved Flash Heal",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [2048, 0, 0],
+      "carrier_spell": 2061,
+      "carrier_name": "Flash Heal",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -3,
+      "notes": "Flash Heal mana cost -3% per rank — flags confirmed: 0x00000800=2048 (mask0 bit11).",
+      "verified": true, "verify_command": ".spellinfo all 2061"
+    },
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Rapture (5r, tier 8) — Mana return when PW:Shield is fully absorbed or dispelled. Complex proc mechanic, not implementable as SpellMod."},
+
+    {
+      "id": 149,
+      "name": "Aspiration",
+      "class": "PRIEST",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [2147483648, 805310464, 0],
+      "carrier_spell": 33206,
+      "carrier_name": "Pain Suppression",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "PCT",
+      "value_per_rank": -15,
+      "notes": "flags=[2147483648,805310464,0]: PS(33206) mask0 bit31(0x80000000=2147483648)|mask1(0x10001000=268439552); PI(10060) mask0 bit31|mask1(0x20001000=536875008). OR: mask0=2147483648, mask1=0x30001000=805310464. Exclude mask2=1024 (shared Priest marker). Inner Focus(89)=SPELLFAMILY_GENERIC — cannot be targeted by Priest SpellMod, excluded entirely. Cooldown -15%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Borrowed Time (5r, tier 9) — After casting PW:Shield, reduces cast time of next spell by 5%/rank. Proc-based next-spell modifier, not implementable as SpellMod."},
+    {"_todo": "Divine Aegis (3r, tier 9) — After a critical heal, create absorb shield for 10/20/30% of heal amount. Proc-based absorb, not implementable as SpellMod."},
+    {"_todo": "Pain Suppression (1r, tier 9) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Grace (2r, tier 10) — Healing a target with Flash Heal/Greater Heal/Penance reduces damage they take by 1%/rank (stacking up to 3). Proc-based stacking mitigation, not SpellMod."},
+    {"_todo": "Penance (1r, tier 10) — Single-rank talent (also a channeled spell), excluded by design."}
+
+  ]
+}

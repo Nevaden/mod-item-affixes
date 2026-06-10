@@ -1,0 +1,42 @@
+{
+  "_type": "generic_defs",
+  "_comment": "Generic stat affix definitions. All entries use family:0 (universal). Role mask is the sole class gatekeeper. Tier values are in generics_NN_NN.json files. Run build_affixes.ps1 after changes.",
+  "affixes": [
+
+    { "id": 20000, "name": "Stamina",      "weight": 120, "min_quality": 1, "affix_type": 1, "stat": {"op": 0,  "op_name": "STAMINA"},        "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20001, "name": "Crit Rating",  "weight": 100, "min_quality": 1, "affix_type": 1, "stat": {"op": 10, "op_name": "CRIT_RATING"},     "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20002, "name": "Haste Rating", "weight": 90,  "min_quality": 1, "affix_type": 1, "stat": {"op": 11, "op_name": "HASTE_RATING"},    "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20003, "name": "Hit Rating",   "weight": 100, "min_quality": 1, "affix_type": 1, "stat": {"op": 12, "op_name": "HIT_RATING"},      "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20410, "name": "Mp5",          "weight": 80,  "min_quality": 1, "affix_type": 1, "stat": {"op": 8,  "op_name": "MP5"},             "item_category": 0, "role": "CASTER_HEALER", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20400, "name": "Armor Pen",    "weight": 70,  "min_quality": 1, "affix_type": 1, "stat": {"op": 17, "op_name": "ARMOR_PEN_RATING"},"item_category": 0, "role": "PHYSICAL_RANGED", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20006, "name": "Move Speed",   "weight": 30,  "min_quality": 2, "affix_type": 1, "stat": {"op": 18, "op_name": "MOVE_SPEED"},      "item_category": 7, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+
+    { "id": 20010, "name": "Strength",  "weight": 100, "min_quality": 1, "affix_type": 1, "stat": {"op": 1, "op_name": "STRENGTH"},  "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20020, "name": "Agility",   "weight": 100, "min_quality": 1, "affix_type": 1, "stat": {"op": 2, "op_name": "AGILITY"},   "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20030, "name": "Intellect", "weight": 100, "min_quality": 1, "affix_type": 1, "stat": {"op": 3, "op_name": "INTELLECT"}, "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20040, "name": "Spirit",    "weight": 90,  "min_quality": 1, "affix_type": 1, "stat": {"op": 4, "op_name": "SPIRIT"},    "item_category": 0, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+
+    { "id": 20070, "name": "Dodge Rating",   "weight": 80, "min_quality": 2, "affix_type": 1, "stat": {"op": 13, "op_name": "DODGE_RATING"},   "item_category": 0, "role": "TANK", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20080, "name": "Defense Rating", "weight": 80, "min_quality": 2, "affix_type": 1, "stat": {"op": 14, "op_name": "DEFENSE_RATING"}, "item_category": 0, "role": "TANK", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20090, "name": "Parry Rating",   "weight": 80, "min_quality": 2, "affix_type": 1, "stat": {"op": 15, "op_name": "PARRY_RATING"},   "item_category": 0, "role": "TANK", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+
+    { "id": 20100, "name": "Spell Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 7, "op_name": "SPELL_POWER"}, "item_category": 3, "role": "CASTER_HEALER", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20101, "name": "Spell Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 7, "op_name": "SPELL_POWER"}, "item_category": 4, "role": "CASTER_HEALER", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20102, "name": "Spell Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 7, "op_name": "SPELL_POWER"}, "item_category": 5, "role": "CASTER_HEALER", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20103, "name": "Spell Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 7, "op_name": "SPELL_POWER"}, "item_category": 6, "role": "CASTER_HEALER", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+
+    { "id": 20200, "name": "Attack Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 5, "op_name": "ATTACK_POWER"}, "item_category": 1, "role": "PHYSICAL", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20201, "name": "Attack Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 5, "op_name": "ATTACK_POWER"}, "item_category": 2, "role": "PHYSICAL", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20202, "name": "Attack Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 5, "op_name": "ATTACK_POWER"}, "item_category": 4, "role": "PHYSICAL", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20203, "name": "Attack Power", "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 5, "op_name": "ATTACK_POWER"}, "item_category": 5, "role": "PHYSICAL", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20220, "name": "Ranged AP",    "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 6, "op_name": "RANGED_AP"},    "item_category": 2, "role": "RANGED", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20221, "name": "Ranged AP",    "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 6, "op_name": "RANGED_AP"},    "item_category": 4, "role": "RANGED", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20222, "name": "Ranged AP",    "weight": 90, "min_quality": 2, "affix_type": 1, "stat": {"op": 6, "op_name": "RANGED_AP"},    "item_category": 5, "role": "RANGED", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+
+    { "id": 20300, "name": "Expertise", "weight": 80, "min_quality": 2, "affix_type": 1, "stat": {"op": 16, "op_name": "EXPERTISE_RATING"}, "item_category": 3, "role": "PHYSICAL", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20301, "name": "Expertise", "weight": 80, "min_quality": 2, "affix_type": 1, "stat": {"op": 16, "op_name": "EXPERTISE_RATING"}, "item_category": 4, "role": "PHYSICAL", "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} }
+
+  ],
+  "removedAffixes": [
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "_comment": "Priest — Shadow tree (spec_tree=2). IDs 180–199.",
+  "_notes": {
+    "tree": "Shadow",
+    "class": "PRIEST",
+    "spec_tree": 2,
+    "id_range": "180–199",
+    "spell_family": "PRIEST (6)",
+    "note_main_file": "id=51 Improved Mind Blast (spec_tree=-1) is a Shadow-tree talent (tier 2) — not duplicated here.",
+    "note_bit_sharing": [
+      "mask2 bit10 (0x400=1024) is the shared Priest family marker — ALWAYS exclude.",
+      "Mind Flay (15407) has mask2=0x440=1088: unique bit is mask2 bit6 (64); exclude mask2 bit10 (1024).",
+      "Shadowform mask0 bit31 (0x80000000=2147483648) is SHARED with Pain Suppression and Power Infusion — use mask1 bit11 (2048) as the unique Shadowform identifier instead.",
+      "Vampiric Touch mask1=0x400=1024 (bit10 of mask1) is DISTINCT from mask2=1024 (bit10 of mask2)."
+    ],
+    "confirmed_flags": {
+      "SW_Pain_589":          "[32768,0,0] = 0x8000 (mask0 bit15) — exclude mask2=1024",
+      "Dispersion_47585":     "[0,262144,0] = mask1 bit18 (0x40000) — exclude mask2=1024",
+      "Vampiric_Touch_34914": "[0,1024,0] = mask1 bit10 (0x400) — exclude mask2=1024",
+      "Vampiric_Embrace_15286":"[4,0,0] = mask0 bit2 (0x4) — clean",
+      "Mind_Blast_8092":      "[8192,0,0] = mask0 bit13 (0x2000) — clean",
+      "Mind_Flay_15407":      "[0,0,64] = mask2 bit6 (0x40) — exclude mask2 bit10 (1024)",
+      "MB_plus_MF_combined":  "[8192,0,64]"
+    },
+    "pending_spellinfo": [
+      ".spellinfo all 586   -- Fade (for id=188 Improved Fade / Veiled Shadows Fade portion)",
+      ".spellinfo all 605   -- Mind Control (optional addition to id=184 Focused Mind)"
+    ]
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 180,
+      "name": "Improved Shadow Word: Pain",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [32768, 0, 0],
+      "carrier_spell": 589,
+      "carrier_name": "Shadow Word: Pain",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 3000,
+      "notes": "flags=[32768,0,0]=0x8000 (mask0 bit15). Exclude mask2=1024 (shared). SW:Pain duration +3s/rank (DURATION FLAT: 3000=3s).",
+      "verified": true
+    },
+
+    {
+      "id": 181,
+      "name": "Shadow Focus",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 589,
+      "carrier_name": "Shadow Word: Pain",
+      "spellmod_op": "RESIST_MISS_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "Shadow spell resist chance -1%/rank (RESIST_MISS_CHANCE FLAT: -100=-1%). All-ones used since 'Shadow school' cannot be targeted by Priest family SpellMod directly.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 51,
+      "name": "Improved Mind Blast",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [8192, 0, 0],
+      "carrier_spell": 8092,
+      "carrier_name": "Mind Blast",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -500,
+      "notes": "Mind Blast cooldown -0.5s per rank — flags confirmed: 0x2000=8192 (mask0 bit13).",
+      "verified": true, "verify_command": ".spellinfo all 8092"
+    },
+
+    {
+      "id": 182,
+      "name": "Shadow Affinity",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 589,
+      "carrier_name": "Shadow Word: Pain",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -10,
+      "notes": "Shadow spell threat -10%/rank. All-ones matches every Priest spell.",
+      "verified": true
+    },
+
+    {
+      "id": 183,
+      "name": "Improved Vampiric Embrace",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [4, 0, 0],
+      "carrier_spell": 15286,
+      "carrier_name": "Vampiric Embrace",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 33,
+      "notes": "flags=[4,0,0]=0x4 (mask0 bit2). Vampiric Embrace healing from Shadow damage +33%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 184,
+      "name": "Improved Fade",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [16384, 0, 0],
+      "carrier_spell": 586,
+      "carrier_name": "Fade",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -6000,
+      "notes": "flags=[16384,0,0]: Fade(586) mask0 bit14(0x4000=16384). Exclude mask2=1024 (shared) AND mask1 bit12=4096 (shared with Pain Suppression/Power Infusion). Fade cooldown -6s/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 185,
+      "name": "Focused Mind",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [139264, 0, 64],
+      "carrier_spell": 8092,
+      "carrier_name": "Mind Blast",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -5,
+      "notes": "flags=[139264,0,64]: Mind Blast(8092) mask0 bit13(0x2000=8192) | Mind Control(605) mask0 bit17(0x20000=131072) → mask0=139264; Mind Flay(15407) mask2 bit6(0x40=64, exclude mask2 bit10=1024). Mana cost -5%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Misery (3r, tier 3) — Applies a debuff reducing target's spell hit/haste/crit. Target-side debuff mechanic, not a caster SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 186,
+      "name": "Shadow Power",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [8192, 0, 64],
+      "carrier_spell": 8092,
+      "carrier_name": "Mind Blast",
+      "spellmod_op": "CRIT_DAMAGE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 2000,
+      "notes": "flags=[8192,0,64]: Mind Blast(8092)+Mind Flay(15407). Critical strike damage bonus +20%/rank (CRIT_DAMAGE FLAT: assumed 100=1%, so 2000=20% — verify unit in-game).",
+      "verified": true
+    },
+
+    {"_todo": "Pain and Suffering (3r, tier 4) — SW:Death crits refresh SW:Pain duration. Proc-based, not SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Vampiric Embrace (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 187,
+      "name": "Darkness",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 589,
+      "carrier_name": "Shadow Word: Pain",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "All Shadow spell damage +2%/rank. All-ones used since 'Shadow school' cannot be targeted by Priest family SpellMod; acceptable for Shadow spec affixes.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Shadowform (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Vampiric Touch (1r, tier 7) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 188,
+      "name": "Veiled Shadows",
+      "class": "PRIEST",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [0, 262144, 0],
+      "carrier_spell": 47585,
+      "carrier_name": "Dispersion",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -45000,
+      "notes": "flags=[0,262144,0]: Dispersion(47585) mask1 bit18(0x40000=262144, exclude mask2=1024). Dispersion cooldown -45s/rank. NOTE: Fade(-6s/rank) is the other half of this talent — add as separate entry once '.spellinfo all 586' is confirmed.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Twisted Faith (5r, tier 8) — (1) Increases spell power from Spirit by 5%/rank AND (2) Mind Flay damage +5%/rank when target has SW:Pain. The conditional part (requires debuff) is not implementable as SpellMod. The SP-from-Spirit is a stat conversion."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Dispersion (1r, tier 9) — Single-rank talent, excluded by design."}
+
+  ]
+}

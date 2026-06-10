@@ -1,0 +1,122 @@
+{
+  "_comment": "Warlock — Demonology tree (spec_tree=1). IDs 280–299.",
+  "_notes": {
+    "tree": "Demonology",
+    "class": "WARLOCK",
+    "spec_tree": 1,
+    "id_range": "280–299",
+    "spell_family": "WARLOCK (5)",
+    "note_no_shared_bits": "No shared Warlock family marker bits across all verified carrier spells. No exclusions required.",
+    "note_healthstone": "Healthstone USE spell (5512) returned 'Fill Phial' SPELLFAMILY_GENERIC (0) — not a Warlock family spell. A Warlock SpellMod can only target Warlock family spells; the Healthstone consumption spell is unreachable. id=280 moved to _todo.",
+    "confirmed_flags": {
+      "Health_Funnel_755":  "[16777216,0,0] = 0x01000000 (mask0 bit24)",
+      "Demon_Armor_706":    "[0,32,0] = mask1 bit5 (0x00000020)",
+      "Fel_Armor_28176":    "[0,536870912,0] = mask1 bit29 (0x20000000)",
+      "Enslave_Demon_1098": "[2048,0,0] = 0x00000800 (mask0 bit11)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Improved Healthstone (2r, tier 1 or 2) — HP restored by Healthstone +10%/rank. The Healthstone consumption spell (5512) is SPELLFAMILY_GENERIC — it cannot be targeted by a Warlock family SpellMod. Not implementable."},
+    {"_todo": "Demonic Embrace (5r, tier 1) — Increases Stamina by 1/2/3/4/5% and reduces Spirit by 1%. Passive stat bonus, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 281,
+      "name": "Improved Health Funnel",
+      "class": "WARLOCK",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "WARLOCK",
+      "family_flags": [16777216, 0, 0],
+      "carrier_spell": 755,
+      "carrier_name": "Health Funnel",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[16777216,0,0]=0x01000000 (mask0 bit24). No shared Warlock marker bits. Health Funnel transfer amount +10%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Improved Voidwalker (3r, tier 2) — Increases effectiveness of Voidwalker's Suffering by 10/20/30%. Pet ability, not player SpellMod."},
+    {"_todo": "Fel Intellect (3r, tier 2) — Increases Intellect of summoned demons by 5/10/15%. Pet stat bonus, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Succubus (3r, tier 3) — Increases duration of Seduction by 15/30/45%. Pet ability, not player SpellMod."},
+    {"_todo": "Fel Domination (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 282,
+      "name": "Demonic Aegis",
+      "class": "WARLOCK",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "WARLOCK",
+      "family_flags": [0, 536870944, 0],
+      "carrier_spell": 706,
+      "carrier_name": "Demon Armor",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[0,536870944,0]: OR of Demon Armor(706) mask1 bit5(0x20=32)|Fel Armor(28176) mask1 bit29(0x20000000=536870912). No shared Warlock marker bits. DA EFFECT1=armor bonus, FA EFFECT1=spell power bonus — both boosted proportionally, which is the intended talent behavior.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Master Summoner (2r, tier 4) — Reduces cast time for summoning demons by 2s/rank and mana cost by 20%/rank. Two different ops (CASTING_TIME + COST) on summon spells — complex; defer until summon spell flags are verified."},
+    {"_todo": "Unholy Power (5r, tier 4) — Increases damage done by Voidwalker/Felguard by 4%/rank. Pet damage bonus, not player SpellMod."},
+    {"_todo": "Master Demonologist (5r, tier 4) — Passive bonuses while specific pets are active. Aura-conditional, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Demonic Sacrifice (1r, tier 5) — Single-rank talent, excluded by design."},
+    {"_todo": "Mana Feed (3r, tier 5) — When pet critically strikes, restores 4/8/12% mana. Pet proc, not player SpellMod."},
+    {"_todo": "Demonic Knowledge (3r, tier 5) — Increases spell power by 4/8/12% of pet's Stamina+Intellect. Passive stat conversion, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 283,
+      "name": "Improved Enslave Demon",
+      "class": "WARLOCK",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "WARLOCK",
+      "family_flags": [2048, 0, 0],
+      "carrier_spell": 1098,
+      "carrier_name": "Enslave Demon",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -500,
+      "notes": "flags=[2048,0,0]=0x00000800 (mask0 bit11). No shared Warlock marker bits. Enslave Demon cast time -500ms/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Summon Felguard (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Demonic Empowerment (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Fel Synergy (2r, tier 7) — Your pet is healed 15/30% of damage you deal with Shadow/Fire spells. Proc-based pet heal, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Demonic Tactics (3r, tier 8) — Increases your pet's critical strike chance by 10/20/30% of your own. Passive stat scaling, not implementable as SpellMod."},
+    {"_todo": "Decimation (2r, tier 8) — When Shadow Bolt or Incinerate crits a target below 35% HP, next Soul Fire cast time reduced by 40/80%. HP-conditional proc, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Molten Core (3r, tier 9) — Your Corruption ticks have a chance to reduce cast time and mana cost of next Incinerate by 10%/rank. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Metamorphosis (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

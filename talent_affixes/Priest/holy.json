@@ -1,0 +1,209 @@
+{
+  "_comment": "Priest — Holy tree (spec_tree=1). IDs 160–179.",
+  "_notes": {
+    "tree": "Holy",
+    "class": "PRIEST",
+    "spec_tree": 1,
+    "id_range": "160–179",
+    "spell_family": "PRIEST (6)",
+    "note_main_file": "id=52 Improved Renew (spec_tree=-1) is a Holy-tree talent — not duplicated here.",
+    "note_bit_sharing": "mask2 bit10 (0x400=1024) is a shared Priest family marker. ALWAYS exclude from specific-spell masks. All flags below use unique bits only.",
+    "confirmed_flags": {
+      "Smite_585":              "[128,0,0] = 0x80 (mask0 bit7)",
+      "Holy_Fire_14914":        "[1048576,0,0] = 0x100000 (mask0 bit20) — exclude mask2=1024",
+      "Heal_2050":              "[262144,0,0] = 0x40000 (mask0 bit18)",
+      "Greater_Heal_2060":      "[4096,0,0] = 0x1000 (mask0 bit12)",
+      "Flash_Heal_2061":        "[2048,0,0] = 0x800 (mask0 bit11)",
+      "Binding_Heal_32546":     "[0,4,0] = mask1 bit2",
+      "Prayer_of_Healing_596":  "[512,0,0] = 0x200 (mask0 bit9)",
+      "Prayer_of_Mending_33076":"[0,32,0] = mask1 bit5 — exclude mask2=1024",
+      "Renew_139":              "[64,0,0] = 0x40 (mask0 bit6) — exclude mask2=1024"
+    },
+    "todo_divine_providence": "Circle of Healing (34861), Holy Nova (15237), Lightwell (724) flags not yet verified — run .spellinfo all on each to complete id=166."
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Healing Focus (2r, tier 1) — Reduces chance of losing cast when struck by 35%/70%. Pushback resistance mechanic, not implementable as SpellMod."},
+    {
+      "id": 52,
+      "name": "Improved Renew",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [64, 0, 0],
+      "carrier_spell": 139,
+      "carrier_name": "Renew",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "Renew healing +5% per rank — flags confirmed: 0x40=64 (mask0 bit6). Exclude mask2=1024 (shared Priest marker).",
+      "verified": true, "verify_command": ".spellinfo all 139"
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 160,
+      "name": "Holy Specialization",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "Holy spell crit +1%/rank (CRIT_CHANCE FLAT: 100=1%). All-ones matches every Priest spell.",
+      "verified": true
+    },
+
+    {"_todo": "Spell Warding (5r, tier 2) — Reduces all spell damage taken by 2%/rank. School-based damage reduction, not a SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 161,
+      "name": "Divine Fury",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [1314944, 0, 0],
+      "carrier_spell": 585,
+      "carrier_name": "Smite",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[1314944,0,0]=0x141080: Smite(585) bit7(128) | Greater Heal(2060) bit12(4096) | Heal(2050) bit18(262144) | Holy Fire(14914) bit20(1048576, mask2=1024 excluded). Cast time -100ms/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Desperate Prayer (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Blessed Recovery (3r, tier 4) — Proc-based: after being struck critically, heals over 6s for 2/4/6% of damage taken. Requires hit-taken trigger, not SpellMod."},
+    {"_todo": "Inspiration (3r, tier 4) — Proc-based: after a critical heal, reduces physical damage taken by target by 10/15/25%. Requires crit trigger, not SpellMod."},
+    {"_todo": "Holy Nova (1r, tier 4) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Lightwell (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 162,
+      "name": "Improved Healing",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "PRIEST",
+      "family_flags": [268288, 4, 0],
+      "carrier_spell": 2050,
+      "carrier_name": "Heal",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -5,
+      "notes": "flags=[268288,4,0]: Heal(2050) bit18(262144) | Greater Heal(2060) bit12(4096) | Flash Heal(2061) bit11(2048) → mask0=268288; Binding Heal(32546) mask1 bit2(4). Mana cost -5%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 163,
+      "name": "Healing Prayers",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "PRIEST",
+      "family_flags": [512, 32, 0],
+      "carrier_spell": 596,
+      "carrier_name": "Prayer of Healing",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -10,
+      "notes": "flags=[512,32,0]: Prayer of Healing(596) mask0 bit9(0x200=512); Prayer of Mending(33076) mask1 bit5(0x20=32, mask2=1024 excluded). Mana cost -10%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Spirit of Redemption (1r, tier 6) — Single-rank talent, excluded by design."},
+    {"_todo": "Spiritual Guidance (5r, tier 6) — Converts Spirit to bonus spell power. Passive stat conversion, not SpellMod."},
+    {"_todo": "Surge of Light (2r, tier 6) — Proc-based: Smite/Holy Fire crit makes next Flash Heal free and instant. Requires crit trigger, not SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 164,
+      "name": "Spiritual Healing",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 17,
+      "carrier_name": "Power Word: Shield",
+      "spellmod_op": "ALL_EFFECTS",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "All healing done +2%/rank. All-ones matches every Priest spell.",
+      "verified": true
+    },
+
+    {"_todo": "Holy Concentration (3r, tier 7) — Proc-based: after a Renew/Heal/Flash Heal/Binding Heal/Greater Heal critical, gain increased mana regen. Complex mana proc, not SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 165,
+      "name": "Empowered Healing",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [6144, 4, 0],
+      "carrier_spell": 2061,
+      "carrier_name": "Flash Heal",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 4,
+      "notes": "flags=[6144,4,0]: Flash Heal(2061) bit11(2048) | Greater Heal(2060) bit12(4096) → mask0=6144; Binding Heal(32546) mask1 bit2(4). Healing bonus +4%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Serendipity (3r, tier 8) — Proc-based: Flash Heal/Binding Heal crit reduces next Greater Heal/Prayer of Healing cast time. Requires proc trigger, not SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Empowered Renew (3r, tier 9) — Renew instantly heals for 15/30/45% of total periodic effect on application. Requires an instant heal proc on cast, not a simple SpellMod."},
+    {"_todo": "Circle of Healing (1r, tier 9) — Single-rank talent, excluded by design."},
+    {"_todo": "Test of Faith (3r, tier 9) — Conditional bonus when target is below 50% HP. Requires HP-threshold check, not SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {
+      "id": 166,
+      "name": "Divine Providence",
+      "class": "PRIEST",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "PRIEST",
+      "family_flags": [1346372096, 36, 0],
+      "carrier_spell": 596,
+      "carrier_name": "Prayer of Healing",
+      "spellmod_op": "ALL_EFFECTS",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[1346372096,36,0]=0x50400200: Prayer of Healing(596) bit9(512) | Circle of Healing(34861) bit28(0x10000000=268435456) | Holy Nova(15237) bit22(0x400000=4194304) | Lightwell(724) bit30(0x40000000=1073741824) → mask0=1346372096; Prayer of Mending(33076) mask1 bit5(32); Binding Heal(32546) mask1 bit2(4) → mask1=36. Multi-target heal effectiveness +2%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Guardian Spirit (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

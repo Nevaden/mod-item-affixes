@@ -1,0 +1,976 @@
+{
+    "_comment":  "WARLOCK affixes (family 5). Edit this file, then run build_affixes.ps1.",
+    "family":  5,
+    "family_name":  "WARLOCK",
+    "affixes":  [
+                    {
+                        "id":  9000,
+                        "name":  "Shadow Bolt: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  686,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 686"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4230,
+                                        "display_name":  "Shadow Bolt: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9001,
+                        "name":  "Shadow Bolt: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  686,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 686"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4231,
+                                        "display_name":  "Shadow Bolt: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  9002,
+                        "name":  "Shadow Bolt: -750ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  686,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 686"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -750
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4232,
+                                        "display_name":  "Shadow Bolt: -750ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9003,
+                        "name":  "Shadow Bolt: +20% Dmg, -750ms Cast",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  686,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 686"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -750
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4233,
+                                        "display_name":  "Shadow Bolt: +20% Dmg, -750ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9004,
+                        "name":  "Incinerate: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  29722,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29722"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4234,
+                                        "display_name":  "Incinerate: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9005,
+                        "name":  "Incinerate: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  29722,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29722"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4235,
+                                        "display_name":  "Incinerate: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  9006,
+                        "name":  "Incinerate: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  29722,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29722"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4236,
+                                        "display_name":  "Incinerate: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9007,
+                        "name":  "Incinerate: +20% Dmg, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  29722,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29722"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4237,
+                                        "display_name":  "Incinerate: +20% Dmg, -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9008,
+                        "name":  "Corruption: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  172,
+                                       "flags":  [
+                                                     2,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 172"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4238,
+                                        "display_name":  "Corruption: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  9009,
+                        "name":  "Corruption: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  172,
+                                       "flags":  [
+                                                     2,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 172"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4239,
+                                        "display_name":  "Corruption: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9010,
+                        "name":  "Corruption: +20% DoT, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  172,
+                                       "flags":  [
+                                                     2,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 172"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4240,
+                                        "display_name":  "Corruption: +20% DoT, +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9011,
+                        "name":  "Immolate: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  348,
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 348"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4241,
+                                        "display_name":  "Immolate: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9012,
+                        "name":  "Immolate: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  348,
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 348"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4242,
+                                        "display_name":  "Immolate: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9013,
+                        "name":  "Immolate: +20% Dmg, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  348,
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 348"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4243,
+                                        "display_name":  "Immolate: +20% Dmg, -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9014,
+                        "name":  "Curse of Agony: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  980,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 980"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4244,
+                                        "display_name":  "Curse of Agony: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  9015,
+                        "name":  "Curse of Agony: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  980,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 980"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4245,
+                                        "display_name":  "Curse of Agony: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9016,
+                        "name":  "Curse of Agony: +20% DoT, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  980,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 980"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4246,
+                                        "display_name":  "Curse of Agony: +20% DoT, +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9017,
+                        "name":  "Haunt: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  48181,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48181"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4247,
+                                        "display_name":  "Haunt: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9018,
+                        "name":  "Haunt: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  48181,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48181"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4248,
+                                        "display_name":  "Haunt: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9019,
+                        "name":  "Haunt: +20% Dmg, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  48181,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48181"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4249,
+                                        "display_name":  "Haunt: +20% Dmg, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  9020,
+                        "name":  "Unstable Affliction: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  30108,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 30108"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4250,
+                                        "display_name":  "Unstable Affliction: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  9021,
+                        "name":  "Unstable Affliction: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  30108,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 30108"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4251,
+                                        "display_name":  "Unstable Affliction: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9022,
+                        "name":  "Unstable Affliction: +20% DoT, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  30108,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 30108"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4252,
+                                        "display_name":  "Unstable Affliction: +20% DoT, -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9023,
+                        "name":  "Conflagrate: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  17962,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 17962"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4253,
+                                        "display_name":  "Conflagrate: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9024,
+                        "name":  "Conflagrate: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  17962,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 17962"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4254,
+                                        "display_name":  "Conflagrate: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  9025,
+                        "name":  "Conflagrate: -3s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  17962,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 17962"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4255,
+                                        "display_name":  "Conflagrate: -3s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  9026,
+                        "name":  "Conflagrate: +20% Dmg, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  17962,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 17962"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4256,
+                                        "display_name":  "Conflagrate: +20% Dmg, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  9027,
+                        "name":  "Soul Fire: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  6353,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6353"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4257,
+                                        "display_name":  "Soul Fire: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9028,
+                        "name":  "Soul Fire: -1000ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  6353,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6353"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4258,
+                                        "display_name":  "Soul Fire: -1000ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9029,
+                        "name":  "Soul Fire: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  6353,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6353"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4259,
+                                        "display_name":  "Soul Fire: +20% Dmg, Instant Cast"
+                                    }
+                    }
+                ],
+    "affix_examples":  [
+
+                       ],
+    "removedAffixes":  [
+
+                       ]
+}

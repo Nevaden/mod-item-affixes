@@ -1,0 +1,144 @@
+{
+  "_comment": "Death Knight — Blood tree (spec_tree=0). IDs 620–639.",
+  "_notes": {
+    "tree": "Blood",
+    "class": "DK",
+    "spec_tree": 0,
+    "id_range": "620–639",
+    "spell_family": "DK",
+    "note_main_file": [
+      "id=61 'Improved Blood Strike' (spec_tree=-1) — CORRECTED: flags [4,0,0]→[4194304,0,0]. Old flags=bit2(4) targeted Chains of Ice mask0 bit2, not Blood Strike(45902) which is mask0 bit22(0x00400000=4194304). CRITICAL BUG. verified=true.",
+      "id=62 'Virulence' (spec_tree=-1) — all-ones, carrier=Icy Touch(45477) confirmed SPELLFAMILY_DK. No flag change. verified=true."
+    ],
+    "note_blood_spellmod_scope": "Blood tree is melee/proc-heavy. Butchery (tier 1) is Runic Power generation — not SpellMod. Most Blood talents (Blade Barrier, Scent of Blood, Dark Conviction, Death Rune Mastery, Mark of Blood, Spell Deflection, Will of the Necropolis, Blood-Caked Blade, Blood Gorged) are passive/proc/conditional.",
+    "confirmed_flags": {
+      "BloodStrike_45902":  "[4194304, 0, 0] = mask0 bit22 (0x00400000) — SPELLFAMILY_DK confirmed",
+      "DeathStrike_49998":  "[16, 0, 0] = mask0 bit4 (0x00000010) — SPELLFAMILY_DK confirmed",
+      "HeartStrike_55050":  "[16777216, 0, 0] = mask0 bit24 (0x01000000) — SPELLFAMILY_DK confirmed",
+      "Obliterate_49020":   "[0, 131072, 0] = mask1 bit17 (0x00020000) — SPELLFAMILY_DK confirmed",
+      "RuneTap_48982":      "[134217728, 0, 0] = mask0 bit27 (0x08000000) — SPELLFAMILY_DK confirmed"
+    },
+    "computed_combined_flags": {
+      "Subversion_BS_HS_Ob": "[20971520, 131072, 0] — BS mask0 bit22(4194304)|HS mask0 bit24(16777216)|Ob mask1 bit17(131072). No shared bits."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Butchery (2r, tier 1) — You generate 1/2 Runic Power per 5 seconds while in combat and 10/20 Runic Power when killing an enemy that yields XP or honor. Passive RP generation, not implementable as SpellMod."},
+
+    {
+      "id": 60,
+      "name": "Improved Icy Touch",
+      "class": "DK",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [66, 0, 0],
+      "carrier_spell": 45477,
+      "carrier_name": "Icy Touch",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[66,0,0]=0x00000042. IcyTouch(45477) confirmed SPELLFAMILY_DK. mask0 bit1(2)+bit6(64)=66. Icy Touch damage +5%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 61,
+      "name": "Improved Blood Strike",
+      "class": "DK",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [4194304, 0, 0],
+      "carrier_spell": 45902,
+      "carrier_name": "Blood Strike",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[4194304,0,0]=mask0 bit22 (0x00400000). BloodStrike(45902) confirmed SPELLFAMILY_DK. Blood Strike damage +5%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 621,
+      "name": "Subversion",
+      "class": "DK",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "DK",
+      "family_flags": [20971520, 131072, 0],
+      "carrier_spell": 45902,
+      "carrier_name": "Blood Strike",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 300,
+      "notes": "flags=[20971520,131072,0]. mask0: BloodStrike(45902) bit22(4194304)|HeartStrike(55050) bit24(16777216)=20971520 (0x01400000). mask1: Obliterate(49020) bit17(131072). No shared bits across all three spells. Carrier BloodStrike(45902) confirmed SPELLFAMILY_DK. Blood Strike, Heart Strike, and Obliterate crit chance +3%/rank (CRIT_CHANCE FLAT: 300). WotLK: 3r at +3/+6/+9%.",
+      "verified": true
+    },
+
+    {"_todo": "Blade Barrier (5r, tier 1) — Reduces damage taken by 1/2/3/4/5% when all Blood Runes are on cooldown. Passive proc-based mitigation, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Bladed Armor (5r, tier 2) — Increases spell power by 2/4/6/8/10% of armor value. Stat conversion, not implementable as SpellMod."},
+    {"_todo": "Scent of Blood (3r, tier 2) — After dodging, parrying, or taking damage, 15/30/45% chance to grant a charge making next ability cost no runes. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Two-Handed Weapon Specialization (3r, tier 2) — Increases damage with two-handed melee weapons by 2/4/6%. Passive melee stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Dark Conviction (5r, tier 3) — Increases crit chance by 1/2/3/4/5%. Affects melee AND spells — melee portion not implementable as SpellMod. All-ones would be partial scope. Deferred."},
+    {"_todo": "Death Rune Mastery (3r, tier 3) — Obliterate and Death Strike convert used runes to Death Runes. Rune conversion mechanic, not implementable as SpellMod."},
+    {"_todo": "Improved Death Strike (3r, tier 3) — Increases Death Strike damage and healing by 15/25/40%. Non-linear progression — not modelable with linear value_per_rank."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Rune Tap (1r, tier 4) — Single-rank talent, excluded by design."},
+    {"_todo": "Mark of Blood (1r, tier 4) — Single-rank talent, excluded by design."},
+    {"_todo": "Vendetta (2r, tier 4) — Killing an enemy restores 2/4% total health. Kill proc, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Bloody Strikes (3r, tier 5) — Blood Strike +5/10/15%, Pestilence +10/20/30%, Heart Strike +10/20/30%. Different percentage increments per spell — not modelable as a single linear SpellMod entry."},
+    {"_todo": "Spell Deflection (3r, tier 5) — Chance equal to parry to reduce spell damage taken by 15/30/45%. Conditional passive mitigation, not implementable as SpellMod."},
+    {"_todo": "Veteran of the Third War (3r, tier 5) — Increases Strength, Stamina, expertise, and defense. Passive stats, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Hysteria (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 622,
+      "name": "Improved Rune Tap",
+      "class": "DK",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "DK",
+      "family_flags": [134217728, 0, 0],
+      "carrier_spell": 48982,
+      "carrier_name": "Rune Tap",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 25,
+      "notes": "flags=[134217728,0,0]=mask0 bit27 (0x08000000). RuneTap(48982) confirmed SPELLFAMILY_DK. Carrier RuneTap(48982) confirmed SPELLFAMILY_DK. Rune Tap healing +25%/rank (DAMAGE PCT: 25). WotLK: 2r at +25/+50% (base 10% max health → 12.5%/15%).",
+      "verified": true
+    },
+
+    {"_todo": "Abomination's Might (2r, tier 6) — Melee attacks have 25/50% chance to increase party Attack Power by 10% for 10 sec. Proc/aura buff, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Vampiric Blood (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Will of the Necropolis (3r, tier 7) — Reduces damage taken by 5/10/15% when below 35% health. Conditional passive mitigation, not implementable as SpellMod."},
+    {"_todo": "Blood-Caked Blade (3r, tier 7) — Auto attacks have 25/50/75% chance to trigger Blood-Caked Strike dealing 5/10/15% weapon damage. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Blood Gorged (5r, tier 8) — When above 75% health, attacks ignore 3/6/9/12/15% of armor. Passive conditional stat, not implementable as SpellMod."},
+    {"_todo": "Dancing Rune Weapon (1r, tier 8) — Single-rank talent, excluded by design."}
+
+  ]
+}

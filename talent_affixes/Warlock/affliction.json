@@ -1,0 +1,227 @@
+{
+  "_comment": "Warlock — Affliction tree (spec_tree=0). IDs 260–279.",
+  "_notes": {
+    "tree": "Affliction",
+    "class": "WARLOCK",
+    "spec_tree": 0,
+    "id_range": "260–279",
+    "spell_family": "WARLOCK (5)",
+    "note_main_file": [
+      "id=81 Improved Corruption (spec_tree=-1) — Corruption flags=[2,0,0] CONFIRMED CORRECT via .spellinfo all 172.",
+      "id=83 Improved Life Tap (spec_tree=-1) — Life Tap flags=[262144,0,0] CONFIRMED. Main-file had WRONG flags [0,64,0]; corrected."
+    ],
+    "note_suppression": "Suppression (id=260) and Shadow Mastery (id=264) use all-ones because 'Affliction' and 'Shadow school' are not addressable by Warlock family SpellMod as a subset — no shared Affliction-only bit exists.",
+    "note_no_shared_bits": "No shared Warlock family marker bits across all verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Shadow_Bolt_686":          "[1,0,0] = 0x00000001 (mask0 bit0) — also verifies main-file id=80 CORRECT",
+      "Corruption_172":           "[2,0,0] = 0x00000002 (mask0 bit1) — verifies main-file id=81 CORRECT",
+      "Life_Tap_1454":            "[262144,0,0] = 0x00040000 (mask0 bit18) — main-file id=83 was [0,64,0] WRONG; corrected",
+      "Curse_of_Weakness_702":    "[32768,0,0] = 0x00008000 (mask0 bit15)",
+      "Fear_5782":                "[0,1024,0] = mask1 bit10 (0x00000400)",
+      "Curse_of_Agony_980":       "[1024,0,0] = 0x00000400 (mask0 bit10)",
+      "Seed_of_Corruption_27243": "[0,16,0] = mask1 bit4 (0x00000010)",
+      "Howl_of_Terror_5484":      "[0,8,0] = mask1 bit3 (0x00000008)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 260,
+      "name": "Suppression",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 172,
+      "carrier_name": "Corruption",
+      "spellmod_op": "RESIST_MISS_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "Affliction spell hit chance +1%/rank (RESIST_MISS_CHANCE FLAT: -100=-1%). All-ones used — 'Affliction' is not a targetable spell sub-type in Warlock family SpellMod; acceptable scope for Affliction spec affixes.",
+      "verified": true
+    },
+
+    {
+      "id": 81,
+      "name": "Improved Corruption",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 172,
+      "carrier_name": "Corruption",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -400,
+      "notes": "flags=[2,0,0]=0x00000002 (mask0 bit1). Corruption cast time -400ms/rank (max 5/5 = instant).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 261,
+      "name": "Improved Curse of Weakness",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARLOCK",
+      "family_flags": [32768, 0, 0],
+      "carrier_spell": 702,
+      "carrier_name": "Curse of Weakness",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[32768,0,0]=0x8000 (mask0 bit15). No shared Warlock marker bits. CoW armor-reduction EFFECT1 +5%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Improved Drain Soul (2r, tier 2) — Increases damage of Drain Soul when target is below 25% HP. HP-conditional damage bonus, not implementable as SpellMod."},
+    {
+      "id": 83,
+      "name": "Improved Life Tap",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARLOCK",
+      "family_flags": [262144, 0, 0],
+      "carrier_spell": 1454,
+      "carrier_name": "Life Tap",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[262144,0,0]=0x00040000 (mask0 bit18). Life Tap mana return +10%/rank.",
+      "verified": true
+    },
+    {"_todo": "Soul Siphon (2r, tier 2) — Increases damage done by Drain Life and Drain Soul by 2/4% per Affliction effect on the target. Conditional (stacking debuff count), not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 262,
+      "name": "Improved Fear",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARLOCK",
+      "family_flags": [0, 1024, 0],
+      "carrier_spell": 5782,
+      "carrier_name": "Fear",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 1000,
+      "notes": "flags=[0,1024,0]=mask1 bit10 (0x00000400). No shared Warlock marker bits. Fear duration +1s/rank (DURATION FLAT: 1000=1s).",
+      "verified": true
+    },
+
+    {"_todo": "Fel Concentration (5r, tier 3) — Reduces pushback chance while channeling Drain Life/Drain Soul/Drain Mana by 14/28/42/56/70%. Pushback resistance, not implementable as SpellMod."},
+    {"_todo": "Amplify Curse (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Grim Reach (2r, tier 4) — Increases range of Affliction spells by 10/20%. RANGE SpellMod unit unclear (yards × ?); deferring until units confirmed in-game."},
+    {"_todo": "Nightfall (2r, tier 4) — Your Corruption and Drain Life have a 2/4% chance to proc Shadow Trance (instant Shadow Bolt). Proc-based, not implementable as SpellMod."},
+
+    {
+      "id": 263,
+      "name": "Empowered Corruption",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "WARLOCK",
+      "family_flags": [2, 0, 0],
+      "carrier_spell": 172,
+      "carrier_name": "Corruption",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "flags=[2,0,0]=0x00000002 (mask0 bit1). No shared Warlock marker bits. Corruption bonus damage from spell power +3%/rank (modeled as DAMAGE PCT).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Shadow Embrace (5r, tier 5) — Your Shadow Bolt and Haunt spells apply a stacking debuff reducing healing and physical damage. Target-side debuff mechanic, not implementable as SpellMod."},
+    {"_todo": "Curse of Exhaustion (1r, tier 5) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Felhunter (2r, tier 5) — Reduces mana cost/cooldown of felhunter Shadow Bite. Pet ability, not player SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 264,
+      "name": "Shadow Mastery",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 172,
+      "carrier_name": "Corruption",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "All Shadow spell damage +2%/rank. All-ones used — 'Shadow school' cannot be targeted by Warlock family SpellMod as a subset; acceptable for Affliction spec affixes.",
+      "verified": true
+    },
+
+    {
+      "id": 265,
+      "name": "Contagion",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "WARLOCK",
+      "family_flags": [1026, 16, 0],
+      "carrier_spell": 980,
+      "carrier_name": "Curse of Agony",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 1,
+      "notes": "flags=[1026,16,0]: OR of CoA(980) mask0 bit10(0x400=1024)|Corruption(172) mask0 bit1(0x2=2)|SoC(27243) mask1 bit4(0x10=16). No shared Warlock marker bits. DoT damage +1%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Dark Pact (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 266,
+      "name": "Improved Howl of Terror",
+      "class": "WARLOCK",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARLOCK",
+      "family_flags": [0, 8, 0],
+      "carrier_spell": 5484,
+      "carrier_name": "Howl of Terror",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -4000,
+      "notes": "flags=[0,8,0]=mask1 bit3 (0x00000008). No shared Warlock marker bits. Howl of Terror cooldown -4s/rank (COOLDOWN FLAT: -4000ms).",
+      "verified": true
+    },
+
+    {"_todo": "Death's Embrace (3r, tier 7) — Increases damage done by Shadow spells when player is below 35% HP, and increases life drain when target is below 25% HP. HP-threshold conditional, not implementable as SpellMod."},
+    {"_todo": "Eradication (3r, tier 7) — Your Corruption ticks have a 6/12/18% chance to increase cast speed by 20% for 8 sec. Proc-based haste, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Pandemic (1r, tier 8) — Your Corruption and Unstable Affliction can now critically strike. Single-rank, excluded by design."},
+    {"_todo": "Everlasting Affliction (5r, tier 8) — Shadow Bolt, Haunt, Drain Soul refresh Corruption duration on target. Proc/reset mechanic on hit, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Haunt (1r, tier 9) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Unstable Affliction (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

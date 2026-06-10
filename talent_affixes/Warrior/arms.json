@@ -1,0 +1,197 @@
+{
+  "_comment": "Warrior — Arms tree (spec_tree=0). IDs 380–399.",
+  "_notes": {
+    "tree": "Arms",
+    "class": "WARRIOR",
+    "spec_tree": 0,
+    "id_range": "380–399",
+    "spell_family": "WARRIOR (4)",
+    "note_main_file": [
+      "id=10 Improved Heroic Strike (spec_tree=-1) — flags=[2,0,0] WRONG → CORRECTED to [64,0,0]=0x00000040 (mask0 bit6). Heroic Strike bit6, not bit1.",
+      "id=11 Improved Rend (spec_tree=-1) — flags=[32,0,0] CONFIRMED CORRECT via .spellinfo all 772.",
+      "id=12 Improved Overpower (spec_tree=-1) — flags=[4,0,0] CONFIRMED CORRECT via .spellinfo all 7384. Also fixed value_per_rank 25→2500 (100=1% convention).",
+      "id=13 Improved Mortal Strike (spec_tree=-1) — flags=[0,0,2048] COMPLETELY WRONG → CORRECTED to [33554432,0,0]=0x02000000 (mask0 bit25). Original mask2 bit11 matched nothing."
+    ],
+    "note_no_shared_bits": "No shared Warrior family marker bits across all verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Heroic_Strike_78":    "[64,0,0] = 0x00000040 (mask0 bit6) — CORRECTS main-file id=10 (was [2,0,0])",
+      "Rend_772":            "[32,0,0] = 0x00000020 (mask0 bit5) — verifies main-file id=11 CORRECT",
+      "Overpower_7384":      "[4,0,0] = 0x00000004 (mask0 bit2) — verifies main-file id=12 CORRECT",
+      "Mortal_Strike_12294": "[33554432,0,0] = 0x02000000 (mask0 bit25) — CORRECTS main-file id=13 (was [0,0,2048])",
+      "Charge_100":          "[1,0,0] = 0x00000001 (mask0 bit0)",
+      "Slam_1464":           "[2097152,0,0] = 0x00200000 (mask0 bit21)",
+      "Revenge_6572":        "[1024,0,0] = 0x00000400 (mask0 bit10)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 10,
+      "name": "Improved Heroic Strike",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "WARRIOR",
+      "family_flags": [64, 0, 0],
+      "carrier_spell": 78,
+      "carrier_name": "Heroic Strike",
+      "spellmod_op": "COST",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -10,
+      "notes": "flags=[64,0,0]=0x00000040 (mask0 bit6). Heroic Strike rage cost -1/rank. Rage stored 10x internally (15 rage = ManaCost 150), so COST FLAT value is -10 per rank.",
+      "verified": true
+    },
+    {"_todo": "Deflection (5r, tier 1) — Increases parry chance by 1%/rank. Passive stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 11,
+      "name": "Improved Rend",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "WARRIOR",
+      "family_flags": [32, 0, 0],
+      "carrier_spell": 772,
+      "carrier_name": "Rend",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[32,0,0]=0x00000020 (mask0 bit5). Rend damage +10%/rank.",
+      "verified": true
+    },
+
+    {
+      "id": 380,
+      "name": "Improved Charge",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [1, 0, 0],
+      "carrier_spell": 100,
+      "carrier_name": "Charge",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[1,0,0]=0x00000001 (mask0 bit0). No shared Warrior marker bits. Charge cooldown -2s/rank (COOLDOWN FLAT: -2000ms).",
+      "verified": true
+    },
+
+    {"_todo": "Iron Will (3r, tier 2) — Reduces the duration of stun/immobilize/disarm effects. Mechanic resistance, not implementable as SpellMod."},
+    {"_todo": "Tactical Mastery (3r, tier 2) — Retain up to 25 rage when changing stances. Passive stance mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 12,
+      "name": "Improved Overpower",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [4, 0, 0],
+      "carrier_spell": 7384,
+      "carrier_name": "Overpower",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 2500,
+      "notes": "flags=[4,0,0]=0x00000004 (mask0 bit2). Overpower crit chance +25%/rank (CRIT_CHANCE FLAT: 2500=25%).",
+      "verified": true
+    },
+    {"_todo": "Anger Management (1r, tier 3) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Deep Wounds (3r, tier 4) — Your melee crits cause the target to bleed for additional damage. Proc-based DoT, not implementable as SpellMod."},
+
+    {
+      "id": 381,
+      "name": "Improved Slam",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [2097152, 0, 0],
+      "carrier_spell": 1464,
+      "carrier_name": "Slam",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -500,
+      "notes": "flags=[2097152,0,0]=0x00200000 (mask0 bit21). No shared Warrior marker bits. Slam cast time -0.5s/rank (CASTING_TIME FLAT: -500ms).",
+      "verified": true
+    },
+
+    {"_todo": "Two-Handed Weapon Specialization (3r, tier 4) — Increases damage done with two-handed weapons by 2/4/6%. Passive melee damage, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Impale (2r, tier 5) — Increases melee critical strike damage bonus by 10/20%. SPELLMOD_CRIT_DAMAGE_BONUS applies to spell crits only, not melee — not implementable as SpellMod."},
+    {"_todo": "Taste for Blood (3r, tier 5) — Your Rend periodic damage has a chance to allow use of Overpower. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Sudden Death (3r, tier 6) — Your melee hits have a chance to allow your next Execute to cost no rage. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Mortal Strike (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 13,
+      "name": "Improved Mortal Strike",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "WARRIOR",
+      "family_flags": [33554432, 0, 0],
+      "carrier_spell": 12294,
+      "carrier_name": "Mortal Strike",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[33554432,0,0]=0x02000000 (mask0 bit25). Mortal Strike damage +2%/rank.",
+      "verified": true
+    },
+    {"_todo": "Strength of Arms (2r, tier 7) — Increases total Strength and Stamina by 3/6%. Passive stat, not implementable as SpellMod."},
+
+    {
+      "id": 382,
+      "name": "Unrelenting Assault",
+      "class": "WARRIOR",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [1028, 0, 0],
+      "carrier_spell": 7384,
+      "carrier_name": "Overpower",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[1028,0,0]: OR of Overpower(7384) mask0 bit2(0x4=4)|Revenge(6572) mask0 bit10(0x400=1024). No shared Warrior marker bits. Overpower/Revenge cooldown -2s/rank (COOLDOWN FLAT: -2000ms).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Weapon Expertise (2r, tier 8) — Increases expertise by 4/8. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Trauma (2r, tier 8) — Your bleed effects are 15/30% stronger. Passive bleed multiplier applied at a mechanic level, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Juggernaut (1r, tier 9) — Single-rank talent, excluded by design."},
+    {"_todo": "Sweeping Strikes (1r, tier 9) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Wrecking Crew (5r, tier 10) — Melee crits apply Enrage granting 7/14/20/25/30% melee damage. Proc-based buff, not implementable as SpellMod."},
+
+    {"_section": "── Tier 11 (50 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Bladestorm (1r, tier 11) — Single-rank talent, excluded by design."}
+
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "_comment": "Hunter — Marksmanship tree (spec_tree=1). IDs 460–479.",
+  "_notes": {
+    "tree": "Marksmanship",
+    "class": "HUNTER",
+    "spec_tree": 1,
+    "id_range": "460–479",
+    "spell_family": "HUNTER (9)",
+    "note_main_file": [
+      "id=30 Improved Arcane Shot (spec_tree=-1) — flags=[2048,0,0] CONFIRMED CORRECT. But max_rank=5 WRONG (WotLK is 3 ranks) and value_per_rank=3 WRONG (WotLK is +5%/rank). Both corrected in main file.",
+      "id=31 Efficiency (spec_tree=-1) — all-ones, carrier=13165. AotH confirmed SPELLFAMILY_HUNTER [1048576,0,0]. verified=true.",
+      "id=32 Improved Aimed Shot (spec_tree=-1) — INVALID ENTRY. carrier=14287 is Arcane Shot rank X (flags=[2048,0,0]), NOT Aimed Shot. 'Improved Aimed Shot' does not exist as a multi-rank talent in WotLK 3.3.5a (Aimed Shot is a single-rank trained ability). Entry moved to main-file _todo.",
+      "id=33 Lethal Shots (spec_tree=-1) — all-ones, CRIT_CHANCE FLAT +100. Confirmed carrier 3044 SPELLFAMILY_HUNTER. verified=true."
+    ],
+    "note_no_shared_bits": "No shared Hunter family marker bits across all verified carrier spells. No exclusions required.",
+    "note_14287": "ID 14287 returns 'Arcane Shot' SpellFamilyFlags: 0x00000800 — identical to 3044. It is a higher rank of Arcane Shot, not Aimed Shot. The actual Aimed Shot base spell ID needs separate verification (.spellinfo all 19434 is the TBC/Classic base; WotLK may differ).",
+    "confirmed_flags": {
+      "Aspect_of_the_Hawk_13165": "[1048576,0,0] = 0x00100000 (mask0 bit20) — confirms SPELLFAMILY_HUNTER for main-file id=31",
+      "Arcane_Shot_3044":          "[2048,0,0] = 0x00000800 (mask0 bit11) — confirms main-file id=30 flags CORRECT",
+      "Arcane_Shot_14287":         "[2048,0,0] = 0x00000800 — same as 3044; ID 14287 is another Arcane Shot rank, NOT Aimed Shot; invalidates main-file id=32",
+      "Hunters_Mark_1130":         "[1024,0,0] = 0x00000400 (mask0 bit10)",
+      "Serpent_Sting_1978":        "[16384,0,0] = 0x00004000 (mask0 bit14)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Improved Concussive Shot (5r, tier 1) — Gives Concussive Shot a 4/8/12/16/20% chance to daze target. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Focused Aim (3r, tier 1) — Reduces mana cost of Aimed Shot, Arcane Shot, and Chimera Shot by 4/7/10%. Non-linear progression (4/7/10), not modelable with linear value_per_rank."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 460,
+      "name": "Improved Hunter's Mark",
+      "class": "HUNTER",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "HUNTER",
+      "family_flags": [1024, 0, 0],
+      "carrier_spell": 1130,
+      "carrier_name": "Hunter's Mark",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[1024,0,0]=0x00000400 (mask0 bit10). No shared Hunter marker bits. Hunter's Mark AP bonus +10%/rank (EFFECT1 PCT: 10).",
+      "verified": true
+    },
+
+    {
+      "id": 33,
+      "name": "Lethal Shots",
+      "class": "HUNTER",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "HUNTER",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 3044,
+      "carrier_name": "Arcane Shot",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "All-ones — ranged attack crits cannot be targeted as a Hunter SpellMod sub-type; all-ones is the only viable scope. Carrier Arcane Shot(3044) confirmed SPELLFAMILY_HUNTER. Hunter spell crit +1%/rank.",
+      "verified": true
+    },
+    {
+      "id": 31,
+      "name": "Efficiency",
+      "class": "HUNTER",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "HUNTER",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 13165,
+      "carrier_name": "Aspect of the Hawk",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -2,
+      "notes": "All-ones — WotLK Efficiency reduces pet attack mana costs; pet spells are SPELLFAMILY_GENERIC and cannot be targeted by Hunter SpellMod; all-ones reduces all Hunter player spells as the only viable approximation. Carrier AotH(13165) confirmed SPELLFAMILY_HUNTER.",
+      "verified": true
+    },
+    {"_todo": "Aimed Shot (1r, tier 2) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Steady Shot (3r, tier 3) — After 2 consecutive Steady Shots, increases Aimed Shot damage by 5/10/15%. Proc (stacking counter mechanic), not implementable as SpellMod."},
+    {"_todo": "Rapid Killing (2r, tier 3) — On killing blow, reduces Rapid Fire cooldown by 2/4s and next Aimed/Steady Shot cast time -20%. Proc-based, not implementable as SpellMod."},
+    {"_todo": "Mortal Shots (5r, tier 3) — Increases ranged weapon crit damage bonus by 6/12/18/24/30%. Ranged weapon crit multiplier; SPELLMOD_CRIT_DAMAGE_BONUS applies to spell crits only — not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Go for the Throat (2r, tier 4) — Your ranged crits give pet 25/50 Focus. Proc to pet resource, not implementable as SpellMod."},
+
+    {"_todo": "Improved Arcane Shot (3r, tier 4) — now id=461 in this file. Shared id=30 retired (see removedTalentAffixes)."},
+
+    {
+      "id": 461,
+      "name": "Improved Arcane Shot",
+      "class": "HUNTER",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "HUNTER",
+      "family_flags": [2048, 0, 0],
+      "carrier_spell": 3044,
+      "carrier_name": "Arcane Shot",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[2048,0,0]=0x00000800 (mask0 bit11). No shared Hunter marker bits. Arcane Shot damage +5%/rank (DAMAGE PCT: 5).",
+      "verified": true
+    },
+
+    {"_todo": "Readiness (1r, tier 4) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 462,
+      "name": "Improved Serpent Sting",
+      "class": "HUNTER",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "HUNTER",
+      "family_flags": [16384, 0, 0],
+      "carrier_spell": 1978,
+      "carrier_name": "Serpent Sting",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[16384,0,0]=0x00004000 (mask0 bit14). No shared Hunter marker bits. Serpent Sting damage +2%/rank (DAMAGE PCT: 2).",
+      "verified": true
+    },
+
+    {"_todo": "Connective Fire (2r, tier 5) — Your Volley reduces the cooldown of Multi-Shot by 2/4s. Proc triggered by cast of Volley, not implementable as SpellMod."},
+    {"_todo": "Silencing Shot (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Tracking (5r, tier 6) — Increases damage done while tracking Beasts/Dragonkin/etc. by 1/2/3/4/5%. Conditional passive (tracking type), not implementable as flat SpellMod."},
+    {"_todo": "Scatter Shot (1r, tier 6) — Single-rank talent, excluded by design."},
+    {"_todo": "Master Marksman (5r, tier 6) — Increases ranged crit by 1/2/3/4/5%. Passive ranged crit stat; same scoping issue as Lethal Shots — all-ones variant already covered by main-file id=33."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Rapid Recuperation (2r, tier 7) — Rapid Fire and Rapid Killing restore 2/4 Focus every 2 sec. Proc-based periodic resource, not implementable as SpellMod."},
+    {"_todo": "Chimera Shot (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Wild Quiver (3r, tier 7) — Your ranged auto attacks have a 4/8/16% chance to instantly fire a bonus Arcane Shot. Proc-based bonus shot, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Trueshot Aura (1r, tier 8) — Single-rank talent, excluded by design."}
+
+  ],
+
+  "removedTalentAffixes": [30]
+}

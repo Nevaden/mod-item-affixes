@@ -1,0 +1,191 @@
+{
+  "_comment": "Shaman — Restoration tree (spec_tree=2). IDs 600–619.",
+  "_notes": {
+    "tree": "Restoration",
+    "class": "SHAMAN",
+    "spec_tree": 2,
+    "id_range": "600–619",
+    "spell_family": "SHAMAN (11)",
+    "note_main_file": [
+      "id=72 'Improved Healing Wave' (spec_tree=-1) — CORRECTED: flags [512,0,0]→[64,0,0]. Old flags targeted Reincarnation(20608) bit9=512, not Healing Wave(331) bit6=64. CRITICAL BUG. verified=true.",
+      "id=73 'Tidal Focus' (spec_tree=-1) — all-ones, COST PCT -1. verified=true. No spellinfo needed."
+    ],
+    "note_no_shared_healing_bit": "No shared healing bit found. HealingWave(bit6=64), LesserHW(bit7=128), and ChainHeal(bit8=256) all have unique SHAMAN family bits. Combined healing mask=[448,0,0]=0x000001C0 targets all three healing spells. No exclusion required.",
+    "confirmed_flags": {
+      "HealingWave_331":        "[64, 0, 0] = mask0 bit6 (0x00000040) — SPELLFAMILY_SHAMAN confirmed",
+      "LesserHealingWave_8004": "[128, 0, 0] = mask0 bit7 (0x00000080) — SPELLFAMILY_SHAMAN confirmed",
+      "ChainHeal_1064":         "[256, 0, 0] = mask0 bit8 (0x00000100) — SPELLFAMILY_SHAMAN confirmed",
+      "LightningBolt_403":      "[1, 0, 0] = mask0 bit0 (0x00000001) — SPELLFAMILY_SHAMAN confirmed",
+      "Reincarnation_20608":    "[512, 0, 0] = mask0 bit9 (0x00000200) — SPELLFAMILY_SHAMAN confirmed"
+    },
+    "computed_combined_flags": {
+      "AllHealing_HW_LHW_CH":  "[448, 0, 0] = 0x000001C0 — HW bit6(64)|LHW bit7(128)|CH bit8(256). No shared bits.",
+      "TidalMastery_Heal_LB":  "[449, 0, 0] = 0x000001C1 — AllHealing(448)|LB bit0(1). Targets all healing spells and Lightning Bolt."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 73,
+      "name": "Tidal Focus",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 331,
+      "carrier_name": "Healing Wave",
+      "spellmod_op": "COST",
+      "spellmod_type": "PCT",
+      "value_per_rank": -1,
+      "notes": "All-ones — mana cost of all Shaman spells -1%/rank. Carrier Healing Wave(331) is SPELLFAMILY_SHAMAN.",
+      "verified": true
+    },
+    {
+      "id": 72,
+      "name": "Improved Healing Wave",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [64, 0, 0],
+      "carrier_spell": 331,
+      "carrier_name": "Healing Wave",
+      "spellmod_op": "CASTING_TIME",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -100,
+      "notes": "flags=[64,0,0]=mask0 bit6 (0x00000040). Healing Wave cast time -0.1s/rank. CORRECTED from [512,0,0] which targeted Reincarnation(bit9).",
+      "verified": true
+    },
+
+    {
+      "id": 600,
+      "name": "Tidal Mastery",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [449, 0, 0],
+      "carrier_spell": 331,
+      "carrier_name": "Healing Wave",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 100,
+      "notes": "flags=[449,0,0]=0x000001C1. OR of HealingWave(331) bit6(64)|LesserHW(8004) bit7(128)|ChainHeal(1064) bit8(256)|LightningBolt(403) bit0(1). No shared bits — all four spells have unique SHAMAN family bits. Carrier Healing Wave(331) confirmed SPELLFAMILY_SHAMAN. Crit chance of healing spells and Lightning Bolt +1%/rank (CRIT_CHANCE FLAT: 100). WotLK: 5r at +1/+2/+3/+4/+5%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 602,
+      "name": "Healing Grace",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 3,
+      "spell_family": "SHAMAN",
+      "family_flags": [448, 0, 0],
+      "carrier_spell": 331,
+      "carrier_name": "Healing Wave",
+      "spellmod_op": "THREAT",
+      "spellmod_type": "PCT",
+      "value_per_rank": -5,
+      "notes": "flags=[448,0,0]=0x000001C0. OR of HealingWave(331) bit6(64)|LesserHW(8004) bit7(128)|ChainHeal(1064) bit8(256). No shared bits. Same combined healing flags as id=601. Carrier Healing Wave(331) confirmed SPELLFAMILY_SHAMAN. Healing spell threat -5%/rank (THREAT PCT: -5). WotLK: 3r at -5/-10/-15%. NOTE: talent also reduces spell resist chance by 1/2/3% — RESIST_MISS_CHANCE part not modeled separately.",
+      "verified": true
+    },
+
+    {"_todo": "Focused Mind (3r, tier 2) — Reduces the pushback suffered from damaging attacks while casting Fire, Frost, and Nature spells. Passive pushback reduction, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Totemic Focus (5r, tier 3) — Reduces mana cost of totems by 5/10/15/20/25%. COST PCT -5/rank on totem spells — implementable if totem spells share a SHAMAN family bit. Add after verifying totem spell flags (query a representative totem like Searing Totem or Flametongue Totem)."},
+    {"_todo": "Nature's Guidance (3r, tier 3) — Increases chance to hit with melee, ranged, and spell attacks by 1/2/3%. Passive hit chance, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 601,
+      "name": "Purification",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 5,
+      "spell_family": "SHAMAN",
+      "family_flags": [448, 0, 0],
+      "carrier_spell": 331,
+      "carrier_name": "Healing Wave",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 2,
+      "notes": "flags=[448,0,0]=0x000001C0. OR of HealingWave(331) bit6(64)|LesserHW(8004) bit7(128)|ChainHeal(1064) bit8(256). No shared bits. Same combined healing flags as id=602. Carrier Healing Wave(331) confirmed SPELLFAMILY_SHAMAN. Healing spell effectiveness +2%/rank (DAMAGE PCT: 2). WotLK: 5r at +2/+4/+6/+8/+10%.",
+      "verified": true
+    },
+
+    {"_todo": "Healing Focus (5r, tier 4) — Reduces pushback suffered from damaging attacks while casting healing spells. Passive pushback reduction, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Nature's Swiftness (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 604,
+      "name": "Improved Reincarnation",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "SHAMAN",
+      "family_flags": [512, 0, 0],
+      "carrier_spell": 20608,
+      "carrier_name": "Reincarnation",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -600000,
+      "notes": "flags=[512,0,0]=mask0 bit9 (0x00000200). Reincarnation(20608) confirmed SPELLFAMILY_SHAMAN. No shared bits. Carrier Reincarnation(20608) confirmed SPELLFAMILY_SHAMAN. Reincarnation cooldown -10min/rank (COOLDOWN FLAT: -600000ms). WotLK: 2r at -10/-20 minutes.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Ancestral Healing (2r, tier 6) — Heals that crit increase target's armor by 25/50% for 15 sec. Proc/aura on crit heal, not implementable as SpellMod."},
+    {"_todo": "Totemic Mastery (1r, tier 6) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 603,
+      "name": "Improved Chain Heal",
+      "class": "SHAMAN",
+      "spec_tree": 2,
+      "max_rank": 2,
+      "spell_family": "SHAMAN",
+      "family_flags": [256, 0, 0],
+      "carrier_spell": 1064,
+      "carrier_name": "Chain Heal",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[256,0,0]=mask0 bit8 (0x00000100). Chain Heal(1064) confirmed SPELLFAMILY_SHAMAN. No shared bits — unique bit. Carrier Chain Heal(1064) confirmed SPELLFAMILY_SHAMAN. Chain Heal healing +10%/rank (DAMAGE PCT: 10). WotLK: 2r at +10/+20%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Earth Shield (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Healing Way (3r, tier 7) — Increases the effectiveness of your Healing Wave spell on its target by 8/16/25%. Non-linear progression (8/16/25 = not equal increments) — not modelable with linear value_per_rank."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Mana Tide Totem (1r, tier 8) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Water Shield (3r, tier 8) — Increases the chance for Water Shield charges to be released by 10/20/30% when you heal and the amount of mana gained. Proc rate modifier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Riptide (1r, tier 9) — Single-rank talent, excluded by design."},
+    {"_todo": "Tidal Waves (5r, tier 9) — Casting Chain Heal or Riptide reduces cast time of next HW by 20/40/60/80/100% or increases crit of next LHW. Conditional proc mechanic, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Blessing of the Eternals (2r, tier 10) — Increases spell power by 2/4% of Intellect. Stat conversion, not implementable as SpellMod."}
+
+  ]
+}

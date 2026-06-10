@@ -1,0 +1,74 @@
+{
+  "spells": [
+    {
+      "id": 600002,
+      "name": "Celestial Resonance",
+      "description": "Applies Celestial Resonance to the target. Holy Nova radiates from their position each second for 8 sec.",
+      "visual_id": 3077,
+      "aura_description": "Radiating Holy Nova once per second.",
+      "icon": 1874,
+      "school": "holy",
+      "damage_class": "magic",
+      "prevention_type": "silence",
+      "dispel_type": 1,
+      "power_type": "mana",
+      "cost": 0,
+      "cast_time_index": 16,
+      "duration_index": 31,
+      "cooldown_ms": 0,
+      "interrupt_flags": 15,
+      "gcd_category": 133,
+      "gcd_ms": 1500,
+      "range_index": 5,
+      "targets_flag": 2,
+      "spell_family": 6,
+      "family_flags": [0, 0, 0],
+      "effects": [
+        {
+          "type": "APPLY_AURA",
+          "aura": "PERIODIC_DUMMY",
+          "amplitude_ms": 1000,
+          "base_points": 0,
+          "target": "TARGET_UNIT_TARGET_ANY"
+        }
+      ],
+      "skill_line": 56,
+      "sla_entry_id": 50000
+    },
+    {
+      "id": 600003,
+      "name": "Vanishing Backstab",
+      "description": "Shadowsteps to your target and immediately Backstabs them. Does not trigger Shadowstep's cooldown.",
+      "visual_id": 0,
+      "aura_description": "",
+      "icon": 243,
+      "school": "physical",
+      "damage_class": "melee",
+      "prevention_type": "none",
+      "dispel_type": 0,
+      "power_type": "energy",
+      "cost": 60,
+      "cast_time_index": 1,
+      "duration_index": 0,
+      "cooldown_ms": 0,
+      "interrupt_flags": 0,
+      "gcd_category": 133,
+      "gcd_ms": 1000,
+      "range_index": 34,
+      "targets_flag": 2,
+      "spell_family": 8,
+      "family_flags": [0, 0, 0],
+      "effects": [
+        {
+          "type": "DUMMY",
+          "aura": null,
+          "amplitude_ms": 0,
+          "base_points": 0,
+          "target": "TARGET_SELF"
+        }
+      ],
+      "skill_line": 38,
+      "sla_entry_id": 50001
+    }
+  ]
+}

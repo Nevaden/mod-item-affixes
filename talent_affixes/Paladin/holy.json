@@ -1,0 +1,177 @@
+{
+  "_comment": "Paladin — Holy tree (spec_tree=0). IDs 200–219.",
+  "_notes": {
+    "tree": "Holy",
+    "class": "PALADIN",
+    "spec_tree": 0,
+    "id_range": "200–219",
+    "spell_family": "PALADIN (10)",
+    "note_main_file": [
+      "id=21 Improved Lay on Hands (spec_tree=-1) is a Holy-tree talent — not duplicated here.",
+      "id=22 Healing Light (spec_tree=-1) is a Holy-tree talent — not duplicated here.",
+      "Both were fixed in talent_affixes.json using the spellinfo data below."
+    ],
+    "note_no_shared_bits": "No shared Paladin family marker bits identified across all 14 verified carrier spells. No exclusions required.",
+    "note_seals_partial": "Seals of the Pure (id=200) and Sanctified Seals (Ret id=241) use Seal of Righteousness flags only. Seal of Vengeance(31801) and Seal of Corruption flags were not run — if they have different bits, OR them in for full coverage.",
+    "confirmed_flags": {
+      "Holy_Light_635":              "[2147483648,0,0] = 0x80000000 (mask0 bit31)",
+      "Flash_of_Light_19750":        "[1073741824,0,0] = 0x40000000 (mask0 bit30)",
+      "Holy_Shock_20473":            "[2097152,0,0] = 0x00200000 (mask0 bit21)",
+      "Lay_on_Hands_633":            "[32768,0,0] = 0x00008000 (mask0 bit15) — fixes main-file id=21",
+      "Seal_of_Righteousness_20154": "[134217728,536870912,0] = 0x08000000|mask1=0x20000000",
+      "Blessing_of_Wisdom_19742":    "[65536,0,0] = 0x00010000 (mask0 bit16)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Spiritual Focus (5r, tier 1) — Reduces pushback chance while casting Flash of Light and Holy Light by 14/28/42/56/70%. Pushback resistance mechanic, not implementable as SpellMod."},
+
+    {
+      "id": 200,
+      "name": "Seals of the Pure",
+      "class": "PALADIN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [134217728, 536870912, 0],
+      "carrier_spell": 20154,
+      "carrier_name": "Seal of Righteousness",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "flags=[134217728,536870912,0]: SoR(20154) mask0 bit27(0x8000000=134217728)|mask1 bit29(0x20000000=536870912). NOTE: Seal of Vengeance(31801)/Seal of Corruption not yet run — OR in their unique bits if different from SoR. Seal damage +3%/rank.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {
+      "id": 22,
+      "name": "Healing Light",
+      "class": "PALADIN",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PALADIN",
+      "family_flags": [3221225472, 0, 0],
+      "carrier_spell": 635,
+      "carrier_name": "Holy Light",
+      "spellmod_op": "DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 4,
+      "notes": "flags=[3221225472,0,0]=0xC0000000: HL(635) mask0 bit31(0x80000000=2147483648)|FoL(19750) mask0 bit30(0x40000000=1073741824). Holy Light and Flash of Light healing +4%/rank.",
+      "verified": true, "verify_command": ".spellinfo all 635"
+    },
+    {"_todo": "Divine Intellect (5r, tier 2) — Increases total Intellect by 3%/rank. Passive stat bonus, not implementable as SpellMod."},
+    {"_todo": "Unyielding Faith (2r, tier 2) — Reduces Fear and Disorient duration by 10/20%. Mechanic resistance, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Aura Mastery (1r, tier 3) — Single-rank talent, excluded by design."},
+    {"_todo": "Illumination (5r, tier 3) — After a critical heal, restores mana equal to 20/40/60/80/100% of base mana cost. Proc-based mana return, not implementable as SpellMod."},
+    {
+      "id": 21,
+      "name": "Improved Lay on Hands",
+      "class": "PALADIN",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [32768, 0, 0],
+      "carrier_spell": 633,
+      "carrier_name": "Lay on Hands",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -120000,
+      "notes": "flags=[32768,0,0]=0x8000 (mask0 bit15). LoH cooldown -2 min/rank.",
+      "verified": true, "verify_command": ".spellinfo all 633"
+    },
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Concentration Aura (3r, tier 4) — Increases Concentration Aura interrupt resistance and reduces silence/interrupt duration. Aura/mechanic effect, not implementable as SpellMod."},
+
+    {
+      "id": 201,
+      "name": "Improved Blessing of Wisdom",
+      "class": "PALADIN",
+      "spec_tree": 0,
+      "max_rank": 2,
+      "spell_family": "PALADIN",
+      "family_flags": [65536, 0, 0],
+      "carrier_spell": 19742,
+      "carrier_name": "Blessing of Wisdom",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 10,
+      "notes": "flags=[65536,0,0]=0x10000 (mask0 bit16). No shared Paladin marker bits. BoW mana-per-5 EFFECT1 +10%/rank.",
+      "verified": true
+    },
+
+    {"_todo": "Pure of Heart (2r, tier 4) — Reduces duration of Curse and Disease effects by 25/50%. Debuff duration resistance, not implementable as SpellMod."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Divine Favor (1r, tier 5) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 202,
+      "name": "Sanctified Light",
+      "class": "PALADIN",
+      "spec_tree": 0,
+      "max_rank": 3,
+      "spell_family": "PALADIN",
+      "family_flags": [2149580800, 0, 0],
+      "carrier_spell": 635,
+      "carrier_name": "Holy Light",
+      "spellmod_op": "CRIT_CHANCE",
+      "spellmod_type": "FLAT",
+      "value_per_rank": 200,
+      "notes": "flags=[2149580800,0,0]=0x80200000: HL(635) mask0 bit31(0x80000000=2147483648)|HS(20473) mask0 bit21(0x200000=2097152). No shared Paladin marker bits. Crit chance +2%/rank (CRIT_CHANCE FLAT: 200=2%).",
+      "verified": true
+    },
+
+    {"_todo": "Purifying Power (2r, tier 5) — Reduces mana cost of Cleanse/Consecration by 5%/rank and Exorcism/Holy Wrath by 10%/rank. Two different percentage values for different spell groups — not cleanly implementable as a single SpellMod entry. Could be split into two entries after spellinfo verification, but skipping for now."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 203,
+      "name": "Holy Power",
+      "class": "PALADIN",
+      "spec_tree": 0,
+      "max_rank": 5,
+      "spell_family": "PALADIN",
+      "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 635,
+      "carrier_name": "Holy Light",
+      "spellmod_op": "CRIT_DAMAGE",
+      "spellmod_type": "PCT",
+      "value_per_rank": 3,
+      "notes": "Holy spell critical damage bonus +3%/rank. All-ones used since Holy school cannot be targeted via Paladin family SpellMod directly; acceptable scope for Holy spec.",
+      "verified": true
+    },
+
+    {"_todo": "Holy Guidance (5r, tier 6) — Increases spell power by 6/12/18/24/35% of total Intellect. Passive stat conversion (Intellect → SP), not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Enlightened Judgements (2r, tier 7) — Increases Judgement range by 10/20 yards and hit chance by 2/4%. Range bonus not a standard SpellMod op; hit chance could be RESIST_MISS_CHANCE but requires Judgement spell flags. Skipping."},
+    {"_todo": "Beacon of Light (1r, tier 7) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Judgements of the Pure (5r, tier 8) — Your Judgements increase your casting speed by 3/6/9/12/15% for 1 min. Proc-based haste buff, not implementable as SpellMod."},
+    {"_todo": "Infusion of Light (2r, tier 8) — After Holy Shock crit, reduces cast time of next Holy Light by 1.5/3 sec or Flash of Light cost by 50/100%. Proc-based next-cast modifier, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Illuminated Healing (3r, tier 9) — Your Holy Light also places an absorb shield on the target equal to 10/20/30% of the amount healed. Proc-based absorb, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Divine Illumination (1r, tier 10) — Single-rank talent, excluded by design."}
+
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "_comment": [
+    "Rogue — Subtlety (spec_tree=2) talent affixes.",
+    "See ADDING_TALENT_AFFIXES.md for the authoring guide.",
+    "IDs 120-139 reserved for Rogue Subtlety.",
+    "All entries use class='ROGUE', spell_family='ROGUE', spec_tree=2.",
+    "family_flags verified via .spellinfo all <carrier_spell> in-game.",
+    "Entries with all-ones flags [4294967295, 4294967295, 4294967295] skip flag verification.",
+    "Run build_talent_affixes.ps1 (or update_affixes.bat) after any edits.",
+    "",
+    "Previously confirmed flags reused here:",
+    "  Backstab  (53):   [4, 0, 0]        — assumed 0x00000004, spot-check pending",
+    "  Garrote   (703):  [256, 0, 0]      — 0x00000100 confirmed in Assassination session",
+    "  Mutilate  (1329): [0, 2097152, 0]  — 0x00200000 mask1 confirmed in Assassination session",
+    "  Evasion   (5277): [32, 0, 0]       — 0x00000020 confirmed in Combat session",
+    "  Rupture   (1943): [1048576, 0, 0]  — 0x00100000 confirmed in Assassination session"
+  ],
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts required) ─────────────────────────────────────"},
+
+    {
+      "_talent": "Master of Deception",
+      "_todo": {
+        "talent_description": "Reduces the chance enemies detect you while you are Stealthed.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Passive stealth detection reduction — modifies the server-side stealth detection radius formula, not a SpellMod on any cast spell.",
+        "future_path": "Modify the stealth detection level calculation in Unit::GetStealthDetectionLevel or Player::UpdateSkillsForLevel. Apply a per-bonus-rank detection penalty when the player has this affix equipped."
+      }
+    },
+
+    {
+      "_talent": "Opportunity",
+      "_notes": {
+        "talent_description": "Increases the damage dealt by your Backstab, Ambush, Garrote, and Mutilate abilities by 4% per rank.",
+        "max_talent_rank": 5,
+        "affix_effect": "Single entry — OR'd flags cover all four opening attacks. Each bonus rank adds +4% damage to all four.",
+        "scaling": "Linear. value_per_rank=4 PCT. A 5-rank roll gives +20% damage to all four abilities.",
+        "flags": "Combined = Backstab[4,0,0] | Garrote[256,0,0] | Mutilate[0,2097152,0] | Ambush[?,0,0]. Ambush flags pending .spellinfo all 8676. Partial mask0 = 4|256 = 260.",
+        "implementation": "Pattern 1. Backstab/Garrote/Mutilate flags confirmed in prior sessions. Ambush flags fill in the placeholder after .spellinfo."
+      }
+    },
+    {
+      "id": 120, "name": "Opportunity",
+      "class": "ROGUE", "spec_tree": 2, "max_rank": 5,
+      "spell_family": "ROGUE", "family_flags": [772, 2097152, 0],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 4,
+      "notes": "Backstab+Ambush+Garrote+Mutilate dmg +4% per bonus rank. Unique bits: Backstab bit2(4)|Garrote bit8(256)|Ambush bit9(512)=772 in mask0; Mutilate bit21(2097152) in mask1. Bit 23 excluded — shared across Rogue offensive spells.",
+      "verified": true, "verify_command": ".spellinfo all 8676 (Ambush=0x00800200, unique bit9=512 used)"
+    },
+
+    {
+      "_talent": "Sleight of Hand",
+      "_todo": {
+        "talent_description": "Reduces the chance you are critically hit by melee and ranged attacks by 2% per rank, and reduces threat caused by 4% per rank.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Incoming critical hit reduction is a defensive stat (crit resilience), not a SpellMod on the player's own spells. Threat reduction is also not a SpellMod in this context (it would require a THREAT SpellMod matching the player's own abilities, which is possible but requires specific flags for every threat-generating spell).",
+        "future_path": "Incoming crit reduction: extend talent affix system with a RESILIENCE stat bonus. Threat reduction: could be implemented as THREAT PCT with all-ones mask, but would need the full rogue spell family confirmed."
+      }
+    },
+
+    {"_section": "── Tier 2 (5 pts required) ─────────────────────────────────────"},
+
+    {
+      "_talent": "Elusiveness",
+      "_notes": {
+        "talent_description": "Reduces the cooldown of your Evasion and Vanish abilities by 15 seconds per rank.",
+        "max_talent_rank": 2,
+        "affix_effect": "Two separate entries — one for Evasion, one for Vanish. Each bonus rank cuts that ability's cooldown by 15 seconds.",
+        "scaling": "Linear. value_per_rank=-15000 (ms) FLAT. A 2-rank roll gives -30s CDR on Evasion or Vanish.",
+        "implementation": "Pattern 1. Evasion flags already confirmed [32,0,0]. Vanish flags need .spellinfo all 1856.",
+        "note": "Some versions of this talent also reduced Blind's cooldown. Not added here until confirmed."
+      }
+    },
+    {
+      "id": 121, "name": "Elusiveness (Evasion)",
+      "class": "ROGUE", "spec_tree": 2, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [32, 0, 0],
+      "carrier_spell": 5277, "carrier_name": "Evasion",
+      "spellmod_op": "COOLDOWN", "spellmod_type": "FLAT", "value_per_rank": -15000,
+      "notes": "Evasion cooldown -15s per bonus rank. flags=0x00000020=32, confirmed in Combat session via .spellinfo all 5277.",
+      "verified": true, "verify_command": ".spellinfo all 5277"
+    },
+    {
+      "id": 122, "name": "Elusiveness (Vanish)",
+      "class": "ROGUE", "spec_tree": 2, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [2048, 0, 0],
+      "carrier_spell": 1856, "carrier_name": "Vanish",
+      "spellmod_op": "COOLDOWN", "spellmod_type": "FLAT", "value_per_rank": -15000,
+      "notes": "Vanish cooldown -15s per bonus rank. flags=0x00000800=2048 confirmed via .spellinfo all 1856. Bit 11 only — no bit 23 shared-flag issue.",
+      "verified": true, "verify_command": ".spellinfo all 1856"
+    },
+
+    {
+      "_talent": "Camouflage",
+      "_todo": {
+        "talent_description": "Increases your movement speed while stealthed by 5% per rank, and reduces the duration of movement-impairing effects on you by 10% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Speed while stealthed modifies the player's speed multiplier while in the stealth aura — not a SpellMod on a cast spell. Movement impairment duration reduction (incoming debuffs) requires hooking aura application, same limitation as Nerves of Steel in Combat.",
+        "future_path": "Speed: hook Stealth aura application and apply a speed bonus aura scaled to rank×5%. Impairment reduction: hook OnAuraApply for root/slow mechanics on the player and reduce duration by rank×10%."
+      }
+    },
+
+    {"_section": "── Tier 3 (10 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Initiative",
+      "_todo": {
+        "talent_description": "Gives a 25/50/75% chance to add a combo point each time you use Ambush, Garrote, or Cheap Shot.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Proc-based combo point generation — triggers after the ability lands, not a passive modifier to the ability itself. Requires hooking the spell cast success event for Ambush, Garrote, and Cheap Shot, then rolling rank×25% and granting a combo point.",
+        "future_path": "Hook OnSpellCast for spells 8676/703/1833. Roll rank×25%; if success, call Player::AddComboPoints(1). Over 100% (>4 ranks) could grant a guaranteed point plus a chance at a second."
+      }
+    },
+
+    {
+      "_talent": "Ghostly Strike",
+      "_todo": {
+        "talent_description": "A strike that deals weapon damage and increases your chance to dodge by 15% for 7 seconds.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {
+      "_talent": "Improved Ambush",
+      "_notes": {
+        "talent_description": "Increases the critical strike chance of Ambush by 15% per rank.",
+        "max_talent_rank": 3,
+        "affix_effect": "Each bonus rank adds another +15% crit to Ambush on top of the character's talents.",
+        "scaling": "Linear. value_per_rank=1500 FLAT (CRIT_CHANCE FLAT uses 100 units = 1%). A 3-rank roll gives +45% crit to Ambush.",
+        "implementation": "Pattern 1 — specific spell. flags = Ambush's SpellClassMask — awaiting .spellinfo all 8676."
+      }
+    },
+    {
+      "id": 123, "name": "Improved Ambush",
+      "class": "ROGUE", "spec_tree": 2, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [512, 0, 0],
+      "carrier_spell": 8676, "carrier_name": "Ambush",
+      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 1500,
+      "notes": "Ambush crit +15% per bonus rank. Ambush=0x00800200 (bits 9,23) — using unique bit9 only (0x00000200=512). Bit 23 excluded — shared with SS/Backstab/Eviscerate/Hemorrhage.",
+      "verified": true, "verify_command": ".spellinfo all 8676"
+    },
+
+    {"_section": "── Tier 4 (15 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Setup",
+      "_todo": {
+        "talent_description": "Gives a 15/30/45% chance to add a combo point when an opponent dodges one of your attacks.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Proc triggered by an enemy dodge event — not a SpellMod. Requires hooking the melee hit outcome check and granting a combo point when the result is DODGE.",
+        "future_path": "Hook OnMeleeAttack hit outcome. If result == DODGE, roll rank×15%; if success, call Player::AddComboPoints(1)."
+      }
+    },
+
+    {
+      "_talent": "Dirty Deeds",
+      "_todo": {
+        "talent_description": "Increases your damage against enemies below 35% health by 10% per rank. Also reduces the energy cost of Cheap Shot and Garrote by 10 per rank.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Two separate effects: (1) Conditional damage bonus based on target HP threshold — not a static SpellMod; requires a per-hit HP comparison. (2) Energy cost reduction on Cheap Shot and Garrote could be done as COST FLAT, but only the flat reduction half of the talent would apply.",
+        "future_path": "Cost reduction only: COST FLAT on Cheap Shot (1833) and Garrote (703), value_per_rank=-10, OR'd flags. Conditional damage: hook OnMeleeAttack / OnSpellHit with target HP check, same approach as Prey on the Weak in Combat."
+      }
+    },
+
+    {
+      "_talent": "Deadened Nerves",
+      "_todo": {
+        "talent_description": "Reduces all damage taken by 2% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Incoming damage reduction is a defensive stat (damage mitigation multiplier), not a SpellMod on the player's own spells. Requires modifying the damage-taken calculation in Unit::DealMeleeDamage / Unit::SpellDamageBonusTaken.",
+        "future_path": "Extend ApplyTalentAffixes with a DAMAGE_TAKEN_PCT bonus type. On equip, register a custom aura or multiplier that reduces incoming damage by rank×2%."
+      }
+    },
+
+    {"_section": "── Tier 5 (20 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Waylay",
+      "_todo": {
+        "talent_description": "Your Ambush and Backstab abilities reduce the target's movement speed and attack speed by 50% for 8 seconds.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Applies a debuff aura on the target after Ambush/Backstab land — a triggered effect on the enemy, not a SpellMod that modifies the ability's own stats. Requires hooking OnSpellHit and casting a slow debuff on the target.",
+        "future_path": "Hook OnSpellHit for Ambush (8676) and Backstab (53). When hit, CastSpell a movement and attack speed debuff on the target scaled to rank duration or intensity."
+      }
+    },
+
+    {
+      "_talent": "Premeditation",
+      "_todo": {
+        "talent_description": "When used, adds 2 combo points to your target. Must be in stealth.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {
+      "_talent": "Cheat Death",
+      "_todo": {
+        "talent_description": "You have a 33/66/100% chance to reduce a killing blow's damage to leave you at 10% health. Also reduces all damage taken while below 10% health by 90% for 3 seconds.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Survival proc — triggers when a killing blow would be landed and is checked in the damage application code. Requires hooking the killing-blow code path in Unit::DealDamage and applying a temporary survival effect.",
+        "future_path": "Hook OnDamageDealt / Unit::DealDamage when damage would reduce player HP to 0. Roll rank×33%; if success, cap damage to leave player at 10% HP and apply the short-term damage reduction aura."
+      }
+    },
+
+    {"_section": "── Tier 6 (25 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Serrated Blades",
+      "_notes": {
+        "talent_description": "Increases your Rupture periodic damage by 10% per rank, and causes your Expose Armor to ignore 25% of armor per rank.",
+        "max_talent_rank": 3,
+        "affix_effect": "Implements only the Rupture damage bonus (+10% per rank). The Expose Armor armor-ignore effect is proc/debuff-based and skipped.",
+        "scaling": "Linear. value_per_rank=10 PCT. A 3-rank roll gives +30% Rupture periodic damage.",
+        "flags": "Rupture flags [1048576,0,0] = 0x00100000 confirmed in Assassination session via .spellinfo all 1943.",
+        "implementation": "Pattern 1. Rupture flags already confirmed. No additional .spellinfo needed."
+      }
+    },
+    {
+      "id": 124, "name": "Serrated Blades",
+      "class": "ROGUE", "spec_tree": 2, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [1048576, 0, 0],
+      "carrier_spell": 1943, "carrier_name": "Rupture",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 10,
+      "notes": "Rupture damage +10% per bonus rank (simplified — skips Expose Armor armor-ignore). flags=0x00100000=1048576 confirmed via .spellinfo all 1943.",
+      "verified": true, "verify_command": "N/A — flags confirmed in Assassination session"
+    },
+
+    {
+      "_talent": "Preparation",
+      "_todo": {
+        "talent_description": "When activated, immediately finishes the cooldown on your Evasion, Sprint, Vanish, Cold Blood, Shadowstep, and Blind abilities.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {"_section": "── Tier 7 (30 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Enveloping Shadows",
+      "_todo": {
+        "talent_description": "Reduces the duration of all harmful magical effects on you by 10/20/30% and increases the damage of Hemorrhage by 10/20/30%.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Two effects: (1) Incoming magic debuff duration reduction — same limitation as Nerves of Steel in Combat, requires hooking OnAuraApply for magical effects. (2) Hemorrhage damage increase could be done as DAMAGE PCT with Hemorrhage's SpellClassMask flags.",
+        "future_path": "Partial: implement the Hemorrhage damage portion as DAMAGE PCT once Hemorrhage's SpellFamilyFlags are confirmed via .spellinfo all 16511 (or the correct Hemorrhage base spell ID). The magic duration reduction half would need C++ hook work."
+      }
+    },
+
+    {
+      "_talent": "Shadowstep",
+      "_todo": {
+        "talent_description": "Step through the shadows and appear behind your enemy. Your next Ambush, Backstab, or Garrote deals 20% increased damage and costs 20% less energy.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {
+      "_talent": "Sinister Calling",
+      "_notes": {
+        "talent_description": "Increases your total Agility by 3% per rank, and improves your Backstab and Hemorrhage abilities by 5% per rank.",
+        "max_talent_rank": 5,
+        "affix_effect": "Implements only the Backstab and Hemorrhage damage bonus. The Agility % increase is a stat modifier outside the SpellMod path.",
+        "scaling": "Linear. value_per_rank=5 PCT. A 5-rank roll gives +25% damage to Backstab and Hemorrhage.",
+        "flags": "Backstab [4,0,0] assumed (spot-check pending .spellinfo all 53). Hemorrhage flags unknown — need .spellinfo all 16511 (or correct Hemorrhage spell ID). Placeholder flags until both confirmed.",
+        "implementation": "Pattern 1. Combined mask once both spell flags confirmed. Agility bonus skipped."
+      }
+    },
+    {
+      "id": 125, "name": "Sinister Calling",
+      "class": "ROGUE", "spec_tree": 2, "max_rank": 5,
+      "spell_family": "ROGUE", "family_flags": [33554436, 0, 0],
+      "carrier_spell": 53, "carrier_name": "Backstab",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 5,
+      "notes": "Backstab+Hemorrhage dmg +5% per bonus rank (Agility bonus skipped). Unique bits: Backstab bit2(4)|Hemorrhage bit25(33554432)=33554436. Bit 23 excluded — shared across offensive Rogue spells.",
+      "verified": true, "verify_command": ".spellinfo all 53 (Backstab=0x00800004) and .spellinfo all 16511 (Hemorrhage=0x02800000)"
+    },
+
+    {"_section": "── Tier 8 (35 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Shadow Dance",
+      "_todo": {
+        "talent_description": "Enter the Shadow Dance state, allowing the use of Stealth abilities for 6 seconds.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    }
+
+  ]
+}

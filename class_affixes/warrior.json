@@ -1,0 +1,1454 @@
+﻿{
+    "_comment":  "WARRIOR affixes (family 4). Edit this file, then run build_affixes.ps1.",
+    "family":  4,
+    "family_name":  "WARRIOR",
+    "affixes":  [
+                    {
+                        "id":  3000,
+                        "name":  "Bloodthirst: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23881,
+                                       "flags":  [
+                                                     0,
+                                                     1024,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23881"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4005,
+                                        "display_name":  "Bloodthirst: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3001,
+                        "name":  "Bloodthirst: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23881,
+                                       "flags":  [
+                                                     0,
+                                                     1024,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23881"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4006,
+                                        "display_name":  "Bloodthirst: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3002,
+                        "name":  "Bloodthirst: -1s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23881,
+                                       "flags":  [
+                                                     0,
+                                                     1024,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23881"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4007,
+                                        "display_name":  "Bloodthirst: -1s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  3003,
+                        "name":  "Bloodthirst: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23881,
+                                       "flags":  [
+                                                     0,
+                                                     1024,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23881"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4008,
+                                        "display_name":  "Bloodthirst: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3004,
+                        "name":  "Bloodthirst: +15% Dmg, -1s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23881,
+                                       "flags":  [
+                                                     0,
+                                                     1024,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23881"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -1000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4009,
+                                        "display_name":  "Bloodthirst: +15% Dmg, -1s CD"
+                                    }
+                    },
+                    {
+                        "id":  3005,
+                        "name":  "Mortal Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  12294,
+                                       "flags":  [
+                                                     33554432,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12294"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4010,
+                                        "display_name":  "Mortal Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3006,
+                        "name":  "Mortal Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  12294,
+                                       "flags":  [
+                                                     33554432,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12294"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4011,
+                                        "display_name":  "Mortal Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3007,
+                        "name":  "Mortal Strike: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  12294,
+                                       "flags":  [
+                                                     33554432,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12294"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4012,
+                                        "display_name":  "Mortal Strike: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  3008,
+                        "name":  "Mortal Strike: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  12294,
+                                       "flags":  [
+                                                     33554432,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12294"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4013,
+                                        "display_name":  "Mortal Strike: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  3009,
+                        "name":  "Heroic Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  78,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 78"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4014,
+                                        "display_name":  "Heroic Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3010,
+                        "name":  "Heroic Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  78,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 78"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4015,
+                                        "display_name":  "Heroic Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3011,
+                        "name":  "Heroic Strike: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  78,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 78"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4016,
+                                        "display_name":  "Heroic Strike: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3012,
+                        "name":  "Execute: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  5308,
+                                       "flags":  [
+                                                     536870912,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5308"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4017,
+                                        "display_name":  "Execute: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3013,
+                        "name":  "Execute: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  5308,
+                                       "flags":  [
+                                                     536870912,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5308"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4018,
+                                        "display_name":  "Execute: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3014,
+                        "name":  "Execute: +25% Dmg, +5% Crit",
+                        "weight":  5,
+                        "spec_tree":  1,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  5308,
+                                       "flags":  [
+                                                     536870912,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5308"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4019,
+                                        "display_name":  "Execute: +25% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3015,
+                        "name":  "Whirlwind: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1680,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1680"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4020,
+                                        "display_name":  "Whirlwind: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3016,
+                        "name":  "Whirlwind: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1680,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1680"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4021,
+                                        "display_name":  "Whirlwind: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3017,
+                        "name":  "Whirlwind: -3s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1680,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1680"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4022,
+                                        "display_name":  "Whirlwind: -3s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  3018,
+                        "name":  "Whirlwind: +20% Dmg, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1680,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1680"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4023,
+                                        "display_name":  "Whirlwind: +20% Dmg, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  3019,
+                        "name":  "Overpower: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  7384,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 7384"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4024,
+                                        "display_name":  "Overpower: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3020,
+                        "name":  "Overpower: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  7384,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 7384"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4025,
+                                        "display_name":  "Overpower: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3021,
+                        "name":  "Overpower: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  7384,
+                                       "flags":  [
+                                                     4,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 7384"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4026,
+                                        "display_name":  "Overpower: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3022,
+                        "name":  "Revenge: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6572,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6572"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4027,
+                                        "display_name":  "Revenge: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3023,
+                        "name":  "Revenge: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6572,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6572"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4028,
+                                        "display_name":  "Revenge: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3024,
+                        "name":  "Revenge: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6572,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6572"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4029,
+                                        "display_name":  "Revenge: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  3025,
+                        "name":  "Revenge: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6572,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6572"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4030,
+                                        "display_name":  "Revenge: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  3026,
+                        "name":  "Slam: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1464,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1464"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4031,
+                                        "display_name":  "Slam: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3027,
+                        "name":  "Slam: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1464,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1464"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4032,
+                                        "display_name":  "Slam: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3028,
+                        "name":  "Slam: -750ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1464,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1464"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -750
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4033,
+                                        "display_name":  "Slam: -750ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  3029,
+                        "name":  "Slam: Instant Cast",
+                        "weight":  20,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1464,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1464"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4034,
+                                        "display_name":  "Slam: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  3030,
+                        "name":  "Slam: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  1,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  1464,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1464"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4035,
+                                        "display_name":  "Slam: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  3031,
+                        "name":  "Thunder Clap: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6343,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6343"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4036,
+                                        "display_name":  "Thunder Clap: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3032,
+                        "name":  "Thunder Clap: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6343,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6343"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4037,
+                                        "display_name":  "Thunder Clap: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3033,
+                        "name":  "Thunder Clap: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6343,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6343"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4038,
+                                        "display_name":  "Thunder Clap: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  3034,
+                        "name":  "Thunder Clap: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  6343,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6343"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4039,
+                                        "display_name":  "Thunder Clap: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  3035,
+                        "name":  "Devastate: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  20243,
+                                       "flags":  [
+                                                     0,
+                                                     64,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20243"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4040,
+                                        "display_name":  "Devastate: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3036,
+                        "name":  "Devastate: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  20243,
+                                       "flags":  [
+                                                     0,
+                                                     64,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20243"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4041,
+                                        "display_name":  "Devastate: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3037,
+                        "name":  "Devastate: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  20243,
+                                       "flags":  [
+                                                     0,
+                                                     64,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 20243"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4042,
+                                        "display_name":  "Devastate: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3038,
+                        "name":  "Rend: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  772,
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 772"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4043,
+                                        "display_name":  "Rend: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  3039,
+                        "name":  "Rend: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  772,
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 772"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4044,
+                                        "display_name":  "Rend: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  3040,
+                        "name":  "Rend: +20% DoT, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  772,
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 772"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4045,
+                                        "display_name":  "Rend: +20% DoT, +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  3041,
+                        "name":  "Shield Slam: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23922,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23922"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4046,
+                                        "display_name":  "Shield Slam: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  3042,
+                        "name":  "Shield Slam: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23922,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23922"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4047,
+                                        "display_name":  "Shield Slam: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  3043,
+                        "name":  "Shield Slam: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  23922,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 23922"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4048,
+                                        "display_name":  "Shield Slam: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  3044,
+                        "name":  "Victory Rush: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  4,
+                                       "family_name":  "WARRIOR",
+                                       "carrier_spell_id":  34428,
+                                       "flags":  [
+                                                     0,
+                                                     256,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 34428"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4049,
+                                        "display_name":  "Victory Rush: +15% Damage"
+                                    }
+                    }
+                ],
+    "affix_examples":  [
+
+                       ],
+    "removedAffixes":  [
+
+                       ]
+}

@@ -1,0 +1,15 @@
+Goal of Celestial Resonance.
+Turn Holy nova into a targeted spell, applies a duration buff to the target.
+This debuff then will cast Holy Nova, as through from the player, at the target location.
+The current attempt is to spawn a small creature at the targets current location, cast holy nova, then despawn the creature.
+The creature behavior is how the current EmpyreanEcho works, so we have a blueprint for that part.
+
+The buff will last 8 seconds, it can be cast on an enemy or ally, or self(auto cast on self if no target)
+have a cast time of 1.5 seconds.
+Can apply to any number of targets.(one per cast)
+
+We are currently trying to add a custom spell. so that on equip we gain the new spell Celestial Resonance.
+there is also code to remove Holy Nova, we can remove that code. No need to remove Holy Nova, too complicated and not much payoff.
+We can continue with that path, or if able modify the original spell to accompish this goal.
+Please keep notes in a file the same name as the ability target +.md
+so this files notes and findings while attempting to accomplish the above should be kept in. CelestialResonance.md

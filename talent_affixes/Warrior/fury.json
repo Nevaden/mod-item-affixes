@@ -1,0 +1,158 @@
+{
+  "_comment": "Warrior — Fury tree (spec_tree=1). IDs 400–419.",
+  "_notes": {
+    "tree": "Fury",
+    "class": "WARRIOR",
+    "spec_tree": 1,
+    "id_range": "400–419",
+    "spell_family": "WARRIOR (4)",
+    "note_main_file": [],
+    "note_no_shared_bits": "No shared Warrior family marker bits across all verified carrier spells. No exclusions required.",
+    "confirmed_flags": {
+      "Battle_Shout_6673":       "[65536,0,0] = 0x00010000 (mask0 bit16)",
+      "Commanding_Shout_469":    "[0,128,0] = mask1 bit7 (0x00000080)",
+      "Demoralizing_Shout_1160": "[131072,0,0] = 0x00020000 (mask0 bit17)",
+      "Whirlwind_1680":          "[0,4,0] = mask1 bit2 (0x00000004)"
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Armored to the Teeth (3r, tier 1) — Increases AP by 1/2/3 for every 180 armor. Stat conversion, not implementable as SpellMod."},
+
+    {
+      "id": 400,
+      "name": "Booming Voice",
+      "class": "WARRIOR",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [65536, 128, 0],
+      "carrier_spell": 6673,
+      "carrier_name": "Battle Shout",
+      "spellmod_op": "DURATION",
+      "spellmod_type": "PCT",
+      "value_per_rank": 30,
+      "notes": "flags=[65536,128,0]: OR of BattleShout(6673) mask0 bit16(0x10000=65536)|CommandingShout(469) mask1 bit7(0x80=128). No shared Warrior marker bits. Battle Shout and Commanding Shout duration +30%/rank (DURATION PCT: 30).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Cruelty (5r, tier 2) — Increases melee crit by 1%/rank. Passive melee stat, not implementable as SpellMod."},
+    {"_todo": "Unbridled Wrath (5r, tier 2) — Your melee attacks have a chance to generate extra rage. Proc-based rage generation, not implementable as SpellMod."},
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 401,
+      "name": "Improved Battle Shout",
+      "class": "WARRIOR",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "WARRIOR",
+      "family_flags": [65536, 0, 0],
+      "carrier_spell": 6673,
+      "carrier_name": "Battle Shout",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 4,
+      "notes": "flags=[65536,0,0]=0x00010000 (mask0 bit16). No shared Warrior marker bits. Battle Shout AP bonus +4%/rank (EFFECT1 PCT: 4).",
+      "verified": true
+    },
+
+    {"_todo": "Improved Cleave (3r, tier 3) — Increases Cleave bonus damage by 40/80/120%. DAMAGE PCT on Cleave — add after verifying Cleave(845) flags with .spellinfo all 845."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 402,
+      "name": "Commanding Presence",
+      "class": "WARRIOR",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "WARRIOR",
+      "family_flags": [65536, 128, 0],
+      "carrier_spell": 6673,
+      "carrier_name": "Battle Shout",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[65536,128,0]: OR of BattleShout(6673) mask0 bit16(0x10000=65536)|CommandingShout(469) mask1 bit7(0x80=128). No shared Warrior marker bits. Battle Shout AP and Commanding Shout max health bonus +5%/rank (EFFECT1 PCT: 5).",
+      "verified": true
+    },
+
+    {
+      "id": 403,
+      "name": "Improved Demoralizing Shout",
+      "class": "WARRIOR",
+      "spec_tree": 1,
+      "max_rank": 5,
+      "spell_family": "WARRIOR",
+      "family_flags": [131072, 0, 0],
+      "carrier_spell": 1160,
+      "carrier_name": "Demoralizing Shout",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 8,
+      "notes": "flags=[131072,0,0]=0x00020000 (mask0 bit17). No shared Warrior marker bits. Demoralizing Shout AP reduction effect +8%/rank (EFFECT1 PCT: 8).",
+      "verified": true
+    },
+
+    {"_todo": "Dual Wield Specialization (5r, tier 4) — Increases damage dealt by off-hand weapon by 5/10/15/20/25%. Passive off-hand multiplier, not implementable as SpellMod."},
+    {"_todo": "Improved Execute (2r, tier 4) — Reduces rage cost of Execute by 2/5. Non-linear (-2r/-5r), not modelable with linear value_per_rank."},
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Blood Craze (3r, tier 5) — Your melee crits cause you to regenerate 2/4/6% of total health over 6 sec. Proc-based self-heal, not implementable as SpellMod."},
+    {"_todo": "Dual Wield Mastery (2r, tier 5) — Increases hit chance while dual wielding by 2/4%. Passive hit stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Death Wish (1r, tier 6) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Intercept (2r, tier 6) — Reduces cooldown of Intercept by 3/5 sec. Non-linear (-3s/-5s), not modelable with linear value_per_rank."},
+    {"_todo": "Furious Attacks (2r, tier 6) — Your normal melee attacks have a 10/20% chance to reduce healing effects on target. Proc/debuff, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Improved Berserker Stance (5r, tier 7) — Increases AP in Berserker Stance by 2/4/6/8/10%. Aura-conditional passive, not implementable as SpellMod."},
+
+    {
+      "id": 404,
+      "name": "Improved Whirlwind",
+      "class": "WARRIOR",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "WARRIOR",
+      "family_flags": [0, 4, 0],
+      "carrier_spell": 1680,
+      "carrier_name": "Whirlwind",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[0,4,0]=mask1 bit2 (0x00000004). No shared Warrior marker bits. Whirlwind cooldown -2s/rank (COOLDOWN FLAT: -2000ms).",
+      "verified": true
+    },
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Precision (3r, tier 8) — Increases melee and ranged hit chance by 1/2/3%. Passive hit stat, not implementable as SpellMod."},
+    {"_todo": "Flurry (5r, tier 8) — After landing a melee crit, increases attack speed by 10/15/20/25/30% for next 3 swings. Proc-based attack speed, not implementable as SpellMod."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Bloodsurge (3r, tier 9) — Your melee hits have a 7/14/20% chance to make your next Slam instant. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 10 (45 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Unending Fury (5r, tier 10) — Increases damage of Whirlwind, Slam, and Bloodthirst by 2/4/6/8/10%. DAMAGE PCT on WW|Slam|BT — deferring until Bloodthirst(23881) flags verified with .spellinfo all 23881."},
+    {"_todo": "Rampage (1r, tier 10) — Single-rank talent, excluded by design."},
+
+    {"_section": "── Tier 11 (50 pts) ─────────────────────────────────────"},
+
+    {"_todo": "Bloodthirst (1r, tier 11) — Single-rank talent, excluded by design."}
+
+  ]
+}

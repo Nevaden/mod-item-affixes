@@ -1,0 +1,127 @@
+{
+  "_comment": "Shaman — Enhancement tree (spec_tree=1). IDs 580–599.",
+  "_notes": {
+    "tree": "Enhancement",
+    "class": "SHAMAN",
+    "spec_tree": 1,
+    "id_range": "580–599",
+    "spell_family": "SHAMAN (11)",
+    "note_main_file": [
+      "No main-file entries are Enhancement spec-specific. ids 70–73 are all spec_tree=-1."
+    ],
+    "note_stormstrike": "Stormstrike (17364) confirmed SPELLFAMILY_SHAMAN. flags=0x00000000 0x01000010 0x00000000 → [0, 16777232, 0] (mask1: bit4(16) + bit24(16777216)). SpellMod can target it — id=580 is valid.",
+    "note_shared_FT_WF_bit": "Flametongue Weapon(8024) and Windfury Weapon(8232) both have flags=0x00000000 0x00000800 0x00000000 = [0, 2048, 0]. mask1 bit11=2048 is intentionally shared — one combined flag [0,2048,0] targets both weapon buff spells simultaneously.",
+    "confirmed_flags": {
+      "Stormstrike_17364":      "[0, 16777232, 0] = mask1 bit4(16) + bit24(16777216) = 0x01000010 — SPELLFAMILY_SHAMAN confirmed",
+      "LightningShield_324":    "[1024, 0, 0] = mask0 bit10 (0x00000400) — SPELLFAMILY_SHAMAN confirmed",
+      "WaterShield_52127":      "[0, 32, 0] = mask1 bit5 (0x00000020) — SPELLFAMILY_SHAMAN confirmed",
+      "FlametongueWeapon_8024": "[0, 2048, 0] = mask1 bit11 (0x00000800) — SPELLFAMILY_SHAMAN confirmed",
+      "WindfuryWeapon_8232":    "[0, 2048, 0] = mask1 bit11 (0x00000800) — same bit as FT, intentional shared"
+    },
+    "computed_combined_flags": {
+      "LS_WS": "[1024, 32, 0] — LightningShield mask0 bit10(1024) | WaterShield mask1 bit5(32). No shared bits.",
+      "FT_WF": "[0, 2048, 0] — Both share mask1 bit11(2048). One flag targets both weapon buff spells."
+    }
+  },
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Ancestral Knowledge (5r, tier 1) — Increases maximum mana by 1/2/3/4/5%. Passive stat, not implementable as SpellMod."},
+    {"_todo": "Shield Specialization (3r, tier 1) — Increases the effect of your shield spells by 5/10/15%. Covered by id=581 Improved Shields."},
+    {"_todo": "Guardian Totems (2r, tier 1) — Increases the effect of Stoneskin and Windwall Totems by 8/16% and reduces cooldown of Grounding Totem by 1/2s. Mixed effect — add after verifying totem spell IDs and families."},
+
+    {"_section": "── Tier 2 (5 pts) ───────────────────────────────────────"},
+
+    {"_todo": "Thundering Strikes (5r, tier 2) — Increases melee crit chance by 1/2/3/4/5%. Passive melee crit, not implementable as SpellMod."},
+    {"_todo": "Improved Ghost Wolf (2r, tier 2) — Reduces cast time of Ghost Wolf by 1/2s. CASTING_TIME FLAT -1000ms/rank on Ghost Wolf(2645) — add after verifying .spellinfo all 2645."},
+
+    {
+      "id": 581,
+      "name": "Improved Shields",
+      "class": "SHAMAN",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "SHAMAN",
+      "family_flags": [1024, 32, 0],
+      "carrier_spell": 324,
+      "carrier_name": "Lightning Shield",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[1024,32,0]. OR of LightningShield(324) mask0 bit10(1024)|WaterShield(52127) mask1 bit5(32). No shared bits — all bits unique. Carrier Lightning Shield(324) confirmed SPELLFAMILY_SHAMAN. Lightning Shield and Water Shield effectiveness +5%/rank (EFFECT1 PCT: 5). WotLK: 3r at +5/+10/+15%.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 3 (10 pts) ──────────────────────────────────────"},
+
+    {
+      "id": 582,
+      "name": "Elemental Weapons",
+      "class": "SHAMAN",
+      "spec_tree": 1,
+      "max_rank": 3,
+      "spell_family": "SHAMAN",
+      "family_flags": [0, 2048, 0],
+      "carrier_spell": 8024,
+      "carrier_name": "Flametongue Weapon",
+      "spellmod_op": "EFFECT1",
+      "spellmod_type": "PCT",
+      "value_per_rank": 5,
+      "notes": "flags=[0,2048,0]=mask1 bit11 (0x00000800). FlametongueWeapon(8024) and WindfuryWeapon(8232) share mask1 bit11=2048 — one combined flag targets both simultaneously. Shared bit is intentional here (no false matches within this pair). Carrier Flametongue Weapon(8024) confirmed SPELLFAMILY_SHAMAN. Flametongue and Windfury Weapon effectiveness +5%/rank (EFFECT1 PCT: 5). WotLK: 3r at +5/+10/+15%.",
+      "verified": true
+    },
+
+    {"_todo": "Shamanistic Focus (5r, tier 3) — After melee crit, reduces mana cost of next Shock by 20/40/60/80/100%. Conditional proc (melee crit trigger), not implementable as flat SpellMod."},
+    {"_todo": "Flurry (5r, tier 3) — After melee crit, increases attack speed by 10/15/20/25/30% for next 3 swings. Proc-based attack speed, not implementable as SpellMod."},
+
+    {"_section": "── Tier 4 (15 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Toughness (5r, tier 4) — Increases armor value from items by 2/4/6/8/10%. Passive item stat multiplier, not implementable as SpellMod."},
+    {"_todo": "Spirit Weapons (1r, tier 4) — Single-rank talent, excluded by design."},
+
+    {
+      "id": 580,
+      "name": "Improved Stormstrike",
+      "class": "SHAMAN",
+      "spec_tree": 1,
+      "max_rank": 2,
+      "spell_family": "SHAMAN",
+      "family_flags": [0, 16777232, 0],
+      "carrier_spell": 17364,
+      "carrier_name": "Stormstrike",
+      "spellmod_op": "COOLDOWN",
+      "spellmod_type": "FLAT",
+      "value_per_rank": -2000,
+      "notes": "flags=[0,16777232,0]=0x01000010. Stormstrike(17364) confirmed SPELLFAMILY_SHAMAN. mask1: bit4(16)+bit24(16777216)=16777232. Carrier Stormstrike(17364) confirmed SPELLFAMILY_SHAMAN. Stormstrike cooldown -2s/rank (COOLDOWN FLAT: -2000ms). WotLK: 2r at -2/-4s.",
+      "verified": true
+    },
+
+    {"_section": "── Tier 5 (20 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Mental Dexterity (3r, tier 5) — Increases Attack Power by 10/20/30% of Intellect. Stat conversion, not implementable as SpellMod."},
+    {"_todo": "Unleashed Rage (5r, tier 5) — Melee crits grant nearby party members 4/7/10/13/15% AP. Proc/aura buff, not implementable as SpellMod."},
+
+    {"_section": "── Tier 6 (25 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Weapon Mastery (3r, tier 6) — Increases weapon expertise by 2/4/6. Passive expertise stat, not implementable as SpellMod."},
+    {"_todo": "Dual Wield Specialization (3r, tier 6) — Increases damage done by your offhand attacks by 10/20/30%. Passive melee stat, not implementable as SpellMod."},
+
+    {"_section": "── Tier 7 (30 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Shamanistic Rage (1r, tier 7) — Single-rank talent, excluded by design."},
+    {"_todo": "Maelstrom Weapon (5r, tier 7) — Melee hits have a 20/40/60/80/100% chance per hit to reduce cast time and mana cost of next spell. Proc-based stacking charge mechanic, not implementable as SpellMod."},
+    {"_todo": "Static Shock (3r, tier 7) — When you use Stormstrike, you have a 33/66/99% chance to automatically cast a Lightning Shield bolt. Proc-based, not implementable as SpellMod."},
+
+    {"_section": "── Tier 8 (35 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Lava Lash (1r, tier 8) — Single-rank talent, excluded by design."},
+    {"_todo": "Improved Lava Lash (2r, tier 8) — Increases Lava Lash damage by 15/30%. DAMAGE PCT +15/rank on Lava Lash — add after verifying Lava Lash spell ID and SPELLFAMILY_SHAMAN with .spellinfo."},
+
+    {"_section": "── Tier 9 (40 pts) ──────────────────────────────────────"},
+
+    {"_todo": "Feral Spirit (1r, tier 9) — Single-rank talent, excluded by design."}
+
+  ]
+}

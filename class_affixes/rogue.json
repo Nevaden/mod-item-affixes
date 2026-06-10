@@ -1,0 +1,1073 @@
+{
+    "_comment":  "ROGUE affixes (family 8). Edit this file, then run build_affixes.ps1.",
+    "family":  8,
+    "family_name":  "ROGUE",
+    "affixes":  [
+                    {
+                        "id":  6000,
+                        "name":  "Sinister Strike: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1752,
+                                       "flags":  [
+                                                     8388610,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1752"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4128,
+                                        "display_name":  "Sinister Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6001,
+                        "name":  "Sinister Strike: +5% Crit",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1752,
+                                       "flags":  [
+                                                     8388610,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1752"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4129,
+                                        "display_name":  "Sinister Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6002,
+                        "name":  "Sinister Strike: -10 Energy Cost",
+                        "weight":  50,
+                        "min_quality":  2,
+                        "spec_tree":  1,
+                        "_note":  "Sinister Strike costs 45 energy; -10 brings it to 35.",
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1752,
+                                       "flags":  [
+                                                     8388610,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1752"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4130,
+                                        "display_name":  "Sinister Strike: -10 Energy Cost"
+                                    }
+                    },
+                    {
+                        "id":  6003,
+                        "name":  "Sinister Strike: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  1,
+                        "_note":  "Sinister Strike costs 0 energy. -1000 flat covers all ranks.",
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1752,
+                                       "flags":  [
+                                                     8388610,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1752"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4131,
+                                        "display_name":  "Sinister Strike: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6004,
+                        "name":  "Sinister Strike: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "min_quality":  2,
+                        "spec_tree":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1752,
+                                       "flags":  [
+                                                     8388610,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1752"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4132,
+                                        "display_name":  "Sinister Strike: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6005,
+                        "name":  "Backstab: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  1,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  53,
+                                       "flags":  [
+                                                     8388612,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4133,
+                                        "display_name":  "Backstab: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6006,
+                        "name":  "Backstab: +5% Crit",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  1,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  53,
+                                       "flags":  [
+                                                     8388612,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4134,
+                                        "display_name":  "Backstab: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6007,
+                        "name":  "Backstab: -15 Energy Cost",
+                        "weight":  50,
+                        "min_quality":  2,
+                        "spec_tree":  1,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  53,
+                                       "flags":  [
+                                                     8388612,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4135,
+                                        "display_name":  "Backstab: -15 Energy Cost"
+                                    }
+                    },
+                    {
+                        "id":  6008,
+                        "name":  "Backstab: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  1,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  53,
+                                       "flags":  [
+                                                     8388612,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4136,
+                                        "display_name":  "Backstab: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6009,
+                        "name":  "Backstab: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "min_quality":  2,
+                        "spec_tree":  1,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  53,
+                                       "flags":  [
+                                                     8388612,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 53"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4137,
+                                        "display_name":  "Backstab: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6010,
+                        "name":  "Ambush: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  8676,
+                                       "flags":  [
+                                                     8389120,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8676"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4138,
+                                        "display_name":  "Ambush: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6011,
+                        "name":  "Ambush: +5% Crit",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  8676,
+                                       "flags":  [
+                                                     8389120,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8676"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4139,
+                                        "display_name":  "Ambush: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6012,
+                        "name":  "Ambush: -20 Energy Cost",
+                        "weight":  50,
+                        "min_quality":  2,
+                        "spec_tree":  0,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  8676,
+                                       "flags":  [
+                                                     8389120,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8676"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -20
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4140,
+                                        "display_name":  "Ambush: -20 Energy Cost"
+                                    }
+                    },
+                    {
+                        "id":  6013,
+                        "name":  "Ambush: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  0,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  8676,
+                                       "flags":  [
+                                                     8389120,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8676"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4141,
+                                        "display_name":  "Ambush: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6014,
+                        "name":  "Ambush: +20% Dmg, +5% Crit",
+                        "weight":  5,
+                        "min_quality":  3,
+                        "spec_tree":  0,
+                        "item_category":  8,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  8676,
+                                       "flags":  [
+                                                     8389120,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8676"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4142,
+                                        "display_name":  "Ambush: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6015,
+                        "name":  "Mutilate: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1329,
+                                       "flags":  [
+                                                     0,
+                                                     2097152,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1329"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4143,
+                                        "display_name":  "Mutilate: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6016,
+                        "name":  "Mutilate: +5% Crit",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1329,
+                                       "flags":  [
+                                                     0,
+                                                     2097152,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1329"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4144,
+                                        "display_name":  "Mutilate: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6017,
+                        "name":  "Mutilate: -15 Energy Cost",
+                        "weight":  50,
+                        "min_quality":  2,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1329,
+                                       "flags":  [
+                                                     0,
+                                                     2097152,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1329"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4145,
+                                        "display_name":  "Mutilate: -15 Energy Cost"
+                                    }
+                    },
+                    {
+                        "id":  6018,
+                        "name":  "Mutilate: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1329,
+                                       "flags":  [
+                                                     0,
+                                                     2097152,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1329"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4146,
+                                        "display_name":  "Mutilate: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6019,
+                        "name":  "Eviscerate: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2098,
+                                       "flags":  [
+                                                     8519680,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2098"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4147,
+                                        "display_name":  "Eviscerate: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6020,
+                        "name":  "Eviscerate: +5% Crit",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2098,
+                                       "flags":  [
+                                                     8519680,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2098"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4148,
+                                        "display_name":  "Eviscerate: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6021,
+                        "name":  "Eviscerate: -15 Energy Cost",
+                        "weight":  50,
+                        "min_quality":  2,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2098,
+                                       "flags":  [
+                                                     8519680,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2098"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4149,
+                                        "display_name":  "Eviscerate: -15 Energy Cost"
+                                    }
+                    },
+                    {
+                        "id":  6022,
+                        "name":  "Eviscerate: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2098,
+                                       "flags":  [
+                                                     8519680,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2098"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4150,
+                                        "display_name":  "Eviscerate: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6023,
+                        "name":  "Eviscerate: +25% Dmg, +5% Crit",
+                        "weight":  5,
+                        "min_quality":  3,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2098,
+                                       "flags":  [
+                                                     8519680,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2098"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4151,
+                                        "display_name":  "Eviscerate: +25% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6024,
+                        "name":  "Envenom: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  32645,
+                                       "flags":  [
+                                                     8388608,
+                                                     8,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32645"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4152,
+                                        "display_name":  "Envenom: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6025,
+                        "name":  "Envenom: +5% Crit",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  32645,
+                                       "flags":  [
+                                                     8388608,
+                                                     8,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32645"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4153,
+                                        "display_name":  "Envenom: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6026,
+                        "name":  "Envenom: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  32645,
+                                       "flags":  [
+                                                     8388608,
+                                                     8,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32645"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4154,
+                                        "display_name":  "Envenom: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6027,
+                        "name":  "Fan of Knives: +15% Damage",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  51723,
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51723"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4155,
+                                        "display_name":  "Fan of Knives: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  6028,
+                        "name":  "Fan of Knives: -1s Cooldown",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  51723,
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51723"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4156,
+                                        "display_name":  "Fan of Knives: -1s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  6029,
+                        "name":  "Fan of Knives: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  51723,
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51723"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4157,
+                                        "display_name":  "Fan of Knives: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6030,
+                        "name":  "Hemorrhage: +15% DoT",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  16511,
+                                       "flags":  [
+                                                     41943040,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 16511"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4158,
+                                        "display_name":  "Hemorrhage: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  6031,
+                        "name":  "Hemorrhage: Free Cast",
+                        "weight":  10,
+                        "min_quality":  3,
+                        "spec_tree":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  16511,
+                                       "flags":  [
+                                                     41943040,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 16511"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4159,
+                                        "display_name":  "Hemorrhage: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6032,
+                        "name":  "Rupture: +15% DoT",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1943,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1943"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4160,
+                                        "display_name":  "Rupture: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  6033,
+                        "name":  "Garrote: +15% DoT",
+                        "weight":  100,
+                        "min_quality":  1,
+                        "spec_tree":  0,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  703,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 703"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4161,
+                                        "display_name":  "Garrote: +15% DoT"
+                                    }
+                    }
+                ],
+    "affix_examples":  [
+
+                       ],
+    "removedAffixes":  [
+
+                       ]
+}

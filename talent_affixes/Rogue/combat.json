@@ -1,0 +1,307 @@
+{
+  "_comment": [
+    "Rogue — Combat (spec_tree=1) talent affixes.",
+    "See ADDING_TALENT_AFFIXES.md for the authoring guide.",
+    "IDs 41 and 100-119 reserved for Rogue Combat.",
+    "All entries use class='ROGUE', spell_family='ROGUE', spec_tree=1.",
+    "family_flags verified via .spellinfo all <carrier_spell> in-game.",
+    "Entries with all-ones flags [4294967295, 4294967295, 4294967295] skip flag verification.",
+    "Run build_talent_affixes.ps1 (or update_affixes.bat) after any edits."
+  ],
+
+  "talent_affixes": [
+
+    {"_section": "── Tier 1 (0 pts required) ─────────────────────────────────────"},
+
+    {
+      "_talent": "Improved Gouge",
+      "_notes": {
+        "talent_description": "Increases the duration of Gouge by 0.5 seconds per rank.",
+        "max_talent_rank": 3,
+        "affix_effect": "Each bonus rank adds 500ms (0.5s) to Gouge's duration on top of the character's talents.",
+        "scaling": "Linear. value_per_rank=500 (ms) FLAT. A 3-rank roll adds +1.5s total.",
+        "implementation": "Pattern 1 — specific spell. family_flags must match Gouge's SpellClassMask. DURATION FLAT values are in ms."
+      }
+    },
+    {
+      "id": 100, "name": "Improved Gouge",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [8, 0, 0],
+      "carrier_spell": 1776, "carrier_name": "Gouge",
+      "spellmod_op": "DURATION", "spellmod_type": "FLAT", "value_per_rank": 500,
+      "notes": "Gouge duration +0.5s (500ms) per bonus rank. flags=0x00000008=8 confirmed via .spellinfo all 1776",
+      "verified": true, "verify_command": ".spellinfo all 1776"
+    },
+
+    {
+      "id": 41, "name": "Improved Sinister Strike",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [2, 0, 0],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "COST", "spellmod_type": "FLAT", "value_per_rank": -3,
+      "notes": "flags=[2,0,0]=mask0 bit1. SinisterStrike(1752) confirmed SPELLFAMILY_ROGUE. Energy cost -3/rank. WotLK: 2r at -3/-6. Moved from cross-tree main file (pre-spec-split id).",
+      "verified": true, "verify_command": ".spellinfo all 1752"
+    },
+
+    {
+      "_talent": "Dual Wield Specialization",
+      "_todo": {
+        "talent_description": "Increases the damage done by your offhand weapon by 10% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Affects passive offhand autoattack damage — not a castable spell with SpellFamilyFlags. Autoattack is not dispatched through the SpellMod system.",
+        "future_path": "Hook OnMeleeAttack with offhand swing check. Apply a damage multiplier of (1 + rank*0.1) to the offhand damage roll in Unit::MeleeDamageBonus or Unit::CalcDamage."
+      }
+    },
+
+    {"_section": "── Tier 2 (5 pts required) ─────────────────────────────────────"},
+
+    {
+      "_talent": "Improved Slice and Dice",
+      "_notes": {
+        "talent_description": "Increases the duration granted by Slice and Dice by 15% per rank (to a max of +45%).",
+        "max_talent_rank": 3,
+        "affix_effect": "Each bonus rank adds another +15% to the Slice and Dice buff duration.",
+        "scaling": "Linear. value_per_rank=15 PCT. A 3-rank roll gives +45% duration on top of talents.",
+        "implementation": "Pattern 1 — specific spell. family_flags must match Slice and Dice's SpellClassMask. DURATION PCT is a percentage of the spell's base duration."
+      }
+    },
+    {
+      "id": 101, "name": "Improved Slice and Dice",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [262144, 0, 0],
+      "carrier_spell": 5171, "carrier_name": "Slice and Dice",
+      "spellmod_op": "DURATION", "spellmod_type": "PCT", "value_per_rank": 15,
+      "notes": "Slice and Dice duration +15% per bonus rank. flags=0x00040000=262144 confirmed via .spellinfo all 5171",
+      "verified": true, "verify_command": ".spellinfo all 5171"
+    },
+
+    {
+      "_talent": "Deflection",
+      "_todo": {
+        "talent_description": "Increases your chance to parry an attack by 1% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Parry rating is a character stat, not a SpellMod. The talent affix system only supports SpellModifier objects. Parry bonuses require ApplyRatingMod / HandleStatFlatModifier, which are currently only in the generic (stat) affix path.",
+        "future_path": "Extend ApplyTalentAffixes to support a stat-bonus fallback. Or add as a class-specific stat affix in rogue.json."
+      }
+    },
+
+    {
+      "_talent": "Precision",
+      "_todo": {
+        "talent_description": "Increases your chance to hit with melee and ranged weapons by 1% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Hit rating is a character stat, not a SpellMod. Same limitation as Deflection.",
+        "future_path": "Extend ApplyTalentAffixes to support stat bonuses, or add as a class-specific stat affix."
+      }
+    },
+
+    {"_section": "── Tier 3 (10 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Endurance",
+      "_notes": {
+        "talent_description": "Reduces the cooldown of your Sprint and Evasion abilities by 45 seconds per rank.",
+        "max_talent_rank": 2,
+        "affix_effect": "Two separate entries — one for Sprint, one for Evasion. Each bonus rank reduces that ability's cooldown by 45 seconds.",
+        "scaling": "Linear. value_per_rank=-45000 (ms) FLAT. A 2-rank roll gives -90s CDR on Sprint or Evasion.",
+        "implementation": "Pattern 1 — two entries because Sprint and Evasion almost certainly have different SpellClassMask bits. COOLDOWN FLAT values are in milliseconds, negative = reduction."
+      }
+    },
+    {
+      "id": 102, "name": "Endurance (Sprint)",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [64, 0, 0],
+      "carrier_spell": 2983, "carrier_name": "Sprint",
+      "spellmod_op": "COOLDOWN", "spellmod_type": "FLAT", "value_per_rank": -45000,
+      "notes": "Sprint cooldown -45s per bonus rank. flags=0x00000040=64 confirmed via .spellinfo all 2983",
+      "verified": true, "verify_command": ".spellinfo all 2983"
+    },
+    {
+      "id": 103, "name": "Endurance (Evasion)",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [32, 0, 0],
+      "carrier_spell": 5277, "carrier_name": "Evasion",
+      "spellmod_op": "COOLDOWN", "spellmod_type": "FLAT", "value_per_rank": -45000,
+      "notes": "Evasion cooldown -45s per bonus rank. flags=0x00000020=32 confirmed via .spellinfo all 5277",
+      "verified": true, "verify_command": ".spellinfo all 5277"
+    },
+
+    {
+      "_talent": "Riposte",
+      "_todo": {
+        "talent_description": "A strike that becomes active after parrying an enemy attack. Deals weapon damage plus bonus damage and disarms the target for 6 seconds.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {
+      "_talent": "Aggression",
+      "_notes": {
+        "talent_description": "Increases the damage of your Sinister Strike, Backstab, and Eviscerate abilities by 2% per rank.",
+        "max_talent_rank": 3,
+        "affix_effect": "Single entry with OR'd flags covering all three abilities. Each bonus rank adds +2% damage to all three.",
+        "scaling": "Linear. value_per_rank=2 PCT. A 3-rank roll gives +6% damage to Sinister Strike, Backstab, and Eviscerate.",
+        "flags": "Combined using UNIQUE bits only (bit 23=0x00800000 excluded — shared by SS/Backstab/Eviscerate/Ambush/Hemorrhage): SS unique bit1(0x2) | Backstab unique bit2(0x4) | Eviscerate unique bit17(0x20000) = 0x00020006 = 131078.",
+        "implementation": "Pattern 1. All component flags confirmed. Using unique bits only to prevent false-positive matches on Ambush and other spells sharing bit 23."
+      }
+    },
+    {
+      "id": 104, "name": "Aggression",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 3,
+      "spell_family": "ROGUE", "family_flags": [131078, 0, 0],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 2,
+      "notes": "SS+Backstab+Eviscerate damage +2% per bonus rank. flags=0x00020006=131078 (unique bits: SS bit1|Backstab bit2|Eviscerate bit17). Bit 23 excluded — shared by Ambush/Hemorrhage.",
+      "verified": true, "verify_command": "N/A — derived from flags confirmed in Assassination session"
+    },
+
+    {"_section": "── Tier 4 (15 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Mace Specialization",
+      "_todo": {
+        "talent_description": "Your attacks have a 1% per rank chance to stun the target when using a Mace.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Stun-on-hit is a proc triggered by autoattack or ability hits, not a SpellMod. Requires a custom OnHit hook with weapon type check and a CastSpell call to apply the stun debuff.",
+        "future_path": "Hook OnMeleeAttack with mace weapon type check. Roll rank×1% chance; if success, cast the stun spell on the target."
+      }
+    },
+
+    {
+      "_talent": "Blade Flurry",
+      "_todo": {
+        "talent_description": "Increases your attack speed by 20% and causes each of your attacks to also strike a nearby enemy. Lasts 15 seconds.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {
+      "_talent": "Combat Potency",
+      "_todo": {
+        "talent_description": "Gives your successful offhand weapon strikes a 20% chance to restore 15 energy.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Proc on offhand weapon strike — not a SpellMod. Requires hooking the offhand melee hit event and granting energy on a probability roll.",
+        "future_path": "Hook OnMeleeAttack for offhand strikes. Roll rank×20% chance; if success, call Player::ModifyPower(POWER_ENERGY, 15)."
+      }
+    },
+
+    {"_section": "── Tier 5 (20 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Sword Specialization",
+      "_todo": {
+        "talent_description": "Gives you a 5% per rank chance to get an extra attack after hitting with your sword.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Extra attack proc on weapon hit — not a SpellMod. Requires hooking the melee swing event with a sword weapon type check.",
+        "future_path": "Hook OnMeleeAttack with sword-type check. Roll rank×5% chance; if success, trigger an extra attack via Unit::HandleProcExtraAttackFor."
+      }
+    },
+
+    {
+      "_talent": "Hack and Slash",
+      "_todo": {
+        "talent_description": "Increases your chance to get an extra attack when using swords or axes.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Extra attack proc on weapon hit — same limitation as Sword Specialization. Not a SpellMod.",
+        "future_path": "Same as Sword Specialization but expanded to sword and axe weapon types."
+      }
+    },
+
+    {
+      "_talent": "Vitality",
+      "_todo": {
+        "talent_description": "Increases your Energy regeneration rate by 8/16/25% per rank.",
+        "max_talent_rank": 3,
+        "why_not_implemented": "Energy regeneration rate is a base character attribute, not a SpellMod. Requires modifying the player's energy regen multiplier via a path not currently exposed in the talent affix system.",
+        "future_path": "Extend ApplyTalentAffixes with an ENERGY_REGEN bonus type. On equip, multiply the player's base energy regen by (1 + accumulated_bonus). Track separately so RemoveTalentAffixes can undo it cleanly."
+      }
+    },
+
+    {"_section": "── Tier 6 (25 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Adrenaline Rush",
+      "_todo": {
+        "talent_description": "Increases your Energy regeneration rate by 100% for 15 seconds.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    },
+
+    {
+      "_talent": "Nerves of Steel",
+      "_todo": {
+        "talent_description": "Reduces the duration of Stun and Fear effects used against you by 15/30%.",
+        "max_talent_rank": 2,
+        "why_not_implemented": "Incoming CC duration reduction is not a SpellMod on the player's own spells. Requires hooking the aura application path to shorten incoming stun/fear debuff durations.",
+        "future_path": "Hook OnAuraApply for the player. When a stun or fear mechanic aura is applied, reduce its duration by rank×15%."
+      }
+    },
+
+    {
+      "_talent": "Lightning Reflexes",
+      "_todo": {
+        "talent_description": "Increases your Dodge chance by 1% per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Dodge is a character stat, not a SpellMod. Same limitation as Deflection and Precision.",
+        "future_path": "Extend ApplyTalentAffixes to support stat bonuses."
+      }
+    },
+
+    {"_section": "── Tier 7 (30 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Restless Blades",
+      "_todo": {
+        "talent_description": "Your Eviscerate, Rupture, and Envenom reduce the remaining cooldown of your Adrenaline Rush, Killing Spree, and Sprint by 2 seconds per combo point spent per rank.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Triggered CDR — fires when a finisher is cast and counts the combo points spent. Not a static SpellMod. Requires hooking the finisher cast event, reading the combo points consumed, and reducing the cooldowns of three specific spells.",
+        "future_path": "Hook OnSpellCast for Eviscerate/Rupture/Envenom. Read Player::GetComboPoints() at cast time, then call Player::ReduceSpellCooldown for Adrenaline Rush, Killing Spree, and Sprint by rank × 2000ms × combo_points."
+      }
+    },
+
+    {
+      "_talent": "Savage Combat",
+      "_notes": {
+        "talent_description": "Increases your total physical damage by 2% per rank. Also reduces the armor of targets you apply a physical bleed to by 2% per rank.",
+        "max_talent_rank": 2,
+        "affix_effect": "Implements only the flat physical damage bonus (+2% per rank). The armor reduction on bleed targets requires an aura-on-debuff-application hook and is skipped.",
+        "scaling": "Linear. value_per_rank=2 PCT. All-ones mask — applies to all Rogue spells (slight overreach, acceptable).",
+        "implementation": "Pattern 2 — all-ones mask. Simplification: all Rogue abilities gain +2% damage, not just physical abilities. Armor reduction half is omitted."
+      }
+    },
+    {
+      "id": 105, "name": "Savage Combat",
+      "class": "ROGUE", "spec_tree": 1, "max_rank": 2,
+      "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
+      "carrier_spell": 1752, "carrier_name": "Sinister Strike",
+      "spellmod_op": "DAMAGE", "spellmod_type": "PCT", "value_per_rank": 2,
+      "notes": "All Rogue damage +2% per bonus rank (simplified — skips armor reduction debuff). All-ones mask, carrier 1752 confirmed Rogue family.",
+      "verified": true, "verify_command": "N/A — all-ones mask"
+    },
+
+    {"_section": "── Tier 8 (35 pts required) ────────────────────────────────────"},
+
+    {
+      "_talent": "Prey on the Weak",
+      "_todo": {
+        "talent_description": "When you hit a target with less health percentage than you, your damage dealt is increased by 4% per rank for 10 seconds.",
+        "max_talent_rank": 5,
+        "why_not_implemented": "Conditional damage bonus based on relative HP percentages — not a static SpellMod. Requires a per-hit HP comparison and conditional temporary aura application.",
+        "future_path": "Hook OnMeleeAttack or OnSpellHit. Compare target.GetHealthPct() < player.GetHealthPct(); if true, apply or refresh a short-duration DAMAGE PCT aura scaled to rank×4%."
+      }
+    },
+
+    {
+      "_talent": "Killing Spree",
+      "_todo": {
+        "talent_description": "Step through the shadows from enemy to enemy, attacking each for 2 seconds.",
+        "max_talent_rank": 1,
+        "why_not_implemented": "Single-rank talent — excluded by design."
+      }
+    }
+
+  ]
+}

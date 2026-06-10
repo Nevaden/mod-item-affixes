@@ -1,0 +1,64 @@
+{
+  "_comment": [
+    "Lookup maps for build_talent_affixes.ps1.",
+    "This file is read explicitly by name; it is not treated as a talent data file.",
+    "Edit this file only when the underlying DB schema or enum values change."
+  ],
+
+  "spell_family_map": {
+    "GENERIC":  0,
+    "MAGE":     3,
+    "WARRIOR":  4,
+    "WARLOCK":  5,
+    "PRIEST":   6,
+    "DRUID":    7,
+    "ROGUE":    8,
+    "HUNTER":   9,
+    "PALADIN":  10,
+    "SHAMAN":   11,
+    "DK":       15
+  },
+
+  "class_mask_map": {
+    "WARRIOR":  1,
+    "PALADIN":  2,
+    "HUNTER":   4,
+    "ROGUE":    8,
+    "PRIEST":   16,
+    "DK":       32,
+    "SHAMAN":   64,
+    "MAGE":     128,
+    "WARLOCK":  256,
+    "DRUID":    1024
+  },
+
+  "spellmod_op_map": {
+    "DAMAGE":            0,
+    "DURATION":          1,
+    "THREAT":            2,
+    "EFFECT1":           3,
+    "CHARGES":           4,
+    "RANGE":             5,
+    "RADIUS":            6,
+    "CRIT_CHANCE":       7,
+    "ALL_EFFECTS":       8,
+    "NOT_LOSE_CAST":     9,
+    "CASTING_TIME":      10,
+    "COOLDOWN":          11,
+    "EFFECT2":           12,
+    "COST":              14,
+    "CRIT_DAMAGE":       15,
+    "RESIST_MISS_CHANCE":16,
+    "JUMP_TARGETS":      17,
+    "DOT_DURATION":      22,
+    "EFFECT3":           23
+  },
+
+  "spellmod_type_map": {
+    "FLAT": 107,
+    "PCT":  108
+  },
+
+  "_removedTalentAffixes_note": "Talent affixes moved here are deleted from talent_affix_def on the next update_affixes.bat run. Full data is kept for history and can be restored by moving the entry back to its class file. If an id is reused in the active array it will be deleted then re-inserted on each run — that is safe.",
+  "removedTalentAffixes": []
+}

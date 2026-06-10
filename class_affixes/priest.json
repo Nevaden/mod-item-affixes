@@ -1,0 +1,2225 @@
+{
+    "_comment":  "PRIEST affixes (family 6). Edit this file, then run build_affixes.ps1.",
+    "family":  6,
+    "family_name":  "PRIEST",
+    "affixes":  [
+                    {
+                        "id":  1000,
+                        "name":  "Smite: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  585,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 585"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3890,
+                                        "display_name":  "Smite: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  1001,
+                        "name":  "Smite: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  585,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 585"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3891,
+                                        "display_name":  "Smite: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1002,
+                        "name":  "Smite: -750ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  585,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 585"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -750
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3892,
+                                        "display_name":  "Smite: -750ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1003,
+                        "name":  "Smite: Instant Cast",
+                        "weight":  20,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  585,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 585"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3893,
+                                        "display_name":  "Smite: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  1004,
+                        "name":  "Smite: +20% Dmg, -750ms",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  585,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 585"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -750
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3894,
+                                        "display_name":  "Smite: +20% Dmg, -750ms"
+                                    }
+                    },
+                    {
+                        "id":  1005,
+                        "name":  "Psychic Scream: -5s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8122,
+                                       "flags":  [
+                                                     65536,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8122"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -5000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3895,
+                                        "display_name":  "Psychic Scream: -5s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1006,
+                        "name":  "Psychic Scream: +2s Duration",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8122,
+                                       "flags":  [
+                                                     65536,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8122"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3896,
+                                        "display_name":  "Psychic Scream: +2s Duration"
+                                    }
+                    },
+                    {
+                        "id":  1007,
+                        "name":  "Psychic Scream: -10s CD, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8122,
+                                       "flags":  [
+                                                     65536,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8122"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3897,
+                                        "display_name":  "Psychic Scream: -10s CD, +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  1008,
+                        "name":  "Desperate Prayer: +20% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  19236,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19236"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3898,
+                                        "display_name":  "Desperate Prayer: +20% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1009,
+                        "name":  "Desperate Prayer: -15s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  19236,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19236"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3899,
+                                        "display_name":  "Desperate Prayer: -15s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1010,
+                        "name":  "Desperate Prayer: +25% Heal, -15s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  19236,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 19236"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -15000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3900,
+                                        "display_name":  "Desperate Prayer: +25% Heal, -15s CD"
+                                    }
+                    },
+                    {
+                        "id":  1011,
+                        "name":  "Holy Fire: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  14914,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 14914"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3901,
+                                        "display_name":  "Holy Fire: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  1012,
+                        "name":  "Holy Fire: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  14914,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 14914"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3902,
+                                        "display_name":  "Holy Fire: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1013,
+                        "name":  "Holy Fire: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  14914,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 14914"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3903,
+                                        "display_name":  "Holy Fire: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1014,
+                        "name":  "Holy Fire: -5s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  14914,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 14914"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -5000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3904,
+                                        "display_name":  "Holy Fire: -5s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1015,
+                        "name":  "Holy Fire: +20% Dmg, -5s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  14914,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 14914"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -5000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3905,
+                                        "display_name":  "Holy Fire: +20% Dmg, -5s CD"
+                                    }
+                    },
+                    {
+                        "id":  1016,
+                        "name":  "Holy Nova: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  15237,
+                                       "flags":  [
+                                                     4194304,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 15237"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3906,
+                                        "display_name":  "Holy Nova: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  1017,
+                        "name":  "Holy Nova: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  15237,
+                                       "flags":  [
+                                                     4194304,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 15237"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3907,
+                                        "display_name":  "Holy Nova: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1018,
+                        "name":  "Holy Nova: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  15237,
+                                       "flags":  [
+                                                     4194304,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 15237"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3908,
+                                        "display_name":  "Holy Nova: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1019,
+                        "name":  "Lightwell: -15s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  724,
+                                       "flags":  [
+                                                     1073741824,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 724"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3909,
+                                        "display_name":  "Lightwell: -15s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1020,
+                        "name":  "Lightwell: Instant Cast",
+                        "weight":  20,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  724,
+                                       "flags":  [
+                                                     1073741824,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 724"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3910,
+                                        "display_name":  "Lightwell: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  1021,
+                        "name":  "Mind Blast: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8092,
+                                       "flags":  [
+                                                     8192,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8092"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3911,
+                                        "display_name":  "Mind Blast: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  1022,
+                        "name":  "Mind Blast: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8092,
+                                       "flags":  [
+                                                     8192,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8092"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3912,
+                                        "display_name":  "Mind Blast: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1023,
+                        "name":  "Mind Blast: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8092,
+                                       "flags":  [
+                                                     8192,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8092"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3913,
+                                        "display_name":  "Mind Blast: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1024,
+                        "name":  "Mind Blast: -3s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8092,
+                                       "flags":  [
+                                                     8192,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8092"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3914,
+                                        "display_name":  "Mind Blast: -3s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1025,
+                        "name":  "Mind Blast: +20% Dmg, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  8092,
+                                       "flags":  [
+                                                     8192,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8092"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3915,
+                                        "display_name":  "Mind Blast: +20% Dmg, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  1026,
+                        "name":  "Mind Sear: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  48045,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48045"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3916,
+                                        "display_name":  "Mind Sear: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  1027,
+                        "name":  "Mind Sear: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  48045,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48045"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3917,
+                                        "display_name":  "Mind Sear: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1028,
+                        "name":  "Mind Sear: +20% Dmg, -500ms Channel",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  48045,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48045"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3918,
+                                        "display_name":  "Mind Sear: +20% Dmg, -500ms Channel"
+                                    }
+                    },
+                    {
+                        "id":  1029,
+                        "name":  "Penance: +15% Power",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  47540,
+                                       "flags":  [
+                                                     0,
+                                                     8388608,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 47540"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3919,
+                                        "display_name":  "Penance: +15% Power"
+                                    }
+                    },
+                    {
+                        "id":  1030,
+                        "name":  "Penance: -3s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  47540,
+                                       "flags":  [
+                                                     0,
+                                                     8388608,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 47540"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3920,
+                                        "display_name":  "Penance: -3s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1031,
+                        "name":  "Penance: +20% Power, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  47540,
+                                       "flags":  [
+                                                     0,
+                                                     8388608,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 47540"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3921,
+                                        "display_name":  "Penance: +20% Power, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  1032,
+                        "name":  "Binding Heal: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  32546,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32546"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3922,
+                                        "display_name":  "Binding Heal: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1033,
+                        "name":  "Binding Heal: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  32546,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32546"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3923,
+                                        "display_name":  "Binding Heal: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1034,
+                        "name":  "Binding Heal: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  32546,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32546"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3924,
+                                        "display_name":  "Binding Heal: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1035,
+                        "name":  "Binding Heal: +20% Heal, -500ms",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  32546,
+                                       "flags":  [
+                                                     0,
+                                                     4,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 32546"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3925,
+                                        "display_name":  "Binding Heal: +20% Heal, -500ms"
+                                    }
+                    },
+                    {
+                        "id":  1036,
+                        "name":  "Circle of Healing: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  34861,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 34861"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3926,
+                                        "display_name":  "Circle of Healing: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1037,
+                        "name":  "Circle of Healing: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  34861,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 34861"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3927,
+                                        "display_name":  "Circle of Healing: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1038,
+                        "name":  "Circle of Healing: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  34861,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 34861"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3928,
+                                        "display_name":  "Circle of Healing: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1039,
+                        "name":  "Circle of Healing: +20% Heal, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  34861,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 34861"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3929,
+                                        "display_name":  "Circle of Healing: +20% Heal, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  1040,
+                        "name":  "Flash Heal: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2061,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2061"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3930,
+                                        "display_name":  "Flash Heal: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1041,
+                        "name":  "Flash Heal: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2061,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2061"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3931,
+                                        "display_name":  "Flash Heal: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1042,
+                        "name":  "Flash Heal: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2061,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2061"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3932,
+                                        "display_name":  "Flash Heal: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1043,
+                        "name":  "Flash Heal: Instant Cast",
+                        "weight":  20,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2061,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2061"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3933,
+                                        "display_name":  "Flash Heal: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  1044,
+                        "name":  "Flash Heal: +20% Heal, Instant",
+                        "weight":  5,
+                        "spec_tree":  1,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2061,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2061"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3934,
+                                        "display_name":  "Flash Heal: +20% Heal, Instant"
+                                    }
+                    },
+                    {
+                        "id":  1045,
+                        "name":  "Greater Heal: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2060,
+                                       "flags":  [
+                                                     4096,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2060"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3935,
+                                        "display_name":  "Greater Heal: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1046,
+                        "name":  "Greater Heal: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2060,
+                                       "flags":  [
+                                                     4096,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2060"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3936,
+                                        "display_name":  "Greater Heal: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1047,
+                        "name":  "Greater Heal: -750ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2060,
+                                       "flags":  [
+                                                     4096,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2060"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -750
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3937,
+                                        "display_name":  "Greater Heal: -750ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1048,
+                        "name":  "Greater Heal: -1500ms Cast",
+                        "weight":  40,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2060,
+                                       "flags":  [
+                                                     4096,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2060"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3938,
+                                        "display_name":  "Greater Heal: -1500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  1049,
+                        "name":  "Greater Heal: +20% Heal, -1000ms",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  2060,
+                                       "flags":  [
+                                                     4096,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2060"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -1000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3939,
+                                        "display_name":  "Greater Heal: +20% Heal, -1000ms"
+                                    }
+                    },
+                    {
+                        "id":  1050,
+                        "name":  "Prayer of Mending: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  33076,
+                                       "flags":  [
+                                                     0,
+                                                     32,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33076"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3940,
+                                        "display_name":  "Prayer of Mending: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1051,
+                        "name":  "Prayer of Mending: -3s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  33076,
+                                       "flags":  [
+                                                     0,
+                                                     32,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33076"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3941,
+                                        "display_name":  "Prayer of Mending: -3s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1052,
+                        "name":  "Prayer of Mending: +20% Heal, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  33076,
+                                       "flags":  [
+                                                     0,
+                                                     32,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33076"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3942,
+                                        "display_name":  "Prayer of Mending: +20% Heal, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  1053,
+                        "name":  "Renew: +20% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  139,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 139"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3943,
+                                        "display_name":  "Renew: +20% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1054,
+                        "name":  "Renew: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  139,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 139"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3944,
+                                        "display_name":  "Renew: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  1055,
+                        "name":  "Renew: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  139,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 139"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3945,
+                                        "display_name":  "Renew: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  1056,
+                        "name":  "Renew: +25% Heal, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  139,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 139"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3946,
+                                        "display_name":  "Renew: +25% Heal, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  1057,
+                        "name":  "Divine Hymn: +20% Healing",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  64843,
+                                       "flags":  [
+                                                     0,
+                                                     4194304,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 64843"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3947,
+                                        "display_name":  "Divine Hymn: +20% Healing"
+                                    }
+                    },
+                    {
+                        "id":  1058,
+                        "name":  "Divine Hymn: -1min Cooldown",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  64843,
+                                       "flags":  [
+                                                     0,
+                                                     4194304,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 64843"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -60000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  3948,
+                                        "display_name":  "Divine Hymn: -1min Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  1059,
+                        "name":  "Divine Hymn: +25% Heal, -1min CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  6,
+                                       "family_name":  "PRIEST",
+                                       "carrier_spell_id":  64843,
+                                       "flags":  [
+                                                     0,
+                                                     4194304,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 64843"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -60000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  3949,
+                                        "display_name":  "Divine Hymn: +25% Heal, -1min CD"
+                                    }
+                    }
+                ],
+    "affix_examples":  [
+                           {
+                               "id":  100,
+                               "name":  "Smite: +15% Damage",
+                               "_purpose":  "Increases the damage Smite deals by 15%. Affects all ranks.",
+                               "weight":  0,
+                               "min_quality":  2,
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "carrier_spell_id":  585,
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  0,
+                                              "op_name":  "DAMAGE",
+                                              "_op_note":  "op=0 (SPELLMOD_DAMAGE) scales the spell\u0027s direct damage output.",
+                                              "modifier":  108,
+                                              "modifier_name":  "PCT",
+                                              "_modifier_note":  "108=PCT. value=15 means the spell hits for 115% of its normal damage.",
+                                              "value":  15,
+                                              "_value_note":  "+15%. Smite Rank 12 (48123) hits for ~765-857 base; with affix: ~880-985."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  0,
+                                               "_tooltip_note":  "enchant_id=0 = no tooltip until a DBC entry is created."
+                                           }
+                           },
+                           {
+                               "id":  101,
+                               "name":  "Smite: +100% Crit Chance",
+                               "_purpose":  "Smite has a 5% higher chance to critically strike. Stacks with gear/talent crit.",
+                               "weight":  0,
+                               "min_quality":  2,
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "carrier_spell_id":  585,
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  7,
+                                              "op_name":  "CRITICAL_CHANCE",
+                                              "_op_note":  "op=7 (SPELLMOD_CRITICAL_CHANCE) adjusts the spell\u0027s crit chance in percentage points.",
+                                              "modifier":  107,
+                                              "modifier_name":  "FLAT",
+                                              "_modifier_note":  "107=FLAT. For crit chance, FLAT means percentage points added directly (not a % of existing crit).",
+                                              "value":  100,
+                                              "_value_note":  "+5 percentage points of crit. If the caster has 20% spell crit, Smite now crits at 25%."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  0
+                                           }
+                           },
+                           {
+                               "id":  102,
+                               "name":  "Smite: -500ms Cast Time",
+                               "_purpose":  "Smite casts 0.5 seconds faster. Smite has a 2.5s base cast; this brings it to 2.0s.",
+                               "weight":  0,
+                               "min_quality":  2,
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "carrier_spell_id":  585,
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  10,
+                                              "op_name":  "CASTING_TIME",
+                                              "_op_note":  "op=10 (SPELLMOD_CASTING_TIME). FLAT unit is milliseconds; PCT is a percentage reduction.",
+                                              "modifier":  107,
+                                              "modifier_name":  "FLAT",
+                                              "_modifier_note":  "107=FLAT in milliseconds. Use negative to reduce cast time, positive to add cast time.",
+                                              "value":  -500,
+                                              "_value_note":  "-500ms. Smite base cast 2500ms becomes 2000ms (2.0s). Use -10000 to make it fully instant."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  0
+                                           }
+                           },
+                           {
+                               "id":  103,
+                               "name":  "Smite: -10% Mana Cost",
+                               "_purpose":  "Each cast of Smite costs 10% less mana. Scales with all ranks automatically.",
+                               "weight":  0,
+                               "min_quality":  2,
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "carrier_spell_id":  585,
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  14,
+                                              "op_name":  "COST",
+                                              "_op_note":  "op=14 (SPELLMOD_COST) reduces the mana/resource cost of the spell.",
+                                              "modifier":  108,
+                                              "modifier_name":  "PCT",
+                                              "_modifier_note":  "108=PCT. Negative value reduces cost; positive increases it.",
+                                              "value":  -10,
+                                              "_value_note":  "-10%. Smite Rank 12 costs 385 mana base; with affix: ~347 mana."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  0
+                                           }
+                           }
+                       ],
+    "removedAffixes":  [
+                           {
+                               "id":  1,
+                               "name":  "Smite: Instant Cast",
+                               "weight":  100,
+                               "min_quality":  1,
+                               "_min_quality_note":  "1=white and above",
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "family_name":  "PRIEST",
+                                              "carrier_spell_id":  585,
+                                              "_carrier_note":  "Rank 1 spell ID. Provides the SpellFamilyName used for matching.",
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "_flags_note":  "flags[0] bit 7 = Smite family bit. Matches all ranks of Smite (IDs: 585, 591, 598, 984, 1004, 6060, 10933, 10934, 25363, 25364, 48122, 48123).",
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  10,
+                                              "op_name":  "CASTING_TIME",
+                                              "_op_note":  "Modifies cast time. Other useful values: 0=DAMAGE, 1=DURATION, 7=CRIT_CHANCE, 11=COOLDOWN, 14=COST.",
+                                              "modifier":  107,
+                                              "modifier_name":  "FLAT",
+                                              "_modifier_note":  "107=FLAT (add/subtract raw units). 108=PCT (percentage change).",
+                                              "value":  -10000,
+                                              "_value_note":  "Flat milliseconds. -10000ms = -10 seconds, making any Smite with cast time â‰¤10s instant."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  3884,
+                                               "display_name":  "Smite: Instant Cast",
+                                               "dbc_entry_exists":  true,
+                                               "_tooltip_note":  "Entry 3884 in SpellItemEnchantment.dbc. Client patch-4.MPQ must be in WoW Data/ folder."
+                                           }
+                           },
+                           {
+                               "id":  2,
+                               "name":  "Lesser Heal: +100% Healing",
+                               "weight":  100,
+                               "min_quality":  1,
+                               "_min_quality_note":  "1=white and above - same as Smite affix, so they roll randomly against each other",
+                               "target":  {
+                                              "description":  "Priest - Lesser Heal (all ranks)",
+                                              "family":  6,
+                                              "family_name":  "PRIEST",
+                                              "carrier_spell_id":  2050,
+                                              "_carrier_note":  "Rank 1 spell ID for Lesser Heal.",
+                                              "flags":  [
+                                                            262144,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00040000",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "_flags_note":  "flags[0] bit 18 = Lesser Heal family bit. Verified from Spell.dbc: matches all ranks (IDs: 2050, 2052, 2053).",
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 2050"
+                                          },
+                               "effect":  {
+                                              "op":  0,
+                                              "op_name":  "DAMAGE",
+                                              "_op_note":  "SPELLMOD_DAMAGE (op=0) controls both damage and healing amount for spell modifiers.",
+                                              "modifier":  108,
+                                              "modifier_name":  "PCT",
+                                              "_modifier_note":  "108=PCT (percentage). value=100 means +100% = heals for double the normal amount.",
+                                              "value":  100,
+                                              "_value_note":  "+100% percentage increase to heal output. Lesser Heal Rank 1 normally heals 36-45; with affix: 72-90."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  3885,
+                                               "display_name":  "Lesser Heal: +100% Healing",
+                                               "dbc_entry_exists":  true,
+                                               "_tooltip_note":  "Entry 3885 added to SpellItemEnchantment.dbc. Client patch-4.MPQ has been rebuilt."
+                                           }
+                           },
+                           {
+                               "id":  101,
+                               "name":  "Smite: +100% Crit Chance",
+                               "_purpose":  "Smite has a 100% higher chance to critically strike. Stacks with gear/talent crit.",
+                               "weight":  100,
+                               "min_quality":  1,
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "carrier_spell_id":  585,
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  7,
+                                              "op_name":  "CRITICAL_CHANCE",
+                                              "_op_note":  "op=7 (SPELLMOD_CRITICAL_CHANCE) adjusts the spell\u0027s crit chance in percentage points.",
+                                              "modifier":  107,
+                                              "modifier_name":  "FLAT",
+                                              "_modifier_note":  "107=FLAT. For crit chance, FLAT means percentage points added directly (not a % of existing crit).",
+                                              "value":  100,
+                                              "_value_note":  "+5 percentage points of crit. If the caster has 20% spell crit, Smite now crits at 25%."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  3886
+                                           }
+                           },
+                           {
+                               "id":  102,
+                               "name":  "Smite: -500ms Cast Time",
+                               "_purpose":  "Smite casts 0.5 seconds faster. Smite has a 2.5s base cast; this brings it to 2.0s.",
+                               "weight":  100,
+                               "min_quality":  1,
+                               "target":  {
+                                              "description":  "Priest - Smite (all ranks)",
+                                              "family":  6,
+                                              "carrier_spell_id":  585,
+                                              "flags":  [
+                                                            128,
+                                                            0,
+                                                            0
+                                                        ],
+                                              "flags_hex":  [
+                                                                "0x00000080",
+                                                                "0x00000000",
+                                                                "0x00000000"
+                                                            ],
+                                              "verified":  true,
+                                              "verify_command":  ".spellinfo all 585"
+                                          },
+                               "effect":  {
+                                              "op":  10,
+                                              "op_name":  "CASTING_TIME",
+                                              "_op_note":  "op=10 (SPELLMOD_CASTING_TIME). FLAT unit is milliseconds; PCT is a percentage reduction.",
+                                              "modifier":  107,
+                                              "modifier_name":  "FLAT",
+                                              "_modifier_note":  "107=FLAT in milliseconds. Use negative to reduce cast time, positive to add cast time.",
+                                              "value":  -500,
+                                              "_value_note":  "-500ms. Smite base cast 2500ms becomes 2000ms (2.0s). Use -10000 to make it fully instant."
+                                          },
+                               "tooltip":  {
+                                               "enchant_id":  3887
+                                           }
+                           }
+                       ]
+}
