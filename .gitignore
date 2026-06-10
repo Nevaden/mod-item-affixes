@@ -24,9 +24,6 @@ Desktop.ini
 data/sql/db-world/affix_template.sql
 data/sql/db-world/talent_affix_def.sql
 
-# Stale addon copy — edits go in the live client path
-addon/
-
 # Client patch build output
 client-patch/
 Client

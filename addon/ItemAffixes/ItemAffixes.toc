@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: Item Affixes
+## Notes: Displays ARPG-style affixes on items and handles the roll-and-choose UI. Requires the server mod.
+## Version: 1.0.0
+## Author: Server Team
+
+ItemAffixes.lua
+ItemAffixRollUI.xml
+ItemAffixRollUI.lua
