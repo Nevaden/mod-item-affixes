@@ -7,6 +7,19 @@ trade.
 
 ---
 
+## What it looks like
+
+Every item — from a level 16 dagger to a level 80 epic ring — gets its own set of affixes chosen by the player.
+
+| Level 80 Ret Paladin — ring | Level 18 Mage — staff | Level 16 Rogue — dagger |
+|---|---|---|
+| ![Signet of Hopeful Light with affixes](screenshots/example1.png) | ![Emberstone Staff with affixes](screenshots/example2.png) | ![Buzzer Blade with affixes](screenshots/example3.png) |
+| Stat affixes (+Crit, +Hit) and two talent bonuses to Sacred Duty and Guardian's Favor. | Spell Power stacking and talent ranks in Arctic Reach and Chilled to the Bone — at level 18. | Class skill modifiers on Backstab, plus an Imprint (Vanishing Backstab) showing 2 Return Allowances. |
+
+Affixes scale with item level, so they feel meaningful at every stage of the game without overshadowing base item stats.
+
+---
+
 ## How It Works
 
 1. **Acquisition** — when an item enters a player's bags (loot, quest reward, purchase, craft),
