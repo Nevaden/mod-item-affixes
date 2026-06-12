@@ -469,6 +469,8 @@ void ItemAffixMgr::LoadAffixTemplates()
     _budgetMinRoll           = std::clamp(sConfigMgr->GetOption<float>  ("ItemAffixes.BudgetMinRoll",      0.75f), 0.0f, 1.0f);
     _statMultiplier          = sConfigMgr->GetOption<float>  ("ItemAffixes.StatMultiplier",          1.0f);
     _imprintRollChance       = sConfigMgr->GetOption<uint32> ("ItemAffixes.ImprintRollChance",       30);
+    _critRollEnabled         = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableCritRolls",          true);
+    _critRollChance          = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.CritRollChance", 10u), 0u, 100u);
 
     LoadTalentAffixDefs();
 }
@@ -668,9 +670,7 @@ void ItemAffixMgr::ApplyTalentAffixes(Player* player, Item* item)
 
         auto it = _talentDefs.find(affixId);
         if (it == _talentDefs.end())
-        {
-                continue;
-        }
+            continue;
         TalentAffixDef const& def = it->second;
 
         SpellModifier* mod = new SpellModifier(nullptr);
@@ -1515,9 +1515,20 @@ void ItemAffixMgr::SendItemStatus(Player* player, Item* item, std::string const&
     if (!player || !item)
         return;
 
-    auto slots = LoadAffixSlots(item->GetGUID().GetRawValue());
+    uint64 rawGuid = item->GetGUID().GetRawValue();
+    auto slots = LoadAffixSlots(rawGuid);
+
+    // Skip items that have nothing to display — no affix slots, no imprint, no talent affix.
+    // Items with only an imprint (slotCount=0) still deserve a DATA packet so the bag tooltip
+    // shows the imprint even when the regular affix system hasn't assigned any slots.
     if (slots.empty())
-        return;
+    {
+        bool hasImprint = sImprintMgr->GetInstance(rawGuid) != nullptr;
+        bool hasTalent  = CharacterDatabase.Query(
+            "SELECT 1 FROM item_talent_affix WHERE item_guid = {} LIMIT 1", rawGuid) != nullptr;
+        if (!hasImprint && !hasTalent && extraTalentLine.empty())
+            return;
+    }
 
     auto [luaBag, luaSlot] = GetLuaBagSlot(item);
     std::string msg = Acore::StringFormat("DATA|{}|{}|{}",
@@ -1552,6 +1563,10 @@ void ItemAffixMgr::SendItemStatus(Player* player, Item* item, std::string const&
     ItemTemplate const* proto = item->GetTemplate();
     if (proto && proto->Class == ITEM_CLASS_GEM)
         msg += "|isGem";
+
+    // Flag rune items so the Lua apply mechanic enables right-click apply mode.
+    if (sImprintMgr->IsRune(item))
+        msg += "|isRune";
 
     // Append talent affix segments.
     // extraTalentLine is passed by InitTalentAffix immediately after an async INSERT
@@ -1770,11 +1785,11 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
         }
     }
 
-    // Crit roll: 10% chance per option, applied after 2H bonus.
+    // Crit roll: per-option chance (configurable via ItemAffixes.CritRollChance), applied after 2H bonus.
     // STAT: multiply rolledValue by 1.5 (ceiling). SPELLMOD: escalate flag value.
     for (PendingOpt& opt : opts)
     {
-        if (urand(0, 9) != 0)
+        if (!_critRollEnabled || urand(0, 99) >= _critRollChance)
             continue;
         opt.isCrit = true;
         auto const* d = GetAffixDef(opt.affixId);
@@ -1992,6 +2007,65 @@ void ItemAffixMgr::ClearPendingReroll(uint64 playerGuid)
 }
 
 // ---------------------------------------------------------------------------
+// AppendAffixPayload  — shared serializer for all read-only item queries
+// ---------------------------------------------------------------------------
+// Appends |s{i}:{state}:{text} slot entries, |ta:+{rv} to {name} talent lines,
+// and |imprint:{name}:{n} to msg for the item identified by rawGuid.
+// slots must already be loaded by the caller (via LoadAffixSlots) so they can
+// also use the count for their message prefix before calling this function.
+
+void ItemAffixMgr::AppendAffixPayload(std::string& msg, uint64 rawGuid,
+                                       std::vector<AffixSlotInfo> const& slots)
+{
+    for (size_t i = 0; i < slots.size(); ++i)
+    {
+        AffixSlotInfo const& s = slots[i];
+        char stateChar;
+        std::string text;
+        switch (s.rollState)
+        {
+            case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
+            case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
+            case AFFIX_ROLL_APPLIED:
+                stateChar = 'A';
+                if (auto const* def = GetAffixDef(s.affixId))
+                {
+                    text = BuildAffixDisplayString(def, s.rolledValue);
+                    if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
+                        text = "!" + text;
+                }
+                break;
+            default: stateChar = '-'; break;
+        }
+        msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
+    }
+
+    QueryResult talentResult = CharacterDatabase.Query(
+        "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
+        rawGuid);
+    if (talentResult)
+    {
+        do
+        {
+            Field* f       = talentResult->Fetch();
+            uint32 affixId = f[0].Get<uint32>();
+            int32  rv      = f[1].Get<int32>();
+            auto it = _talentDefs.find(affixId);
+            if (it != _talentDefs.end())
+                msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
+        } while (talentResult->NextRow());
+    }
+
+    ImprintInstance const* impInst = sImprintMgr->GetInstance(rawGuid);
+    if (impInst)
+    {
+        ImprintDef const* impDef = sImprintMgr->GetDef(impInst->imprintId);
+        std::string impName = impDef ? impDef->name : "Unknown Imprint";
+        msg += Acore::StringFormat("|imprint:{}:{}", impName, impInst->extractionsLeft);
+    }
+}
+
+// ---------------------------------------------------------------------------
 // HandleAddonMessage  — dispatches AFXM commands from client
 // ---------------------------------------------------------------------------
 
@@ -2070,45 +2144,7 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
 
         // Always reply — even empty (0 slots) — so the client stops retrying for non-affixed items.
         std::string msg = Acore::StringFormat("PEEKDATA|{}|{}", uniqueId, slots.size());
-
-        for (size_t i = 0; i < slots.size(); ++i)
-        {
-            AffixSlotInfo const& s = slots[i];
-            char stateChar;
-            std::string text;
-            switch (s.rollState)
-            {
-                case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
-                case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
-                case AFFIX_ROLL_APPLIED:
-                    stateChar = 'A';
-                    if (auto const* def = GetAffixDef(s.affixId))
-                    {
-                        text = BuildAffixDisplayString(def, s.rolledValue);
-                        if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
-                            text = "!" + text;
-                    }
-                    break;
-                default: stateChar = '-'; break;
-            }
-            msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
-        }
-
-        QueryResult talentResult = CharacterDatabase.Query(
-            "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
-            rawGuid);
-        if (talentResult)
-        {
-            do
-            {
-                Field* f       = talentResult->Fetch();
-                uint32 affixId = f[0].Get<uint32>();
-                int32  rv      = f[1].Get<int32>();
-                auto it = _talentDefs.find(affixId);
-                if (it != _talentDefs.end())
-                    msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
-            } while (talentResult->NextRow());
-        }
+        AppendAffixPayload(msg, rawGuid, slots);
 
         LOG_DEBUG("module", "mod-item-affixes: PEEK sending: {}", msg);
         SendAddonMsg(player, msg);
@@ -2159,45 +2195,7 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
             targetName, luaSlot, rawGuid, slots.size());
 
         std::string msg = Acore::StringFormat("INSPECTDATA|{}|{}|{}", targetName, luaSlot, slots.size());
-
-        for (size_t i = 0; i < slots.size(); ++i)
-        {
-            AffixSlotInfo const& s = slots[i];
-            char stateChar;
-            std::string text;
-            switch (s.rollState)
-            {
-                case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
-                case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
-                case AFFIX_ROLL_APPLIED:
-                    stateChar = 'A';
-                    if (auto const* def = GetAffixDef(s.affixId))
-                    {
-                        text = BuildAffixDisplayString(def, s.rolledValue);
-                        if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
-                            text = "!" + text;
-                    }
-                    break;
-                default: stateChar = '-'; break;
-            }
-            msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
-        }
-
-        QueryResult talentResult = CharacterDatabase.Query(
-            "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
-            rawGuid);
-        if (talentResult)
-        {
-            do
-            {
-                Field* f       = talentResult->Fetch();
-                uint32 affixId = f[0].Get<uint32>();
-                int32  rv      = f[1].Get<int32>();
-                auto it = _talentDefs.find(affixId);
-                if (it != _talentDefs.end())
-                    msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
-            } while (talentResult->NextRow());
-        }
+        AppendAffixPayload(msg, rawGuid, slots);
 
         LOG_DEBUG("module", "mod-item-affixes: PEEKUNIT sending: {}", msg);
         SendAddonMsg(player, msg);
@@ -2207,8 +2205,14 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
     // PEEKAUCTION — read affixes for an AH item by seller name + item template ID.
     // WoW 3.3.5a AH packet does not include item instance GUIDs, so the client sends
     // the seller's character name and item template ID extracted from GetAuctionItemInfo.
-    // Server finds the auction in auctionhouse + characters tables and responds with
-    // AUCTIONDATA|ownerName|itemId|slotCount|... (same slot format as PEEKDATA).
+    // The client also sends auctionType and index (its own listing-slot identifiers) so
+    // the server can echo them back.  The client keys auctionCache by auctionType:index,
+    // giving each listing slot its own cache entry regardless of shared item template.
+    // groupOffset is the 0-based position within the same (owner,itemId,buyout) group on
+    // the current AH page; used as OFFSET in the SQL query so each listing returns a
+    // different physical item instance (items ordered by ah.id ASC for stability).
+    // Format: PEEKAUCTION|owner|itemId|buyout|auctionType|index|groupOffset
+    // Response: AUCTIONDATA|owner|itemId|buyout|auctionType|index|slotCount|...
     if (cmd == "PEEKAUCTION")
     {
         if (parts.size() < 3)
@@ -2220,23 +2224,58 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
             return;
         uint32 itemId = *itemIdOpt;
 
-        LOG_DEBUG("module", "mod-item-affixes: PEEKAUCTION from {} owner={} itemId={}",
-            player->GetName(), ownerName, itemId);
+        uint32 buyout = 0;
+        if (parts.size() >= 4)
+        {
+            if (auto v = Acore::StringTo<uint32>(parts[3])) buyout = *v;
+        }
 
-        // Find the auction via item_instance to avoid relying on auctionhouse.item_template
-        // (column name varies across AzerothCore DB versions).
-        QueryResult auctionResult = CharacterDatabase.Query(
-            "SELECT ah.itemguid FROM auctionhouse ah "
-            "INNER JOIN item_instance ii ON ii.guid = ah.itemguid "
-            "INNER JOIN characters c ON c.guid = ah.itemowner "
-            "WHERE c.name = '{}' AND ii.itemEntry = {} LIMIT 1",
-            ownerName, itemId);
+        // Echoed back verbatim so the client can key its cache by listing slot.
+        std::string auctionTypeStr = parts.size() >= 5 ? std::string(parts[4]) : "list";
+        uint32      auctionIndex   = 0;
+        if (parts.size() >= 6)
+        {
+            if (auto v = Acore::StringTo<uint32>(parts[5])) auctionIndex = *v;
+        }
+        // 0-based offset within same (owner,itemId,buyout) group; used for LIMIT/OFFSET.
+        uint32 groupOffset = 0;
+        if (parts.size() >= 7)
+        {
+            if (auto v = Acore::StringTo<uint32>(parts[6])) groupOffset = *v;
+        }
+
+        LOG_DEBUG("module", "mod-item-affixes: PEEKAUCTION from {} owner={} itemId={} buyout={} type={} idx={} offset={}",
+            player->GetName(), ownerName, itemId, buyout, auctionTypeStr, auctionIndex, groupOffset);
+
+        // Find the auction via item_instance.  When buyout > 0, filter by buyoutprice.
+        QueryResult auctionResult;
+        if (buyout > 0)
+        {
+            auctionResult = CharacterDatabase.Query(
+                "SELECT ah.itemguid FROM auctionhouse ah "
+                "INNER JOIN item_instance ii ON ii.guid = ah.itemguid "
+                "INNER JOIN characters c ON c.guid = ah.itemowner "
+                "WHERE c.name = '{}' AND ii.itemEntry = {} AND ah.buyoutprice = {} "
+                "ORDER BY ah.id ASC LIMIT 1 OFFSET {}",
+                ownerName, itemId, buyout, groupOffset);
+        }
+        else
+        {
+            auctionResult = CharacterDatabase.Query(
+                "SELECT ah.itemguid FROM auctionhouse ah "
+                "INNER JOIN item_instance ii ON ii.guid = ah.itemguid "
+                "INNER JOIN characters c ON c.guid = ah.itemowner "
+                "WHERE c.name = '{}' AND ii.itemEntry = {} "
+                "ORDER BY ah.id ASC LIMIT 1 OFFSET {}",
+                ownerName, itemId, groupOffset);
+        }
 
         if (!auctionResult)
         {
-            LOG_DEBUG("module", "mod-item-affixes: PEEKAUCTION no auction found for owner={} itemId={}",
-                ownerName, itemId);
-            SendAddonMsg(player, Acore::StringFormat("AUCTIONDATA|{}|{}|0", ownerName, itemId));
+            LOG_DEBUG("module", "mod-item-affixes: PEEKAUCTION no auction found for owner={} itemId={} buyout={}",
+                ownerName, itemId, buyout);
+            SendAddonMsg(player, Acore::StringFormat("AUCTIONDATA|{}|{}|{}|{}|{}|0",
+                ownerName, itemId, buyout, auctionTypeStr, auctionIndex));
             return;
         }
 
@@ -2248,46 +2287,9 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
             rawCounter, rawGuid);
 
         auto slots = LoadAffixSlots(rawGuid);
-        std::string msg = Acore::StringFormat("AUCTIONDATA|{}|{}|{}", ownerName, itemId, slots.size());
-
-        for (size_t i = 0; i < slots.size(); ++i)
-        {
-            AffixSlotInfo const& s = slots[i];
-            char stateChar;
-            std::string text;
-            switch (s.rollState)
-            {
-                case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
-                case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
-                case AFFIX_ROLL_APPLIED:
-                    stateChar = 'A';
-                    if (auto const* def = GetAffixDef(s.affixId))
-                    {
-                        text = BuildAffixDisplayString(def, s.rolledValue);
-                        if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
-                            text = "!" + text;
-                    }
-                    break;
-                default: stateChar = '-'; break;
-            }
-            msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
-        }
-
-        QueryResult talentResult = CharacterDatabase.Query(
-            "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
-            rawGuid);
-        if (talentResult)
-        {
-            do
-            {
-                Field* f       = talentResult->Fetch();
-                uint32 affixId = f[0].Get<uint32>();
-                int32  rv      = f[1].Get<int32>();
-                auto it = _talentDefs.find(affixId);
-                if (it != _talentDefs.end())
-                    msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
-            } while (talentResult->NextRow());
-        }
+        std::string msg = Acore::StringFormat("AUCTIONDATA|{}|{}|{}|{}|{}|{}",
+            ownerName, itemId, buyout, auctionTypeStr, auctionIndex, slots.size());
+        AppendAffixPayload(msg, rawGuid, slots);
 
         LOG_DEBUG("module", "mod-item-affixes: PEEKAUCTION sending: {}", msg);
         SendAddonMsg(player, msg);
@@ -2324,45 +2326,7 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
             uint8 luaSlot = cppSlot + 1;  // Lua slots are 1-based
 
             std::string msg = Acore::StringFormat("INSPECTDATA|{}|{}|{}", targetName, luaSlot, slots.size());
-
-            for (size_t i = 0; i < slots.size(); ++i)
-            {
-                AffixSlotInfo const& s = slots[i];
-                char stateChar;
-                std::string text;
-                switch (s.rollState)
-                {
-                    case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
-                    case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
-                    case AFFIX_ROLL_APPLIED:
-                        stateChar = 'A';
-                        if (auto const* def = GetAffixDef(s.affixId))
-                        {
-                            text = BuildAffixDisplayString(def, s.rolledValue);
-                            if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
-                                text = "!" + text;
-                        }
-                        break;
-                    default: stateChar = '-'; break;
-                }
-                msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
-            }
-
-            QueryResult talentResult = CharacterDatabase.Query(
-                "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
-                rawGuid);
-            if (talentResult)
-            {
-                do
-                {
-                    Field* f       = talentResult->Fetch();
-                    uint32 affixId = f[0].Get<uint32>();
-                    int32  rv      = f[1].Get<int32>();
-                    auto it = _talentDefs.find(affixId);
-                    if (it != _talentDefs.end())
-                        msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
-                } while (talentResult->NextRow());
-            }
+            AppendAffixPayload(msg, rawGuid, slots);
 
             SendAddonMsg(player, msg);
         }
@@ -2371,10 +2335,26 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
         return;
     }
 
-    // TRADEPEEK — read-only affix lookup for an item in the trade partner's trade window.
-    // WoW 3.3.5a trade protocol strips item GUIDs (uid=0), so PEEK cannot be used.
-    // Client sends TRADEPEEK|slot (1-based Lua slot 1-6); server reads the partner's
-    // TradeData, loads affix rows for that item, and replies with TRADEDATA|slot|...
+    // Helper: build affix+talent+imprint payload for a trade-window item and send
+    // it as TRADEGUID (partner) or MYTRADEGUID (own).  The counter is the low 32
+    // bits of the item's raw GUID — identical to what ObjectGuid(HighGuid::Item, x)
+    // uses and what the PEEK handler reconstructs from client messages.
+    auto SendTradeGuidMsg = [&](const char* msgPrefix, uint8 luaSlot, Item* item)
+    {
+        uint64 rawGuid  = item->GetGUID().GetRawValue();
+        uint32 counter  = static_cast<uint32>(rawGuid);   // low 32 bits = counter
+        auto   slots    = LoadAffixSlots(rawGuid);
+
+        std::string msg = Acore::StringFormat("{}|{}|{}|{}", msgPrefix, luaSlot, counter, slots.size());
+        AppendAffixPayload(msg, rawGuid, slots);
+
+        LOG_DEBUG("module", "mod-item-affixes: {} slot={} counter={} sending: {}", msgPrefix, luaSlot, counter, msg);
+        SendAddonMsg(player, msg);
+    };
+
+    // TRADEPEEK — partner's item.  WoW 3.3.5a strips GUIDs from GetTradeTargetItemLink
+    // (uid=0), so the client cannot identify the item.  Reply with TRADEGUID carrying
+    // counter + full affix data so the client populates peekCache in one round trip.
     if (cmd == "TRADEPEEK")
     {
         if (parts.size() < 2)
@@ -2384,79 +2364,44 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
         if (!slotOpt || *slotOpt < 1 || *slotOpt > TRADE_SLOT_TRADED_COUNT)
             return;
 
-        uint8 luaSlot  = *slotOpt;
-        uint8 cppSlot  = luaSlot - 1;  // Lua slots are 1-based, TradeSlots are 0-based
+        uint8 luaSlot = *slotOpt;
+        uint8 cppSlot = luaSlot - 1;
 
         TradeData* myTrade = player->GetTradeData();
-        if (!myTrade)
-        {
-            SendAddonMsg(player, Acore::StringFormat("TRADEDATA|{}|0", luaSlot));
-            return;
-        }
+        if (!myTrade) { SendAddonMsg(player, Acore::StringFormat("TRADEGUID|{}|0|0", luaSlot)); return; }
 
         TradeData* partnerTrade = myTrade->GetTraderData();
-        if (!partnerTrade)
-        {
-            SendAddonMsg(player, Acore::StringFormat("TRADEDATA|{}|0", luaSlot));
-            return;
-        }
+        if (!partnerTrade) { SendAddonMsg(player, Acore::StringFormat("TRADEGUID|{}|0|0", luaSlot)); return; }
 
         Item* item = partnerTrade->GetItem(TradeSlots(cppSlot));
-        if (!item)
-        {
-            SendAddonMsg(player, Acore::StringFormat("TRADEDATA|{}|0", luaSlot));
+        if (!item) { SendAddonMsg(player, Acore::StringFormat("TRADEGUID|{}|0|0", luaSlot)); return; }
+
+        SendTradeGuidMsg("TRADEGUID", luaSlot, item);
+        return;
+    }
+
+    // MYTRADEPEEK — own item.  GetTradePlayerItemLink may also carry uid=0 for
+    // duplicate-template items.  Reply with MYTRADEGUID so the client can show the
+    // correct affixes per slot even when two identical items are in the trade window.
+    if (cmd == "MYTRADEPEEK")
+    {
+        if (parts.size() < 2)
             return;
-        }
 
-        uint64 rawGuid = item->GetGUID().GetRawValue();
-        auto slots = LoadAffixSlots(rawGuid);
+        auto slotOpt = Acore::StringTo<uint8>(parts[1]);
+        if (!slotOpt || *slotOpt < 1 || *slotOpt > TRADE_SLOT_TRADED_COUNT)
+            return;
 
-        LOG_DEBUG("module", "mod-item-affixes: TRADEPEEK from {} luaSlot={} guid={} affixSlots={}",
-            player->GetName(), luaSlot, rawGuid, slots.size());
+        uint8 luaSlot = *slotOpt;
+        uint8 cppSlot = luaSlot - 1;
 
-        std::string msg = Acore::StringFormat("TRADEDATA|{}|{}", luaSlot, slots.size());
+        TradeData* myTrade = player->GetTradeData();
+        if (!myTrade) { SendAddonMsg(player, Acore::StringFormat("MYTRADEGUID|{}|0|0", luaSlot)); return; }
 
-        for (size_t i = 0; i < slots.size(); ++i)
-        {
-            AffixSlotInfo const& s = slots[i];
-            char stateChar;
-            std::string text;
-            switch (s.rollState)
-            {
-                case AFFIX_ROLL_UNROLLED: stateChar = 'U'; break;
-                case AFFIX_ROLL_PENDING:  stateChar = 'P'; break;
-                case AFFIX_ROLL_APPLIED:
-                    stateChar = 'A';
-                    if (auto const* def = GetAffixDef(s.affixId))
-                    {
-                        text = BuildAffixDisplayString(def, s.rolledValue);
-                        if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
-                            text = "!" + text;
-                    }
-                    break;
-                default: stateChar = '-'; break;
-            }
-            msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
-        }
+        Item* item = myTrade->GetItem(TradeSlots(cppSlot));
+        if (!item) { SendAddonMsg(player, Acore::StringFormat("MYTRADEGUID|{}|0|0", luaSlot)); return; }
 
-        QueryResult talentResult = CharacterDatabase.Query(
-            "SELECT affix_id, rolled_value FROM item_talent_affix WHERE item_guid = {}",
-            rawGuid);
-        if (talentResult)
-        {
-            do
-            {
-                Field* f       = talentResult->Fetch();
-                uint32 affixId = f[0].Get<uint32>();
-                int32  rv      = f[1].Get<int32>();
-                auto it = _talentDefs.find(affixId);
-                if (it != _talentDefs.end())
-                    msg += Acore::StringFormat("|ta:+{} to {}", rv, it->second.name);
-            } while (talentResult->NextRow());
-        }
-
-        LOG_DEBUG("module", "mod-item-affixes: TRADEPEEK sending: {}", msg);
-        SendAddonMsg(player, msg);
+        SendTradeGuidMsg("MYTRADEGUID", luaSlot, item);
         return;
     }
 
@@ -2565,6 +2510,24 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
     }
     else if (cmd == "DATA")
     {
-        SendItemStatus(player, item);
+        // Always respond to an explicit client DATA request so the client's
+        // "[Fetching affixes...]" placeholder is cleared even for items with nothing.
+        // SendItemStatus has an early-return for items with no slots/imprint/talent,
+        // so check that condition here and send an empty DATA|bag|slot|0 if needed.
+        uint64 rawGuid = item->GetGUID().GetRawValue();
+        auto   slots   = LoadAffixSlots(rawGuid);
+        bool hasImprint = sImprintMgr->GetInstance(rawGuid) != nullptr;
+        bool hasTalent  = CharacterDatabase.Query(
+            "SELECT 1 FROM item_talent_affix WHERE item_guid = {} LIMIT 1", rawGuid) != nullptr;
+        if (slots.empty() && !hasImprint && !hasTalent)
+        {
+            auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+            SendAddonMsg(player, Acore::StringFormat("DATA|{}|{}|0",
+                uint32(luaBag), uint32(luaSlot)));
+        }
+        else
+        {
+            SendItemStatus(player, item);
+        }
     }
 }

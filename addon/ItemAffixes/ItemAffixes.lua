@@ -33,9 +33,9 @@ local initialized = false
 -- Both populated by IMPRINT_DESC server messages; cleared by IMPRINT_DESC_CLEAR.
 local imprintDescOverrides = {}
 local imprintDescByName    = {}
-AFXM.debug = false
 -- Tracks in-flight single-slot DATA requests so we don't spam the server.
 local pendingDataReq = {}
+local DATA_COOLDOWN = 2.0
 
 -- Read-only affix data for items we don't own (auction house).
 -- Keyed by the item's uniqueId (low-32 bits from the item link).
@@ -49,17 +49,22 @@ local inspectCache = {}       -- ["inspect:name:slot"] = { slotCount, slots, tal
 local pendingInspectReq = {}  -- ["inspect:name:slot"] = timestamp of last PEEKUNIT request
 local INSPECT_COOLDOWN = 2.0
 
--- AH affix cache: WoW 3.3.5a AH links also have uniqueId=0, so we key by "ah:owner:itemId".
-local auctionCache = {}       -- ["ah:owner:itemId"] = { slotCount, slots, talentTexts }
-local pendingAuctionReq = {}  -- ["ah:owner:itemId"] = timestamp of last PEEKAUCTION request
+-- AH affix cache: keyed by "ah:auctionType:index" for per-listing uniqueness.
+-- auctionType ("list"/"bidder"/"owner") and index are echoed back by the server so that
+-- two instances of the same item template from the same seller never share a cache entry.
+local auctionCache = {}       -- ["ah:auctionType:index"] = { slotCount, slots, talentTexts }
+local pendingAuctionReq = {}  -- ["ah:auctionType:index"] = timestamp of last PEEKAUCTION request
+local auctionGroupOffset = {} -- ["ah:auctionType:index"] = 0-based position within same (owner,itemId,buyout) group
 local AUCTION_COOLDOWN = 2.0
 
 -- Trade window affix cache for the partner's items (uid=0, resolved server-side via TRADEPEEK).
 -- Keyed by the Lua trade slot number (1-6, matching SetTradeTargetItem/GetTradeTargetItemLink).
 -- Wiped when any target slot changes or the trade window closes.
-local tradeCache      = {}  -- [tradeSlot] = { slotCount, slots, talentTexts }
-local pendingTradeReq = {}  -- [tradeSlot] = timestamp of last TRADEPEEK request sent
-local TRADE_COOLDOWN  = 2.0
+local tradeGuidCache    = {}  -- [tradeSlot] = uint32 counter for partner's items (TRADEGUID)
+local selfTradeGuidCache = {} -- [tradeSlot] = uint32 counter for own items (MYTRADEGUID)
+local pendingTradeReq   = {}  -- [tradeSlot] = timestamp of last TRADEPEEK/MYTRADEPEEK sent
+local pendingSelfReq    = {}  -- [tradeSlot] = timestamp of last MYTRADEPEEK sent
+local TRADE_COOLDOWN    = 2.0
 
 -- Tracks which inspect tooltip the player is currently hovering so INSPECTDATA can
 -- retrigger SetInventoryItem in-place (avoiding the "move off and back" requirement).
@@ -119,22 +124,33 @@ local function AddPeekLines(tooltip, uniqueId)
     end
     if not data then
         RequestPeek(uniqueId)
+        if tooltip == GameTooltip then
+            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:Show()
+        end
         return
     end
-    if data.slotCount == 0 then return end  -- item carries no affix system
+    -- Only skip entirely if there is genuinely nothing to render.
+    -- slotCount==0 alone is not sufficient — the item may still have an imprint or talent affix.
+    local hasContent = data.slotCount > 0
+        or (data.talentTexts and #data.talentTexts > 0)
+        or data.imprintText ~= nil
+    if not hasContent then return end
     local renderKey = "peek:" .. uniqueId
     if tooltip._affixLinesKey == renderKey then return end
     tooltip._affixLinesKey = renderKey
     local addedSep = false
-    for _, s in ipairs(data.slots) do
-        if not addedSep then tooltip:AddLine(" "); addedSep = true end
-        if s.state == "U" or s.state == "P" then
-            tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
-        elseif s.state == "A" and s.text and s.text ~= "" then
-            if s.text:sub(1, 1) == "!" then
-                tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
-            else
-                tooltip:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+    if data.slotCount > 0 then
+        for _, s in ipairs(data.slots) do
+            if not addedSep then tooltip:AddLine(" "); addedSep = true end
+            if s.state == "U" or s.state == "P" then
+                tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
+            elseif s.state == "A" and s.text and s.text ~= "" then
+                if s.text:sub(1, 1) == "!" then
+                    tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
+                else
+                    tooltip:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+                end
             end
         end
     end
@@ -143,6 +159,18 @@ local function AddPeekLines(tooltip, uniqueId)
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
             tooltip:AddLine("|cffd4af37" .. taText .. "|r", 0.83, 0.69, 0.22)
         end
+    end
+    if data.imprintText then
+        if not addedSep then tooltip:AddLine(" "); addedSep = true end
+        local impLine = "|cffA335EE[Imprint] " .. data.imprintText
+        if data.imprintCount ~= nil then
+            if data.imprintCount > 0 then
+                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+            else
+                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+            end
+        end
+        tooltip:AddLine(impLine .. "|r")
     end
     if addedSep then tooltip:Show() end
 end
@@ -184,22 +212,31 @@ local function AddInspectLines(tooltip, unit, slot)
         -- Cache miss: inspect window may not have opened yet, or this slot was
         -- somehow missed. Request a single slot as fallback.
         RequestPeekUnit(unit, slot)
+        if tooltip == GameTooltip then
+            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:Show()
+        end
         return
     end
-    if data.slotCount == 0 then return end  -- item has no affix slots (cached miss)
+    local hasContent = data.slotCount > 0
+        or (data.talentTexts and #data.talentTexts > 0)
+        or data.imprintText ~= nil
+    if not hasContent then return end
     local renderKey = "inspect:" .. key
     if tooltip._affixLinesKey == renderKey then return end
     tooltip._affixLinesKey = renderKey
     local addedSep = false
-    for _, s in ipairs(data.slots) do
-        if not addedSep then tooltip:AddLine(" "); addedSep = true end
-        if s.state == "U" or s.state == "P" then
-            tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
-        elseif s.state == "A" and s.text and s.text ~= "" then
-            if s.text:sub(1, 1) == "!" then
-                tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
-            else
-                tooltip:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+    if data.slotCount > 0 then
+        for _, s in ipairs(data.slots) do
+            if not addedSep then tooltip:AddLine(" "); addedSep = true end
+            if s.state == "U" or s.state == "P" then
+                tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
+            elseif s.state == "A" and s.text and s.text ~= "" then
+                if s.text:sub(1, 1) == "!" then
+                    tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
+                else
+                    tooltip:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+                end
             end
         end
     end
@@ -209,13 +246,51 @@ local function AddInspectLines(tooltip, unit, slot)
             tooltip:AddLine("|cffd4af37" .. taText .. "|r", 0.83, 0.69, 0.22)
         end
     end
+    if data.imprintText then
+        if not addedSep then tooltip:AddLine(" "); addedSep = true end
+        local impLine = "|cffA335EE[Imprint] " .. data.imprintText
+        if data.imprintCount ~= nil then
+            if data.imprintCount > 0 then
+                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+            else
+                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+            end
+        end
+        tooltip:AddLine(impLine .. "|r")
+    end
     if addedSep then tooltip:Show() end
 end
 
--- Send a PEEKAUCTION request for an AH item by seller name + item template ID.
-local function RequestPeekAuction(owner, itemId)
-    if not owner or not itemId then return end
-    local key = "ah:" .. owner .. ":" .. itemId
+-- Scan the visible AH list and compute a 0-based group offset for each slot.
+-- When the same seller lists multiple copies of the same item at the same price the
+-- offset distinguishes them: the server uses LIMIT 1 OFFSET N so each slot gets its
+-- own physical item instance rather than always the first DB match.
+local function RebuildAuctionGroupOffsets(auctionType)
+    if not GetNumAuctionItems then return end
+    local count = GetNumAuctionItems(auctionType)
+    if count == 0 then return end
+    local seen = {}  -- "owner:itemId:buyout" -> count seen so far
+    for i = 1, count do
+        local _, _, _, _, _, _, _, _, buyout, _, _, owner = GetAuctionItemInfo(auctionType, i)
+        local link = GetAuctionItemLink and GetAuctionItemLink(auctionType, i)
+        local itemId = link and tonumber(link:match("|Hitem:(%d+):"))
+        if owner and itemId then
+            local groupKey = owner .. ":" .. itemId .. ":" .. (buyout or 0)
+            local n = seen[groupKey] or 0
+            auctionGroupOffset["ah:" .. auctionType .. ":" .. i] = n
+            seen[groupKey] = n + 1
+        end
+    end
+end
+
+-- Send a PEEKAUCTION request. auctionType ("list"/"bidder"/"owner") and index
+-- are included so the server can echo them back, letting the client key the response
+-- cache by listing slot rather than by item template (which is not unique enough).
+-- groupOffset is the 0-based position within same (owner,itemId,buyout) groups so
+-- the server can use LIMIT 1 OFFSET N to return the correct physical item instance.
+local function RequestPeekAuction(owner, itemId, buyout, auctionType, index)
+    if not owner or not itemId or not auctionType or not index then return end
+    local key = "ah:" .. auctionType .. ":" .. index
     local now = GetTime()
     local last = pendingAuctionReq[key]
     if last and (now - last) < AUCTION_COOLDOWN then
@@ -228,35 +303,49 @@ local function RequestPeekAuction(owner, itemId)
     if AFX_DEBUG then
         print("|cff44DDFF[ItemAffixes]|r PEEKAUCTION sending key=" .. key)
     end
-    AFXM:SendToServer("PEEKAUCTION|" .. owner .. "|" .. itemId)
+    local groupOffset = auctionGroupOffset["ah:" .. auctionType .. ":" .. index] or 0
+    AFXM:SendToServer("PEEKAUCTION|" .. owner .. "|" .. itemId .. "|" .. (buyout or 0)
+        .. "|" .. auctionType .. "|" .. index .. "|" .. groupOffset)
 end
 
--- Add read-only affix lines for an AH item, keyed by seller+template.
--- Always refreshes (rate-limited) in case the seller relisted with a different item.
-local function AddAuctionLines(tooltip, owner, itemId)
-    if not owner or not itemId then return end
-    local key = "ah:" .. owner .. ":" .. itemId
+-- Add read-only affix lines for an AH item.
+-- Keyed by auctionType:index so each listing slot gets its own cache entry regardless
+-- of whether two listings share the same item template, seller, and price.
+local function AddAuctionLines(tooltip, owner, itemId, buyout, auctionType, index)
+    if not owner or not itemId or not auctionType or not index then return end
+    local key = "ah:" .. auctionType .. ":" .. index
     local data = auctionCache[key]
     if AFX_DEBUG then
         print("|cff44DDFF[ItemAffixes]|r AddAuctionLines key=" .. key
             .. " cached=" .. tostring(data ~= nil))
     end
-    RequestPeekAuction(owner, itemId)
-    if not data then return end
-    if data.slotCount == 0 then return end
-    local renderKey = "ah:" .. key
+    RequestPeekAuction(owner, itemId, buyout, auctionType, index)
+    if not data then
+        if tooltip == GameTooltip then
+            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:Show()
+        end
+        return
+    end
+    local hasContent = data.slotCount > 0
+        or (data.talentTexts and #data.talentTexts > 0)
+        or data.imprintText ~= nil
+    if not hasContent then return end
+    local renderKey = key
     if tooltip._affixLinesKey == renderKey then return end
     tooltip._affixLinesKey = renderKey
     local addedSep = false
-    for _, s in ipairs(data.slots) do
-        if not addedSep then tooltip:AddLine(" "); addedSep = true end
-        if s.state == "U" or s.state == "P" then
-            tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
-        elseif s.state == "A" and s.text and s.text ~= "" then
-            if s.text:sub(1, 1) == "!" then
-                tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
-            else
-                tooltip:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+    if data.slotCount > 0 then
+        for _, s in ipairs(data.slots) do
+            if not addedSep then tooltip:AddLine(" "); addedSep = true end
+            if s.state == "U" or s.state == "P" then
+                tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
+            elseif s.state == "A" and s.text and s.text ~= "" then
+                if s.text:sub(1, 1) == "!" then
+                    tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
+                else
+                    tooltip:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
+                end
             end
         end
     end
@@ -265,6 +354,18 @@ local function AddAuctionLines(tooltip, owner, itemId)
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
             tooltip:AddLine("|cffd4af37" .. taText .. "|r", 0.83, 0.69, 0.22)
         end
+    end
+    if data.imprintText then
+        if not addedSep then tooltip:AddLine(" "); addedSep = true end
+        local impLine = "|cffA335EE[Imprint] " .. data.imprintText
+        if data.imprintCount ~= nil then
+            if data.imprintCount > 0 then
+                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+            else
+                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+            end
+        end
+        tooltip:AddLine(impLine .. "|r")
     end
     if addedSep then tooltip:Show() end
 end
@@ -372,10 +473,13 @@ function AFXM:OnServerMsg(msg)
                         cache[bag][slot].gemTexts[#cache[bag][slot].gemTexts + 1] = gemText
                     elseif parts[i] == "isGem" then
                         cache[bag][slot].isGem = true
+                    elseif parts[i] == "isRune" then
+                        cache[bag][slot].isRune = true
                     else
-                        local impName = parts[i]:match("^imprint:(.+):%d+$")
+                        local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
                         if impName then
-                            cache[bag][slot].imprintText = impName
+                            cache[bag][slot].imprintText  = impName
+                            cache[bag][slot].imprintCount = tonumber(impCount) or 0
                         end
                     end
                 end
@@ -398,8 +502,17 @@ function AFXM:OnServerMsg(msg)
                 pcall(function() GameTooltip:SetBagItem(_lastBagTooltipBag, _lastBagTooltipSlot) end)
             elseif bag == 255 and slot == _lastEquipTooltipSlot then
                 pcall(function() GameTooltip:SetInventoryItem("player", _lastEquipTooltipSlot) end)
-            else
-                GameTooltip:Hide(); GameTooltip:Show()
+            end
+        end
+        -- If a comparison tooltip is open for this equipped slot (data arrived after
+        -- the first hover), append affix lines now that the cache is populated.
+        if bag == 255 then
+            for _, ttName in ipairs({"ShoppingTooltip1", "ShoppingTooltip2"}) do
+                local tt = _G[ttName]
+                if tt and tt:IsShown() and tt._affixCompareEquipSlot == slot then
+                    tt._affixLinesKey = nil
+                    AddAffixLines(tt, 255, slot)
+                end
             end
         end
 
@@ -456,6 +569,12 @@ function AFXM:OnServerMsg(msg)
                 local taText = parts[i]:match("^ta:(.+)$")
                 if taText then
                     peekCache[uniqueId].talentTexts[#peekCache[uniqueId].talentTexts + 1] = taText
+                else
+                    local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
+                    if impName then
+                        peekCache[uniqueId].imprintText  = impName
+                        peekCache[uniqueId].imprintCount = tonumber(impCount) or 0
+                    end
                 end
             end
         end
@@ -472,8 +591,10 @@ function AFXM:OnServerMsg(msg)
                         GameTooltip:SetTradeTargetItem(_lastTradeTooltipSlot)
                     end
                 end)
-            else
-                GameTooltip:Hide(); GameTooltip:Show()
+            elseif _lastAuctionTooltipType and _lastAuctionTooltipIndex then
+                pcall(function()
+                    GameTooltip:SetAuctionItem(_lastAuctionTooltipType, _lastAuctionTooltipIndex)
+                end)
             end
         end
 
@@ -492,6 +613,12 @@ function AFXM:OnServerMsg(msg)
                 local taText = parts[i]:match("^ta:(.+)$")
                 if taText then
                     inspectCache[key].talentTexts[#inspectCache[key].talentTexts + 1] = taText
+                else
+                    local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
+                    if impName then
+                        inspectCache[key].imprintText  = impName
+                        inspectCache[key].imprintCount = tonumber(impCount) or 0
+                    end
                 end
             end
         end
@@ -504,18 +631,21 @@ function AFXM:OnServerMsg(msg)
             pcall(function()
                 GameTooltip:SetInventoryItem(_lastInspectTooltipUnit, _lastInspectTooltipSlot)
             end)
-        elseif GameTooltip:IsVisible() then
-            GameTooltip:Hide(); GameTooltip:Show()
         end
 
     elseif cmd == "AUCTIONDATA" then
-        local owner     = parts[2]
-        local itemId    = tonumber(parts[3])
-        local slotCount = tonumber(parts[4])
-        if not owner or not itemId or not slotCount then return end
-        local key = "ah:" .. owner .. ":" .. itemId
+        -- Format: AUCTIONDATA|owner|itemId|buyout|auctionType|index|slotCount|...
+        -- auctionType and index are echoed from the PEEKAUCTION request for unique-per-slot keying.
+        local owner       = parts[2]
+        local itemId      = tonumber(parts[3])
+        local buyout      = tonumber(parts[4])
+        local auctionType = parts[5]
+        local index       = tonumber(parts[6])
+        local slotCount   = tonumber(parts[7])
+        if not owner or not itemId or buyout == nil or not auctionType or not index or not slotCount then return end
+        local key = "ah:" .. auctionType .. ":" .. index
         auctionCache[key] = { slotCount = slotCount, slots = {}, talentTexts = {} }
-        for i = 5, #parts do
+        for i = 8, #parts do
             local idx, state, text = parts[i]:match("^s(%d+):([UPEA%-]):(.*)")
             if idx then
                 auctionCache[key].slots[tonumber(idx) + 1] = { state = state, text = text }
@@ -523,6 +653,12 @@ function AFXM:OnServerMsg(msg)
                 local taText = parts[i]:match("^ta:(.+)$")
                 if taText then
                     auctionCache[key].talentTexts[#auctionCache[key].talentTexts + 1] = taText
+                else
+                    local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
+                    if impName then
+                        auctionCache[key].imprintText  = impName
+                        auctionCache[key].imprintCount = tonumber(impCount) or 0
+                    end
                 end
             end
         end
@@ -533,35 +669,78 @@ function AFXM:OnServerMsg(msg)
             pcall(function()
                 GameTooltip:SetAuctionItem(_lastAuctionTooltipType, _lastAuctionTooltipIndex)
             end)
-        elseif GameTooltip:IsVisible() then
-            GameTooltip:Hide(); GameTooltip:Show()
         end
 
-    elseif cmd == "TRADEDATA" then
+    elseif cmd == "TRADEGUID" then
+        -- Server resolved partner's trade slot to item counter + inline affix data.
+        -- Populate peekCache directly so AddPeekLines renders without a second request.
         local tradeSlot = tonumber(parts[2])
-        local slotCount = tonumber(parts[3])
-        if not tradeSlot or not slotCount then return end
-        pendingTradeReq[tradeSlot] = nil  -- allow re-request if slot changes later
-        tradeCache[tradeSlot] = { slotCount = slotCount, slots = {}, talentTexts = {} }
-        for i = 4, #parts do
+        local counter   = tonumber(parts[3])
+        local slotCount = tonumber(parts[4])
+        if not tradeSlot or not counter or counter == 0 then return end
+        pendingTradeReq[tradeSlot] = nil
+        tradeGuidCache[tradeSlot]  = counter
+        peekCache[counter] = { slotCount = slotCount or 0, slots = {}, talentTexts = {} }
+        for i = 5, #parts do
             local idx, state, text = parts[i]:match("^s(%d+):([UPEA%-]):(.*)")
             if idx then
-                tradeCache[tradeSlot].slots[tonumber(idx) + 1] = { state = state, text = text }
+                peekCache[counter].slots[tonumber(idx) + 1] = { state = state, text = text }
             else
                 local taText = parts[i]:match("^ta:(.+)$")
                 if taText then
-                    tradeCache[tradeSlot].talentTexts[#tradeCache[tradeSlot].talentTexts + 1] = taText
+                    peekCache[counter].talentTexts[#peekCache[counter].talentTexts + 1] = taText
+                else
+                    local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
+                    if impName then
+                        peekCache[counter].imprintText  = impName
+                        peekCache[counter].imprintCount = tonumber(impCount) or 0
+                    end
                 end
             end
         end
         if AFX_DEBUG then
-            print("|cff44DDFF[ItemAffixes]|r TRADEDATA slot=" .. tradeSlot .. " slotCount=" .. slotCount)
+            print("|cff44DDFF[ItemAffixes]|r TRADEGUID slot=" .. tradeSlot .. " counter=" .. counter
+                .. " slotCount=" .. tostring(slotCount))
         end
-        -- Retrigger tooltip in-place if the player is still hovering this trade slot.
         if GameTooltip:IsVisible()
                 and _lastTradeTooltipIsPlayer == false
                 and _lastTradeTooltipSlot == tradeSlot then
             pcall(function() GameTooltip:SetTradeTargetItem(tradeSlot) end)
+        end
+
+    elseif cmd == "MYTRADEGUID" then
+        -- Server resolved own trade slot to item counter + inline affix data.
+        local tradeSlot = tonumber(parts[2])
+        local counter   = tonumber(parts[3])
+        local slotCount = tonumber(parts[4])
+        if not tradeSlot or not counter or counter == 0 then return end
+        pendingSelfReq[tradeSlot]      = nil
+        selfTradeGuidCache[tradeSlot]  = counter
+        peekCache[counter] = { slotCount = slotCount or 0, slots = {}, talentTexts = {} }
+        for i = 5, #parts do
+            local idx, state, text = parts[i]:match("^s(%d+):([UPEA%-]):(.*)")
+            if idx then
+                peekCache[counter].slots[tonumber(idx) + 1] = { state = state, text = text }
+            else
+                local taText = parts[i]:match("^ta:(.+)$")
+                if taText then
+                    peekCache[counter].talentTexts[#peekCache[counter].talentTexts + 1] = taText
+                else
+                    local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
+                    if impName then
+                        peekCache[counter].imprintText  = impName
+                        peekCache[counter].imprintCount = tonumber(impCount) or 0
+                    end
+                end
+            end
+        end
+        if AFX_DEBUG then
+            print("|cff44DDFF[ItemAffixes]|r MYTRADEGUID slot=" .. tradeSlot .. " counter=" .. counter)
+        end
+        if GameTooltip:IsVisible()
+                and _lastTradeTooltipIsPlayer == true
+                and _lastTradeTooltipSlot == tradeSlot then
+            pcall(function() GameTooltip:SetTradePlayerItem(tradeSlot) end)
         end
 
     elseif cmd == "IMPRINT_DESC_CLEAR" then
@@ -620,9 +799,15 @@ local function AddAffixLines(tooltip, bag, slot)
         -- The server responds with DATA|bag|slot which updates cache and refreshes tooltip.
         local key = bag .. ":" .. slot
         local now = GetTime()
-        if not pendingDataReq[key] or (now - pendingDataReq[key]) > 1.0 then
+        if not pendingDataReq[key] or (now - pendingDataReq[key]) > DATA_COOLDOWN then
             pendingDataReq[key] = now
             AFXM:SendToServer("DATA|" .. bag .. "|" .. slot)
+        end
+        -- Show a placeholder only on the main tooltip; comparison tooltips get lines
+        -- appended in-place when the DATA response arrives, so no indicator is needed.
+        if tooltip == GameTooltip then
+            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:Show()
         end
         return
     end
@@ -650,7 +835,15 @@ local function AddAffixLines(tooltip, bag, slot)
     -- Imprint name (epic purple)
     if data.imprintText then
         if not addedSep then tooltip:AddLine(" "); addedSep = true end
-        tooltip:AddLine("|cffA335EE[Imprint] " .. data.imprintText .. "|r", 0.64, 0.21, 0.93)
+        local impLine = "|cffA335EE[Imprint] " .. data.imprintText
+        if data.imprintCount ~= nil then
+            if data.imprintCount > 0 then
+                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+            else
+                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+            end
+        end
+        tooltip:AddLine(impLine .. "|r")
     end
     -- Talent affixes (gold/amber, no roll indicator — always applied)
     if data.talentTexts then
@@ -1249,6 +1442,15 @@ local function HookComparisonTooltip(tt)
                 -- Not an equipped item link — fall back to PEEK by uniqueId.
                 local uid = GetItemUniqueId(link)
                 if uid and uid ~= 0 then
+                    -- Guard: if the link's uid matches the bag item currently
+                    -- shown in GameTooltip, this is the Shift+B case where WoW
+                    -- passes the hovered bag item's link to the comparison frame
+                    -- instead of an equipped counterpart.  Skip to avoid echoing
+                    -- the same affix lines on both frames.
+                    if _lastBagTooltipBag and _lastBagTooltipSlot then
+                        local bagLink = GetContainerItemLink(_lastBagTooltipBag, _lastBagTooltipSlot)
+                        if bagLink and GetItemUniqueId(bagLink) == uid then return end
+                    end
                     AddPeekLines(self, uid)
                 end
             end
@@ -1257,6 +1459,108 @@ local function HookComparisonTooltip(tt)
     if AFX_DEBUG then
         local name = (tt.GetName and tt:GetName()) or "(unnamed)"
         print("|cff44DDFF[ItemAffixes]|r Hooked comparison tooltip: " .. name)
+    end
+end
+
+-- Maps WoW INVTYPE strings to Lua equipment slot number(s).
+-- Rings and trinkets occupy two slots; weapons can compare both hands.
+local INVTYPE_TO_SLOTS = {
+    INVTYPE_HEAD           = {1},
+    INVTYPE_NECK           = {2},
+    INVTYPE_SHOULDER       = {3},
+    INVTYPE_BODY           = {4},
+    INVTYPE_CHEST          = {5},
+    INVTYPE_ROBE           = {5},
+    INVTYPE_WAIST          = {6},
+    INVTYPE_LEGS           = {7},
+    INVTYPE_FEET           = {8},
+    INVTYPE_WRIST          = {9},
+    INVTYPE_HAND           = {10},
+    INVTYPE_FINGER         = {11, 12},
+    INVTYPE_TRINKET        = {13, 14},
+    INVTYPE_CLOAK          = {15},
+    INVTYPE_2HWEAPON       = {16},
+    INVTYPE_WEAPON         = {16, 17},
+    INVTYPE_SHIELD         = {17},
+    INVTYPE_WEAPONMAINHAND = {16},
+    INVTYPE_WEAPONOFFHAND  = {17},
+    INVTYPE_HOLDABLE       = {17},
+    INVTYPE_RANGED         = {18},
+    INVTYPE_RANGEDRIGHT    = {18},
+    INVTYPE_THROWN         = {18},
+    INVTYPE_RELIC          = {18},
+    INVTYPE_TABARD         = {19},
+}
+
+-- Called after GameTooltip_ShowCompareItem runs (ShoppingTooltip1/2 are already
+-- populated by the C ShowCompareItem call at that point).  Appends affix lines for
+-- the equipped item(s) being compared.  Handles three hover sources:
+--   bag item    → derive equip slot(s) from INVTYPE of the hovered bag item
+--   trade item  → same, but link comes from GetTradePlayerItemLink / GetTradeTargetItemLink
+--   inspect     → comparison slot is exactly _lastInspectTooltipSlot (same slot, your gear)
+local function AddCompareTooltipAffixes()
+    local invSlots
+
+    if _lastBagTooltipBag and _lastBagTooltipSlot then
+        local link = GetContainerItemLink(_lastBagTooltipBag, _lastBagTooltipSlot)
+        if not link then return end
+        local _, _, _, _, _, _, _, _, equipSlot = GetItemInfo(link)
+        if not equipSlot or equipSlot == "" then return end
+        invSlots = INVTYPE_TO_SLOTS[equipSlot]
+    elseif _lastTradeTooltipSlot then
+        local link
+        if _lastTradeTooltipIsPlayer then
+            link = GetTradePlayerItemLink(_lastTradeTooltipSlot)
+        else
+            link = GetTradeTargetItemLink(_lastTradeTooltipSlot)
+        end
+        if not link then return end
+        local _, _, _, _, _, _, _, _, equipSlot = GetItemInfo(link)
+        if not equipSlot or equipSlot == "" then return end
+        invSlots = INVTYPE_TO_SLOTS[equipSlot]
+    elseif _lastInspectTooltipUnit and _lastInspectTooltipSlot then
+        -- Inspect window: derive equip slot(s) from the inspected item's INVTYPE.
+        -- This ensures rings (INVTYPE_FINGER) always populate both ShoppingTooltip1
+        -- and ShoppingTooltip2 in canonical order (slot 11, slot 12), regardless of
+        -- which ring slot was hovered on the inspected player.
+        local link = GetInventoryItemLink(_lastInspectTooltipUnit, _lastInspectTooltipSlot)
+        if not link then return end
+        local _, _, _, _, _, _, _, _, equipSlot = GetItemInfo(link)
+        if not equipSlot or equipSlot == "" then return end
+        invSlots = INVTYPE_TO_SLOTS[equipSlot]
+    elseif _lastAuctionTooltipType and _lastAuctionTooltipIndex then
+        -- Auction house hover: derive equip slots from the AH item's INVTYPE.
+        local link = GetAuctionItemLink(_lastAuctionTooltipType, _lastAuctionTooltipIndex)
+        if not link then return end
+        local _, _, _, _, _, _, _, _, equipSlot = GetItemInfo(link)
+        if not equipSlot or equipSlot == "" then return end
+        invSlots = INVTYPE_TO_SLOTS[equipSlot]
+    end
+
+    if not invSlots then return end
+
+    -- When slot is empty, fall back to its weapon-hand companion.
+    -- Example: hovering a shield (invSlot=17) while wielding a 2H (slot 16 occupied,
+    -- slot 17 empty) — WoW shows the 2H weapon in ShoppingTooltip1, so we must look
+    -- up slot 16's affixes instead of slot 17's (which has nothing).
+    local function ResolveEquippedSlot(invSlot)
+        if GetInventoryItemLink("player", invSlot) then return invSlot end
+        if invSlot == 17 and GetInventoryItemLink("player", 16) then return 16 end
+        if invSlot == 16 and GetInventoryItemLink("player", 17) then return 17 end
+        return nil
+    end
+
+    local ttNames = { "ShoppingTooltip1", "ShoppingTooltip2" }
+    for i, invSlot in ipairs(invSlots) do
+        local tt = _G[ttNames[i]]
+        if tt and tt:IsShown() then
+            local resolvedSlot = ResolveEquippedSlot(invSlot)
+            if resolvedSlot then
+                tt._affixCompareEquipSlot = resolvedSlot
+                tt._affixLinesKey = nil
+                AddAffixLines(tt, 255, resolvedSlot)
+            end
+        end
     end
 end
 
@@ -1279,9 +1583,10 @@ local function TryHookShoppingTooltips()
         end
     end
 
-    -- GameTooltip_ShowCompareItem is called by Blizzard with the actual tooltip
-    -- frame references as arguments — hook it as a reliable fallback so we can
-    -- discover frames whatever their global name (or even if anonymous).
+    -- GameTooltip_ShowCompareItem is the Lua wrapper that ends with a call to
+    -- GameTooltip:ShowCompareItem() (C method), which populates ShoppingTooltip1/2
+    -- entirely in C.  Hook the Lua wrapper so we can append affix lines after it
+    -- finishes, and also discover any tooltip frames passed as arguments.
     if not _compareItemFnHooked and _G["GameTooltip_ShowCompareItem"] then
         _compareItemFnHooked = true
         pcall(function()
@@ -1292,6 +1597,11 @@ local function TryHookShoppingTooltips()
                         HookComparisonTooltip(tt)
                     end
                 end
+                -- GameTooltip:ShowCompareItem() (C method) populates ShoppingTooltip1/2
+                -- entirely in C, bypassing any Lua hooksecurefunc on SetInventoryItem /
+                -- SetHyperlink on those frames.  After the Lua wrapper returns the
+                -- tooltips are already populated, so we can safely append affix lines.
+                AddCompareTooltipAffixes()
             end)
         end)
         if AFX_DEBUG then
@@ -1299,6 +1609,216 @@ local function TryHookShoppingTooltips()
         end
     end
 end
+
+-- ============================================================================
+-- Imprint rune apply mechanic
+-- ============================================================================
+-- Right-clicking a rune item in a bag enters apply mode (dismisses context menu,
+-- shows a cursor-following icon indicator).  Left-clicking any other bag item
+-- sends IMPRINT_APPLY.  Right-clicking or clicking the rune itself cancels.
+--
+-- Rune detection: uses the server-provided isRune flag when available (requires
+-- rebuild).  Falls back to the heuristic slotCount==0 + imprintText which is
+-- reliable because rune items are not gear and never have affix slots.
+
+local _applyRuneBag  = nil
+local _applyRuneSlot = nil
+
+-- Cursor-following indicator frame (lazy-created)
+local _applyIndicator = nil
+
+local function GetOrCreateApplyIndicator()
+    if _applyIndicator then return _applyIndicator end
+    local f = CreateFrame("Frame", "AFXImprintApplyIndicator", UIParent)
+    f:SetFrameStrata("TOOLTIP")
+    f:SetSize(36, 36)
+    f:EnableMouse(false)
+    f:SetClampedToScreen(false)
+
+    local bg = f:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    bg:SetVertexColor(0.64, 0.21, 0.93, 0.9)
+
+    local icon = f:CreateTexture(nil, "ARTWORK")
+    icon:SetPoint("TOPLEFT",     f, "TOPLEFT",     4, -4)
+    icon:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -4, 4)
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    f._icon = icon
+
+    f:SetScript("OnUpdate", function(self)
+        local x, y = GetCursorPosition()
+        local s = UIParent:GetEffectiveScale()
+        self:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x/s + 14, y/s + 2)
+    end)
+
+    f:Hide()
+    _applyIndicator = f
+    return f
+end
+
+local function ShowApplyIndicator(bag, slot)
+    local f = GetOrCreateApplyIndicator()
+    local texture = GetContainerItemInfo(bag, slot)
+    if texture then f._icon:SetTexture(texture) end
+    f:Show()
+end
+
+local function HideApplyIndicator()
+    if _applyIndicator then _applyIndicator:Hide() end
+end
+
+local function IsRuneItem(data)
+    if not data then return false end
+    if data.isRune then return true end
+    return data.slotCount == 0 and data.imprintText ~= nil and not data.isGem
+end
+
+-- Full-screen click interceptor shown during apply mode.
+-- Sits above all bag buttons at FULLSCREEN_DIALOG strata so its OnClick fires
+-- BEFORE the underlying bag item receives the click — preventing equip/use.
+-- Right-click: cancels apply mode (click consumed, nothing below fires).
+-- Left-click: uses IsMouseOver() to identify which bag slot is under the cursor
+--             and processes it as apply/cancel without the click reaching the item.
+--
+-- Order matters for Lua upvalue scoping: HideApplyOverlay and CancelImprintApplyMode
+-- are declared before GetOrCreateApplyOverlay so the SetScript closure can capture them.
+
+local _applyOverlay = nil
+
+local function HideApplyOverlay()
+    if _applyOverlay then _applyOverlay:Hide() end
+end
+
+local function CancelImprintApplyMode()
+    if not _applyRuneBag then return end
+    _applyRuneBag  = nil
+    _applyRuneSlot = nil
+    HideApplyIndicator()
+    HideApplyOverlay()
+    UIErrorsFrame:AddMessage("|cffA335EE[Imprint]|r Apply mode cancelled.")
+end
+
+local function GetOrCreateApplyOverlay()
+    if _applyOverlay then return _applyOverlay end
+    local f = CreateFrame("Button", "AFXImprintApplyOverlay", UIParent)
+    f:SetFrameStrata("FULLSCREEN_DIALOG")
+    f:SetAllPoints(UIParent)
+    f:EnableMouse(true)
+    f:Hide()
+
+    -- Use OnMouseDown (not OnClick/OnMouseUp) so the click is consumed on press.
+    -- Bag items require a matching Down+Up pair to trigger their OnClick; since our
+    -- overlay consumes the Down event, the bag item never sees a paired Up and cannot
+    -- fire its equip/use action.
+    f:SetScript("OnMouseDown", function(self, button)
+        if button == "RightButton" then
+            CancelImprintApplyMode()
+            CloseDropDownMenus()
+
+        elseif button == "LeftButton" then
+            -- IsMouseOver() is geometric and works even though our frame has focus.
+            local targetBag, targetSlot = nil, nil
+            for bag = 0, 4 do
+                local numSlots = GetContainerNumSlots(bag)
+                for m = 1, numSlots do
+                    local btn = _G["ContainerFrame" .. (bag + 1) .. "Item" .. m]
+                    if btn and btn:IsVisible() and btn:IsMouseOver() then
+                        targetBag  = bag
+                        targetSlot = btn:GetID()
+                        break
+                    end
+                end
+                if targetBag then break end
+            end
+
+            if not targetBag then
+                -- Clicked empty space — cancel so the player knows they need to retry.
+                CancelImprintApplyMode()
+                return
+            end
+
+            if targetBag == _applyRuneBag and targetSlot == _applyRuneSlot then
+                CancelImprintApplyMode()  -- clicked the rune itself
+            else
+                local rb, rs = _applyRuneBag, _applyRuneSlot
+                _applyRuneBag, _applyRuneSlot = nil, nil
+                HideApplyIndicator()
+                self:Hide()
+                AFXM:SendToServer("IMPRINT_APPLY|" .. rb .. "|" .. rs
+                    .. "|" .. targetBag .. "|" .. targetSlot)
+                -- No ClearCursor() needed: OnMouseDown fires before WoW's pickup
+                -- (which happens on MouseUp), so no item was ever picked up.
+            end
+        end
+    end)
+
+    -- Synthesize item tooltips while in apply mode.
+    -- The overlay blocks bag item OnEnter events, so we drive GameTooltip manually
+    -- via SetBagItem.  Our existing SetBagItem hook then appends affix lines as normal.
+    f:SetScript("OnUpdate", function(self)
+        local foundBag, foundSlot = nil, nil
+        for bag = 0, 4 do
+            local numSlots = GetContainerNumSlots(bag)
+            for m = 1, numSlots do
+                local btn = _G["ContainerFrame" .. (bag + 1) .. "Item" .. m]
+                if btn and btn:IsVisible() and btn:IsMouseOver() then
+                    foundBag  = bag
+                    foundSlot = btn:GetID()
+                    break
+                end
+            end
+            if foundBag then break end
+        end
+
+        if foundBag then
+            if self._ttBag ~= foundBag or self._ttSlot ~= foundSlot then
+                self._ttBag  = foundBag
+                self._ttSlot = foundSlot
+                GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+                GameTooltip:SetBagItem(foundBag, foundSlot)
+                GameTooltip:Show()
+            end
+        else
+            if self._ttBag then
+                self._ttBag  = nil
+                self._ttSlot = nil
+                GameTooltip:Hide()
+            end
+        end
+    end)
+
+    _applyOverlay = f
+    return f
+end
+
+local function ShowApplyOverlay()
+    GetOrCreateApplyOverlay():Show()
+end
+
+local function EnterImprintApplyMode(bag, slot, imprintName)
+    _applyRuneBag  = bag
+    _applyRuneSlot = slot
+    ShowApplyIndicator(bag, slot)
+    ShowApplyOverlay()
+    UIErrorsFrame:AddMessage("|cffA335EE[Imprint: " .. (imprintName or "?") .. "]|r "
+        .. "Left-click a target item to apply.  Right-click to cancel.")
+end
+
+-- Only enter apply mode here (right-click rune when NOT in apply mode).
+-- All in-mode actions are handled by the overlay which intercepts clicks
+-- before they reach bag buttons, preventing accidental equip/use.
+hooksecurefunc("ContainerFrameItemButton_OnClick", function(self, button)
+    if button == "RightButton" and not _applyRuneBag then
+        local bag  = self:GetParent():GetID()
+        local slot = self:GetID()
+        local data = cache[bag] and cache[bag][slot]
+        if IsRuneItem(data) then
+            EnterImprintApplyMode(bag, slot, data.imprintText)
+            CloseDropDownMenus()
+        end
+    end
+end)
 
 -- ============================================================================
 -- Initialization
@@ -1357,6 +1877,10 @@ local function Init()
         _lastEquipTooltipSlot     = nil
         _lastTradeTooltipIsPlayer = nil
         _lastTradeTooltipSlot     = nil
+        _lastInspectTooltipUnit   = nil
+        _lastInspectTooltipSlot   = nil
+        _lastAuctionTooltipType   = nil
+        _lastAuctionTooltipIndex  = nil
         AddAffixLines(self, bag, slot)
     end)
     hooksecurefunc(GameTooltip, "SetInventoryItem", function(self, unit, slot)
@@ -1375,8 +1899,14 @@ local function Init()
         elseif UnitIsPlayer(unit) then
             -- Inspecting another player's item. WoW 3.3.5a inspect links have uniqueId=0,
             -- so we use PEEKUNIT (name+slot) instead of PEEK (uniqueId).
-            _lastInspectTooltipUnit = unit
-            _lastInspectTooltipSlot = slot
+            _lastInspectTooltipUnit   = unit
+            _lastInspectTooltipSlot   = slot
+            _lastBagTooltipBag        = nil
+            _lastBagTooltipSlot       = nil
+            _lastTradeTooltipIsPlayer = nil
+            _lastTradeTooltipSlot     = nil
+            _lastAuctionTooltipType   = nil
+            _lastAuctionTooltipIndex  = nil
             if AFX_DEBUG then
                 print("|cff44DDFF[ItemAffixes]|r SetInventoryItem inspect unit="
                     .. tostring(unit) .. " slot=" .. tostring(slot)
@@ -1396,9 +1926,16 @@ local function Init()
     -- Fall back to PEEKAUCTION (seller name + item template) for the lookup.
     local auctionHookOk, auctionHookErr = pcall(function()
         hooksecurefunc(GameTooltip, "SetAuctionItem", function(self, auctionType, index)
-            self._affixLinesKey      = nil
-            _lastAuctionTooltipType  = auctionType
-            _lastAuctionTooltipIndex = index
+            self._affixLinesKey       = nil
+            _lastAuctionTooltipType   = auctionType
+            _lastAuctionTooltipIndex  = index
+            _lastBagTooltipBag        = nil
+            _lastBagTooltipSlot       = nil
+            _lastEquipTooltipSlot     = nil
+            _lastTradeTooltipIsPlayer = nil
+            _lastTradeTooltipSlot     = nil
+            _lastInspectTooltipUnit   = nil
+            _lastInspectTooltipSlot   = nil
             local link = GetAuctionItemLink(auctionType, index)
             local uid  = GetItemUniqueId(link)
             if AFX_DEBUG then
@@ -1408,20 +1945,22 @@ local function Init()
             if uid and uid ~= 0 then
                 AddPeekLines(self, uid)
             else
-                -- uid=0: use owner name + item template ID for server-side lookup.
+                -- uid=0: use owner name + item template ID + buyout price for server-side lookup.
+                -- buyout disambiguates multiple listings of the same template by the same seller.
                 -- WoW 3.3.5a GetAuctionItemInfo returns 13 values:
                 --   name,texture,count,quality,canUse,level,minBid,minIncrement,
                 --   buyoutPrice,bidAmount,highBidder,owner,saleStatus
-                -- owner=12; itemId is not returned in this version, extract from link.
+                -- owner=12, buyoutPrice=9; itemId is not returned, extract from link.
                 local info = {GetAuctionItemInfo(auctionType, index)}
                 local owner  = info[12]
+                local buyout = info[9] or 0
                 local itemId = link and tonumber(link:match("|Hitem:(%d+):"))
                 if AFX_DEBUG then
                     print("|cff44DDFF[ItemAffixes]|r SetAuctionItem owner=" .. tostring(owner)
-                        .. " itemId=" .. tostring(itemId))
+                        .. " itemId=" .. tostring(itemId) .. " buyout=" .. tostring(buyout))
                 end
                 if owner and itemId then
-                    AddAuctionLines(self, owner, itemId)
+                    AddAuctionLines(self, owner, itemId, buyout, auctionType, index)
                 end
             end
         end)
@@ -1463,59 +2002,43 @@ local function Init()
         _lastBagTooltipBag        = nil
         _lastBagTooltipSlot       = nil
         _lastEquipTooltipSlot     = nil
+        _lastInspectTooltipUnit   = nil
+        _lastInspectTooltipSlot   = nil
+        _lastAuctionTooltipType   = nil
+        _lastAuctionTooltipIndex  = nil
+        if not tradeSlot then return end
         if AFX_DEBUG then
             print("|cff44DDFF[ItemAffixes]|r AddTradeLines isPlayer=" .. tostring(isPlayer)
                 .. " slot=" .. tostring(tradeSlot)
-                .. " link=" .. tostring(link)
-                .. " uid=" .. tostring(link and GetItemUniqueId(link)))
+                .. " link=" .. tostring(link))
         end
-        local uid = GetItemUniqueId(link)
-        if uid and uid ~= 0 then
-            -- Normal path: link has a real GUID.
-            AddPeekLines(self, uid)
-        elseif isPlayer and link then
-            -- uid=0 fallback for own trade items: find the locked bag slot.
-            local itemId = tonumber(link:match("|Hitem:(%d+):"))
-            if itemId then
-                local bag, slot = FindLockedItemInBags(itemId)
-                if bag and slot then
-                    _lastBagTooltipBag  = bag
-                    _lastBagTooltipSlot = slot
-                    AddAffixLines(self, bag, slot)
+        -- Never use the item link's uid field to key into peekCache for trade items.
+        -- For WoW random-enchant items ("of the Monkey" etc.) the link's uniqueId
+        -- field holds the suffix/enchant FACTOR, not the item's GUID counter.
+        -- Always resolve via the trade slot itself (MYTRADEPEEK / TRADEPEEK) so
+        -- the server looks up the item by actual slot pointer, not by uid.
+        if isPlayer then
+            local counter = selfTradeGuidCache[tradeSlot]
+            if counter then
+                AddPeekLines(self, counter)
+            else
+                local now  = GetTime()
+                local last = pendingSelfReq[tradeSlot]
+                if not last or (now - last) > TRADE_COOLDOWN then
+                    pendingSelfReq[tradeSlot] = now
+                    AFXM:SendToServer("MYTRADEPEEK|" .. tradeSlot)
+                    if AFX_DEBUG then
+                        print("|cff44DDFF[ItemAffixes]|r MYTRADEPEEK sent slot=" .. tradeSlot)
+                    end
                 end
             end
-        end
-        -- uid=0 for partner's items: request from server via TRADEPEEK, render from tradeCache.
-        elseif not isPlayer and link and tradeSlot then
-            local data = tradeCache[tradeSlot]
-            if data then
-                if data.slotCount == 0 then return end
-                local renderKey = "trade:" .. tradeSlot
-                if self._affixLinesKey == renderKey then return end
-                self._affixLinesKey = renderKey
-                local addedSep = false
-                for _, s in ipairs(data.slots) do
-                    if not addedSep then self:AddLine(" "); addedSep = true end
-                    if s.state == "U" or s.state == "P" then
-                        self:AddLine("|cff888888[Affix slot not yet rolled]|r")
-                    elseif s.state == "A" and s.text and s.text ~= "" then
-                        if s.text:sub(1, 1) == "!" then
-                            self:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
-                        else
-                            self:AddLine("|cff44DDFF" .. s.text .. "|r", 0.27, 0.87, 1)
-                        end
-                    end
-                end
-                if data.talentTexts then
-                    for _, taText in ipairs(data.talentTexts) do
-                        if not addedSep then self:AddLine(" "); addedSep = true end
-                        self:AddLine("|cffd4af37" .. taText .. "|r", 0.83, 0.69, 0.22)
-                    end
-                end
-                if addedSep then self:Show() end
+        elseif link then
+            -- Partner's item — always uid=0 in 3.3.5a, use TRADEPEEK.
+            local counter = tradeGuidCache[tradeSlot]
+            if counter then
+                AddPeekLines(self, counter)
             else
-                -- Cache miss — ask server.  Rate-limited so rapid re-hovers don't spam.
-                local now = GetTime()
+                local now  = GetTime()
                 local last = pendingTradeReq[tradeSlot]
                 if not last or (now - last) > TRADE_COOLDOWN then
                     pendingTradeReq[tradeSlot] = now
@@ -1571,7 +2094,6 @@ local function Init()
     -- Blizzard_InspectUI is lazy-loaded; also retried on every ADDON_LOADED.
     TryHookInspectFrame()
 
-    print("|cff44DDFF[ItemAffixes]|r ready — Alt+Click a bag item to roll.")
 end
 
 -- ============================================================================
@@ -1588,6 +2110,8 @@ frame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 frame:RegisterEvent("INSPECT_READY")
 frame:RegisterEvent("TRADE_TARGET_ITEM_CHANGED")
 frame:RegisterEvent("TRADE_CLOSED")
+frame:RegisterEvent("AUCTION_HOUSE_CLOSED")
+frame:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...
@@ -1607,8 +2131,9 @@ frame:SetScript("OnEvent", function(self, event, ...)
         cache = {}
         inspectCache = {}
         pendingInspectReq = {}
-        auctionCache = {}
-        pendingAuctionReq = {}
+        auctionCache       = {}
+        pendingAuctionReq  = {}
+        auctionGroupOffset = {}
         AFXM:SendToServer("CONFIG")
         AFXM:SendToServer("ALLDATA")
 
@@ -1669,19 +2194,44 @@ frame:SetScript("OnEvent", function(self, event, ...)
         local slot = ...
         if AFX_DEBUG then print("|cff44DDFF[ItemAffixes]|r EVENT: TRADE_TARGET_ITEM_CHANGED slot=" .. tostring(slot)) end
         if type(slot) == "number" then
-            tradeCache[slot]      = nil
-            pendingTradeReq[slot] = nil
+            tradeGuidCache[slot]    = nil
+            selfTradeGuidCache[slot] = nil
+            pendingTradeReq[slot]   = nil
+            pendingSelfReq[slot]    = nil
         else
-            tradeCache      = {}
-            pendingTradeReq = {}
+            tradeGuidCache    = {}
+            selfTradeGuidCache = {}
+            pendingTradeReq   = {}
+            pendingSelfReq    = {}
         end
 
     elseif event == "TRADE_CLOSED" then
-        -- Trade window closed (accepted, cancelled, or interrupted).
-        -- Wipe all cached trade data — it belongs to the now-gone session.
         if AFX_DEBUG then print("|cff44DDFF[ItemAffixes]|r EVENT: TRADE_CLOSED") end
-        tradeCache      = {}
-        pendingTradeReq = {}
+        tradeGuidCache    = {}
+        selfTradeGuidCache = {}
+        pendingTradeReq   = {}
+        pendingSelfReq    = {}
+
+    elseif event == "AUCTION_ITEM_LIST_UPDATE" then
+        -- AH list refreshed: recompute per-slot group offsets and flush stale cache so
+        -- each slot sends a fresh PEEKAUCTION with the correct OFFSET for this listing.
+        auctionGroupOffset = {}
+        auctionCache       = {}
+        pendingAuctionReq  = {}
+        RebuildAuctionGroupOffsets("list")
+        RebuildAuctionGroupOffsets("bidder")
+        RebuildAuctionGroupOffsets("owner")
+        if AFX_DEBUG then print("|cff44DDFF[ItemAffixes]|r EVENT: AUCTION_ITEM_LIST_UPDATE") end
+
+    elseif event == "AUCTION_HOUSE_CLOSED" then
+        -- AH listing slot indexes are no longer valid after the window closes.
+        -- Clear so the next open session gets fresh requests with the new slot positions.
+        if AFX_DEBUG then print("|cff44DDFF[ItemAffixes]|r EVENT: AUCTION_HOUSE_CLOSED") end
+        auctionCache       = {}
+        pendingAuctionReq  = {}
+        auctionGroupOffset = {}
+        -- Also cancel any in-progress imprint apply mode (user left context).
+        CancelImprintApplyMode()
     end
 end)
 

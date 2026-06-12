@@ -111,6 +111,9 @@ public:
     // Command support
     // -----------------------------------------------------------------------
 
+    // True if this item is an imprint rune (its GetEntry() matches the def's runeItemId).
+    bool IsRune(Item const* item) const;
+
     // Grant a pre-loaded Rune directly into the player's bags (GM/testing use).
     bool GrantRune(Player* player, uint32 imprintId);
 

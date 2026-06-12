@@ -271,6 +271,12 @@ private:
     std::string BuildAffixDisplayString(AffixDefinition const* def, int32 rolledValue);
     void SendRollOptions(Player* player, Item* item, uint8 affixSlot, std::vector<PendingOpt> const& opts);
 
+    // Appends slot entries, talent affix lines, and imprint to msg for any read-only
+    // affix query (PEEK / PEEKUNIT / PEEKAUCTION / PEEKUNITALL / TRADEGUID).
+    // slots must already be loaded via LoadAffixSlots(rawGuid).
+    void AppendAffixPayload(std::string& msg, uint64 rawGuid,
+                            std::vector<AffixSlotInfo> const& slots);
+
     void LoadTalentAffixDefs();
     TalentAffixDef const* GetEligibleTalentAffix(Player* player, Item const* item, int8 specOverride = -1);
 
@@ -291,6 +297,8 @@ private:
     float  _budgetMinRoll        = 0.75f;  // minimum roll as fraction of max (variance floor)
     float  _statMultiplier       = 1.0f;   // global stat scaler (>1 = power fantasy, <1 = conservative)
     uint32 _imprintRollChance    = 30;     // % chance an Imprint option replaces the last roll option
+    bool   _critRollEnabled      = true;   // whether crit rolls can fire at all
+    uint32 _critRollChance       = 10;     // % chance each roll option lands a crit (0–100)
 };
 
 #define sItemAffixMgr ItemAffixMgr::instance()

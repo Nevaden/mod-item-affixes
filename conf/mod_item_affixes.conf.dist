@@ -53,3 +53,16 @@ ItemAffixes.StatMultiplier = 3.0
 # Once an item has an Imprint (from any source) the option will never appear again on that item.
 # 0 = Imprint options never appear in rolls.  30 = 30% chance (default).
 ItemAffixes.ImprintRollChance = 30
+
+# Enable "crit" rolls — a per-option lucky bonus that inflates the rolled value by 50%.
+# When a crit fires on a stat affix the value is multiplied by 1.5 (ceiling).
+# On a SpellMod affix the internal scale flag is escalated (plain→×1.5, 2H→×2.25).
+# Crit options are shown with a gold "!" prefix in the pick menu.
+# 0 = crits never occur, 1 = enabled (default).
+ItemAffixes.EnableCritRolls = 1
+
+# Percentage chance (0-100) that each individual roll option lands a crit.
+# Evaluated independently for every option presented to the player.
+# Has no effect when EnableCritRolls = 0.
+# 10 = 10% chance per option (default).
+ItemAffixes.CritRollChance = 10

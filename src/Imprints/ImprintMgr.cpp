@@ -377,6 +377,21 @@ std::pair<uint8,uint8> ImprintMgr::FindRuneInBags(Player* player, uint32& outImp
 }
 
 // ---------------------------------------------------------------------------
+// IsRune — true when the item's template ID matches any ImprintDef's runeItemId.
+// Used by SendItemStatus to flag rune items with |isRune for the Lua apply mechanic.
+// ---------------------------------------------------------------------------
+
+bool ImprintMgr::IsRune(Item const* item) const
+{
+    if (!item) return false;
+    uint32 entry = item->GetEntry();
+    for (auto const& [id, def] : _defs)
+        if (def.runeItemId == entry)
+            return true;
+    return false;
+}
+
+// ---------------------------------------------------------------------------
 // GrantRune — create a loaded Rune item and register it in item_imprint.
 // Used by the .imprint grant GM command for testing.
 // ---------------------------------------------------------------------------
@@ -472,11 +487,8 @@ bool ImprintMgr::ExtractImprint(Player* player, Item* sourceItem)
         return false;
     }
 
-    // Unequip/remove source item and update extractions, then destroy it
-    if (sourceItem->IsEquipped())
-        player->RemoveItem(sourceItem->GetBagSlot(), sourceItem->GetSlot(), true);
-    else
-        player->RemoveItem(sourceItem->GetBagSlot(), sourceItem->GetSlot(), true);
+    // Remove source item from bag/equip slot before creating the rune.
+    player->RemoveItem(sourceItem->GetBagSlot(), sourceItem->GetSlot(), true);
 
     // Create the Rune in bags
     Item* runeItem = player->StoreNewItem(dest, def->runeItemId, true);
