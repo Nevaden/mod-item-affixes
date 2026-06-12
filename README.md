@@ -327,7 +327,7 @@ Epic items present three options per roll — the highest variance and the highe
 ![Class skill selected on what to roll menu](screenshots/class%20skill%20selected%20on%20what%20to%20roll%20menu.png)
 ![Class skills options](screenshots/class%20skills%20options.png)
 
-When "Class Skills" is selected, the server presents spell modifier options tuned for the player's class and dominant talent tree.
+When "Class Skills" is selected, the server presents spell modifier options for the player's class and the talent tree chosen in the Roll Menu. A class skill only appears as an option if the character has already learned that ability — you will never roll a modifier for a spell you don't know.
 
 ### Imprint option
 ![Imprint option - Eternal Elemental](screenshots/imprint%20option%20-%20eternal%20elemental.png)
