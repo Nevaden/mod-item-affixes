@@ -5,7 +5,7 @@ set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
 set USER=acore
 set PASS=UnlimitedCosmicPower
 set SCRIPT_DIR=%~dp0
-set SQL_DIR=%SCRIPT_DIR%data\sql\db-world
+set SQL_DIR=%SCRIPT_DIR%..\data\sql\db-world
 set WS_EXE=E:\servers\Wow\Standard\bin\worldserver.exe
 set WS_CFG=E:\servers\Wow\Standard\bin\configs\worldserver.conf
 set WS_DIR=E:\servers\Wow\Standard\bin
@@ -46,7 +46,7 @@ echo.
 
 REM ── Step 2: Rebuild client DBC + MPQ ────────────────────────────────────
 echo [2/3] Rebuilding client DBC and MPQ patch files...
-powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%tools\patch_custom_spells.ps1"
+powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%..\tools\patch_custom_spells.ps1"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: patch_custom_spells.ps1 failed.
     pause & exit /b 1

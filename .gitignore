@@ -1,5 +1,8 @@
-# Internal notes — never committed
+# Internal notes and dev-only docs — never committed
 CLAUDE.md
+docs/
+talent_affixes/PROCESS.md
+affixes/pseudo-code budget
 
 # OS-generated files
 .DS_Store

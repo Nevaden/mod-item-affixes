@@ -1,6 +1,6 @@
 param(
     [string]$SpellDBC   = "E:\servers\Wow\Standard\bin\data\dbc\Spell.dbc",
-    [string]$MpqCreate  = "$PSScriptRoot\tools\mpqcreate.ps1",
+    [string]$MpqCreate  = "$PSScriptRoot\..\tools\mpqcreate.ps1",
     [string]$PatchZ     = "E:\servers\Wow\WoW HD\data\patch-z.MPQ",
     [string]$PatchEnUSZ = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-z.MPQ"
 )

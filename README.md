@@ -195,7 +195,7 @@ void Player::ApplyModToSpell(SpellModifier* mod, Spell* spell)
 }
 ```
 
-Run `apply_core_patches.ps1` to apply all required patches automatically, or see
+Run `scripts\apply_core_patches.ps1` to apply all required patches automatically, or see
 `docs/CORE_PATCHES.md` for manual instructions.
 
 ### Step 3 — Build
@@ -225,8 +225,8 @@ Get-Content data\sql\db-characters\item_imprint.sql |
 **World database** — generates and applies affix/talent/imprint template data:
 
 ```powershell
-.\build_affixes.ps1
-.\build_talent_affixes.ps1
+.\scripts\build_affixes.ps1
+.\scripts\build_talent_affixes.ps1
 Get-Content data\sql\db-world\affix_template.sql |
     & mysql.exe -u acore -pPASSWORD acore_world
 Get-Content data\sql\db-world\talent_affix_def.sql |
@@ -235,7 +235,7 @@ Get-Content data\sql\db-world\imprint_def.sql |
     & mysql.exe -u acore -pPASSWORD acore_world
 ```
 
-Or run `update_affixes.bat` which handles the affix and talent SQL automatically.
+Or run `scripts\update_affixes.bat` which handles the affix and talent SQL automatically.
 
 ### Step 5 — Install the client addon
 
@@ -422,7 +422,7 @@ Key fields:
 - `item_category` — `0`=any, `1`=1H weapon, `2`=2H weapon, `4`=armor, `5`=jewelry, `6`=wand, `7`=boots, `8`=dagger
 - `min_quality` — `1`=green+, `2`=blue+, `3`=epic+
 
-After editing, run `build_affixes.ps1` (or `update_affixes.bat`) to regenerate and apply SQL.
+After editing, run `scripts\build_affixes.ps1` (or `scripts\update_affixes.bat`) to regenerate and apply SQL.
 
 ### SpellMod affixes (class-specific)
 
@@ -446,14 +446,14 @@ See `docs/ADDING_NEW_IMPRINT.md` for a full walkthrough. The short version:
 4. Register the handler in `src/mod_item_affixes_loader.cpp`.
 5. Rebuild and run the updated SQL.
 
-After any JSON edits: **run `update_affixes.bat`** from the module folder.
+After any JSON edits: **run `scripts\update_affixes.bat`** from the module folder.
 
 ---
 
 ## Enabling / Disabling the Module
 
-- **`enable.bat`** — re-enables, rebuilds, and installs.
-- **`disable.bat`** — excludes from build, rebuilds, and installs.
+- **`scripts\enable.bat`** — re-enables, rebuilds, and installs.
+- **`scripts\disable.bat`** — excludes from build, rebuilds, and installs.
 
 Items affixed before disabling keep their `item_affix` rows; no mods are applied while the
 module is disabled. Re-enabling fully restores all functionality.
@@ -465,10 +465,19 @@ module is disabled. Re-enabling fully restores all functionality.
 ```
 mod-item-affixes/
 ├── README.md
-├── build_affixes.ps1        ← generates affix_template.sql from affixes/*.json
-├── build_talent_affixes.ps1 ← generates talent_affix_def.sql from talent_affixes/<Class>/*.json
-├── update_affixes.bat       ← runs both build scripts and applies SQL to DB
-├── apply_core_patches.ps1   ← applies required engine patches
+├── CMakeLists.txt
+│
+├── scripts/
+│   ├── build_affixes.ps1        ← generates affix_template.sql from affixes/*.json
+│   ├── build_talent_affixes.ps1 ← generates talent_affix_def.sql from talent_affixes/<Class>/*.json
+│   ├── update_affixes.bat       ← runs both build scripts and applies SQL to DB
+│   ├── update_imprints.bat      ← applies imprint SQL and rebuilds client DBC/MPQ
+│   ├── apply_core_patches.ps1   ← applies required engine patches
+│   ├── patch_dbc.ps1            ← syncs SpellItemEnchantment.dbc and rebuilds MPQ
+│   ├── patch_imprint_spells.ps1 ← injects custom imprint spells into Spell.dbc
+│   ├── reset_affixes.bat        ← wipes item_affix (testing only)
+│   ├── enable.bat               ← re-enables module, rebuilds, and installs
+│   └── disable.bat              ← excludes module from build, rebuilds, and installs
 │
 ├── affixes/
 │   └── generics_defs.json   ← stat affix definitions (metadata only — no value ranges)

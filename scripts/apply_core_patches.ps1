@@ -16,7 +16,7 @@
     .\apply_core_patches.ps1 -AzerothCoreRoot "C:\dev\azerothcore-wotlk"
 #>
 param(
-    [string]$AzerothCoreRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+    [string]$AzerothCoreRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
 )
 
 Set-StrictMode -Version Latest

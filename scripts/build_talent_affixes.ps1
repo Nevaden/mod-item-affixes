@@ -16,9 +16,10 @@
 
 $ErrorActionPreference = "Stop"
 $ScriptDir    = Split-Path -Parent $MyInvocation.MyCommand.Path
-$TalentDir    = Join-Path $ScriptDir "talent_affixes"
+$moduleRoot   = Split-Path -Parent $ScriptDir
+$TalentDir    = Join-Path $moduleRoot "talent_affixes"
 $MapsJson     = Join-Path $TalentDir "_maps.json"
-$OutPath      = Join-Path $ScriptDir "data\sql\db-world\talent_affix_def.sql"
+$OutPath      = Join-Path $moduleRoot "data\sql\db-world\talent_affix_def.sql"
 
 # Read lookup maps from the dedicated maps file
 Write-Host "  Reading $MapsJson ..."
@@ -44,7 +45,7 @@ $subFiles = Get-ChildItem $TalentDir -Recurse -Filter "*.json" |
     Where-Object { $_.FullName -ne $MapsJson } |
     Sort-Object { $_.FullName }
 foreach ($f in $subFiles) {
-    Write-Host "  Reading $($f.FullName.Replace($ScriptDir, '.')) ..."
+    Write-Host "  Reading $($f.FullName.Replace($moduleRoot, '.')) ..."
     $sub = Get-Content $f.FullName -Raw | ConvertFrom-Json
     if ($sub.PSObject.Properties["talent_affixes"]) {
         $allRaw += @($sub.talent_affixes | Where-Object { $_.PSObject.Properties["id"] })

@@ -5,9 +5,10 @@
 param()
 
 $scriptDir        = Split-Path -Parent $MyInvocation.MyCommand.Path
-$affixesDir       = Join-Path $scriptDir "affixes"
-$classAffixesDir  = Join-Path $scriptDir "class_affixes"
-$sqlPath          = Join-Path $scriptDir "data\sql\db-world\affix_template.sql"
+$moduleRoot       = Split-Path -Parent $scriptDir
+$affixesDir       = Join-Path $moduleRoot "affixes"
+$classAffixesDir  = Join-Path $moduleRoot "class_affixes"
+$sqlPath          = Join-Path $moduleRoot "data\sql\db-world\affix_template.sql"
 
 if (-not (Test-Path $affixesDir)) {
     Write-Error "affixes/ folder not found at $affixesDir"; exit 1

@@ -3,9 +3,9 @@
 # with the correct display name (overwrites if name changed), then rebuilds client MPQ files.
 
 param(
-    [string]$AffixesDir  = "$PSScriptRoot\affixes",
+    [string]$AffixesDir  = "$PSScriptRoot\..\affixes",
     [string]$ServerDBC   = "E:\servers\Wow\Standard\bin\data\dbc\SpellItemEnchantment.dbc",
-    [string]$MpqBuild    = "$PSScriptRoot\tools\mpqbuild.exe",
+    [string]$MpqBuild    = "$PSScriptRoot\..\tools\mpqbuild.exe",
     [string]$Patch4      = "E:\servers\Wow\WoW HD\data\patch-4.MPQ",
     [string]$PatchEnUS4  = "E:\servers\Wow\WoW HD\data\enUS\patch-enUS-4.MPQ"
 )
