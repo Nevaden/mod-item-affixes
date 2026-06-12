@@ -237,6 +237,8 @@ Get-Content data\sql\db-world\imprint_def.sql |
 
 Or run `scripts\update_affixes.bat` which handles the affix and talent SQL automatically.
 
+> **Before running any `.bat` script**, open it and set `USER`, `PASS`, and `MYSQL` at the top to match your MySQL installation. The scripts ship with placeholder values.
+
 ### Step 5 — Install the client addon
 
 The canonical addon source lives in `addon\ItemAffixes\` inside the module. Copy it to the live
@@ -251,13 +253,17 @@ client↔server communication.
 
 ### Step 6 — (Optional) Install the client DBC patch
 
-Affix names appear in item tooltips via `SpellItemEnchantment.dbc`. The patched DBC is
-pre-built via the tools in `tools/`.
+Affix names appear in item tooltips via `SpellItemEnchantment.dbc`. Run `scripts\patch_dbc.ps1`
+to generate the patch files, then copy or place the output into your WoW client data folder:
 
 ```
 WoW Client 3.3.5a\Data\patch-4.MPQ
 WoW Client 3.3.5a\Data\enUS\patch-enUS-4.MPQ
 ```
+
+> Before running `patch_dbc.ps1`, update the `$ServerDBC`, `$Patch4`, and `$PatchEnUS4` parameter
+> defaults at the top of the script (or pass them on the command line) to match your server and
+> client paths.
 
 Without the patch, affixes function correctly but no green tooltip line appears.
 
@@ -454,6 +460,8 @@ After any JSON edits: **run `scripts\update_affixes.bat`** from the module folde
 
 - **`scripts\enable.bat`** — re-enables, rebuilds, and installs.
 - **`scripts\disable.bat`** — excludes from build, rebuilds, and installs.
+
+> Set the `BUILD` variable at the top of each script to your AzerothCore build directory before running.
 
 Items affixed before disabling keep their `item_affix` rows; no mods are applied while the
 module is disabled. Re-enabling fully restores all functionality.

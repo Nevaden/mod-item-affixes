@@ -1,8 +1,10 @@
 @echo off
 setlocal
 
+REM ── Configure for your installation ──────────────────────────────────────
 set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
-set BUILD=E:\servers\Wow\build-standard
+set BUILD=C:\AzerothCore\build
+REM ──────────────────────────────────────────────────────────────────────────
 
 echo ============================================================
 echo  mod-item-affixes -- DISABLE

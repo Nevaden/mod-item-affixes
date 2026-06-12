@@ -1,9 +1,12 @@
 @echo off
 setlocal
 
+REM ── Configure for your installation ──────────────────────────────────────
 set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
 set USER=acore
-set PASS=UnlimitedCosmicPower
+set PASS=YOUR_PASSWORD
+REM ──────────────────────────────────────────────────────────────────────────
+
 set SCRIPT_DIR=%~dp0
 set SQL_RESET=%SCRIPT_DIR%..\data\sql\db-characters\reset_item_affixes.sql
 

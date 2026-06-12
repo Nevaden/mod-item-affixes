@@ -1,8 +1,8 @@
 param(
-    [string]$SpellDBC   = "E:\servers\Wow\Standard\bin\data\dbc\Spell.dbc",
+    [string]$SpellDBC   = "C:\AzerothCore\bin\data\dbc\Spell.dbc",
     [string]$MpqCreate  = "$PSScriptRoot\..\tools\mpqcreate.ps1",
-    [string]$PatchZ     = "E:\servers\Wow\WoW HD\data\patch-z.MPQ",
-    [string]$PatchEnUSZ = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-z.MPQ"
+    [string]$PatchZ     = "C:\World of Warcraft\Data\patch-z.MPQ",
+    [string]$PatchEnUSZ = "C:\World of Warcraft\Data\enUS\patch-enUS-z.MPQ"
 )
 
 $ErrorActionPreference = "Stop"
@@ -11,7 +11,7 @@ $ErrorActionPreference = "Stop"
 # Appends custom imprint-system spells to Spell.dbc so the WoW client
 # can display them in the spell book, then rebuilds the client MPQ patch.
 # Safe to run multiple times -- already-present spells are skipped.
-# Shared data dir: E:\servers\Wow\Standard\bin\data (worldserver.conf DataDir)
+# Shared data dir: worldserver.conf DataDir (e.g. C:\AzerothCore\bin\data)
 
 # Record size for WoW 3.3.5a Spell.dbc = 936 bytes (234 fields x 4 bytes each).
 # Field byte offsets derived from SpellEntry struct in DBCStructure.h.

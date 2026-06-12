@@ -120,6 +120,6 @@ ApplyPatch "Patch 2: HandleSocketOpcode OnPlayerSocketGem callback (gem affixes)
 
 Write-Host ""
 Write-Host "All patches applied. Rebuild the worldserver:" -ForegroundColor White
-Write-Host "  cd `"e:\servers\Wow\build-standard`""
+Write-Host "  cd `"<YOUR_BUILD_DIR>`""
 Write-Host "  cmake --build . --config RelWithDebInfo"
 Write-Host ""

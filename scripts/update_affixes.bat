@@ -1,17 +1,17 @@
 @echo off
 setlocal
 
+REM ── Configure for your installation ──────────────────────────────────────
 set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
 set USER=acore
-set PASS=UnlimitedCosmicPower
+set PASS=YOUR_PASSWORD
+REM ──────────────────────────────────────────────────────────────────────────
+
 set SCRIPT_DIR=%~dp0
 set SQL_WORLD=%SCRIPT_DIR%..\data\sql\db-world\affix_template.sql
 set SQL_CHARS=%SCRIPT_DIR%..\data\sql\db-characters\item_affix.sql
 set SQL_TALENT_WORLD=%SCRIPT_DIR%..\data\sql\db-world\talent_affix_def.sql
 set SQL_TALENT_CHARS=%SCRIPT_DIR%..\data\sql\db-characters\item_talent_affix.sql
-set WORLDSERVER=E:\servers\Wow\Standard\bin\worldserver.exe
-set WS_CONFIG=E:\servers\Wow\Standard\bin\configs\worldserver.conf
-set WS_DIR=E:\servers\Wow\Standard\bin
 
 echo ============================================================
 echo  mod-item-affixes -- FULL UPDATE
