@@ -657,7 +657,7 @@
                                        "carrier_spell_id":  30108,
                                        "flags":  [
                                                      0,
-                                                     2,
+                                                     256,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -687,7 +687,7 @@
                                        "carrier_spell_id":  30108,
                                        "flags":  [
                                                      0,
-                                                     2,
+                                                     256,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -717,7 +717,7 @@
                                        "carrier_spell_id":  30108,
                                        "flags":  [
                                                      0,
-                                                     2,
+                                                     256,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -1745,7 +1745,7 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  48181,
-                                       "flags":  [0, 4, 0],
+                                       "flags":  [0, 262144, 0],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 48181"
                                    },

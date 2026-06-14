@@ -269,7 +269,7 @@
                                        "carrier_spell_id":  51505,
                                        "flags":  [
                                                      0,
-                                                     4194304,
+                                                     4096,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -299,7 +299,7 @@
                                        "carrier_spell_id":  51505,
                                        "flags":  [
                                                      0,
-                                                     4194304,
+                                                     4096,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -329,7 +329,7 @@
                                        "carrier_spell_id":  51505,
                                        "flags":  [
                                                      0,
-                                                     4194304,
+                                                     4096,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -359,7 +359,7 @@
                                        "carrier_spell_id":  51505,
                                        "flags":  [
                                                      0,
-                                                     4194304,
+                                                     4096,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -395,7 +395,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8042,
                                        "flags":  [
-                                                     4,
+                                                     1048576,
                                                      0,
                                                      0
                                                  ],
@@ -425,7 +425,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8042,
                                        "flags":  [
-                                                     4,
+                                                     1048576,
                                                      0,
                                                      0
                                                  ],
@@ -455,7 +455,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8042,
                                        "flags":  [
-                                                     4,
+                                                     1048576,
                                                      0,
                                                      0
                                                  ],
@@ -485,7 +485,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8042,
                                        "flags":  [
-                                                     4,
+                                                     1048576,
                                                      0,
                                                      0
                                                  ],
@@ -522,7 +522,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8050,
                                        "flags":  [
-                                                     8,
+                                                     268435456,
                                                      0,
                                                      0
                                                  ],
@@ -552,7 +552,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8050,
                                        "flags":  [
-                                                     8,
+                                                     268435456,
                                                      0,
                                                      0
                                                  ],
@@ -582,7 +582,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  8050,
                                        "flags":  [
-                                                     8,
+                                                     268435456,
                                                      0,
                                                      0
                                                  ],
@@ -746,7 +746,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  331,
                                        "flags":  [
-                                                     512,
+                                                     64,
                                                      0,
                                                      0
                                                  ],
@@ -776,7 +776,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  331,
                                        "flags":  [
-                                                     512,
+                                                     64,
                                                      0,
                                                      0
                                                  ],
@@ -806,7 +806,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  331,
                                        "flags":  [
-                                                     512,
+                                                     64,
                                                      0,
                                                      0
                                                  ],
@@ -836,7 +836,7 @@
                                        "family_name":  "SHAMAN",
                                        "carrier_spell_id":  331,
                                        "flags":  [
-                                                     512,
+                                                     64,
                                                      0,
                                                      0
                                                  ],
@@ -875,7 +875,7 @@
                                        "flags":  [
                                                      0,
                                                      0,
-                                                     2097152
+                                                     16
                                                  ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 61295"
@@ -905,7 +905,7 @@
                                        "flags":  [
                                                      0,
                                                      0,
-                                                     2097152
+                                                     16
                                                  ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 61295"
@@ -935,7 +935,7 @@
                                        "flags":  [
                                                      0,
                                                      0,
-                                                     2097152
+                                                     16
                                                  ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 61295"
@@ -971,8 +971,8 @@
                                        "carrier_spell_id":  51514,
                                        "flags":  [
                                                      0,
-                                                     0,
-                                                     262144
+                                                     32768,
+                                                     0
                                                  ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 51514"
@@ -1001,8 +1001,8 @@
                                        "carrier_spell_id":  51514,
                                        "flags":  [
                                                      0,
-                                                     0,
-                                                     262144
+                                                     32768,
+                                                     0
                                                  ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 51514"
@@ -1031,8 +1031,8 @@
                                        "carrier_spell_id":  51514,
                                        "flags":  [
                                                      0,
-                                                     0,
-                                                     262144
+                                                     32768,
+                                                     0
                                                  ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 51514"
@@ -1502,6 +1502,572 @@
                         "tooltip":  {
                                         "enchant_id":  4243,
                                         "display_name":  "Feral Spirit: -30s CD, +10s Duration"
+                                    }
+                    },
+                    {
+                        "id":  8047,
+                        "name":  "Frost Shock: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8056,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8056"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4290,
+                                        "display_name":  "Frost Shock: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  8048,
+                        "name":  "Frost Shock: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8056,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8056"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4291,
+                                        "display_name":  "Frost Shock: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  8049,
+                        "name":  "Frost Shock: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8056,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8056"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4292,
+                                        "display_name":  "Frost Shock: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  8050,
+                        "name":  "Frost Shock: +20% Dmg, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8056,
+                                       "flags":  [
+                                                     2147483648,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8056"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4293,
+                                        "display_name":  "Frost Shock: +20% Dmg, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  8051,
+                        "name":  "Lesser Healing Wave: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8004,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8004"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4294,
+                                        "display_name":  "Lesser Healing Wave: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  8052,
+                        "name":  "Lesser Healing Wave: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8004,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8004"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4295,
+                                        "display_name":  "Lesser Healing Wave: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  8053,
+                        "name":  "Lesser Healing Wave: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8004,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8004"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4296,
+                                        "display_name":  "Lesser Healing Wave: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  8054,
+                        "name":  "Lesser Healing Wave: +20% Heal, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  8004,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8004"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4297,
+                                        "display_name":  "Lesser Healing Wave: +20% Heal, -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  8055,
+                        "name":  "Thunderstorm: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  51490,
+                                       "flags":  [
+                                                     0,
+                                                     8192,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51490"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4298,
+                                        "display_name":  "Thunderstorm: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  8056,
+                        "name":  "Thunderstorm: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  51490,
+                                       "flags":  [
+                                                     0,
+                                                     8192,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51490"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4299,
+                                        "display_name":  "Thunderstorm: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  8057,
+                        "name":  "Thunderstorm: -15s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  51490,
+                                       "flags":  [
+                                                     0,
+                                                     8192,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51490"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4300,
+                                        "display_name":  "Thunderstorm: -15s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  8058,
+                        "name":  "Thunderstorm: +20% Dmg, -15s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  51490,
+                                       "flags":  [
+                                                     0,
+                                                     8192,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51490"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -15000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4301,
+                                        "display_name":  "Thunderstorm: +20% Dmg, -15s CD"
+                                    }
+                    },
+                    {
+                        "id":  8059,
+                        "name":  "Lightning Bolt: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  403,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 403"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4302,
+                                        "display_name":  "Lightning Bolt: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  8060,
+                        "name":  "Lava Burst: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  51505,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 51505"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4303,
+                                        "display_name":  "Lava Burst: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  8061,
+                        "name":  "Chain Lightning: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  421,
+                                       "flags":  [
+                                                     2,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 421"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4304,
+                                        "display_name":  "Chain Lightning: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  8062,
+                        "name":  "Healing Wave: +20% Heal, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  331,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 331"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4305,
+                                        "display_name":  "Healing Wave: +20% Heal, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  8063,
+                        "name":  "Chain Heal: +20% Heal, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  11,
+                                       "family_name":  "SHAMAN",
+                                       "carrier_spell_id":  1064,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1064"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4306,
+                                        "display_name":  "Chain Heal: +20% Heal, Instant Cast"
                                     }
                     }
                 ],
