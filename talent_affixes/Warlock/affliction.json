@@ -40,8 +40,8 @@
       "carrier_name": "Corruption",
       "spellmod_op": "RESIST_MISS_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": -100,
-      "notes": "Affliction spell hit chance +1%/rank (RESIST_MISS_CHANCE FLAT: -100=-1%). All-ones used — 'Affliction' is not a targetable spell sub-type in Warlock family SpellMod; acceptable scope for Affliction spec affixes.",
+      "value_per_rank": 1,
+      "notes": "Affliction spell hit chance +1%/rank (RESIST_MISS_CHANCE FLAT: 1=+1% hit). All-ones used — 'Affliction' is not a targetable spell sub-type in Warlock family SpellMod; acceptable scope for Affliction spec affixes.",
       "verified": true
     },
 

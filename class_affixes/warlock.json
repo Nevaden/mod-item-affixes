@@ -965,6 +965,894 @@
                                         "enchant_id":  4259,
                                         "display_name":  "Soul Fire: +20% Dmg, Instant Cast"
                                     }
+                    },
+
+                    {
+                        "id":  9030,
+                        "name":  "Drain Life: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  689,
+                                       "flags":  [8, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 689"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4260,
+                                        "display_name":  "Drain Life: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9031,
+                        "name":  "Drain Life: +2s Duration",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  689,
+                                       "flags":  [8, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 689"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4261,
+                                        "display_name":  "Drain Life: +2s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9032,
+                        "name":  "Drain Life: +15% Dmg, +2s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  689,
+                                       "flags":  [8, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 689"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4262,
+                                        "display_name":  "Drain Life: +15% Dmg, +2s Duration"
+                                    }
+                    },
+
+                    {
+                        "id":  9033,
+                        "name":  "Seed of Corruption: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  27243,
+                                       "flags":  [0, 16, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 27243"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4263,
+                                        "display_name":  "Seed of Corruption: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  9034,
+                        "name":  "Seed of Corruption: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  27243,
+                                       "flags":  [0, 16, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 27243"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4264,
+                                        "display_name":  "Seed of Corruption: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9035,
+                        "name":  "Seed of Corruption: +20% DoT, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  27243,
+                                       "flags":  [0, 16, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 27243"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4265,
+                                        "display_name":  "Seed of Corruption: +20% DoT, +3s Duration"
+                                    }
+                    },
+
+                    {
+                        "id":  9036,
+                        "name":  "Drain Soul: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1120,
+                                       "flags":  [16384, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1120"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4266,
+                                        "display_name":  "Drain Soul: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9037,
+                        "name":  "Drain Soul: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1120,
+                                       "flags":  [16384, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1120"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4267,
+                                        "display_name":  "Drain Soul: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  9038,
+                        "name":  "Drain Soul: +20% Dmg, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1120,
+                                       "flags":  [16384, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1120"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4268,
+                                        "display_name":  "Drain Soul: +20% Dmg, +3s Duration"
+                                    }
+                    },
+
+                    {
+                        "id":  9039,
+                        "name":  "Life Tap: +15% Mana Returned",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1454,
+                                       "flags":  [262144, 0, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 1454"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4269,
+                                        "display_name":  "Life Tap: +15% Mana Returned"
+                                    }
+                    },
+                    {
+                        "id":  9040,
+                        "name":  "Life Tap: +20% Mana, -10% Health Cost",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1454,
+                                       "flags":  [262144, 0, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 1454"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  14,
+                                        "op_name":  "COST",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  -10
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4270,
+                                        "display_name":  "Life Tap: +20% Mana, -10% Health Cost"
+                                    }
+                    },
+
+                    {
+                        "id":  9041,
+                        "name":  "Health Funnel: +15% Transfer",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  755,
+                                       "flags":  [16777216, 0, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 755"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4271,
+                                        "display_name":  "Health Funnel: +15% Transfer"
+                                    }
+                    },
+                    {
+                        "id":  9042,
+                        "name":  "Health Funnel: +20% Transfer, -10% Cost",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  755,
+                                       "flags":  [16777216, 0, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 755"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  14,
+                                        "op_name":  "COST",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  -10
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4272,
+                                        "display_name":  "Health Funnel: +20% Transfer, -10% Cost"
+                                    }
+                    },
+
+                    {
+                        "id":  9043,
+                        "name":  "Demon/Fel Armor: +10% Effect",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  706,
+                                       "flags":  [0, 536870944, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 706"
+                                   },
+                        "effect":  {
+                                       "op":  3,
+                                       "op_name":  "EFFECT1",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  10
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4273,
+                                        "display_name":  "Demon/Fel Armor: +10% Effect"
+                                    }
+                    },
+                    {
+                        "id":  9044,
+                        "name":  "Demon/Fel Armor: +15% Effect, -10% Cost",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  706,
+                                       "flags":  [0, 536870944, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 706"
+                                   },
+                        "effect":  {
+                                       "op":  3,
+                                       "op_name":  "EFFECT1",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  14,
+                                        "op_name":  "COST",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  -10
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4274,
+                                        "display_name":  "Demon/Fel Armor: +15% Effect, -10% Cost"
+                                    }
+                    },
+
+                    {
+                        "id":  9045,
+                        "name":  "Chaos Bolt: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  50796,
+                                       "flags":  [0, 131072, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50796"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4275,
+                                        "display_name":  "Chaos Bolt: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9046,
+                        "name":  "Chaos Bolt: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  50796,
+                                       "flags":  [0, 131072, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50796"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4276,
+                                        "display_name":  "Chaos Bolt: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  9047,
+                        "name":  "Chaos Bolt: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  50796,
+                                       "flags":  [0, 131072, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50796"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4277,
+                                        "display_name":  "Chaos Bolt: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  9048,
+                        "name":  "Chaos Bolt: +20% Dmg, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  50796,
+                                       "flags":  [0, 131072, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50796"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4278,
+                                        "display_name":  "Chaos Bolt: +20% Dmg, -500ms Cast"
+                                    }
+                    },
+
+                    {
+                        "id":  9049,
+                        "name":  "Rain of Fire: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  5740,
+                                       "flags":  [32, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5740"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4279,
+                                        "display_name":  "Rain of Fire: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9050,
+                        "name":  "Rain of Fire: +25% Radius",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  5740,
+                                       "flags":  [32, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5740"
+                                   },
+                        "effect":  {
+                                       "op":  6,
+                                       "op_name":  "RADIUS",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4280,
+                                        "display_name":  "Rain of Fire: +25% Radius"
+                                    }
+                    },
+                    {
+                        "id":  9051,
+                        "name":  "Rain of Fire: +20% Dmg, +25% Radius",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  5740,
+                                       "flags":  [32, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5740"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  6,
+                                        "op_name":  "RADIUS",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4281,
+                                        "display_name":  "Rain of Fire: +20% Dmg, +25% Radius"
+                                    }
+                    },
+
+                    {
+                        "id":  9055,
+                        "name":  "Shadow Bolt: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  686,
+                                       "flags":  [1, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 686"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4285,
+                                        "display_name":  "Shadow Bolt: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  9056,
+                        "name":  "Incinerate: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  29722,
+                                       "flags":  [2097152, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29722"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4286,
+                                        "display_name":  "Incinerate: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  9057,
+                        "name":  "Immolate: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  348,
+                                       "flags":  [16, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 348"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4287,
+                                        "display_name":  "Immolate: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  9058,
+                        "name":  "Chaos Bolt: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  50796,
+                                       "flags":  [0, 131072, 0],
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50796"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4288,
+                                        "display_name":  "Chaos Bolt: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  9059,
+                        "name":  "Haunt: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  48181,
+                                       "flags":  [0, 4, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48181"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4289,
+                                        "display_name":  "Haunt: +20% Dmg, Instant Cast"
+                                    }
+                    },
+
+                    {
+                        "id":  9052,
+                        "name":  "Hellfire: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1949,
+                                       "flags":  [64, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1949"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4282,
+                                        "display_name":  "Hellfire: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  9053,
+                        "name":  "Hellfire: -10% Mana Cost",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1949,
+                                       "flags":  [64, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1949"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  -10
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4283,
+                                        "display_name":  "Hellfire: -10% Mana Cost"
+                                    }
+                    },
+                    {
+                        "id":  9054,
+                        "name":  "Hellfire: +20% Dmg, -10% Mana Cost",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  5,
+                                       "family_name":  "WARLOCK",
+                                       "carrier_spell_id":  1949,
+                                       "flags":  [64, 0, 0],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1949"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  14,
+                                        "op_name":  "COST",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  -10
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4284,
+                                        "display_name":  "Hellfire: +20% Dmg, -10% Mana Cost"
+                                    }
                     }
                 ],
     "affix_examples":  [

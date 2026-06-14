@@ -3,21 +3,25 @@
 # with the correct display name (overwrites if name changed), then rebuilds client MPQ files.
 
 param(
-    [string]$AffixesDir  = "$PSScriptRoot\..\affixes",
-    [string]$ServerDBC   = "C:\AzerothCore\bin\data\dbc\SpellItemEnchantment.dbc",
-    [string]$MpqBuild    = "$PSScriptRoot\..\tools\mpqbuild.exe",
-    [string]$Patch4      = "C:\World of Warcraft\Data\patch-4.MPQ",
-    [string]$PatchEnUS4  = "C:\World of Warcraft\Data\enUS\patch-enUS-4.MPQ"
+    [string]$AffixesDir      = "$PSScriptRoot\..\affixes",
+    [string]$ClassAffixesDir = "$PSScriptRoot\..\class_affixes",
+    [string]$ServerDBC       = "C:\AzerothCore\bin\data\dbc\SpellItemEnchantment.dbc",
+    [string]$MpqBuild        = "$PSScriptRoot\..\tools\mpqbuild.exe",
+    [string]$Patch4          = "C:\World of Warcraft\Data\patch-4.MPQ",
+    [string]$PatchEnUS4      = "C:\World of Warcraft\Data\enUS\patch-enUS-4.MPQ"
 )
 
 Write-Host "=== Patching SpellItemEnchantment.dbc ==="
 
-# -- 1. Collect needed enchant IDs from active affixes ----------------------
-$classFiles  = @(Get-ChildItem $AffixesDir -Filter "*.json" | Sort-Object Name)
-$allAffixes  = [System.Collections.Generic.List[object]]::new()
-foreach ($file in $classFiles) {
-    $classJson = Get-Content $file.FullName -Raw | ConvertFrom-Json
-    if ($classJson.affixes) { $classJson.affixes | ForEach-Object { $allAffixes.Add($_) } }
+# -- 1. Collect needed enchant IDs from active affixes (stat + class) -------
+$allAffixes = [System.Collections.Generic.List[object]]::new()
+
+foreach ($dir in @($AffixesDir, $ClassAffixesDir)) {
+    if (-not (Test-Path $dir)) { continue }
+    foreach ($file in (Get-ChildItem $dir -Filter "*.json" | Sort-Object Name)) {
+        $classJson = Get-Content $file.FullName -Raw | ConvertFrom-Json
+        if ($classJson.affixes) { $classJson.affixes | ForEach-Object { $allAffixes.Add($_) } }
+    }
 }
 $json = [PSCustomObject]@{ affixes = @($allAffixes) }
 
