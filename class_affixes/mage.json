@@ -1775,6 +1775,817 @@
                                         "enchant_id":  4004,
                                         "display_name":  "Frostbolt: +20% Dmg, Instant Cast"
                                     }
+                    },
+                    {
+                        "id":  2055,
+                        "name":  "Frostfire Bolt: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  44614,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 44614"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4307,
+                                        "display_name":  "Frostfire Bolt: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  2056,
+                        "name":  "Frostfire Bolt: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  44614,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 44614"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4308,
+                                        "display_name":  "Frostfire Bolt: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  2057,
+                        "name":  "Frostfire Bolt: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  44614,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 44614"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4309,
+                                        "display_name":  "Frostfire Bolt: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  2058,
+                        "name":  "Frostfire Bolt: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  1,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  44614,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 44614"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4310,
+                                        "display_name":  "Frostfire Bolt: +20% Dmg, Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  2059,
+                        "name":  "Cone of Cold: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  120,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 120"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4311,
+                                        "display_name":  "Cone of Cold: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  2060,
+                        "name":  "Cone of Cold: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  120,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 120"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4312,
+                                        "display_name":  "Cone of Cold: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  2061,
+                        "name":  "Cone of Cold: -1s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  120,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 120"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4313,
+                                        "display_name":  "Cone of Cold: -1s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  2062,
+                        "name":  "Cone of Cold: +20% Dmg, -1s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  120,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 120"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -1000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4314,
+                                        "display_name":  "Cone of Cold: +20% Dmg, -1s CD"
+                                    }
+                    },
+                    {
+                        "id":  2063,
+                        "name":  "Frost Nova: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  122,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 122"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4315,
+                                        "display_name":  "Frost Nova: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  2064,
+                        "name":  "Frost Nova: -3s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  122,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 122"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4316,
+                                        "display_name":  "Frost Nova: -3s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  2065,
+                        "name":  "Frost Nova: +25% Dur, -3s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  122,
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 122"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4317,
+                                        "display_name":  "Frost Nova: +25% Dur, -3s CD"
+                                    }
+                    },
+                    {
+                        "id":  2066,
+                        "name":  "Blizzard: +25% Radius",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  10,
+                                       "flags":  [
+                                                     524416,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 10"
+                                   },
+                        "effect":  {
+                                       "op":  6,
+                                       "op_name":  "RADIUS",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4318,
+                                        "display_name":  "Blizzard: +25% Radius"
+                                    }
+                    },
+                    {
+                        "id":  2067,
+                        "name":  "Blizzard: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  10,
+                                       "flags":  [
+                                                     524416,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 10"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4319,
+                                        "display_name":  "Blizzard: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  2068,
+                        "name":  "Blizzard: +15% Dmg, +25% Radius",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  10,
+                                       "flags":  [
+                                                     524416,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 10"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  6,
+                                        "op_name":  "RADIUS",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4320,
+                                        "display_name":  "Blizzard: +15% Dmg, +25% Radius"
+                                    }
+                    },
+                    {
+                        "id":  2069,
+                        "name":  "Ice Lance: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  30455,
+                                       "flags":  [
+                                                     131072,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 30455"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4321,
+                                        "display_name":  "Ice Lance: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  2070,
+                        "name":  "Ice Block: -30s CD, +5s Dur",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  45438,
+                                       "flags":  [
+                                                     0,
+                                                     128,
+                                                     8
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45438"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -30000
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4322,
+                                        "display_name":  "Ice Block: -30s CD, +5s Dur"
+                                    }
+                    },
+                    {
+                        "id":  2071,
+                        "name":  "Icy Veins: -15s CD, +5s Dur",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  12472,
+                                       "flags":  [
+                                                     0,
+                                                     16384,
+                                                     8
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12472"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4323,
+                                        "display_name":  "Icy Veins: -15s CD, +5s Dur"
+                                    }
+                    },
+                    {
+                        "id":  2072,
+                        "name":  "Water Elemental: -15s CD, +15s Dur",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  31687,
+                                       "flags":  [
+                                                     0,
+                                                     2048,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 31687"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  15000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4324,
+                                        "display_name":  "Water Elemental: -15s CD, +15s Dur"
+                                    }
+                    },
+                    {
+                        "id":  2073,
+                        "name":  "Arcane Explosion: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  1449,
+                                       "flags":  [
+                                                     4096,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1449"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4325,
+                                        "display_name":  "Arcane Explosion: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  2074,
+                        "name":  "Arcane Power: -15s CD, +15s Dur",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  12042,
+                                       "flags":  [
+                                                     0,
+                                                     524288,
+                                                     8
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12042"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  15000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4326,
+                                        "display_name":  "Arcane Power: -15s CD, +15s Dur"
+                                    }
+                    },
+                    {
+                        "id":  2075,
+                        "name":  "Evocation: -60s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  12051,
+                                       "flags":  [
+                                                     67108864,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12051"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -60000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4327,
+                                        "display_name":  "Evocation: -60s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  2076,
+                        "name":  "Evocation: +2s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  12051,
+                                       "flags":  [
+                                                     67108864,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12051"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4328,
+                                        "display_name":  "Evocation: +2s Duration"
+                                    }
+                    },
+                    {
+                        "id":  2077,
+                        "name":  "Evocation: -60s CD, +2s Dur",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  12051,
+                                       "flags":  [
+                                                     67108864,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 12051"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -60000
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4329,
+                                        "display_name":  "Evocation: -60s CD, +2s Dur"
+                                    }
+                    },
+                    {
+                        "id":  2078,
+                        "name":  "Arcane Blast: +20% Dmg, Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  30451,
+                                       "flags":  [
+                                                     536870912,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 30451"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4330,
+                                        "display_name":  "Arcane Blast: +20% Dmg, Instant Cast"
+                                    }
                     }
                 ],
     "affix_examples":  [
