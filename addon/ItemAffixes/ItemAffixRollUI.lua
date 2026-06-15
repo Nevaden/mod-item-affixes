@@ -154,16 +154,24 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask)
 
         -- Spec section
         local ss = CreateFrame("Frame", nil, f)
-        ss:SetSize(380, 44)
-        ss._height = 44
+        ss:SetSize(380, 78)
+        ss._height = 78
         local sLbl = ss:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         sLbl:SetPoint("TOPLEFT", ss, "TOPLEFT", 0, 0)
         sLbl:SetText("Spec:")
         sLbl:SetTextColor(0.9, 0.9, 0.6)
+        local sDesc1 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        sDesc1:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -2)
+        sDesc1:SetText("Selects which spec's passive talent bonus can roll on this item.")
+        sDesc1:SetTextColor(0.65, 0.65, 0.65)
+        local sDesc2 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        sDesc2:SetPoint("TOPLEFT", sDesc1, "BOTTOMLEFT", 0, -1)
+        sDesc2:SetText("Also doubles the chance of rolling class affixes for that spec tree.")
+        sDesc2:SetTextColor(0.65, 0.65, 0.65)
         local sg = {}
         local specBtns = {}
         specBtns[1] = BuildToggleBtn(ss, "Any", 52, sg, 255, "AFX_PREF_SPEC")
-        specBtns[1]:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -4)
+        specBtns[1]:SetPoint("TOPLEFT", sDesc2, "BOTTOMLEFT", 0, -4)
         for i = 2, 4 do
             specBtns[i] = BuildToggleBtn(ss, "?", 86, sg, i - 2, "AFX_PREF_SPEC")
             specBtns[i]:SetPoint("LEFT", specBtns[i - 1], "RIGHT", 4, 0)
@@ -471,27 +479,31 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem)
 
         -- Section 2: Talent tree
         local ss = CreateFrame("Frame", nil, f)
-        ss:SetSize(420, 70)
+        ss:SetSize(420, 84)
         f._specSection = ss
         local sLbl = ss:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         sLbl:SetPoint("TOPLEFT", ss, "TOPLEFT", 0, 0)
         sLbl:SetText("Talent Tree:")
         sLbl:SetTextColor(0.9, 0.9, 0.6)
-        local sDesc = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-        sDesc:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -2)
-        sDesc:SetText("Selects which spec's passive talent bonus can roll on this item.")
-        sDesc:SetTextColor(0.65, 0.65, 0.65)
+        local sDesc1 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        sDesc1:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -2)
+        sDesc1:SetText("Selects which spec's passive talent bonus can roll on this item.")
+        sDesc1:SetTextColor(0.65, 0.65, 0.65)
+        local sDesc2 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        sDesc2:SetPoint("TOPLEFT", sDesc1, "BOTTOMLEFT", 0, -1)
+        sDesc2:SetText("Also doubles the chance of rolling class affixes for that spec tree.")
+        sDesc2:SetTextColor(0.65, 0.65, 0.65)
         local sg = {}
         local specBtns = {}
         specBtns[1] = BuildToggleBtn(ss, "Any", 60, sg, 255, "AFX_PREF_SPEC")
-        specBtns[1]:SetPoint("TOPLEFT", sDesc, "BOTTOMLEFT", 0, -4)
+        specBtns[1]:SetPoint("TOPLEFT", sDesc2, "BOTTOMLEFT", 0, -4)
         for i = 2, 4 do
             specBtns[i] = BuildToggleBtn(ss, "Spec"..i, 95, sg, i-2, "AFX_PREF_SPEC")
             specBtns[i]:SetPoint("LEFT", specBtns[i-1], "RIGHT", 4, 0)
         end
         ss._group = sg
         ss._specBtns = specBtns
-        ss._height = 70
+        ss._height = 84
 
         -- Section 3: Stat family / role
         local rs = CreateFrame("Frame", nil, f)

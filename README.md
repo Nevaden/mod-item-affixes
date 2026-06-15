@@ -30,37 +30,48 @@ Affixes scale with item level, so they feel meaningful at every stage of the gam
 2. **Roll Menu** — when the player Alt+Clicks an item that has unrolled slots, a preference page
    appears. The player can steer the roll before committing:
    - **What to roll?** — Any / Stats / Class Skills
-   - **Talent Tree:** — which spec's passive talent bonus can roll (Any or a specific spec)
+   - **Talent Tree:** — which spec's passive talent bonus can roll (Any or a specific spec); also doubles the chance of rolling class affixes for that tree
    - **Stat family?** — Any / Tank / Physical / Caster / Healer / Ranged *(hidden when Class Skills selected)*
    - **Main stat?** — Any / Strength / Agility / Intellect / Spirit *(hidden when Class Skills selected)*
 
-3. **Rolling** — clicking "Roll Affix" sends preferences to the server. The server presents 1–3
-   affix options depending on item quality. The player picks one; it is saved as APPLIED.
+3. **Rolling** — clicking "Roll Affix" sends preferences to the server. The server presents
+   1–4 affix options depending on item quality (configurable). The player picks one option to
+   apply; the rest are discarded.
 
-4. **Talent affix** — each slot roll also attempts to roll a passive talent bonus (10% chance on
-   green items, 50% on blue/epic). Talent affixes stack per slot, so a fully-rolled epic can
+4. **Reroll System** — after the initial roll, blue and epic items receive a number of rerolls
+   (configurable per quality). In the option picker the player can:
+   - **Lock** any option with the `[ ]` button beside it — locked options are preserved across rerolls
+   - **Reroll** all unlocked options while keeping locked ones using the "Reroll (N)" button
+   - Lock the option they want, freely change the roll preferences (type/spec/stat family/main stat), and reroll until satisfied or rerolls run out
+   - Pick any visible option at any time to finalise that slot
+
+5. **Talent affix** — each slot roll also attempts to roll a passive talent bonus (10% chance on
+   green items, 50% on blue/epic). The talent affix is applied when the player commits to an
+   option pick — not at roll time. Talent affixes stack per slot, so a fully-rolled epic can
    hold up to 3 talent affixes. The Talent Tree preference controls which spec tree the talent
    draws from.
 
-5. **Equip** — `SpellModifier` objects and stat bonuses are applied to the player via
+6. **Equip** — `SpellModifier` objects and stat bonuses are applied to the player via
    `Player::AddSpellMod` / `ApplyGenericStat`.
 
-6. **Unequip** — all mods are removed and freed.
+7. **Unequip** — all mods are removed and freed.
 
-7. **Login** — mods are reapplied for all currently equipped affixed items.
+8. **Login** — mods are reapplied for all currently equipped affixed items.
 
 ---
 
 ## Affix Slots by Quality
 
-| Quality       | Regular affix slots  | Options shown per roll | Talent chance per slot |
-|---------------|----------------------|------------------------|------------------------|
-| Grey (poor)   | 0 — skipped          | —                      | —                      |
-| White / Green | 1                    | 1                      | 10%                    |
-| Blue (rare)   | 2                    | 2                      | 50%                    |
-| Purple (epic) | 3                    | 3                      | 50%                    |
+| Quality       | Regular affix slots | Options per roll | Rerolls | Talent chance per slot |
+|---------------|---------------------|------------------|---------|------------------------|
+| Grey (poor)   | 0 — skipped         | —                | —       | —                      |
+| White / Green | 1                   | 1 (configurable) | 0       | 10%                    |
+| Blue (rare)   | 2                   | 3 (configurable) | 3       | 50%                    |
+| Purple (epic) | 3                   | 4 (configurable) | 5       | 50%                    |
 
-Two-handed weapons receive 1 additional slot above the quality baseline (configurable via `_twoHanderBonusSlots`).
+Option counts and reroll counts are all configurable — see [Server Configuration](#server-configuration).
+
+Two-handed weapons receive 1 additional slot above the quality baseline (configurable via `TwoHanderBonusSlots`).
 
 Green items can only roll universal stat affixes (Stamina, Crit, Haste, Hit, etc.). Role-specific
 stats (Spell Power, Attack Power, Expertise, Dodge/Defense/Parry) require blue quality or higher.
@@ -149,6 +160,8 @@ Each Rune tracks how many times it can be re-applied after disenchanting an impr
 (**Return Allowances**). The count is shown in the tooltip as `(N remaining)` in purple, or
 `(0 remaining — no rune on disenchant)` in red when the count is zero. Disenchanting an item
 with an Imprint whose allowance is 0 does **not** grant a Rune.
+
+The starting allowance count for newly granted Runes is configurable via `ImprintExtractionCount`.
 
 ### Disenchanting
 
@@ -248,8 +261,8 @@ client path (or symlink the folder):
 WoW Client 3.3.5a\Interface\AddOns\ItemAffixes\
 ```
 
-The addon handles the Roll Menu UI, tooltip affix display, the Rune apply mechanic, and all
-client↔server communication.
+The addon handles the Roll Menu UI, option picker, reroll frame, tooltip affix display, the Rune
+apply mechanic, and all client↔server communication.
 
 ### Step 6 — (Optional) Install the client DBC patch
 
@@ -325,28 +338,31 @@ The Roll Menu appears when a player Alt+Clicks any item with unrolled affix slot
 ### Roll preferences
 ![Affix roll options menu](screenshots/affix%20roll%20options%20menu.png)
 
-Players can steer the roll before committing — stat family, spec tree, main stat, and type (stats vs. class skills).
-
-### Green item — one choice, one roll
-![Green item one choice, one roll](screenshots/green%20item%20one%20choice%2C%20one%20roll.png)
-
-Green items present one option with one roll. The cheapest entry point into the affix system.
-
-### Blue item — two choices, two rolls
-![Blue item - two choices - two rolls](screenshots/Blue%20item%20-%20two%20choices%20-%20two%20rolls.png)
-
-Blue items present two options per roll, giving the player a meaningful decision.
-
-### Purple item — three options, three choices
-![Purple item - 3 options - 3 choices](screenshots/Purple%20item%20-%203%20options%20-%203%20choices.png)
-
-Epic items present three options per roll — the highest variance and the highest ceiling.
+Players steer the roll before committing — stat family, spec tree, main stat, and type (stats vs. class skills). The spec selector also boosts the chance of rolling class affixes for that tree.
 
 ### Class skills roll
 ![Class skill selected on what to roll menu](screenshots/class%20skill%20selected%20on%20what%20to%20roll%20menu.png)
 ![Class skills options](screenshots/class%20skills%20options.png)
 
 When "Class Skills" is selected, the server presents spell modifier options for the player's class and the talent tree chosen in the Roll Menu. A class skill only appears as an option if the character has already learned that ability — you will never roll a modifier for a spell you don't know.
+
+### Reroll System — initial roll with lock buttons
+
+![Initial roll with lock buttons and reroll counter](screenshots/New%20roll%20window%20-%20roll%20for%20protection%20class%20skill%20-%20new%20rerolls%20button--%20lock%20buttons%20next%20to%20each%20affix.png)
+
+Each option has a lock toggle (`[ ]`) beside it. The "Reroll (N)" button shows how many rerolls remain. Pick any option at any time, or lock the ones you want to keep and reroll the rest.
+
+### Reroll System — lock one, reroll for more class skills
+
+![Locked one option and rerolled for more protection skills](screenshots/New%20roll%20window%20-%20locked%20shield%20of%20righteousness%20from%20previous%20roll%20--%20reroll%20for%20more%20protection%20skills.png)
+
+Shield of Righteousness is locked (`[L]`). The other options were rerolled targeting Protection class skills. The reroll preferences (type, spec, stat family) can be changed freely between rerolls — only locked options are preserved.
+
+### Reroll System — lock two, switch to tank stats
+
+![Locked two options and rerolled for tank stats](screenshots/New%20roll%20window%20-locked%20a%20second%20item%20and%20rerolled%20for%20tank%20stats.png)
+
+Two class skill options are now locked. Type was switched to "Stats" and Stat Family to "Tank" before the next reroll — giving tank stat options for the remaining unlocked slot. A stat option can be chosen here or another reroll attempted.
 
 ### Imprint option
 ![Imprint option - Eternal Elemental](screenshots/imprint%20option%20-%20eternal%20elemental.png)
@@ -361,7 +377,7 @@ Imprint options appear in the roll menu alongside stat and class skill choices. 
 2. Loot or purchase any green-quality or better item.
 3. Alt+Click the item — the Roll Menu frame should appear.
 4. Select preferences (or leave at defaults) and click "Roll Affix."
-5. Choose one of the presented options.
+5. Choose one of the presented options, or lock options and use "Reroll (N)" to reroll.
 6. Equip the item — the tooltip shows the applied affix and any talent bonus.
 7. If the affix is a spellmod, cast the affected spell and confirm the modifier applies.
 
@@ -387,6 +403,17 @@ ItemAffixes.EnableMainStatSelection = 1   # Main Stat section
 # Extra affix slots granted to two-handed weapons (default: 1)
 ItemAffixes.TwoHanderBonusSlots = 1
 
+# Number of options presented to the player per roll (clamped 1–6)
+ItemAffixes.OptionsCountGreen  = 1   # Green (Uncommon): 1 option — no choice
+ItemAffixes.OptionsCountBlue   = 3   # Blue  (Rare):     3 options
+ItemAffixes.OptionsCountPurple = 4   # Purple (Epic):    4 options
+
+# Number of rerolls granted after the initial roll
+# Each reroll re-generates all unlocked options; locked options are preserved
+ItemAffixes.RerollsGreen  = 0   # Green: no rerolls
+ItemAffixes.RerollsBlue   = 3   # Blue:  3 rerolls
+ItemAffixes.RerollsPurple = 5   # Purple: 5 rerolls
+
 # Budget fractions — share of item budget allocated per affix roll
 ItemAffixes.BudgetFractionGreen  = 0.18  # green (1 affix)
 ItemAffixes.BudgetFractionBlue   = 0.13  # blue  (2 affixes)
@@ -409,6 +436,8 @@ ItemAffixes.CritRollChance  = 10   # % chance per option (0–100); default 10
 ItemAffixes.ImprintRollChance = 30
 
 # How many times an Imprint can be extracted and re-applied (Return Allowances)
+# 0 = hardcore: Imprint is permanently bound once applied
+# 2 = default: one free move between items
 ItemAffixes.ImprintExtractionCount = 2
 ```
 
@@ -517,8 +546,8 @@ mod-item-affixes/
 ├── addon/
 │   └── ItemAffixes/
 │       ├── ItemAffixes.lua       ← main addon logic
-│       ├── ItemAffixRollUI.lua   ← roll menu UI
-│       └── ItemAffixRollUI.xml   ← roll menu frame definition
+│       ├── ItemAffixRollUI.lua   ← roll menu + option picker + reroll UI
+│       └── ItemAffixRollUI.xml   ← roll frame definition
 │
 ├── conf/
 │   └── mod_item_affixes.conf.dist
@@ -548,14 +577,16 @@ mod-item-affixes/
 ### `item_affix` (characters DB)
 One row per affix slot per item.
 
-| Column          | Type    | Description                                          |
-|-----------------|---------|------------------------------------------------------|
-| `item_guid`     | BIGINT  | Raw GUID of the item                                 |
-| `affix_slot`    | TINYINT | Slot index (0, 1, 2)                                 |
-| `roll_state`    | TINYINT | 0=UNROLLED, 1=PENDING (player choosing), 2=APPLIED   |
-| `affix_id`      | INT     | ID from `affix_template`; 0 while UNROLLED/PENDING   |
-| `rolled_value`  | INT     | Stat value rolled (stat affixes); 0 for spellmods    |
-| `pending_opts`  | VARCHAR | Serialised options while PENDING: `"id:val,id:val"`  |
+| Column               | Type    | Description                                          |
+|----------------------|---------|------------------------------------------------------|
+| `item_guid`          | BIGINT  | Raw GUID of the item                                 |
+| `affix_slot`         | TINYINT | Slot index (0, 1, 2)                                 |
+| `roll_state`         | TINYINT | 0=UNROLLED, 1=PENDING (player choosing), 2=APPLIED   |
+| `affix_id`           | INT     | ID from `affix_template`; 0 while UNROLLED/PENDING   |
+| `rolled_value`       | INT     | Stat value rolled (stat affixes); 0 for spellmods    |
+| `pending_opts`       | VARCHAR | Serialised options while PENDING: `"id:val:crit,..."`|
+| `rerolls_remaining`  | TINYINT | Rerolls left for this slot; 0 when spent             |
+| `locked_mask`        | TINYINT | Bitmask: bit N set = option N is locked across rerolls|
 
 ### `item_talent_affix` (characters DB)
 One row per affix slot per item that successfully rolled a talent bonus.

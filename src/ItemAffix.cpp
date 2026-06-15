@@ -1680,14 +1680,7 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     // Non-gems: roll talent affix for this slot, then send DATA so the client
     // sees the talent line before the option picker appears.
     if (!isGem)
-    {
-        if (_enableTalentAffixes)
-        {
-            int8 talentSpec = (spec >= 0) ? spec : -1;
-            InitTalentAffix(player, item, talentSpec, affixSlot);
-        }
         SendItemStatus(player, item);
-    }
 
     uint32 quality = proto->Quality;
     uint8  numOpts;
@@ -1919,6 +1912,11 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
         "UPDATE item_affix SET roll_state = {}, affix_id = {}, rolled_value = {}, pending_opts = '' "
         "WHERE item_guid = {} AND affix_slot = {}",
         uint8(AFFIX_ROLL_APPLIED), chosen.affixId, rolledValue, itemGuid, uint32(affixSlot));
+
+    // Talent affix for this slot is committed now that the player has made their choice.
+    // Must happen before SyncAffixes so the talent row is in the DB when sync reads it.
+    if (_enableTalentAffixes)
+        InitTalentAffix(player, item, -1, affixSlot);
 
     // Sync immediately if the item is currently equipped
     uint8 bagSlot  = item->GetBagSlot();
