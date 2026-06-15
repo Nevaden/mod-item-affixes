@@ -30,6 +30,22 @@ public:
         sItemAffixMgr->LoadAffixTemplates();
         sImprintMgr->LoadConfig();
         sImprintMgr->LoadDefs();
+
+        // Arcane Missiles trigger spells have SPELL_ATTR3_IGNORE_CASTER_MODIFIERS set in the
+        // binary DBC, which silently blocks all SpellMods (op != DURATION) before family-flag
+        // matching even runs. This hook fires after LoadSpellInfoCorrections(), so the
+        // const_cast patch applies on top of — not before — AzerothCore's own corrections.
+        static constexpr uint32 arcaneMissileTriggers[] = { 7268, 7269, 7270, 25346, 27076, 38700, 42844 };
+        for (uint32 spellId : arcaneMissileTriggers)
+        {
+            if (SpellInfo const* si = sSpellMgr->GetSpellInfo(spellId))
+            {
+                SpellInfo* msi = const_cast<SpellInfo*>(si);
+                msi->AttributesEx3 &= ~uint32(SPELL_ATTR3_IGNORE_CASTER_MODIFIERS);
+                msi->SpellFamilyName = SPELLFAMILY_MAGE;
+                msi->SpellFamilyFlags[0] = 0x800; // matches channel spell 5143
+            }
+        }
     }
 };
 
