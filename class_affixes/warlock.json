@@ -982,8 +982,8 @@
                                        "verify_command":  ".spellinfo all 689"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -1034,8 +1034,8 @@
                                        "verify_command":  ".spellinfo all 689"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -1154,8 +1154,8 @@
                                        "verify_command":  ".spellinfo all 1120"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -1206,8 +1206,8 @@
                                        "verify_command":  ".spellinfo all 1120"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  20
@@ -1222,66 +1222,6 @@
                         "tooltip":  {
                                         "enchant_id":  4268,
                                         "display_name":  "Drain Soul: +20% Dmg, +3s Duration"
-                                    }
-                    },
-
-                    {
-                        "id":  9039,
-                        "name":  "Life Tap: +15% Mana Returned",
-                        "weight":  100,
-                        "spec_tree":  0,
-                        "min_quality":  1,
-                        "target":  {
-                                       "family":  5,
-                                       "family_name":  "WARLOCK",
-                                       "carrier_spell_id":  1454,
-                                       "flags":  [262144, 0, 0],
-                                       "verified":  true,
-                                       "verify_command":  ".spellinfo all 1454"
-                                   },
-                        "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  15
-                                   },
-                        "tooltip":  {
-                                        "enchant_id":  4269,
-                                        "display_name":  "Life Tap: +15% Mana Returned"
-                                    }
-                    },
-                    {
-                        "id":  9040,
-                        "name":  "Life Tap: +20% Mana, -10% Health Cost",
-                        "weight":  10,
-                        "spec_tree":  0,
-                        "min_quality":  2,
-                        "target":  {
-                                       "family":  5,
-                                       "family_name":  "WARLOCK",
-                                       "carrier_spell_id":  1454,
-                                       "flags":  [262144, 0, 0],
-                                       "verified":  true,
-                                       "verify_command":  ".spellinfo all 1454"
-                                   },
-                        "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
-                                   },
-                        "effect2":  {
-                                        "op":  14,
-                                        "op_name":  "COST",
-                                        "modifier":  108,
-                                        "modifier_name":  "PCT",
-                                        "value":  -10
-                                    },
-                        "tooltip":  {
-                                        "enchant_id":  4270,
-                                        "display_name":  "Life Tap: +20% Mana, -10% Health Cost"
                                     }
                     },
 
