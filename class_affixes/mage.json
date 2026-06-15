@@ -782,6 +782,73 @@
                                     }
                     },
                     {
+                        "id":  2079,
+                        "name":  "Arcane Missiles: +1s Channel",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  5143,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5143"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4331,
+                                        "display_name":  "Arcane Missiles: +1s Channel"
+                                    }
+                    },
+                    {
+                        "id":  2080,
+                        "name":  "Arcane Missiles: +2s Channel, +20% Dmg",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  3,
+                                       "family_name":  "MAGE",
+                                       "carrier_spell_id":  5143,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5143"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  2000
+                                   },
+                        "effect2":  {
+                                        "op":  0,
+                                        "op_name":  "DAMAGE",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  20
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4332,
+                                        "display_name":  "Arcane Missiles: +2s Channel, +20% Dmg"
+                                    }
+                    },
+                    {
                         "id":  2024,
                         "name":  "Arcane Blast: +15% Damage",
                         "weight":  100,
