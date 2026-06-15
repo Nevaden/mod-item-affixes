@@ -31,6 +31,7 @@ struct ImprintDef
     uint32      extractionsMax;
     uint32      classMask;      // 0 = any class; bit = (1 << (classId-1))
     int8        specTree;       // -1 = any spec; 0/1/2 = required dominant tree
+    uint32      requiredSpell;  // 0 = no check; player must know any rank of this spell to be offered the imprint
 };
 
 // ---------------------------------------------------------------------------

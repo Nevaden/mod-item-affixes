@@ -12,6 +12,7 @@
 #include "Opcodes.h"
 #include "Player.h"
 #include "SpellInfo.h"
+#include "SpellMgr.h"
 #include "WorldPacket.h"
 
 // ---------------------------------------------------------------------------
@@ -55,7 +56,8 @@ void ImprintMgr::LoadDefs()
     _defs.clear();
 
     QueryResult result = WorldDatabase.Query(
-        "SELECT id, name, rune_item_id, extractions_max, class_mask, spec_tree FROM imprint_def");
+        "SELECT id, name, rune_item_id, extractions_max, class_mask, spec_tree, "
+        "COALESCE(required_spell, 0) FROM imprint_def");
 
     if (!result)
     {
@@ -74,6 +76,7 @@ void ImprintMgr::LoadDefs()
         def.extractionsMax = f[3].Get<uint32>();
         def.classMask      = f[4].Get<uint32>();
         def.specTree       = f[5].Get<int8>();
+        def.requiredSpell  = f[6].Get<uint32>();
         _defs[def.id]      = def;
         ++count;
     } while (result->NextRow());
@@ -659,6 +662,21 @@ bool ImprintMgr::ApplyImprintDirect(Player* player, Item* runeItem, Item* target
 // GetEligibleImprintForRoll  — pick a random class-eligible Imprint for a roll
 // ---------------------------------------------------------------------------
 
+// Walk the spell rank chain to check if the player knows any rank.
+static bool ImprintPlayerKnowsSpell(Player* player, uint32 spellId)
+{
+    uint32 spell = sSpellMgr->GetFirstSpellInChain(spellId);
+    if (!spell)
+        spell = spellId;
+    while (spell)
+    {
+        if (player->HasSpell(spell))
+            return true;
+        spell = sSpellMgr->GetNextSpellInChain(spell);
+    }
+    return false;
+}
+
 ImprintDef const* ImprintMgr::GetEligibleImprintForRoll(Player* player, Item const* item, int8 spec)
 {
     if (!player || !item)
@@ -678,6 +696,10 @@ ImprintDef const* ImprintMgr::GetEligibleImprintForRoll(Player* player, Item con
         // Spec filter: mirrors talent affix logic — only apply when both the Imprint
         // and the player's roll selection specify a tree.
         if (def.specTree != -1 && spec != -1 && def.specTree != spec)
+            continue;
+        // Spell knowledge gate: don't offer an Imprint for an ability the player
+        // hasn't learned yet (e.g. Feral Spirit before the player has the talent).
+        if (def.requiredSpell != 0 && !ImprintPlayerKnowsSpell(player, def.requiredSpell))
             continue;
         eligible.push_back(&def);
     }
@@ -707,8 +729,8 @@ bool ImprintMgr::ApplyImprintFromRoll(Player* player, Item* item, uint32 imprint
     if (GetInstance(guid))
         return false;
 
-    // Persist the Imprint instance on the item with full extractions.
-    SaveInstance(guid, imprintId, def->extractionsMax);
+    // Persist the Imprint instance on the item using the configured extraction count.
+    SaveInstance(guid, imprintId, _extractionCount);
 
     // If the item is currently equipped, activate the Imprint effect immediately.
     if (item->IsEquipped())

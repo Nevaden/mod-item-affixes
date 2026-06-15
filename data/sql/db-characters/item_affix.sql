@@ -33,6 +33,18 @@ PREPARE _s FROM @add_po; EXECUTE _s; DEALLOCATE PREPARE _s;
 -- Widen pending_opts to 255 chars (now stores "id:val,id:val,..." pairs)
 ALTER TABLE `item_affix` MODIFY COLUMN `pending_opts` VARCHAR(255) NOT NULL DEFAULT '';
 
+SET @add_rr = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='item_affix' AND COLUMN_NAME='rerolls_remaining')=0,
+    'ALTER TABLE `item_affix` ADD COLUMN `rerolls_remaining` TINYINT UNSIGNED NOT NULL DEFAULT 0',
+    'SELECT 1');
+PREPARE _s FROM @add_rr; EXECUTE _s; DEALLOCATE PREPARE _s;
+
+SET @add_lm = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='item_affix' AND COLUMN_NAME='locked_mask')=0,
+    'ALTER TABLE `item_affix` ADD COLUMN `locked_mask` TINYINT UNSIGNED NOT NULL DEFAULT 0',
+    'SELECT 1');
+PREPARE _s FROM @add_lm; EXECUTE _s; DEALLOCATE PREPARE _s;
+
 -- Migrate existing applied affixes to roll_state=2
 UPDATE `item_affix` SET `roll_state` = 2 WHERE `affix_id` != 0 AND `roll_state` = 0;
 

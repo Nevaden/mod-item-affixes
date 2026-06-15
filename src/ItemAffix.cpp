@@ -471,6 +471,12 @@ void ItemAffixMgr::LoadAffixTemplates()
     _imprintRollChance       = sConfigMgr->GetOption<uint32> ("ItemAffixes.ImprintRollChance",       30);
     _critRollEnabled         = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableCritRolls",          true);
     _critRollChance          = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.CritRollChance", 10u), 0u, 100u);
+    _optionsCountGreen  = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.OptionsCountGreen",  1), uint8(1), uint8(6));
+    _optionsCountBlue   = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.OptionsCountBlue",   2), uint8(1), uint8(6));
+    _optionsCountPurple = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.OptionsCountPurple", 3), uint8(1), uint8(6));
+    _rerollsGreen       = sConfigMgr->GetOption<uint8>("ItemAffixes.RerollsGreen",  0);
+    _rerollsBlue        = sConfigMgr->GetOption<uint8>("ItemAffixes.RerollsBlue",   2);
+    _rerollsPurple      = sConfigMgr->GetOption<uint8>("ItemAffixes.RerollsPurple", 3);
 
     LoadTalentAffixDefs();
 }
@@ -724,7 +730,15 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
         : ComputeItemBudget(static_cast<uint32>(player->GetLevel()) * 5) * 0.74f;  // fallback
     float itemBudget = itemBudgetBase * GetQualityFraction(itemQuality);
 
-    std::vector<uint32> knownClass, knownGeneric, unknownClass, unknownGeneric;
+    // Three buckets — only affixes the player can currently use (spell known):
+    //   knownSpecClass : class affixes for the chosen spec (or specTree=255), spell learned
+    //   knownOtherSpec : class affixes for other specs of the same class, spell learned
+    //   knownGeneric   : stat/generic affixes (always usable)
+    // Affixes for spells the player hasn't learned are never returned.
+    std::vector<uint32> knownSpecClass, knownOtherSpec, knownGeneric;
+
+    // Resolve the player's active spec once — needed to bucket own-spec vs. other-spec.
+    int8 resolvedSpec = (spec >= 0) ? spec : static_cast<int8>(GetDominantTalentTree(player));
 
     for (uint32 id : _pool)
     {
@@ -767,66 +781,64 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
         }
         else if (def->affixType != AFFIX_TYPE_STAT)
         {
-            // Class-family filter applies only to spellmod affixes.
+            // Class-family filter: skip affixes belonging to a different class entirely.
             if (affixClass != 0 && affixClass != playerClass)
                 continue;
 
-            // Spec-tree filter: skip class affixes locked to a different tree.
-            // specTree=255 means no restriction. Only applied to class-specific affixes.
-            if (def->specTree != 255 && affixClass != 0)
-            {
-                int8 resolvedSpec = (spec >= 0) ? spec : static_cast<int8>(GetDominantTalentTree(player));
-                if (def->specTree != static_cast<uint8>(resolvedSpec))
-                    continue;
-            }
+            // Spell knowledge gate: never offer an affix for a spell the player hasn't
+            // learned yet. Other-spec affixes the player knows are still eligible as a
+            // spec-fallback (bucketed separately below).
+            if (!PlayerKnowsCarrierSpell(player, def->carrierSpellId))
+                continue;
         }
-        // Stat affixes: role mask is the sole class gatekeeper; no family filter.
+        // Stat affixes: role mask is the sole class gatekeeper; no spell check needed.
 
-        bool known = (def->affixType == AFFIX_TYPE_SPELLMOD)
-                   ? PlayerKnowsCarrierSpell(player, def->carrierSpellId)
-                   : true;
-
-        // Stat affixes bucket as generic — spellFamily on stat affixes is only used
-        // for pool expansion (multiple DB rows per stat) and must not affect class weighting.
+        // Stat affixes always go to knownGeneric regardless of spellFamily — that field
+        // is only used for pool-weight expansion and must not affect class weighting.
         uint8 bucketClass = (def->affixType == AFFIX_TYPE_STAT) ? 0 : affixClass;
         if (bucketClass == 0)
         {
-            if (known) knownGeneric.push_back(id);
-            else       unknownGeneric.push_back(id);
+            knownGeneric.push_back(id);
         }
         else
         {
-            if (known) knownClass.push_back(id);
-            else       unknownClass.push_back(id);
+            // Own-spec: unrestricted affixes (specTree=255) or those matching the
+            // player's chosen/dominant spec.  Everything else is "other spec".
+            bool isOwnSpec = (def->specTree == 255) ||
+                             (resolvedSpec >= 0 && def->specTree == static_cast<uint8>(resolvedSpec));
+            if (isOwnSpec)
+                knownSpecClass.push_back(id);
+            else
+                knownOtherSpec.push_back(id);
         }
     }
 
-    // classBoost=2: guaranteed class affix — skip generics entirely if any class entry exists.
+    // classBoost=2: guarantee a class affix — prefer own spec, fall back to other specs.
+    // Known class entries only; if none are known, fall through to generic selection.
     if (classBoost >= 2)
     {
-        if (!knownClass.empty())
-            return knownClass[urand(0, static_cast<uint32>(knownClass.size()) - 1)];
-        if (!unknownClass.empty())
-            return unknownClass[urand(0, static_cast<uint32>(unknownClass.size()) - 1)];
-        // No class affixes available for this player/item — fall through to normal selection.
+        if (!knownSpecClass.empty())
+            return knownSpecClass[urand(0, static_cast<uint32>(knownSpecClass.size()) - 1)];
+        if (!knownOtherSpec.empty())
+            return knownOtherSpec[urand(0, static_cast<uint32>(knownOtherSpec.size()) - 1)];
+        // No known class affixes for this player — fall through to generic selection.
     }
 
-    // classBoost=1: add class entries a second time to give them ~2x weight vs generics.
+    // Normal selection: own-spec class affixes get a +100% weight boost (doubled when classBoost=1).
+    // Other-spec known affixes are always eligible at normal weight — spec selection shifts
+    // probability, not eligibility.  If no own-spec affixes are known, other-spec affixes
+    // fill the spec pool so the roll always returns something relevant.
+    // Own-spec affixes get doubled when classBoost >= 1, giving them a +100% weight advantage.
+    // Other-spec known affixes are always eligible at 1x — spec selection shifts probability,
+    // not eligibility.  When own-spec is empty, other-spec fills the entire spec pool.
     std::vector<uint32> primary;
-    primary.insert(primary.end(), knownClass.begin(), knownClass.end());
+    primary.insert(primary.end(), knownSpecClass.begin(), knownSpecClass.end());
     if (classBoost >= 1)
-        primary.insert(primary.end(), knownClass.begin(), knownClass.end());
+        primary.insert(primary.end(), knownSpecClass.begin(), knownSpecClass.end());  // +100% own-spec boost
+    primary.insert(primary.end(), knownOtherSpec.begin(), knownOtherSpec.end());
     primary.insert(primary.end(), knownGeneric.begin(), knownGeneric.end());
     if (!primary.empty())
         return primary[urand(0, static_cast<uint32>(primary.size()) - 1)];
-
-    std::vector<uint32> fallback;
-    fallback.insert(fallback.end(), unknownClass.begin(), unknownClass.end());
-    if (classBoost >= 1)
-        fallback.insert(fallback.end(), unknownClass.begin(), unknownClass.end());
-    fallback.insert(fallback.end(), unknownGeneric.begin(), unknownGeneric.end());
-    if (!fallback.empty())
-        return fallback[urand(0, static_cast<uint32>(fallback.size()) - 1)];
 
     return 0;
 }
@@ -838,7 +850,8 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
 std::vector<AffixSlotInfo> ItemAffixMgr::LoadAffixSlots(uint64 itemGuid)
 {
     QueryResult result = CharacterDatabase.Query(
-        "SELECT affix_slot, roll_state, affix_id, rolled_value, pending_opts "
+        "SELECT affix_slot, roll_state, affix_id, rolled_value, pending_opts, "
+        "rerolls_remaining, locked_mask "
         "FROM item_affix WHERE item_guid = {} ORDER BY affix_slot",
         itemGuid);
 
@@ -850,10 +863,12 @@ std::vector<AffixSlotInfo> ItemAffixMgr::LoadAffixSlots(uint64 itemGuid)
     {
         Field* f = result->Fetch();
         AffixSlotInfo s;
-        s.rollState   = f[1].Get<uint8>();
-        s.affixId     = f[2].Get<uint32>();
-        s.rolledValue = f[3].Get<int32>();
-        std::string opts = f[4].Get<std::string>();
+        s.rollState        = f[1].Get<uint8>();
+        s.affixId          = f[2].Get<uint32>();
+        s.rolledValue      = f[3].Get<int32>();
+        s.rerollsRemaining = f[5].Get<uint8>();
+        s.lockedMask       = f[6].Get<uint8>();
+        std::string opts   = f[4].Get<std::string>();
         if (!opts.empty())
             for (auto part : Acore::Tokenize(opts, ',', false))
             {
@@ -1476,11 +1491,12 @@ std::string ItemAffixMgr::BuildAffixDisplayString(AffixDefinition const* def, in
 // ---------------------------------------------------------------------------
 
 void ItemAffixMgr::SendRollOptions(Player* player, Item* item, uint8 affixSlot,
-                                   std::vector<PendingOpt> const& opts)
+                                   std::vector<PendingOpt> const& opts,
+                                   uint8 rerolls, uint8 lockedMask)
 {
     auto [luaBag, luaSlot] = GetLuaBagSlot(item);
-    std::string msg = Acore::StringFormat("OPTS|{}|{}|{}",
-        uint32(luaBag), uint32(luaSlot), uint32(affixSlot));
+    std::string msg = Acore::StringFormat("OPTS|{}|{}|{}|{}|{}",
+        uint32(luaBag), uint32(luaSlot), uint32(affixSlot), rerolls, lockedMask);
 
     for (PendingOpt const& opt : opts)
     {
@@ -1646,7 +1662,8 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
 
     if (slotInfo.rollState == AFFIX_ROLL_PENDING)
     {
-        SendRollOptions(player, item, affixSlot, slotInfo.pendingOpts);
+        SendRollOptions(player, item, affixSlot, slotInfo.pendingOpts,
+                        slotInfo.rerollsRemaining, slotInfo.lockedMask);
         return;
     }
 
@@ -1684,9 +1701,9 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     }
     else
     {
-        if      (quality >= ITEM_QUALITY_EPIC)     numOpts = 3;
-        else if (quality == ITEM_QUALITY_RARE)     numOpts = 2;
-        else { numOpts = 1; genericsOnly = true; }
+        if      (quality >= ITEM_QUALITY_EPIC)     numOpts = _optionsCountPurple;
+        else if (quality == ITEM_QUALITY_RARE)     numOpts = _optionsCountBlue;
+        else { numOpts = _optionsCountGreen; genericsOnly = true; }
 
         if (!_enableClassSkillAffixes)
         {
@@ -1827,6 +1844,15 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     if (opts.empty())
         return;
 
+    // Rerolls granted based on quality tier (gems always get 0)
+    uint8 rerolls = 0;
+    if (!isGem)
+    {
+        if      (quality >= ITEM_QUALITY_EPIC) rerolls = _rerollsPurple;
+        else if (quality == ITEM_QUALITY_RARE) rerolls = _rerollsBlue;
+        else                                    rerolls = _rerollsGreen;
+    }
+
     // Serialize as "id:val:crit,..." so crit state survives logout/relog
     std::string optsStr;
     for (size_t i = 0; i < opts.size(); ++i)
@@ -1838,11 +1864,11 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     }
 
     CharacterDatabase.Execute(
-        "UPDATE item_affix SET roll_state = {}, pending_opts = '{}' "
+        "UPDATE item_affix SET roll_state = {}, pending_opts = '{}', rerolls_remaining = {}, locked_mask = 0 "
         "WHERE item_guid = {} AND affix_slot = {}",
-        uint8(AFFIX_ROLL_PENDING), optsStr, itemGuid, uint32(affixSlot));
+        uint8(AFFIX_ROLL_PENDING), optsStr, rerolls, itemGuid, uint32(affixSlot));
 
-    SendRollOptions(player, item, affixSlot, opts);
+    SendRollOptions(player, item, affixSlot, opts, rerolls, 0);
 }
 
 // ---------------------------------------------------------------------------
@@ -1912,6 +1938,224 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
         displayText = "!" + displayText;
     SendAddonMsg(player, Acore::StringFormat("APPLY|{}|{}|{}|{}|{}",
         uint32(luaBag), uint32(luaSlot), uint32(affixSlot), displayText, unrolledLeft));
+}
+
+// ---------------------------------------------------------------------------
+// HandleRerollRequest  — re-rolls all unlocked options, decrements rerolls_remaining
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
+                                        uint8 type, uint8 role, uint8 mainStat)
+{
+    if (!player || !item)
+        return;
+
+    uint64 itemGuid = item->GetGUID().GetRawValue();
+    auto slots = LoadAffixSlots(itemGuid);
+
+    for (uint8 i = 0; i < static_cast<uint8>(slots.size()); ++i)
+    {
+        AffixSlotInfo const& slotInfo = slots[i];
+        if (slotInfo.rollState != AFFIX_ROLL_PENDING)
+            continue;
+
+        if (slotInfo.rerollsRemaining == 0)
+            return;
+
+        uint8 lockedMask = slotInfo.lockedMask;
+        uint8 numOpts    = static_cast<uint8>(slotInfo.pendingOpts.size());
+        if (numOpts == 0)
+            return;
+
+        // Reject if all options are locked (nothing to reroll)
+        uint8 allBits = static_cast<uint8>((1u << numOpts) - 1u);
+        if ((lockedMask & allBits) == allBits)
+            return;
+
+        ItemTemplate const* proto = item->GetTemplate();
+        if (!proto)
+            return;
+
+        uint32 quality    = proto->Quality;
+        float  itemBudget = ComputeItemBudget(proto->ItemLevel)
+                          * GetSlotBudgetMod(proto->InventoryType)
+                          * GetQualityFraction(quality);
+
+        // Derive genericsOnly/classOnly from the player's type preference — same logic as HandleRollRequest.
+        bool genericsOnly = false;
+        bool classOnly    = false;
+        if (!_enableClassSkillAffixes)
+        {
+            genericsOnly = true;
+        }
+        else
+        {
+            if (type == 1) { genericsOnly = true; }
+            if (type == 2) { classOnly = true; genericsOnly = false; }
+        }
+        uint8 roleForRoll     = _enableRoleSelection    ? role    : 0;
+        uint8 mainStatForRoll = _enableMainStatSelection ? mainStat : 0;
+
+        // Phase 1: collect locked options into a "chosen" set for dedup.
+        std::vector<PendingOpt> finalOpts(slotInfo.pendingOpts);  // start as copy
+        std::vector<PendingOpt> chosen;
+        for (uint8 j = 0; j < numOpts; ++j)
+            if (lockedMask & (1u << j))
+                chosen.push_back(finalOpts[j]);
+
+        // Phase 2: roll new options for each unlocked slot.
+        // keptOriginal[j]=true means roll failed — keep the original value.
+        bool keptOriginal[6] = {};
+        for (uint8 j = 0; j < numOpts; ++j)
+        {
+            if (lockedMask & (1u << j))
+                continue;  // locked — already in finalOpts
+
+            PendingOpt newOpt{0, 0, false};
+            for (uint32 attempts = 0; attempts < 100 && newOpt.affixId == 0; ++attempts)
+            {
+                // classBoost=1 doubles own-spec entries (same +100% boost as initial roll)
+                uint32 id = RollAffixId(quality, player, item, genericsOnly, 1, classOnly,
+                                        roleForRoll, mainStatForRoll, spec);
+                if (!id)
+                    continue;
+
+                bool dup = false;
+                for (PendingOpt const& ex : chosen)
+                    if (ex.affixId == id) { dup = true; break; }
+                if (dup)
+                    continue;
+
+                auto const* def = GetAffixDef(id);
+                int32 val = 0;
+                if (def && def->affixType == AFFIX_TYPE_STAT)
+                    val = RollBudgetStatValue(def->statOp, itemBudget, _budgetMinRoll);
+
+                newOpt = {id, val, false};
+            }
+
+            if (newOpt.affixId == 0)
+            {
+                // Roll completely failed — keep the original option untouched
+                keptOriginal[j] = true;
+            }
+            else
+            {
+                finalOpts[j] = newOpt;
+                chosen.push_back(newOpt);
+            }
+        }
+
+        // Apply 2H bonus to genuinely new (not kept) unlocked options.
+        if (Is2HWeapon(item))
+        {
+            for (uint8 j = 0; j < numOpts; ++j)
+            {
+                if ((lockedMask & (1u << j)) || keptOriginal[j])
+                    continue;
+                auto const* d = GetAffixDef(finalOpts[j].affixId);
+                if (!d) continue;
+                if (d->affixType == AFFIX_TYPE_STAT)
+                    finalOpts[j].rolledValue = (finalOpts[j].rolledValue * 3 + 1) / 2;
+                else if (d->affixType == AFFIX_TYPE_SPELLMOD)
+                    finalOpts[j].rolledValue = 150;
+            }
+        }
+
+        // Crit roll on genuinely new unlocked options.
+        for (uint8 j = 0; j < numOpts; ++j)
+        {
+            if ((lockedMask & (1u << j)) || keptOriginal[j])
+                continue;
+            if (!_critRollEnabled || urand(0, 99) >= _critRollChance)
+                continue;
+            finalOpts[j].isCrit = true;
+            auto const* d = GetAffixDef(finalOpts[j].affixId);
+            if (!d) continue;
+            if (d->affixType == AFFIX_TYPE_STAT)
+                finalOpts[j].rolledValue = (finalOpts[j].rolledValue * 3 + 1) / 2;
+            else if (d->affixType == AFFIX_TYPE_SPELLMOD)
+                finalOpts[j].rolledValue = (finalOpts[j].rolledValue == 150) ? 250 : 200;
+        }
+
+        // Imprint replacement: try to replace the last unlocked class spell-mod option.
+        if (urand(0, 99) < _imprintRollChance)
+        {
+            int replaceIdx = -1;
+            for (int j = static_cast<int>(numOpts) - 1; j >= 0; --j)
+            {
+                if ((lockedMask & (1u << j)) || keptOriginal[j])
+                    continue;
+                auto const* d = GetAffixDef(finalOpts[j].affixId);
+                if (d && d->affixType == AFFIX_TYPE_SPELLMOD)
+                {
+                    replaceIdx = j;
+                    break;
+                }
+            }
+            if (replaceIdx >= 0)
+            {
+                ImprintDef const* impDef = sImprintMgr->GetEligibleImprintForRoll(player, item, spec);
+                if (impDef)
+                    finalOpts[replaceIdx] = {IMPRINT_OPT_OFFSET + impDef->id, 0, false};
+            }
+        }
+
+        uint8 newRerolls = slotInfo.rerollsRemaining - 1;
+
+        std::string optsStr;
+        for (size_t k = 0; k < finalOpts.size(); ++k)
+        {
+            if (k > 0) optsStr += ',';
+            optsStr += std::to_string(finalOpts[k].affixId) + ':'
+                     + std::to_string(finalOpts[k].rolledValue) + ':'
+                     + (finalOpts[k].isCrit ? '1' : '0');
+        }
+
+        CharacterDatabase.Execute(
+            "UPDATE item_affix SET pending_opts = '{}', rerolls_remaining = {} "
+            "WHERE item_guid = {} AND affix_slot = {}",
+            optsStr, newRerolls, itemGuid, uint32(i));
+
+        SendRollOptions(player, item, i, finalOpts, newRerolls, lockedMask);
+        return;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// HandleLockToggle  — toggles lock state for one pending option, re-sends OPTS
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::HandleLockToggle(Player* player, Item* item, uint8 optIdx, bool locked)
+{
+    if (!player || !item)
+        return;
+
+    uint64 itemGuid = item->GetGUID().GetRawValue();
+    auto slots = LoadAffixSlots(itemGuid);
+
+    for (uint8 i = 0; i < static_cast<uint8>(slots.size()); ++i)
+    {
+        AffixSlotInfo const& slotInfo = slots[i];
+        if (slotInfo.rollState != AFFIX_ROLL_PENDING)
+            continue;
+
+        if (optIdx >= static_cast<uint8>(slotInfo.pendingOpts.size()))
+            return;
+
+        uint8 newMask = slotInfo.lockedMask;
+        if (locked)
+            newMask |= static_cast<uint8>(1u << optIdx);
+        else
+            newMask &= static_cast<uint8>(~(1u << optIdx));
+
+        CharacterDatabase.Execute(
+            "UPDATE item_affix SET locked_mask = {} WHERE item_guid = {} AND affix_slot = {}",
+            newMask, itemGuid, uint32(i));
+
+        SendRollOptions(player, item, i, slotInfo.pendingOpts, slotInfo.rerollsRemaining, newMask);
+        return;
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -2507,6 +2751,30 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
                 HandlePickOption(player, item, i, *optIdxOpt);
                 return;
             }
+    }
+    else if (cmd == "REROLL" && parts.size() >= 3)
+    {
+        int8  spec    = -1;
+        uint8 type    = 0;
+        uint8 role    = 0;
+        uint8 mainSt  = 0;
+        if (parts.size() >= 4)
+            if (auto sv = Acore::StringTo<uint8>(parts[3]))
+                spec = (*sv == 255) ? -1 : static_cast<int8>(*sv);
+        if (parts.size() >= 5)
+            if (auto v = Acore::StringTo<uint8>(parts[4])) type   = *v;
+        if (parts.size() >= 6)
+            if (auto v = Acore::StringTo<uint8>(parts[5])) role   = *v;
+        if (parts.size() >= 7)
+            if (auto v = Acore::StringTo<uint8>(parts[6])) mainSt = *v;
+        HandleRerollRequest(player, item, spec, type, role, mainSt);
+    }
+    else if (cmd == "LOCK" && parts.size() >= 5)
+    {
+        auto optIdxOpt = Acore::StringTo<uint8>(parts[3]);
+        auto stateOpt  = Acore::StringTo<uint8>(parts[4]);
+        if (!optIdxOpt || !stateOpt) return;
+        HandleLockToggle(player, item, *optIdxOpt, *stateOpt == 1);
     }
     else if (cmd == "DATA")
     {

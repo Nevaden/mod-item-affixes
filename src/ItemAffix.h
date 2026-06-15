@@ -173,10 +173,12 @@ struct PendingOpt
 // Full per-slot state including unrolled/pending slots
 struct AffixSlotInfo
 {
-    uint8                  rollState;    // AffixRollState
-    uint32                 affixId;      // 0 if not yet applied
-    int32                  rolledValue;
-    std::vector<PendingOpt> pendingOpts; // populated when PENDING
+    uint8                   rollState;             // AffixRollState
+    uint32                  affixId     = 0;       // 0 if not yet applied
+    int32                   rolledValue = 0;
+    std::vector<PendingOpt> pendingOpts;           // populated when PENDING
+    uint8                   rerollsRemaining = 0;  // rerolls left for this pending slot
+    uint8                   lockedMask       = 0;  // bitmask: bit N = option N is locked
 };
 
 class ItemAffixMgr
@@ -254,6 +256,14 @@ private:
     void HandleRollRequest(Player* player, Item* item, uint8 affixSlot,
                            uint8 type = 0, int8 spec = -1, uint8 role = 0, uint8 mainStat = 0);
 
+    // Re-roll all unlocked options in the current pending slot; decrements rerolls_remaining.
+    // type: 0=any, 1=stats-only, 2=class-skills-only  (same semantics as HandleRollRequest)
+    void HandleRerollRequest(Player* player, Item* item, int8 spec,
+                             uint8 type = 0, uint8 role = 0, uint8 mainStat = 0);
+
+    // Toggle the lock bit for one pending option; re-sends OPTS with updated lockedMask.
+    void HandleLockToggle(Player* player, Item* item, uint8 optIdx, bool locked);
+
     // Apply a chosen option from a PENDING slot; sets row to APPLIED.
     void HandlePickOption(Player* player, Item* item, uint8 affixSlot, uint8 optIdx);
 
@@ -269,7 +279,8 @@ private:
 
     void SendAddonMsg(Player* player, std::string const& payload);
     std::string BuildAffixDisplayString(AffixDefinition const* def, int32 rolledValue);
-    void SendRollOptions(Player* player, Item* item, uint8 affixSlot, std::vector<PendingOpt> const& opts);
+    void SendRollOptions(Player* player, Item* item, uint8 affixSlot, std::vector<PendingOpt> const& opts,
+                         uint8 rerolls, uint8 lockedMask);
 
     // Appends slot entries, talent affix lines, and imprint to msg for any read-only
     // affix query (PEEK / PEEKUNIT / PEEKAUCTION / PEEKUNITALL / TRADEGUID).
@@ -290,6 +301,13 @@ private:
     bool  _enableRoleSelection      = true;
     bool  _enableMainStatSelection  = true;
     uint8 _twoHanderBonusSlots      = 1;     // extra affix slots granted to 2H weapons (0 = no bonus)
+    // Configurable option counts and reroll counts per quality tier
+    uint8 _optionsCountGreen        = 1;     // how many options offered for green-quality items
+    uint8 _optionsCountBlue         = 2;     // how many options offered for blue-quality items
+    uint8 _optionsCountPurple       = 3;     // how many options offered for purple+ items
+    uint8 _rerollsGreen             = 0;     // player rerolls allowed for green items
+    uint8 _rerollsBlue              = 2;     // player rerolls allowed for blue items
+    uint8 _rerollsPurple            = 3;     // player rerolls allowed for purple+ items
     // WotLK item budget fractions — share of total item budget allocated to one affix roll
     float _budgetFractionGreen  = 0.18f;  // green quality  (1 affix)
     float _budgetFractionBlue   = 0.13f;  // blue quality   (2 affixes)

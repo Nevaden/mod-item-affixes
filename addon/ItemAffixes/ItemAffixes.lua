@@ -517,13 +517,15 @@ function AFXM:OnServerMsg(msg)
         end
 
     elseif cmd == "OPTS" then
-        local bag       = tonumber(parts[2])
-        local slot      = tonumber(parts[3])
-        local affixSlot = tonumber(parts[4])
+        local bag        = tonumber(parts[2])
+        local slot       = tonumber(parts[3])
+        local affixSlot  = tonumber(parts[4])
+        local rerolls    = tonumber(parts[5])
+        local lockedMask = tonumber(parts[6])
         if not bag or not slot or (affixSlot == nil) then return end
         local options = {}
-        for i = 5, #parts do options[#options + 1] = parts[i] end
-        AFXM:ShowRollFrame(bag, slot, affixSlot, options)
+        for i = 7, #parts do options[#options + 1] = parts[i] end
+        AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls or 0, lockedMask or 0)
 
     elseif cmd == "APPLY" then
         local bag       = tonumber(parts[2])

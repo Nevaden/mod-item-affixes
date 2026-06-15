@@ -3,133 +3,6 @@
 -- AFX_DEBUG is declared in ItemAffixes.lua (the shared global).
 -- Set AFX_DEBUG = true in ItemAffixes.lua to enable verbose logging for both files.
 
--- Called from AFXM:OnServerMsg when an OPTS message arrives.
-function AFXM:ShowRollFrame(bag, slot, affixSlot, options)
-    if AFX_DEBUG then
-        print("|cff44DDFF[AFX]|r ShowRollFrame: bag=" .. tostring(bag)
-              .. " slot=" .. tostring(slot) .. " opts=" .. tostring(#options))
-    end
-    local f = AFFXRollFrame
-    if not f then
-        print("|cff44DDFF[AFX]|r ERROR: AFFXRollFrame is nil")
-        return
-    end
-    f.bag       = bag
-    f.slot      = slot
-    f.affixSlot = affixSlot
-
-    -- One-time frame build
-    if not f._built then
-        f._built = true
-        f:SetSize(420, 220)
-        f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton")
-        f:SetScript("OnDragStart", function(self) self:StartMoving() end)
-        f:SetScript("OnDragStop",  function(self) self:StopMovingOrSizing() end)
-        f:SetBackdrop({
-            bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
-            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-            tile = true, tileSize = 32, edgeSize = 32,
-            insets = { left = 11, right = 12, top = 12, bottom = 11 },
-        })
-        f:SetBackdropColor(0, 0, 0, 1)
-
-        -- Title
-        f._title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-        f._title:SetPoint("TOP", f, "TOP", 0, -14)
-        f._title:SetTextColor(1, 0.82, 0)
-        f._title:SetJustifyH("CENTER")
-        f._title:SetWidth(380)
-
-        -- Close button (X)
-        local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
-        closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -4, -4)
-        closeBtn:SetScript("OnClick", function() f:Hide() end)
-
-        -- Option buttons stored in f._btns
-        f._btns = {}
-        for i = 1, 3 do
-            local btn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-            btn:SetSize(380, 40)
-            if i == 1 then
-                btn:SetPoint("TOP", f, "TOP", 0, -50)
-            else
-                btn:SetPoint("TOP", f._btns[i - 1], "BOTTOM", 0, -6)
-            end
-            -- Gold glow overlay for crit rolls
-            local glow = btn:CreateTexture(nil, "OVERLAY")
-            glow:SetAllPoints(btn)
-            glow:SetTexture(1, 0.84, 0, 0)
-            glow:SetAlpha(0)
-            btn._glow      = glow
-            btn._glowing   = false
-            btn._glowTimer = 0
-            btn:SetScript("OnUpdate", function(self, elapsed)
-                if not self._glowing then return end
-                self._glowTimer = self._glowTimer + elapsed
-                self._glow:SetAlpha(0.30 + 0.15 * math.sin(self._glowTimer * 4))
-            end)
-            f._btns[i] = btn
-        end
-    end
-
-    f._title:SetText("Choose an Affix")
-
-    for i = 1, 3 do
-        local btn = f._btns[i]
-        if options[i] then
-            local prefix   = options[i]:sub(1, 1)
-            local isImprint = prefix == "~"
-            local isCrit    = prefix == "!"
-            local dispText  = (isImprint or isCrit) and options[i]:sub(2) or options[i]
-            if isImprint then
-                btn:SetText("|cffA335EE[Imprint] " .. dispText .. "|r")
-                btn._glowing = false
-                btn._glow:SetAlpha(0)
-            elseif isCrit then
-                btn:SetText("|cffFFD700** " .. dispText .. " **|r")
-                btn._glowing   = true
-                btn._glowTimer = 0
-                btn._glow:SetAlpha(0.30)
-            else
-                btn:SetText("|cff44DDFF" .. dispText .. "|r")
-                btn._glowing = false
-                btn._glow:SetAlpha(0)
-            end
-            local optIdx = i - 1
-            btn:SetScript("OnClick", function()
-                AFXM:SendToServer("PICK|" .. bag .. "|" .. slot .. "|" .. optIdx)
-                f:Hide()
-            end)
-            btn:Show()
-        else
-            btn:Hide()
-        end
-    end
-
-    f:ClearAllPoints()
-    f:SetPoint("CENTER", UIParent, "CENTER")
-    f:SetAlpha(1)
-    f:Show()
-    f:Raise()
-    if AFX_DEBUG then
-        print("|cff44DDFF[AFX]|r Frame IsShown=" .. tostring(f:IsShown())
-              .. " size=" .. tostring(f:GetWidth()) .. "x" .. tostring(f:GetHeight()))
-    end
-end
-
--- Refresh tooltip when the roll frame is closed without picking.
-AFFXRollFrame:SetScript("OnHide", function(self)
-    if GameTooltip:IsVisible() then
-        GameTooltip:Hide()
-        GameTooltip:Show()
-    end
-end)
-
--- ============================================================================
--- Roll Menu frame: preference landing page shown before rolling
--- ============================================================================
-
 local CLASS_SPEC_NAMES = {
     WARRIOR     = {"Arms",          "Fury",         "Protection"},
     PALADIN     = {"Holy",          "Protection",   "Retribution"},
@@ -143,9 +16,9 @@ local CLASS_SPEC_NAMES = {
     DRUID       = {"Balance",       "Feral Combat", "Restoration"},
 }
 
--- Creates a mutually-exclusive toggle button inside a section frame.
+-- Creates a mutually-exclusive toggle button inside a parent frame.
+-- group: shared table; clicking any button refreshes all others.
 -- prefVar: global name (string) whose value is set to `value` on click.
--- group: shared table; clicking any button refreshes all others in group.
 local function BuildToggleBtn(parent, label, w, group, value, prefVar)
     local btn = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     btn:SetSize(w, 26)
@@ -169,6 +42,358 @@ local function BuildToggleBtn(parent, label, w, group, value, prefVar)
     Refresh(btn)
     return btn
 end
+
+-- Called from AFXM:OnServerMsg when an OPTS message arrives.
+-- rerolls    = number of rerolls remaining (0 = no reroll button shown)
+-- lockedMask = bitmask: bit N set means option N is locked
+function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask)
+    rerolls    = rerolls    or 0
+    lockedMask = lockedMask or 0
+    if AFX_DEBUG then
+        print("|cff44DDFF[AFX]|r ShowRollFrame: bag=" .. tostring(bag)
+              .. " slot=" .. tostring(slot) .. " opts=" .. tostring(#options)
+              .. " rerolls=" .. tostring(rerolls) .. " locked=" .. tostring(lockedMask))
+    end
+    local f = AFFXRollFrame
+    if not f then
+        print("|cff44DDFF[AFX]|r ERROR: AFFXRollFrame is nil")
+        return
+    end
+    f.bag       = bag
+    f.slot      = slot
+    f.affixSlot = affixSlot
+
+    local MAX_OPTS = 6
+
+    -- One-time frame build
+    if not f._built then
+        f._built = true
+        f:SetSize(420, 260)
+        f:EnableMouse(true)
+        f:RegisterForDrag("LeftButton")
+        f:SetScript("OnDragStart", function(self) self:StartMoving() end)
+        f:SetScript("OnDragStop",  function(self) self:StopMovingOrSizing() end)
+        f:SetBackdrop({
+            bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+            tile = true, tileSize = 32, edgeSize = 32,
+            insets = { left = 11, right = 12, top = 12, bottom = 11 },
+        })
+        f:SetBackdropColor(0, 0, 0, 1)
+
+        -- Title
+        f._title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        f._title:SetPoint("TOP", f, "TOP", 0, -14)
+        f._title:SetTextColor(1, 0.82, 0)
+        f._title:SetJustifyH("CENTER")
+        f._title:SetWidth(380)
+
+        -- Close button
+        local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+        closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -4, -4)
+        closeBtn:SetScript("OnClick", function() f:Hide() end)
+
+        -- Pre-build MAX_OPTS option rows: each row = lock toggle button + option button
+        f._optRows = {}
+        for i = 1, MAX_OPTS do
+            local lockBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+            lockBtn:SetSize(36, 36)
+
+            local optBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+            optBtn:SetSize(334, 36)
+
+            local glow = optBtn:CreateTexture(nil, "OVERLAY")
+            glow:SetAllPoints(optBtn)
+            glow:SetTexture(1, 0.84, 0, 0)
+            glow:SetAlpha(0)
+            optBtn._glow      = glow
+            optBtn._glowing   = false
+            optBtn._glowTimer = 0
+            optBtn:SetScript("OnUpdate", function(self, elapsed)
+                if not self._glowing then return end
+                self._glowTimer = self._glowTimer + elapsed
+                self._glow:SetAlpha(0.30 + 0.15 * math.sin(self._glowTimer * 4))
+            end)
+
+            lockBtn:Hide()
+            optBtn:Hide()
+            f._optRows[i] = { lockBtn = lockBtn, optBtn = optBtn }
+        end
+
+        -- Preference sections shown below options when rerolls > 0.
+        -- Each section: label + row of BuildToggleBtn buttons.
+        local MARGIN_L = 20
+
+        -- Type section (any / stats / class skills)
+        local ts = CreateFrame("Frame", nil, f)
+        ts:SetSize(380, 44)
+        ts._height = 44
+        local tLbl = ts:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        tLbl:SetPoint("TOPLEFT", ts, "TOPLEFT", 0, 0)
+        tLbl:SetText("Roll type:")
+        tLbl:SetTextColor(0.9, 0.9, 0.6)
+        local tg = {}
+        local typeInfo = {{"Any", 0, 60}, {"Stats", 1, 60}, {"Class Skills", 2, 100}}
+        local prevB
+        for i, info in ipairs(typeInfo) do
+            local b = BuildToggleBtn(ts, info[1], info[3], tg, info[2], "AFX_PREF_TYPE")
+            if i == 1 then b:SetPoint("TOPLEFT", tLbl, "BOTTOMLEFT", 0, -4)
+            else            b:SetPoint("LEFT", prevB, "RIGHT", 4, 0) end
+            prevB = b
+        end
+        ts._group = tg
+        -- Type buttons also trigger a layout refresh to show/hide role + main sections.
+        for _, tb in ipairs(tg) do
+            local origClick = tb:GetScript("OnClick")
+            tb:SetScript("OnClick", function(self)
+                origClick(self)
+                f:RefreshRerollLayout()
+            end)
+        end
+        f._typeSection = ts
+
+        -- Spec section
+        local ss = CreateFrame("Frame", nil, f)
+        ss:SetSize(380, 44)
+        ss._height = 44
+        local sLbl = ss:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        sLbl:SetPoint("TOPLEFT", ss, "TOPLEFT", 0, 0)
+        sLbl:SetText("Spec:")
+        sLbl:SetTextColor(0.9, 0.9, 0.6)
+        local sg = {}
+        local specBtns = {}
+        specBtns[1] = BuildToggleBtn(ss, "Any", 52, sg, 255, "AFX_PREF_SPEC")
+        specBtns[1]:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -4)
+        for i = 2, 4 do
+            specBtns[i] = BuildToggleBtn(ss, "?", 86, sg, i - 2, "AFX_PREF_SPEC")
+            specBtns[i]:SetPoint("LEFT", specBtns[i - 1], "RIGHT", 4, 0)
+        end
+        ss._group    = sg
+        ss._specBtns = specBtns
+        f._specSection = ss
+
+        -- Stat-family / role section
+        local rs = CreateFrame("Frame", nil, f)
+        rs:SetSize(380, 44)
+        rs._height = 44
+        local rLbl = rs:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        rLbl:SetPoint("TOPLEFT", rs, "TOPLEFT", 0, 0)
+        rLbl:SetText("Stat family:")
+        rLbl:SetTextColor(0.9, 0.9, 0.6)
+        local rg = {}
+        local roleInfo = {{"Any",0,48},{"Tank",4,52},{"Physical",2,68},{"Caster",1,58},{"Healer",8,58},{"Ranged",16,62}}
+        prevB = nil
+        for i, info in ipairs(roleInfo) do
+            local b = BuildToggleBtn(rs, info[1], info[3], rg, info[2], "AFX_PREF_ROLE")
+            if i == 1 then b:SetPoint("TOPLEFT", rLbl, "BOTTOMLEFT", 0, -4)
+            else            b:SetPoint("LEFT", prevB, "RIGHT", 4, 0) end
+            prevB = b
+        end
+        rs._group = rg
+        f._roleSection = rs
+
+        -- Main stat section
+        local ms = CreateFrame("Frame", nil, f)
+        ms:SetSize(380, 44)
+        ms._height = 44
+        local mLbl = ms:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        mLbl:SetPoint("TOPLEFT", ms, "TOPLEFT", 0, 0)
+        mLbl:SetText("Main stat:")
+        mLbl:SetTextColor(0.9, 0.9, 0.6)
+        local mg = {}
+        local mainInfo = {{"Any",0,48},{"Strength",1,74},{"Agility",2,68},{"Intellect",3,78},{"Spirit",4,62}}
+        prevB = nil
+        for i, info in ipairs(mainInfo) do
+            local b = BuildToggleBtn(ms, info[1], info[3], mg, info[2], "AFX_PREF_MAIN")
+            if i == 1 then b:SetPoint("TOPLEFT", mLbl, "BOTTOMLEFT", 0, -4)
+            else            b:SetPoint("LEFT", prevB, "RIGHT", 4, 0) end
+            prevB = b
+        end
+        ms._group = mg
+        f._mainSection = ms
+
+        -- RefreshRerollLayout: positions visible sections below option rows and resizes frame.
+        -- Reads f._numOpts and f._rerolls set in the update path below.
+        f.RefreshRerollLayout = function(self)
+            local ROW_H    = 36
+            local ROW_GAP  = 8
+            local SECT_GAP = 8
+            local nOpts    = self._numOpts or 0
+            local nRolls   = self._rerolls or 0
+
+            -- First pixel below last option row (50px title + option rows + 14px gap)
+            local sectionTop = 50 + math.max(nOpts - 1, 0) * (ROW_H + ROW_GAP) + ROW_H + 14
+            if nOpts == 0 then sectionTop = 50 end
+
+            local contentH   = sectionTop
+            local nextPx     = sectionTop
+            local classSkills = (AFX_PREF_TYPE == 2)
+            local showCtrls   = (nRolls > 0)
+
+            local function placeSection(sec, show)
+                if show then
+                    sec:ClearAllPoints()
+                    sec:SetPoint("TOPLEFT", self, "TOPLEFT", MARGIN_L, -nextPx)
+                    nextPx   = nextPx   + (sec._height or 44) + SECT_GAP
+                    contentH = contentH + (sec._height or 44) + SECT_GAP
+                    sec:Show()
+                else
+                    sec:Hide()
+                end
+            end
+
+            placeSection(self._typeSection, showCtrls and AFX_CFG_TYPE == 1)
+            placeSection(self._specSection, showCtrls and AFX_CFG_SPEC == 1)
+            placeSection(self._roleSection, showCtrls and AFX_CFG_ROLE == 1 and not classSkills)
+            placeSection(self._mainSection, showCtrls and AFX_CFG_MAIN == 1 and not classSkills)
+
+            if nRolls > 0 then contentH = contentH + 34 + 20 end  -- reroll button + gap
+            contentH = contentH + 20                                -- bottom margin
+            self:SetSize(420, math.max(contentH, 180))
+        end
+
+        -- Reroll button (anchored at frame bottom; frame resizes to keep it visible)
+        f._rerollBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+        f._rerollBtn:SetSize(140, 34)
+        f._rerollBtn:SetPoint("BOTTOM", f, "BOTTOM", 0, 16)
+        f._rerollBtn:Hide()
+    end  -- end one-time build
+
+    f._title:SetText("Choose an Affix")
+    f._numOpts = #options
+    f._rerolls = rerolls
+
+    -- Layout constants
+    local MARGIN_L = 20
+    local LOCK_W   = 36
+    local OPT_GAP  = 10
+    local ROW_H    = 36
+    local ROW_GAP  = 8
+    local TOP_Y    = -50  -- Y offset of first option row from frame TOP
+
+    local function IsBitSet(mask, b)
+        return math.floor(mask / (2 ^ b)) % 2 ~= 0
+    end
+
+    local numOpts = #options
+
+    local anyUnlocked = false
+    for i = 0, numOpts - 1 do
+        if not IsBitSet(lockedMask, i) then anyUnlocked = true; break end
+    end
+
+    -- Configure and position each option row
+    for i = 1, MAX_OPTS do
+        local row = f._optRows[i]
+        if options[i] then
+            local yOff   = TOP_Y - (i - 1) * (ROW_H + ROW_GAP)
+            local optIdx = i - 1
+
+            row.lockBtn:ClearAllPoints()
+            row.lockBtn:SetPoint("TOPLEFT", f, "TOPLEFT", MARGIN_L, yOff)
+            row.optBtn:ClearAllPoints()
+            row.optBtn:SetPoint("TOPLEFT", f, "TOPLEFT", MARGIN_L + LOCK_W + OPT_GAP, yOff)
+
+            local isLocked = IsBitSet(lockedMask, optIdx)
+            row.lockBtn:SetText(isLocked and "|cffFFD700[L]|r" or "|cff888888[ ]|r")
+            local capturedLocked = isLocked
+            local capturedIdx    = optIdx
+            row.lockBtn:SetScript("OnClick", function()
+                local newState = capturedLocked and "0" or "1"
+                AFXM:SendToServer("LOCK|" .. bag .. "|" .. slot .. "|" .. capturedIdx .. "|" .. newState)
+            end)
+
+            local prefix    = options[i]:sub(1, 1)
+            local isImprint = prefix == "~"
+            local isCrit    = prefix == "!"
+            local dispText  = (isImprint or isCrit) and options[i]:sub(2) or options[i]
+            if isImprint then
+                row.optBtn:SetText("|cffA335EE[Imprint] " .. dispText .. "|r")
+                row.optBtn._glowing = false
+                row.optBtn._glow:SetAlpha(0)
+            elseif isCrit then
+                row.optBtn:SetText("|cffFFD700** " .. dispText .. " **|r")
+                row.optBtn._glowing   = true
+                row.optBtn._glowTimer = 0
+                row.optBtn._glow:SetAlpha(0.30)
+            else
+                row.optBtn:SetText("|cff44DDFF" .. dispText .. "|r")
+                row.optBtn._glowing = false
+                row.optBtn._glow:SetAlpha(0)
+            end
+            local capturedOptIdx = optIdx
+            row.optBtn:SetScript("OnClick", function()
+                AFXM:SendToServer("PICK|" .. bag .. "|" .. slot .. "|" .. capturedOptIdx)
+                f:Hide()
+            end)
+
+            row.lockBtn:Show()
+            row.optBtn:Show()
+        else
+            row.lockBtn:Hide()
+            row.optBtn:Hide()
+        end
+    end
+
+    -- Update spec button labels for this character's class
+    local _, classFile = UnitClass("player")
+    local specs = CLASS_SPEC_NAMES[classFile] or {"Tree 1", "Tree 2", "Tree 3"}
+    local sb = f._specSection._specBtns
+    for i = 1, 3 do
+        sb[i + 1]._label = specs[i]
+        sb[i + 1]:Refresh(sb[i + 1])
+    end
+
+    -- Refresh all toggle button visuals from current preference globals
+    for _, b in ipairs(f._typeSection._group) do b:Refresh(b) end
+    for _, b in ipairs(f._specSection._group) do b:Refresh(b) end
+    for _, b in ipairs(f._roleSection._group) do b:Refresh(b) end
+    for _, b in ipairs(f._mainSection._group) do b:Refresh(b) end
+
+    -- Position preference sections and resize the frame
+    f:RefreshRerollLayout()
+
+    -- Configure reroll button
+    if rerolls > 0 then
+        f._rerollBtn:SetText("Reroll (" .. rerolls .. ")")
+        if anyUnlocked then
+            f._rerollBtn:Enable()
+            f._rerollBtn:SetAlpha(1.0)
+        else
+            f._rerollBtn:Disable()
+            f._rerollBtn:SetAlpha(0.5)
+        end
+        f._rerollBtn:SetScript("OnClick", function()
+            if not anyUnlocked then return end
+            AFXM:SendToServer("REROLL|" .. bag .. "|" .. slot .. "|" .. AFX_PREF_SPEC
+                .. "|" .. AFX_PREF_TYPE .. "|" .. AFX_PREF_ROLE .. "|" .. AFX_PREF_MAIN)
+        end)
+        f._rerollBtn:Show()
+    else
+        f._rerollBtn:Hide()
+    end
+
+    f:ClearAllPoints()
+    f:SetPoint("CENTER", UIParent, "CENTER")
+    f:SetAlpha(1)
+    f:Show()
+    f:Raise()
+    if AFX_DEBUG then
+        print("|cff44DDFF[AFX]|r Frame shown, size=" .. f:GetWidth() .. "x" .. f:GetHeight())
+    end
+end
+
+-- Refresh tooltip when the roll frame is closed without picking.
+AFFXRollFrame:SetScript("OnHide", function(self)
+    if GameTooltip:IsVisible() then
+        GameTooltip:Hide()
+        GameTooltip:Show()
+    end
+end)
+
+-- ============================================================================
+-- Roll Menu frame: preference landing page shown before rolling
+-- ============================================================================
 
 function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem)
     if AFX_DEBUG then

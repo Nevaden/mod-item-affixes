@@ -26,6 +26,24 @@ ItemAffixes.EnableMainStatSelection = 1
 # 0 = no bonus, 1 = one extra slot (default), 2 = two extra slots, etc.
 ItemAffixes.TwoHanderBonusSlots = 1
 
+# Number of affix options presented to the player when rolling each quality tier.
+# The player picks one; the rest are discarded. Clamped to 1-6.
+# Green (Uncommon) items: 1 option by default (no choice, rolls immediately).
+# Blue  (Rare)     items: 2 options by default.
+# Purple (Epic)    items: 3 options by default.
+ItemAffixes.OptionsCountGreen  = 3
+ItemAffixes.OptionsCountBlue   = 3
+ItemAffixes.OptionsCountPurple = 4
+
+# Number of rerolls granted per quality tier after the initial roll.
+# Each reroll re-generates all unlocked options; locked options are preserved.
+# Green (Uncommon): 0 = no rerolls (pick the only option or keep nothing).
+# Blue  (Rare):     2 rerolls by default.
+# Purple (Epic):    3 rerolls by default.
+ItemAffixes.RerollsGreen  = 0
+ItemAffixes.RerollsBlue   = 3
+ItemAffixes.RerollsPurple = 5
+
 # WotLK item budget fractions — share of the item's total stat budget allocated to one affix roll.
 # The stat exchange rates (AP=0.5x cost, SP=0.86x cost, others=1x) do the balancing automatically.
 # Green items roll one affix, blue two, purple three — smaller fractions per affix keep epics fair.
@@ -52,7 +70,15 @@ ItemAffixes.StatMultiplier = 3.0
 # the affix slot is returned to UNROLLED so it can still be filled with a normal affix.
 # Once an item has an Imprint (from any source) the option will never appear again on that item.
 # 0 = Imprint options never appear in rolls.  30 = 30% chance (default).
-ItemAffixes.ImprintRollChance = 30
+ItemAffixes.ImprintRollChance = 10
+
+# Number of times an Imprint can be extracted from an item (applied → extract → re-apply).
+# Each extraction decrements the counter; at 0 the Imprint is permanently bound to the item.
+# 0 = hardcore — Imprints cannot be moved once applied.
+# 1 = single-use rune (apply once, then permanently bound).
+# 2 = default (one free re-roll of which item it lives on).
+# 3+ = more flexible; use on casual or fun servers.
+ItemAffixes.ImprintExtractionCount = 2
 
 # Enable "crit" rolls — a per-option lucky bonus that inflates the rolled value by 50%.
 # When a crit fires on a stat affix the value is multiplied by 1.5 (ceiling).
