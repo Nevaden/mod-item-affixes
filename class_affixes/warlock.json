@@ -462,7 +462,7 @@
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  980,
                                        "flags":  [
-                                                     256,
+                                                     1024,
                                                      0,
                                                      0
                                                  ],
@@ -492,7 +492,7 @@
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  980,
                                        "flags":  [
-                                                     256,
+                                                     1024,
                                                      0,
                                                      0
                                                  ],
@@ -522,7 +522,7 @@
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  980,
                                        "flags":  [
-                                                     256,
+                                                     1024,
                                                      0,
                                                      0
                                                  ],
@@ -560,7 +560,7 @@
                                        "carrier_spell_id":  48181,
                                        "flags":  [
                                                      0,
-                                                     4,
+                                                     262144,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -590,7 +590,7 @@
                                        "carrier_spell_id":  48181,
                                        "flags":  [
                                                      0,
-                                                     4,
+                                                     262144,
                                                      0
                                                  ],
                                        "verified":  false,
@@ -620,7 +620,7 @@
                                        "carrier_spell_id":  48181,
                                        "flags":  [
                                                      0,
-                                                     4,
+                                                     262144,
                                                      0
                                                  ],
                                        "verified":  false,
