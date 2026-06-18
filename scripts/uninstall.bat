@@ -167,10 +167,19 @@ if not defined BUILD_DIR (
     goto :done
 )
 echo   Reconfiguring CMake to exclude mod-item-affixes...
-%CMAKE% -DDISABLED_AC_MODULES=mod-item-affixes "%BUILD_DIR%"
+%CMAKE% -DDISABLED_AC_MODULES=mod-item-affixes -DMODULE_MOD-ITEM-AFFIXES=disabled "%BUILD_DIR%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: CMake configure failed. Rebuild manually before restarting worldserver.
     goto :done
+)
+REM Delete the cached module lib so MSBuild is forced to relink worldserver.
+REM Without this, the linker output may be identical to the cached binary and
+REM cmake --install will skip the file, leaving the old module-linked binary.
+if exist "%BUILD_DIR%\modules\RelWithDebInfo\modules.lib" (
+    del "%BUILD_DIR%\modules\RelWithDebInfo\modules.lib"
+)
+if exist "%BUILD_DIR%\bin\RelWithDebInfo\worldserver.exe" (
+    del "%BUILD_DIR%\bin\RelWithDebInfo\worldserver.exe"
 )
 echo   Building worldserver (this will take a few minutes)...
 %CMAKE% --build "%BUILD_DIR%" --target worldserver --config RelWithDebInfo

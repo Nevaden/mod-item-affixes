@@ -309,7 +309,7 @@ Run `scripts\uninstall.bat`. Type `UNINSTALL` at the confirmation prompt, then t
 3. Removes rune item rows from `item_template` and custom spell rows from `spell_dbc` / `spell_script_names`
 4. Deletes the client MPQ patch files
 5. Removes `mod_item_affixes.conf` and `.conf.dist` from the server configs folder
-6. Reconfigures cmake with `-DDISABLED_AC_MODULES=mod-item-affixes`, rebuilds, and installs (if `CMAKE` and `BUILD_DIR` are set in `db_config.bat`)
+6. Reconfigures cmake with `-DDISABLED_AC_MODULES=mod-item-affixes -DMODULE_MOD-ITEM-AFFIXES=disabled`, rebuilds, and installs (if `CMAKE` and `BUILD_DIR` are set in `db_config.bat`)
 
 After `uninstall.bat` finishes, complete these steps manually:
 

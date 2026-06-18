@@ -29,10 +29,18 @@ if not defined BUILD_DIR (
 )
 
 echo [1/3] Reconfiguring CMake (disabling mod-item-affixes)...
-%CMAKE% -DDISABLED_AC_MODULES=mod-item-affixes "%BUILD_DIR%"
+%CMAKE% -DDISABLED_AC_MODULES=mod-item-affixes -DMODULE_MOD-ITEM-AFFIXES=disabled "%BUILD_DIR%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: CMake configure failed.
     pause & exit /b 1
+)
+
+REM Delete cached lib so MSBuild is forced to relink worldserver.exe.
+if exist "%BUILD_DIR%\modules\RelWithDebInfo\modules.lib" (
+    del "%BUILD_DIR%\modules\RelWithDebInfo\modules.lib"
+)
+if exist "%BUILD_DIR%\bin\RelWithDebInfo\worldserver.exe" (
+    del "%BUILD_DIR%\bin\RelWithDebInfo\worldserver.exe"
 )
 
 echo.
