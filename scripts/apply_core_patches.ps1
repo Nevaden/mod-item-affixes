@@ -101,18 +101,92 @@ ApplyPatch "Patch 1: Player::ApplyModToSpell null-guard (ownerAura)" `
            $p1_file $p1_detect $p1_search $p1_replace
 
 # ---------------------------------------------------------------------------
-# Patch 2: WorldSession::HandleSocketOpcode gem hook (gem affixes)
-# Also requires manual edits to PlayerScript.h and ScriptMgr.h/cpp
-# (see CORE_PATCHES.md Patch 2 for the exact virtual + dispatcher code).
+# Patch 2a: PlayerHook enum value
+# File: src/server/game/Scripting/ScriptDefines/PlayerScript.h
 # ---------------------------------------------------------------------------
 
-$p2_file   = Join-Path $AzerothCoreRoot "src\server\game\Handlers\ItemHandler.cpp"
-$p2_detect = "OnPlayerSocketGem"
-$p2_search = @'
+$p2a_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptDefines\PlayerScript.h"
+$p2a_detect = "PLAYERHOOK_ON_SOCKET_GEM"
+$p2a_search = @'
+    PLAYERHOOK_ON_UNEQUIP_ITEM,
+'@
+$p2a_replace = @'
+    PLAYERHOOK_ON_UNEQUIP_ITEM,
+    PLAYERHOOK_ON_SOCKET_GEM,
+'@
+
+ApplyPatch "Patch 2a: PlayerHook enum value PLAYERHOOK_ON_SOCKET_GEM" `
+           $p2a_file $p2a_detect $p2a_search $p2a_replace
+
+# ---------------------------------------------------------------------------
+# Patch 2b: PlayerScript virtual method
+# File: src/server/game/Scripting/ScriptDefines/PlayerScript.h
+# ---------------------------------------------------------------------------
+
+$p2b_detect = "virtual void OnPlayerSocketGem"
+$p2b_search = @'
+    // After an item has been unequipped
+    virtual void OnPlayerUnequip(Player* /*player*/, Item* /*it*/) { }
+'@
+$p2b_replace = @'
+    // After an item has been unequipped
+    virtual void OnPlayerUnequip(Player* /*player*/, Item* /*it*/) { }
+
+    // After a gem is socketed into an item (before the gem item is destroyed)
+    virtual void OnPlayerSocketGem(Player* /*player*/, Item* /*item*/, Item* /*gem*/, uint8 /*slot*/) { }
+'@
+
+ApplyPatch "Patch 2b: PlayerScript virtual OnPlayerSocketGem method" `
+           $p2a_file $p2b_detect $p2b_search $p2b_replace
+
+# ---------------------------------------------------------------------------
+# Patch 2c: ScriptMgr dispatcher
+# File: src/server/game/Scripting/ScriptDefines/PlayerScript.cpp
+# ---------------------------------------------------------------------------
+
+$p2c_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptDefines\PlayerScript.cpp"
+$p2c_detect = "ScriptMgr::OnPlayerSocketGem"
+$p2c_search = "template class AC_GAME_API ScriptRegistry<PlayerScript>;"
+$p2c_replace = @'
+void ScriptMgr::OnPlayerSocketGem(Player* player, Item* item, Item* gem, uint8 slot)
+{
+    CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_SOCKET_GEM, script->OnPlayerSocketGem(player, item, gem, slot));
+}
+
+template class AC_GAME_API ScriptRegistry<PlayerScript>;
+'@
+
+ApplyPatch "Patch 2c: ScriptMgr OnPlayerSocketGem dispatcher" `
+           $p2c_file $p2c_detect $p2c_search $p2c_replace
+
+# ---------------------------------------------------------------------------
+# Patch 2d: ScriptMgr declaration
+# File: src/server/game/Scripting/ScriptMgr.h
+# ---------------------------------------------------------------------------
+
+$p2d_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptMgr.h"
+$p2d_detect = "void OnPlayerSocketGem(Player* player, Item* item, Item* gem, uint8 slot);"
+$p2d_search = "    void OnPlayerUnequip(Player* player, Item* it);"
+$p2d_replace = @'
+    void OnPlayerUnequip(Player* player, Item* it);
+    void OnPlayerSocketGem(Player* player, Item* item, Item* gem, uint8 slot);
+'@
+
+ApplyPatch "Patch 2d: ScriptMgr.h OnPlayerSocketGem declaration" `
+           $p2d_file $p2d_detect $p2d_search $p2d_replace
+
+# ---------------------------------------------------------------------------
+# Patch 2e: WorldSession::HandleSocketOpcode gem hook call site
+# File: src/server/game/Handlers/ItemHandler.cpp
+# ---------------------------------------------------------------------------
+
+$p2e_file   = Join-Path $AzerothCoreRoot "src\server\game\Handlers\ItemHandler.cpp"
+$p2e_detect = "OnPlayerSocketGem"
+$p2e_search = @'
             if (Item* guidItem = _player->GetItemByGuid(packet.GemGuids[i]))
                 _player->DestroyItem(guidItem->GetBagSlot(), guidItem->GetSlot(), true);
 '@
-$p2_replace = @'
+$p2e_replace = @'
             if (Item* guidItem = _player->GetItemByGuid(packet.GemGuids[i]))
             {
                 sScriptMgr->OnPlayerSocketGem(_player, itemTarget, guidItem, i);
@@ -120,8 +194,8 @@ $p2_replace = @'
             }
 '@
 
-ApplyPatch "Patch 2: HandleSocketOpcode OnPlayerSocketGem callback (gem affixes)" `
-           $p2_file $p2_detect $p2_search $p2_replace
+ApplyPatch "Patch 2e: HandleSocketOpcode OnPlayerSocketGem callback (gem affixes)" `
+           $p2e_file $p2e_detect $p2e_search $p2e_replace
 
 # ---------------------------------------------------------------------------
 # Done
