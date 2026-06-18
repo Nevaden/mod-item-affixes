@@ -14,7 +14,7 @@ echo  Run this after pulling new mod updates from git.
 echo ============================================================
 echo.
 
-REM ── Load config ─────────────────────────────────────────────────────────────
+REM -- Load config -------------------------------------------------------------
 if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found.
@@ -23,7 +23,7 @@ if not exist "%SCRIPT_DIR%db_config.bat" (
 )
 call "%SCRIPT_DIR%db_config.bat"
 
-REM ── Step 1: Validate config ──────────────────────────────────────────────────
+REM -- Step 1: Validate config --------------------------------------------------
 echo [1/4] Checking configuration...
 call "%SCRIPT_DIR%test_config.bat"
 if %ERRORLEVEL% neq 0 (
@@ -33,7 +33,7 @@ if %ERRORLEVEL% neq 0 (
 )
 echo.
 
-REM ── Step 2: Regenerate SQL from JSON ────────────────────────────────────────
+REM -- Step 2: Regenerate SQL from JSON ----------------------------------------
 echo [2/4] Generating SQL from JSON definitions...
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build_affixes.ps1"
 if %ERRORLEVEL% neq 0 ( echo ERROR: build_affixes.ps1 failed & pause & exit /b 1 )
@@ -41,7 +41,7 @@ powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build_talent_affixes.ps1"
 if %ERRORLEVEL% neq 0 ( echo ERROR: build_talent_affixes.ps1 failed & pause & exit /b 1 )
 echo.
 
-REM ── Step 3: Apply data SQL ───────────────────────────────────────────────────
+REM -- Step 3: Apply data SQL ---------------------------------------------------
 echo [3/4] Applying updated data SQL...
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\affix_template.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: affix_template.sql failed & pause & exit /b 1 )
@@ -62,7 +62,7 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_arcane_shot_variants.sql failed & 
 echo   Done.
 echo.
 
-REM ── Step 4: Rebuild client DBC and MPQ ───────────────────────────────────────
+REM -- Step 4: Rebuild client DBC and MPQ ---------------------------------------
 echo [4/4] Patching client DBC files and rebuilding MPQ patches...
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%patch_dbc.ps1"
 if %ERRORLEVEL% neq 0 ( echo ERROR: patch_dbc.ps1 failed & pause & exit /b 1 )

@@ -30,7 +30,7 @@ if %ERRORLEVEL% neq 0 (
     pause & exit /b 1
 )
 echo   Done. All item_affix rows cleared.
-echo   Restart worldserver — items will re-initialize to UNROLLED on next login/pickup.
+echo   Restart worldserver - items will re-initialize to UNROLLED on next login/pickup.
 echo.
 pause
 endlocal

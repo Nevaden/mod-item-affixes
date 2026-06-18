@@ -34,7 +34,7 @@ if /i not "%CONFIRM%"=="UNINSTALL" (
 )
 echo.
 
-REM ── Load config ─────────────────────────────────────────────────────────────
+REM -- Load config -------------------------------------------------------------
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found. Cannot locate databases.
     pause & exit /b 1
@@ -42,12 +42,12 @@ if not exist "%SCRIPT_DIR%db_config.bat" (
 if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
 call "%SCRIPT_DIR%db_config.bat"
 
-REM ── Compute ID range ends ────────────────────────────────────────────────────
+REM -- Compute ID range ends ----------------------------------------------------
 set /a RUNE_ITEM_ID_END=%RUNE_ITEM_ID_START% + 99
 set /a IMPRINT_SPELL_ID_END=%IMPRINT_SPELL_ID_START% + 99
 set /a SPELLSWAP_SPELL_ID_END=%SPELLSWAP_SPELL_ID_START% + 99
 
-REM ── Step 1: Drop character DB tables ────────────────────────────────────────
+REM -- Step 1: Drop character DB tables ----------------------------------------
 echo [1/4] Removing character DB tables (player affix data)...
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% -e ^
   "DROP TABLE IF EXISTS item_affix, item_talent_affix, item_imprint;"
@@ -58,7 +58,7 @@ if %ERRORLEVEL% neq 0 (
 echo   Dropped: item_affix, item_talent_affix, item_imprint
 echo.
 
-REM ── Step 2: Clean world DB ──────────────────────────────────────────────────
+REM -- Step 2: Clean world DB --------------------------------------------------
 echo [2/4] Removing world DB tables and mod rows...
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% -e ^
   "DROP TABLE IF EXISTS affix_template, talent_affix_def, imprint_def;"
@@ -93,7 +93,7 @@ if %ERRORLEVEL% neq 0 (
 echo   Deleted spell_script_names rows for custom spells
 echo.
 
-REM ── Step 3: Remove client MPQ files ─────────────────────────────────────────
+REM -- Step 3: Remove client MPQ files -----------------------------------------
 echo [3/4] Removing client MPQ patch files...
 if not defined CLIENT_DATA_DIR (
     echo   WARNING: CLIENT_DATA_DIR not set -- cannot remove MPQ files.
@@ -131,7 +131,7 @@ if not defined CLIENT_DATA_DIR (
 )
 echo.
 
-REM ── Step 4: Remove server config ─────────────────────────────────────────────
+REM -- Step 4: Remove server config ---------------------------------------------
 echo [4/4] Removing server config...
 set CONF_MODULES=%SERVER_DBC_DIR%\..\..\..\configs\modules
 if exist "%CONF_MODULES%\mod_item_affixes.conf" (

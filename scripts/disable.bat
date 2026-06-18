@@ -9,7 +9,7 @@ echo  this completes, or the install step will fail.
 echo ============================================================
 echo.
 
-REM ── Load config ─────────────────────────────────────────────────────────────
+REM -- Load config -------------------------------------------------------------
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found.
     echo        Copy scripts\db_config.bat.example to scripts\db_config.bat and fill it in.

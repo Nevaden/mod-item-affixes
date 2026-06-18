@@ -1,44 +1,44 @@
 @echo off
 REM ============================================================
-REM  mod-item-affixes — local configuration
+REM  mod-item-affixes - local configuration
 REM  Copy this file to db_config.bat and fill in every value.
-REM  db_config.bat is gitignored — your credentials stay local.
+REM  db_config.bat is gitignored - your credentials stay local.
 REM ============================================================
 
-REM ── MySQL connection ─────────────────────────────────────────────────────────
+REM -- MySQL connection ---------------------------------------------------------
 set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
 set MYSQL_HOST=127.0.0.1
 set USER=acore
 set PASS=YOUR_PASSWORD
 
-REM ── Database names ───────────────────────────────────────────────────────────
+REM -- Database names -----------------------------------------------------------
 REM Default AzerothCore names. Change only if your install uses different names.
 set DB_CHAR=acore_characters
 set DB_WORLD=acore_world
 
-REM ── Server DBC directory ─────────────────────────────────────────────────────
+REM -- Server DBC directory -----------------------------------------------------
 REM Where your worldserver reads DBC files from.
 REM Default AzerothCore layout: <root>\env\dist\data\dbc
 set SERVER_DBC_DIR=C:\path\to\your\server\env\dist\data\dbc
 
-REM ── WoW client Data directory ────────────────────────────────────────────────
+REM -- WoW client Data directory ------------------------------------------------
 REM Where MPQ patch files are written. Must be writable.
 REM Default: C:\Program Files (x86)\World of Warcraft\Data
 set CLIENT_DATA_DIR=C:\Program Files (x86)\World of Warcraft\Data
 
-REM ── CMake build (optional — required for install/enable/disable scripts) ─────
+REM -- CMake build (optional - required for install/enable/disable scripts) -----
 REM Path to cmake.exe and the AzerothCore build output directory.
 REM set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
 REM set BUILD_DIR=C:\path\to\your\azerothcore\build
 
-REM ── MPQ patch suffix (optional) ──────────────────────────────────────────────
+REM -- MPQ patch suffix (optional) ----------------------------------------------
 REM On first run the scripts auto-detect two free suffix letters (scanning Z
 REM downward) and save them to local_config.bat for reuse. Uncomment here to pin
-REM to specific letters instead — useful if another mod already owns a slot.
+REM to specific letters instead - useful if another mod already owns a slot.
 REM set PATCH_SUFFIX_DBC=4
 REM set PATCH_SUFFIX_SPELLS=Z
 
-REM ── Custom ID ranges ─────────────────────────────────────────────────────────
+REM -- Custom ID ranges ---------------------------------------------------------
 REM The IDs this module inserts into shared world-DB tables and the DBC.
 REM Change these only if another mod already uses the same range.
 REM If you change a range, you must also update the matching JSON/SQL source files

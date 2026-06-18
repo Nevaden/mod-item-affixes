@@ -26,7 +26,7 @@ echo.
 echo Press Ctrl+C to cancel, or any key to continue...
 pause > nul
 
-REM ── Load config ─────────────────────────────────────────────────────────────
+REM -- Load config -------------------------------------------------------------
 if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found.
@@ -35,7 +35,7 @@ if not exist "%SCRIPT_DIR%db_config.bat" (
 )
 call "%SCRIPT_DIR%db_config.bat"
 
-REM ── Step 1: Validate config ──────────────────────────────────────────────────
+REM -- Step 1: Validate config --------------------------------------------------
 echo [1/5] Checking configuration...
 call "%SCRIPT_DIR%test_config.bat"
 if %ERRORLEVEL% neq 0 (
@@ -45,7 +45,7 @@ if %ERRORLEVEL% neq 0 (
 )
 echo.
 
-REM ── Step 2: Copy module conf ─────────────────────────────────────────────────
+REM -- Step 2: Copy module conf -------------------------------------------------
 echo [2/5] Setting up module config file...
 REM Derive conf location from SERVER_DBC_DIR (env\dist\data\dbc -> env\dist\configs\modules)
 set CONF_MODULES=%SERVER_DBC_DIR%\..\..\..\configs\modules
@@ -65,7 +65,7 @@ if exist "%CONF%" (
 )
 echo.
 
-REM ── Step 3: Create DB schema ─────────────────────────────────────────────────
+REM -- Step 3: Create DB schema -------------------------------------------------
 echo [3/5] Creating database schema tables...
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_CHARS%\item_affix.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: item_affix.sql failed & pause & exit /b 1 )
@@ -76,7 +76,7 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: item_imprint.sql failed & pause & exit /b 1 
 echo   Characters DB schema ready.
 echo.
 
-REM ── Step 4: Generate and apply data SQL ──────────────────────────────────────
+REM -- Step 4: Generate and apply data SQL --------------------------------------
 echo [4/5] Generating and applying affix, imprint, and spell data...
 
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build_affixes.ps1"
@@ -103,7 +103,7 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_arcane_shot_variants.sql failed & 
 echo   All data SQL applied.
 echo.
 
-REM ── Step 5: Rebuild client DBC and MPQ ───────────────────────────────────────
+REM -- Step 5: Rebuild client DBC and MPQ ---------------------------------------
 echo [5/5] Patching client DBC files and rebuilding MPQ patches...
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%patch_dbc.ps1"
 if %ERRORLEVEL% neq 0 ( echo ERROR: patch_dbc.ps1 failed & pause & exit /b 1 )

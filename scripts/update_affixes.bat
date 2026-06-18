@@ -26,7 +26,7 @@ echo    3. Sync DBC entries + rebuild client MPQ
 echo ============================================================
 echo.
 
-REM ── Step 1: Regenerate SQL ──────────────────────────────────────────────
+REM -- Step 1: Regenerate SQL ----------------------------------------------
 echo [1/4] Generating SQL from JSON files...
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build_affixes.ps1"
 if %ERRORLEVEL% neq 0 (
@@ -40,7 +40,7 @@ if %ERRORLEVEL% neq 0 (
 )
 echo.
 
-REM ── Step 2: Apply SQL ───────────────────────────────────────────────────
+REM -- Step 2: Apply SQL ---------------------------------------------------
 echo [2/4] Applying SQL to databases...
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_CHARS%"
 if %ERRORLEVEL% neq 0 (
@@ -65,7 +65,7 @@ if %ERRORLEVEL% neq 0 (
 echo   SQL applied successfully.
 echo.
 
-REM ── Step 3: Patch DBC + rebuild client MPQ ──────────────────────────────
+REM -- Step 3: Patch DBC + rebuild client MPQ ------------------------------
 echo [3/4] Syncing DBC entries and rebuilding client MPQ patch files...
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%patch_dbc.ps1"
 if %ERRORLEVEL% neq 0 (

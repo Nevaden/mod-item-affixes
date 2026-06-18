@@ -22,7 +22,7 @@ echo    2. Rebuild client DBC / MPQ patch files
 echo ============================================================
 echo.
 
-REM ── Step 1: Apply SQL ───────────────────────────────────────────────────
+REM -- Step 1: Apply SQL ---------------------------------------------------
 echo [1/3] Applying imprint SQL to %DB_WORLD%...
 
 REM Table definitions and type rows
@@ -47,7 +47,7 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_vanishing_backstab.sql failed & pa
 echo   SQL applied successfully.
 echo.
 
-REM ── Step 2: Rebuild client DBC + MPQ ────────────────────────────────────
+REM -- Step 2: Rebuild client DBC + MPQ ------------------------------------
 echo [2/3] Rebuilding client DBC and MPQ patch files...
 powershell -ExecutionPolicy Bypass -File "%SCRIPT_DIR%..\tools\patch_custom_spells.ps1"
 if %ERRORLEVEL% neq 0 (
