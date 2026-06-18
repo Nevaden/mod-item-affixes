@@ -13,6 +13,8 @@ if not exist "%SCRIPT_DIR%db_config.bat" (
     echo [FAIL] scripts\db_config.bat not found.
     echo        Copy scripts\db_config.bat.example to scripts\db_config.bat
     echo        and fill in your values, then re-run this check.
+    echo.
+    pause
     exit /b 1
 )
 if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
@@ -123,11 +125,17 @@ if not exist "%BUILD_DIR%\CMakeCache.txt" (
 echo.
 if %ALL_OK%==1 (
     echo  All required checks passed. You are ready to run install.bat or update.bat.
+    echo ============================================================
+    echo.
+    pause
+    endlocal
+    exit /b 0
 ) else (
     echo  One or more required checks failed.
     echo  Fix the issues listed above, then re-run scripts\test_config.bat.
+    echo ============================================================
+    echo.
+    pause
+    endlocal
     exit /b 1
 )
-echo ============================================================
-echo.
-endlocal

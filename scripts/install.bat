@@ -47,8 +47,8 @@ echo.
 
 REM -- Step 2: Copy module conf -------------------------------------------------
 echo [2/5] Setting up module config file...
-REM Derive conf location from SERVER_DBC_DIR (env\dist\data\dbc -> env\dist\configs\modules)
-set CONF_MODULES=%SERVER_DBC_DIR%\..\..\..\configs\modules
+REM Derive conf location from SERVER_DBC_DIR (bin\data\dbc -> env\dist\configs\modules)
+set CONF_MODULES=%SERVER_DBC_DIR%\..\..\..\env\dist\configs\modules
 set CONF_DIST=%CONF_MODULES%\mod_item_affixes.conf.dist
 set CONF=%CONF_MODULES%\mod_item_affixes.conf
 if exist "%CONF%" (
