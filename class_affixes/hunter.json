@@ -989,6 +989,60 @@
                 "display_name": "Raptor Strike: +20% Dmg, +5% Crit"
             }
         }
+        ,
+        {
+            "id": 5100,
+            "name": "Arcane Shot: Multi",
+            "affix_type": 2,
+            "weight": 50,
+            "spec_tree": 1,
+            "min_quality": 2,
+            "family": 9,
+            "flags": [2048, 0, 0],
+            "swap": {
+                "base_spell": 49045,
+                "solo_spell": 699001,
+                "combo_spell": 699003,
+                "swap_group": 1,
+                "swap_role": 1,
+                "chain_spells": [
+                    [699001, 699003],
+                    [699004, 699005],
+                    [699006, 699007],
+                    [699008, 699009],
+                    [699010, 699011],
+                    [699012, 699013],
+                    [699014, 699015],
+                    [699016, 699017],
+                    [699018, 699019]
+                ]
+            },
+            "tooltip": {
+                "enchant_id": 6001,
+                "display_name": "Arcane Shot: Multi"
+            }
+        },
+        {
+            "id": 5101,
+            "name": "Arcane Shot: Sting",
+            "affix_type": 2,
+            "weight": 50,
+            "spec_tree": 1,
+            "min_quality": 2,
+            "family": 9,
+            "flags": [2048, 0, 0],
+            "swap": {
+                "base_spell": 49045,
+                "solo_spell": 699002,
+                "combo_spell": 699003,
+                "swap_group": 1,
+                "swap_role": 2
+            },
+            "tooltip": {
+                "enchant_id": 6002,
+                "display_name": "Arcane Shot: Sting"
+            }
+        }
     ],
     "affix_examples": [
         {

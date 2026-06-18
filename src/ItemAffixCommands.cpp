@@ -29,8 +29,6 @@ public:
     }
 
     // .affix reroll
-    // Marks the player in "pending reroll" mode.  The next Alt+Click (ROLL message)
-    // rerolls all affixes on that item from scratch instead of rolling the next unrolled slot.
     static bool HandleAffixRerollCommand(ChatHandler* handler)
     {
         Player* player = handler->GetSession()->GetPlayer();
@@ -39,68 +37,76 @@ public:
         return true;
     }
 
-    // .affix info
-    // Prints current affix slot states for the item in the main hand.
+    // .affix info — shows affix data for every equipped item that has affix rows.
     static bool HandleAffixInfoCommand(ChatHandler* handler)
     {
         Player* player = handler->GetSession()->GetPlayer();
 
-        Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
-        if (!item)
-        {
-            handler->SendErrorMessage("No item in main hand.");
-            return false;
-        }
-
-        ItemTemplate const* proto = item->GetTemplate();
-        handler->PSendSysMessage("|cffFFFF00[ItemAffixes]|r %s (entry %u, GUID %u, quality %u)",
-            proto ? proto->Name1.c_str() : "?",
-            item->GetEntry(),
-            item->GetGUID().GetCounter(),
-            proto ? proto->Quality : 0u);
-
-        sItemAffixMgr->SendItemStatus(player, item);
-
-        QueryResult result = CharacterDatabase.Query(
-            "SELECT affix_slot, roll_state, affix_id, rolled_value, pending_opts "
-            "FROM item_affix WHERE item_guid = {} ORDER BY affix_slot",
-            static_cast<uint64>(item->GetGUID().GetRawValue()));
-
-        if (!result)
-        {
-            handler->SendSysMessage("  (no affix rows — item not eligible or not yet looted)");
-            return true;
-        }
-
         static const char* stateNames[] = { "UNROLLED", "PENDING", "APPLIED" };
-        do
-        {
-            Field* f = result->Fetch();
-            uint8  slot      = f[0].Get<uint8>();
-            uint8  state     = f[1].Get<uint8>();
-            uint32 affixId   = f[2].Get<uint32>();
-            int32  rolled    = f[3].Get<int32>();
-            std::string opts = f[4].Get<std::string>();
+        static const char* slotNames[]  = {
+            "Head","Neck","Shoulders","Shirt","Chest","Waist","Legs","Feet",
+            "Wrist","Hands","Ring1","Ring2","Trinket1","Trinket2","Back",
+            "MainHand","OffHand","Ranged","Tabard"
+        };
 
-            const char* stateName = (state <= 2) ? stateNames[state] : "UNKNOWN";
-            if (state == 2 && affixId)
+        bool anyItem = false;
+        for (uint8 equipSlot = EQUIPMENT_SLOT_START; equipSlot < EQUIPMENT_SLOT_END; ++equipSlot)
+        {
+            Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, equipSlot);
+            if (!item)
+                continue;
+
+            QueryResult result = CharacterDatabase.Query(
+                "SELECT affix_slot, roll_state, affix_id, rolled_value, pending_opts "
+                "FROM item_affix WHERE item_guid = {} ORDER BY affix_slot",
+                static_cast<uint64>(item->GetGUID().GetRawValue()));
+
+            if (!result)
+                continue;
+
+            anyItem = true;
+            ItemTemplate const* proto = item->GetTemplate();
+            const char* slotLabel = (equipSlot < 19) ? slotNames[equipSlot] : "?";
+            handler->PSendSysMessage("|cffFFFF00[{}]|r {} (entry {}, GUID {})",
+                slotLabel,
+                proto ? proto->Name1.c_str() : "?",
+                item->GetEntry(),
+                item->GetGUID().GetCounter());
+
+            sItemAffixMgr->SendItemStatus(player, item);
+
+            do
             {
-                auto const* def = sItemAffixMgr->GetAffixDef(affixId);
-                handler->PSendSysMessage("  Slot %u: %s — %s (id %u, val %d)",
-                    slot, stateName,
-                    def ? def->name.c_str() : "?",
-                    affixId, rolled);
-            }
-            else if (state == 1)
-            {
-                handler->PSendSysMessage("  Slot %u: %s — pending opts: [%s]",
-                    slot, stateName, opts.c_str());
-            }
-            else
-            {
-                handler->PSendSysMessage("  Slot %u: %s", slot, stateName);
-            }
-        } while (result->NextRow());
+                Field* f = result->Fetch();
+                uint8       affixSlot = f[0].Get<uint8>();
+                uint8       state     = f[1].Get<uint8>();
+                uint32      affixId   = f[2].Get<uint32>();
+                int32       rolled    = f[3].Get<int32>();
+                std::string opts      = f[4].Get<std::string>();
+
+                const char* stateName = (state <= 2) ? stateNames[state] : "UNKNOWN";
+                if (state == 2 && affixId)
+                {
+                    auto const* def = sItemAffixMgr->GetAffixDef(affixId);
+                    handler->PSendSysMessage("  [{}] {} - {} (id {}, val {})",
+                        affixSlot, stateName,
+                        def ? def->name.c_str() : "?",
+                        affixId, rolled);
+                }
+                else if (state == 1)
+                {
+                    handler->PSendSysMessage("  [{}] {} - pending opts: [{}]",
+                        affixSlot, stateName, opts.c_str());
+                }
+                else
+                {
+                    handler->PSendSysMessage("  [{}] {}", affixSlot, stateName);
+                }
+            } while (result->NextRow());
+        }
+
+        if (!anyItem)
+            handler->SendSysMessage("No equipped items have affix data.");
 
         return true;
     }

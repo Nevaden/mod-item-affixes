@@ -9,6 +9,7 @@
 #include "ObjectAccessor.h"
 #include "Player.h"
 #include "ScriptMgr.h"
+#include "SpellAuraEffects.h"
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "SpellScript.h"
@@ -115,9 +116,11 @@ public:
         sImprintMgr->SyncImprints(player);
     }
 
-    void OnPlayerUnequip(Player* player, Item* /*it*/) override
+    void OnPlayerUnequip(Player* player, Item* it) override
     {
-        sItemAffixMgr->SyncAffixes(player);
+        // Pass the item GUID so Phase 1 skips it — the hook fires before the slot vacates,
+        // so without the exclusion Phase 2 would immediately re-apply the variant we just removed.
+        sItemAffixMgr->SyncAffixes(player, it ? it->GetGUID() : ObjectGuid::Empty);
         sImprintMgr->SyncImprints(player);
     }
 

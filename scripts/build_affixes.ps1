@@ -139,6 +139,14 @@ $lines.Add("  ``role_mask``            TINYINT UNSIGNED  NOT NULL DEFAULT 0,")
 $lines.Add("  PRIMARY KEY (``id``)")
 $lines.Add(") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;")
 $lines.Add("")
+$lines.Add("CREATE TABLE IF NOT EXISTS ``spell_swap_chain_spells`` (")
+$lines.Add("  ``affix_id``    INT UNSIGNED     NOT NULL,")
+$lines.Add("  ``chain_count`` TINYINT UNSIGNED NOT NULL,")
+$lines.Add("  ``solo_spell``  INT UNSIGNED     NOT NULL DEFAULT 0,")
+$lines.Add("  ``combo_spell`` INT UNSIGNED     NOT NULL DEFAULT 0,")
+$lines.Add("  PRIMARY KEY (``affix_id``, ``chain_count``)")
+$lines.Add(") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;")
+$lines.Add("")
 
 # Idempotent ALTER blocks — spellmod multi-effect columns
 $lines.Add("-- Idempotent ALTERs: add columns to existing tables (MySQL 5.7+ / MariaDB)")
@@ -181,15 +189,62 @@ if ($allRemoved -and $allRemoved.Count -gt 0) {
     }
 }
 
+$chainSpellRows = [System.Collections.Generic.List[object]]::new()
+
 foreach ($affix in $allAffixes) {
     # Skip disabled entries (enabled: false flag)
     if ($affix.PSObject.Properties['enabled'] -and $affix.enabled -eq $false) {
         continue
     }
 
-    $isStatAffix = ($affix.PSObject.Properties['affix_type'] -and [int]$affix.affix_type -eq 1)
+    $isStatAffix  = ($affix.PSObject.Properties['affix_type'] -and [int]$affix.affix_type -eq 1)
+    $isSpellSwap  = ($affix.PSObject.Properties['affix_type'] -and [int]$affix.affix_type -eq 2)
 
-    if ($isStatAffix) {
+    if ($isSpellSwap) {
+        # ---- spell-swap affix path ----
+        # spellmod columns are repurposed: op=swap_group, value=solo_spell, value2=combo_spell
+        # carrier_spell_id = base spell to replace; stat_op = swap role (1=chain, 2=mark)
+        $swapGroup  = [int]$affix.swap.swap_group
+        $soloSpell  = [int]$affix.swap.solo_spell
+        $comboSpell = [int]$affix.swap.combo_spell
+        $swapRole   = [int]$affix.swap.swap_role
+        $baseSpell  = [int]$affix.swap.base_spell
+        $family     = [int]$affix.family
+        $f0 = [int]$affix.flags[0];  $f1 = [int]$affix.flags[1];  $f2 = [int]$affix.flags[2]
+        $itemCat    = 0
+        $specTree   = if ($affix.PSObject.Properties['spec_tree']) { [int]$affix.spec_tree } else { 255 }
+        $roleMask   = 0
+        $statOp     = $swapRole
+        $carrierId  = $baseSpell
+        $enchantId  = [int]$affix.tooltip.enchant_id
+        $statTiersStr = ""
+        $levelMin = 1;  $levelMax = 80
+        $affixType = 2
+        $op  = $swapGroup;  $typ  = 107;  $val  = $soloSpell
+        $op2 = 255;         $typ2 = 107;  $val2 = $comboSpell
+        $op3 = 255;         $typ3 = 107;  $val3 = 0
+        $op4 = 255;         $typ4 = 107;  $val4 = 0
+
+        # Collect chain_spells entries for the spell_swap_chain_spells table
+        if ($affix.swap.PSObject.Properties['chain_spells']) {
+            $countIdx = 1
+            foreach ($pair in $affix.swap.chain_spells) {
+                $chainSpellRows.Add([PSCustomObject]@{
+                    affixId    = [int]$affix.id
+                    chainCount = $countIdx
+                    soloSpell  = [int]$pair[0]
+                    comboSpell = [int]$pair[1]
+                })
+                $countIdx++
+            }
+        }
+
+        $lines.Add("-- ----------------------------------------------------------------")
+        $lines.Add("-- Affix $($affix.id): $($affix.name)  [SPELL_SWAP]")
+        $lines.Add("-- Base : $baseSpell -> Solo: $soloSpell | Combo: $comboSpell")
+        $lines.Add("-- Group: $swapGroup | Role: $swapRole | Family: $family | Flags: [$f0, $f1, $f2]")
+        $lines.Add("-- ----------------------------------------------------------------")
+    } elseif ($isStatAffix) {
         # ---- stat affix path ----
         $statOp      = [int]$affix.stat.op
         $statOpLabel = if ($statOpNames.ContainsKey($statOp)) { $statOpNames[$statOp] } else { "op=$statOp" }
@@ -288,7 +343,7 @@ foreach ($affix in $allAffixes) {
     $lines.Add("     spellmod_op4, spellmod_type4, spellmod_value4,")
     $lines.Add("     affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask)")
     $lines.Add("VALUES")
-    if ($isStatAffix) {
+    if ($isStatAffix -or $isSpellSwap) {
         $lines.Add("    ($($affix.id), '$safeName', $($affix.weight), $($affix.min_quality), $op, $typ, $val,")
         $lines.Add("     $family, $f0, $f1, $f2,")
         $lines.Add("     $carrierId, $enchantId,")
@@ -335,6 +390,20 @@ foreach ($affix in $allAffixes) {
     $lines.Add("    item_category = VALUES(item_category),")
     $lines.Add("    spec_tree = VALUES(spec_tree),")
     $lines.Add("    role_mask = VALUES(role_mask);")
+    $lines.Add("")
+}
+
+# Emit spell_swap_chain_spells data collected from all chain_spells arrays
+if ($chainSpellRows.Count -gt 0) {
+    $affixIdList = (($chainSpellRows | Select-Object -ExpandProperty affixId -Unique) -join ',')
+    $lines.Add("-- spell_swap_chain_spells: chain-count variant spell IDs for SPELL_SWAP affixes")
+    $lines.Add("DELETE FROM ``spell_swap_chain_spells`` WHERE ``affix_id`` IN ($affixIdList);")
+    $lines.Add("INSERT INTO ``spell_swap_chain_spells`` (``affix_id``, ``chain_count``, ``solo_spell``, ``combo_spell``) VALUES")
+    $rowParts = [System.Collections.Generic.List[string]]::new()
+    foreach ($row in $chainSpellRows) {
+        $rowParts.Add("    ($($row.affixId), $($row.chainCount), $($row.soloSpell), $($row.comboSpell))")
+    }
+    $lines.Add(($rowParts -join ",`r`n") + ";")
     $lines.Add("")
 }
 

@@ -1,13 +1,15 @@
 @echo off
 setlocal
 
-REM ── Configure for your installation ──────────────────────────────────────
-set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
-set USER=acore
-set PASS=YOUR_PASSWORD
-REM ──────────────────────────────────────────────────────────────────────────
-
 set SCRIPT_DIR=%~dp0
+
+if not exist "%SCRIPT_DIR%db_config.bat" (
+    echo ERROR: scripts\db_config.bat not found.
+    echo Copy scripts\db_config.bat.example to scripts\db_config.bat and fill in your local MySQL credentials.
+    pause & exit /b 1
+)
+call "%SCRIPT_DIR%db_config.bat"
+
 set SQL_DIR=%SCRIPT_DIR%..\data\sql\db-world
 
 echo ============================================================

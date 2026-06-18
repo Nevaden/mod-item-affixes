@@ -5,10 +5,14 @@
 param(
     [string]$AffixesDir      = "$PSScriptRoot\..\affixes",
     [string]$ClassAffixesDir = "$PSScriptRoot\..\class_affixes",
-    [string]$ServerDBC       = "C:\AzerothCore\bin\data\dbc\SpellItemEnchantment.dbc",
+    # Server bin/ always sits 4 levels above a module's scripts/ folder
+    # (<root>\azerothcore\modules\<module>\scripts -> <root>\bin), so this
+    # is derived from the module's own location instead of a fixed drive path.
+    [string]$ServerDBC       = "$PSScriptRoot\..\..\..\..\bin\data\dbc\SpellItemEnchantment.dbc",
     [string]$MpqBuild        = "$PSScriptRoot\..\tools\mpqbuild.exe",
-    [string]$Patch4          = "C:\World of Warcraft\Data\patch-4.MPQ",
-    [string]$PatchEnUS4      = "C:\World of Warcraft\Data\enUS\patch-enUS-4.MPQ"
+    # Configure for your installation: the WoW client's Data folder.
+    [string]$Patch4          = "E:\servers\Wow\WoW HD\data\patch-4.MPQ",
+    [string]$PatchEnUS4      = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-4.MPQ"
 )
 
 Write-Host "=== Patching SpellItemEnchantment.dbc ==="

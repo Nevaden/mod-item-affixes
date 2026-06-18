@@ -197,7 +197,7 @@ static float GetStatCost(uint8 statOp)
 // Roll a stat value from the item's allocated budget slice.
 // budget = totalItemBudget * qualityFraction (caller computes this).
 // minRoll: fraction of max that forms the low end of the roll range (e.g. 0.75).
-// MOVE_SPEED is a special case — it is a flat percentage bonus, not budget-based.
+// MOVE_SPEED is a special case — not budget-based.
 static int32 RollBudgetStatValue(uint8 statOp, float budget, float minRoll)
 {
     if (statOp == static_cast<uint8>(GSTAT_MOVE_SPEED))
@@ -427,10 +427,55 @@ void ItemAffixMgr::LoadAffixTemplates()
                 continue;
             }
         }
+        else if (def.affixType == AFFIX_TYPE_SPELL_SWAP)
+        {
+            uint32 soloSpell  = static_cast<uint32>(def.effects[0].value);
+            uint32 comboSpell = static_cast<uint32>(def.effects[1].value);
+            if (!sSpellMgr->GetSpellInfo(def.carrierSpellId))
+            {
+                LOG_ERROR("module", "mod-item-affixes: SPELL_SWAP affix {} has invalid base spell {}, skipping.",
+                    def.id, def.carrierSpellId);
+                continue;
+            }
+            if (soloSpell && !sSpellMgr->GetSpellInfo(soloSpell))
+            {
+                LOG_ERROR("module", "mod-item-affixes: SPELL_SWAP affix {} has invalid solo_spell {}, skipping.",
+                    def.id, soloSpell);
+                continue;
+            }
+            if (comboSpell && !sSpellMgr->GetSpellInfo(comboSpell))
+            {
+                LOG_ERROR("module", "mod-item-affixes: SPELL_SWAP affix {} has invalid combo_spell {}, skipping.",
+                    def.id, comboSpell);
+                continue;
+            }
+        }
 
         _defs[def.id] = std::move(def);
         ++count;
     } while (result->NextRow());
+
+    // Load per-chain-count spell pairs for SPELL_SWAP affixes (spell_swap_chain_spells table).
+    if (QueryResult chainResult = WorldDatabase.Query(
+        "SELECT affix_id, chain_count, solo_spell, combo_spell "
+        "FROM spell_swap_chain_spells ORDER BY affix_id, chain_count"))
+    {
+        do
+        {
+            Field* f      = chainResult->Fetch();
+            uint32 affId  = f[0].Get<uint32>();
+            uint8  cnt    = f[1].Get<uint8>();
+            uint32 solo   = f[2].Get<uint32>();
+            uint32 combo  = f[3].Get<uint32>();
+            auto it = _defs.find(affId);
+            if (it == _defs.end() || it->second.affixType != AFFIX_TYPE_SPELL_SWAP || cnt == 0)
+                continue;
+            auto& v = it->second.chainSwapSpells;
+            if (v.size() < static_cast<size_t>(cnt))
+                v.resize(cnt, {0u, 0u});
+            v[cnt - 1] = { solo, combo };
+        } while (chainResult->NextRow());
+    }
 
     // Generic (family=0) affixes get 3x pool representation so they are
     // more common than class-specific affixes despite their lower raw count.
@@ -758,7 +803,8 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
             if (!ItemMatchesCategory(itemCat, def->itemCategory))
                 continue;
 
-        if (def->affixType == AFFIX_TYPE_STAT && def->statOp != static_cast<uint8>(GSTAT_MOVE_SPEED))
+        if (def->affixType == AFFIX_TYPE_STAT
+            && def->statOp != static_cast<uint8>(GSTAT_MOVE_SPEED))
         {
             // Skip stat affixes whose budget would compute to zero for this item.
             if (static_cast<int32>(itemBudget / GetStatCost(def->statOp)) < 1)
@@ -906,19 +952,15 @@ std::vector<ItemAffixRecord> ItemAffixMgr::LoadItemAffixes(uint64 itemGuid)
     if (!result)
         return {};
 
-    std::array<ItemAffixRecord, 3> slots{};
+    std::vector<ItemAffixRecord> out;
     do
     {
-        Field* f    = result->Fetch();
-        uint8  slot = f[0].Get<uint8>();
-        if (slot < 3)
-            slots[slot] = ItemAffixRecord{ f[1].Get<uint32>(), f[2].Get<int32>() };
+        Field* f       = result->Fetch();
+        uint32 affixId = f[1].Get<uint32>();
+        int32  rolled  = f[2].Get<int32>();
+        if (affixId)
+            out.push_back(ItemAffixRecord{ affixId, rolled });
     } while (result->NextRow());
-
-    std::vector<ItemAffixRecord> out;
-    for (auto const& rec : slots)
-        if (rec.affixId)
-            out.push_back(rec);
     return out;
 }
 
@@ -1313,7 +1355,7 @@ void ItemAffixMgr::OnSocketGem(Player* player, Item* gearItem, Item* gemItem, ui
 // ReapplyAllEquipped
 // ---------------------------------------------------------------------------
 
-void ItemAffixMgr::ReapplyAllEquipped(Player* player)
+void ItemAffixMgr::ReapplyAllEquipped(Player* player, ObjectGuid excludeGuid)
 {
     if (!player)
         return;
@@ -1321,20 +1363,23 @@ void ItemAffixMgr::ReapplyAllEquipped(Player* player)
     for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
     {
         Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
-        if (item)
+        if (item && item->GetGUID() != excludeGuid)
         {
             ApplyAffixes(player, item);
             ApplyTalentAffixes(player, item);
             ApplyGemAffixes(player, item);
         }
     }
+
+    // Post-pass: apply spell swaps after all items are visible so combo detection works.
+    CollectAndApplySpellSwaps(player, excludeGuid);
 }
 
 // ---------------------------------------------------------------------------
 // SyncAffixes
 // ---------------------------------------------------------------------------
 
-void ItemAffixMgr::SyncAffixes(Player* player)
+void ItemAffixMgr::SyncAffixes(Player* player, ObjectGuid excludeGuid)
 {
     if (!player)
         return;
@@ -1361,9 +1406,10 @@ void ItemAffixMgr::SyncAffixes(Player* player)
             for (ActiveStatMod const& sm : statMods)
                 ApplyGenericStat(player, sm.statOp, sm.value, false);
         data->activeGemStatMods.clear();
+
     }
 
-    ReapplyAllEquipped(player);
+    ReapplyAllEquipped(player, excludeGuid);
 }
 
 // ---------------------------------------------------------------------------
@@ -1379,6 +1425,10 @@ void ItemAffixMgr::RemoveAllActiveMods(Player* player)
     if (!data)
         return;
 
+    // Intentionally NOT calling RemoveSpellSwaps here: variant spells are left in
+    // character_spell so the Lua PLAYER_LOGOUT snapshot can see them on the action bar.
+    // Phase 0 in CollectAndApplySpellSwaps removes all variants unconditionally on next login.
+
     for (auto& [guid, mods] : data->activeMods)
         for (SpellModifier* mod : mods)
             player->AddSpellMod(mod, false);
@@ -1393,6 +1443,225 @@ void ItemAffixMgr::RemoveAllActiveMods(Player* player)
         for (SpellModifier* mod : mods)
             player->AddSpellMod(mod, false);
     data->activeTalentMods.clear();
+}
+
+// ---------------------------------------------------------------------------
+// CollectAndApplySpellSwaps
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::CollectAndApplySpellSwaps(Player* player, ObjectGuid excludeGuid)
+{
+    if (!player)
+        return;
+
+    // Build variant→base map.  Used by Phase 2 (find stale variants) and by
+    // ForceReapplySpellSwaps (full clear on demand via ".affix reapply").
+    std::unordered_map<uint32, uint32> variantToBase; // variant spell id -> carrier (base) spell id
+    for (auto const& [id, def] : _defs)
+    {
+        if (def.affixType != AFFIX_TYPE_SPELL_SWAP)
+            continue;
+        for (auto const& [solo, combo] : def.chainSwapSpells)
+        {
+            if (solo)  variantToBase[solo]  = def.carrierSpellId;
+            if (combo) variantToBase[combo] = def.carrierSpellId;
+        }
+        uint32 soloSpell  = static_cast<uint32>(def.effects[0].value);
+        uint32 comboSpell = static_cast<uint32>(def.effects[1].value);
+        if (soloSpell)  variantToBase[soloSpell]  = def.carrierSpellId;
+        if (comboSpell) variantToBase[comboSpell] = def.carrierSpellId;
+    }
+
+    // Phase 1: Collect SPELL_SWAP affixes from all currently equipped items.
+    struct SwapState
+    {
+        AffixDefinition const* chainDef  = nullptr;
+        uint32 markSoloSpell             = 0;
+        uint32 chainCount                = 0;
+        bool   markActive                = false;
+    };
+    std::unordered_map<uint32, SwapState> swapByBase;
+
+    for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
+    {
+        Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+        if (!item)
+            continue;
+        if (item->GetGUID() == excludeGuid)
+            continue;
+
+        for (ItemAffixRecord const& rec : LoadItemAffixes(item->GetGUID().GetRawValue()))
+        {
+            AffixDefinition const* def = GetAffixDef(rec.affixId);
+            if (!def || def->affixType != AFFIX_TYPE_SPELL_SWAP)
+                continue;
+
+            uint32 baseSpell = def->carrierSpellId;
+            uint32 soloSpell = static_cast<uint32>(def->effects[0].value);
+            uint8  role      = def->statOp;  // 1=chain/multi, 2=sting
+
+            SwapState& state = swapByBase[baseSpell];
+            if (role == 1)
+            {
+                state.chainCount++;
+                if (!state.chainDef)
+                    state.chainDef = def;
+            }
+            else if (role == 2)
+            {
+                state.markActive = true;
+                if (!state.markSoloSpell)
+                    state.markSoloSpell = soloSpell;
+            }
+        }
+    }
+
+    ItemAffixPlayerData* data = player->CustomData.GetDefault<ItemAffixPlayerData>("ItemAffixData");
+
+    // Phase 2: Apply the correct variant for each equipped base spell.
+    // Key change from old design: if the player already has the correct variant, skip it entirely
+    // (no SMSG_REMOVED_SPELL, no action bar disruption).  Only fire a spell change when the
+    // variant actually needs to differ from what the player currently has.
+    std::unordered_map<uint32, uint32> newActiveSwaps;
+
+    for (auto const& [baseSpell, state] : swapByBase)
+    {
+        uint32 targetSpell = 0;
+
+        if (state.chainCount > 0 && state.chainDef)
+        {
+            bool useCombo = state.markActive;
+            auto const& csv = state.chainDef->chainSwapSpells;
+            if (!csv.empty())
+            {
+                size_t idx = std::min(static_cast<size_t>(state.chainCount - 1), csv.size() - 1);
+                targetSpell = useCombo ? csv[idx].second : csv[idx].first;
+            }
+            else
+            {
+                targetSpell = useCombo
+                    ? static_cast<uint32>(state.chainDef->effects[1].value)
+                    : static_cast<uint32>(state.chainDef->effects[0].value);
+            }
+        }
+        else if (state.markActive && state.markSoloSpell)
+        {
+            targetSpell = state.markSoloSpell;
+        }
+
+        if (!targetSpell)
+            continue;
+
+        // Already correct — track it and move on with no spell changes.
+        if (player->HasSpell(targetSpell))
+        {
+            newActiveSwaps[baseSpell] = targetSpell;
+            continue;
+        }
+
+        // Find what the player currently has for this base spell so we know what to remove.
+        // Priority: session tracking → base spell → full variant scan (handles persisted variants
+        // on login when activeSpellSwaps is freshly empty).
+        uint32 currentSpell = 0;
+        auto activeIt = data->activeSpellSwaps.find(baseSpell);
+        if (activeIt != data->activeSpellSwaps.end() && player->HasSpell(activeIt->second))
+            currentSpell = activeIt->second;
+        else if (player->HasSpell(baseSpell))
+            currentSpell = baseSpell;
+        else
+        {
+            for (auto const& [variant, vBase] : variantToBase)
+            {
+                if (vBase == baseSpell && player->HasSpell(variant))
+                {
+                    currentSpell = variant;
+                    break;
+                }
+            }
+        }
+
+        if (currentSpell)
+            player->removeSpell(currentSpell, SPEC_MASK_ALL, false);
+
+        player->learnSpell(targetSpell);
+        newActiveSwaps[baseSpell] = targetSpell;
+        SendAddonMsg(player, Acore::StringFormat("SWAP|{}|{}", currentSpell ? currentSpell : baseSpell, targetSpell));
+    }
+
+    // Phase 3: Remove any variant the player has that is no longer needed.
+    // Handles (a) affix removed while offline and (b) unequipping all swap affixes mid-session.
+    // Skips variants that Phase 2 just set — those removes already happened above.
+    for (auto const& [variant, base] : variantToBase)
+    {
+        if (!player->HasSpell(variant))
+            continue;
+        if (newActiveSwaps.find(base) != newActiveSwaps.end())
+            continue;  // Phase 2 owns this base spell slot
+
+        player->removeSpell(variant, SPEC_MASK_ALL, false);
+        if (!player->HasSpell(base))
+            player->learnSpell(base);
+        SendAddonMsg(player, Acore::StringFormat("SWAP|{}|{}", variant, base));
+    }
+
+    data->activeSpellSwaps = std::move(newActiveSwaps);
+}
+
+// ---------------------------------------------------------------------------
+// RemoveSpellSwaps
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::RemoveSpellSwaps(Player* player, ItemAffixPlayerData* data)
+{
+    if (!data || data->activeSpellSwaps.empty())
+        return;
+
+    for (auto const& [baseSpell, variantSpell] : data->activeSpellSwaps)
+    {
+        if (!variantSpell)
+            continue;
+        if (player->HasSpell(variantSpell))
+        {
+            player->removeSpell(variantSpell, SPEC_MASK_ALL, false);
+            player->learnSpell(baseSpell);
+            SendAddonMsg(player, Acore::StringFormat("SWAP|{}|{}", variantSpell, baseSpell));
+        }
+    }
+    data->activeSpellSwaps.clear();
+}
+
+// ---------------------------------------------------------------------------
+// ForceReapplySpellSwaps
+// ---------------------------------------------------------------------------
+// Hard-reset: remove ALL known variants unconditionally, then re-run CollectAndApplySpellSwaps.
+// Equivalent to the old Phase 0 behaviour.  Intended for the future ".affix reapply" command
+// and for any situation where spell state may be inconsistent (e.g. after GM intervention).
+
+void ItemAffixMgr::ForceReapplySpellSwaps(Player* player)
+{
+    if (!player)
+        return;
+
+    for (auto const& [id, def] : _defs)
+    {
+        if (def.affixType != AFFIX_TYPE_SPELL_SWAP)
+            continue;
+        for (auto const& [solo, combo] : def.chainSwapSpells)
+        {
+            if (solo  && player->HasSpell(solo))  { player->removeSpell(solo,  SPEC_MASK_ALL, false); }
+            if (combo && player->HasSpell(combo))  { player->removeSpell(combo, SPEC_MASK_ALL, false); }
+        }
+        uint32 solo  = static_cast<uint32>(def.effects[0].value);
+        uint32 combo = static_cast<uint32>(def.effects[1].value);
+        if (solo  && player->HasSpell(solo))  { player->removeSpell(solo,  SPEC_MASK_ALL, false); if (!player->HasSpell(def.carrierSpellId)) player->learnSpell(def.carrierSpellId); }
+        if (combo && player->HasSpell(combo)) { player->removeSpell(combo, SPEC_MASK_ALL, false); if (!player->HasSpell(def.carrierSpellId)) player->learnSpell(def.carrierSpellId); }
+    }
+
+    ItemAffixPlayerData* data = player->CustomData.Get<ItemAffixPlayerData>("ItemAffixData");
+    if (data)
+        data->activeSpellSwaps.clear();
+
+    CollectAndApplySpellSwaps(player);
 }
 
 // ---------------------------------------------------------------------------

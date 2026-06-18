@@ -1,0 +1,8 @@
+@echo off
+REM Copy this file to db_config.bat (same folder) and fill in your local
+REM MySQL credentials. db_config.bat is gitignored and will never be
+REM committed, so your real password stays out of source control.
+
+set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
+set USER=acore
+set PASS=YOUR_PASSWORD

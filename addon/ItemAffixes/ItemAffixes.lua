@@ -439,6 +439,101 @@ function AFXM:RequestAllData()
 end
 
 -- ============================================================================
+-- Spell-swap action-bar updater
+-- Queue used when a swap arrives while in combat (action bars are locked).
+-- ============================================================================
+
+local pendingSwaps = {}  -- { {old=spellId, new=spellId}, ... }
+local worldEntered = false  -- true after PLAYER_ENTERING_WORLD; SWAP messages arriving before this are queued
+
+-- ItemAffixes_SwapBarSlots (SavedVariablesPerCharacter) persists bar positions
+-- for swap-variant spells across sessions.  Layout: { [spellId] = {slot,...} }
+local function GetSBS()
+    if not ItemAffixes_SwapBarSlots then
+        ItemAffixes_SwapBarSlots = {}
+    end
+    return ItemAffixes_SwapBarSlots
+end
+
+local function ExecuteActionBarSwap(oldSpellId, newSpellId)
+    if not oldSpellId or not newSpellId or oldSpellId == 0 or newSpellId == 0 then return end
+    local sbs = GetSBS()
+
+    -- Transfer saved bar slots from old spell to new.  This handles two cases:
+    --   1. Variant upgrade (699001 → 699004): sbs[old] carries the slot forward.
+    --   2. Relog restore (Phase 0 removes old without a SWAP message, but
+    --      sbs[new] was saved before logout and survives the session boundary).
+    if sbs[oldSpellId] then
+        sbs[newSpellId] = sbs[newSpellId] or sbs[oldSpellId]
+        sbs[oldSpellId] = nil
+    end
+
+    -- Place the new spell into every saved slot.
+    if sbs[newSpellId] and #sbs[newSpellId] > 0 then
+        for _, barSlot in ipairs(sbs[newSpellId]) do
+            PickupSpell(newSpellId)
+            PlaceAction(barSlot)
+            ClearCursor()
+        end
+        if AFX_DEBUG then
+            print("|cff44DDFF[ItemAffixes]|r SWAP " .. oldSpellId .. " -> " .. newSpellId
+                .. " (restored slot(s): " .. table.concat(sbs[newSpellId], ", ") .. ")")
+        end
+        return
+    end
+
+    -- Fallback for first-ever equip: search by name since we have no saved position.
+    -- By the time this fires the old spell is gone from the bar, but a same-named
+    -- lower rank (if known) would still be there and will be replaced.
+    local oldName = GetSpellInfo(oldSpellId)
+    if not oldName then
+        if AFX_DEBUG then
+            print("|cff44DDFF[ItemAffixes]|r SWAP " .. oldSpellId .. " -> " .. newSpellId .. " (no saved slot)")
+        end
+        return
+    end
+    local found = {}
+    for slot = 1, 120 do
+        local actionType, id = GetActionInfo(slot)
+        if actionType == "spell" and id then
+            if id == oldSpellId or GetSpellInfo(id) == oldName then
+                PickupSpell(newSpellId)
+                PlaceAction(slot)
+                ClearCursor()
+                found[#found + 1] = slot
+            end
+        end
+    end
+    if #found > 0 then
+        sbs[newSpellId] = found
+    end
+    if AFX_DEBUG then
+        print("|cff44DDFF[ItemAffixes]|r SWAP " .. oldSpellId .. " -> " .. newSpellId
+            .. (#found > 0 and " (name-matched slot(s): " .. table.concat(found, ", ") .. ")" or " (no slot found)"))
+    end
+end
+
+local function SnapshotBarOnLogout()
+    local sbs = GetSBS()
+    for barSlot = 1, 120 do
+        local actionType, id = GetActionInfo(barSlot)
+        if actionType == "spell" and id and id > 0 then
+            if not sbs[id] then sbs[id] = {} end
+            local found = false
+            for _, s in ipairs(sbs[id]) do
+                if s == barSlot then found = true; break end
+            end
+            if not found then
+                sbs[id][#sbs[id] + 1] = barSlot
+            end
+        end
+    end
+    if AFX_DEBUG then
+        print("|cff44DDFF[ItemAffixes]|r PLAYER_LOGOUT: bar snapshot saved")
+    end
+end
+
+-- ============================================================================
 -- Incoming message parser
 -- ============================================================================
 
@@ -777,6 +872,20 @@ function AFXM:OnServerMsg(msg)
     elseif cmd == "ERR" then
         local reason = parts[4] or (parts[2] ~= "0" and parts[2]) or "unknown"
         print("|cff44DDFF[ItemAffixes]|r " .. reason)
+
+    elseif cmd == "SWAP" then
+        local oldSpell = tonumber(parts[2])
+        local newSpell = tonumber(parts[3])
+        if oldSpell and newSpell then
+            if InCombatLockdown() or not worldEntered then
+                pendingSwaps[#pendingSwaps + 1] = {old = oldSpell, new = newSpell}
+                if AFX_DEBUG then
+                    print("|cff44DDFF[ItemAffixes]|r SWAP queued (" .. (not worldEntered and "pre-world" or "in combat") .. "): " .. oldSpell .. " -> " .. newSpell)
+                end
+            else
+                ExecuteActionBarSwap(oldSpell, newSpell)
+            end
+        end
     end
 end
 
@@ -2114,6 +2223,8 @@ frame:RegisterEvent("TRADE_TARGET_ITEM_CHANGED")
 frame:RegisterEvent("TRADE_CLOSED")
 frame:RegisterEvent("AUCTION_HOUSE_CLOSED")
 frame:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
+frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+frame:RegisterEvent("PLAYER_LOGOUT")
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...
@@ -2138,6 +2249,13 @@ frame:SetScript("OnEvent", function(self, event, ...)
         auctionGroupOffset = {}
         AFXM:SendToServer("CONFIG")
         AFXM:SendToServer("ALLDATA")
+        worldEntered = true
+        if #pendingSwaps > 0 then
+            for _, swap in ipairs(pendingSwaps) do
+                ExecuteActionBarSwap(swap.old, swap.new)
+            end
+            pendingSwaps = {}
+        end
 
     elseif event == "BAG_UPDATE_DELAYED" then
         -- Clear bag cache then send ALLDATA.  BAG_UPDATE_DELAYED fires once per
@@ -2234,6 +2352,23 @@ frame:SetScript("OnEvent", function(self, event, ...)
         auctionGroupOffset = {}
         -- Also cancel any in-progress imprint apply mode (user left context).
         CancelImprintApplyMode()
+
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        -- Out of combat: flush any spell-swap action bar updates that were queued
+        -- while combat lockdown prevented placing spells on action bars.
+        if #pendingSwaps > 0 then
+            for _, swap in ipairs(pendingSwaps) do
+                ExecuteActionBarSwap(swap.old, swap.new)
+            end
+            pendingSwaps = {}
+        end
+
+    elseif event == "PLAYER_LOGOUT" then
+        -- Snapshot all bar spell positions before the session ends. This seeds
+        -- ItemAffixes_SwapBarSlots so relog can restore swap-spell slots even
+        -- though WoW clears action bars before any Lua event fires on login.
+        worldEntered = false
+        SnapshotBarOnLogout()
     end
 end)
 

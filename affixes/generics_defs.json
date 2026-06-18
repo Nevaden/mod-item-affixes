@@ -38,5 +38,7 @@
 
   ],
   "removedAffixes": [
+    { "id": 20500, "name": "Life Leech", "weight": 40, "min_quality": 2, "affix_type": 1, "stat": {"op": 19, "op_name": "LIFE_LEECH"}, "item_category": 1, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} },
+    { "id": 20501, "name": "Life Leech", "weight": 40, "min_quality": 2, "affix_type": 1, "stat": {"op": 19, "op_name": "LIFE_LEECH"}, "item_category": 2, "spec_tree": 255, "target": {"family": 0}, "tooltip": {"enchant_id": 0} }
   ]
 }

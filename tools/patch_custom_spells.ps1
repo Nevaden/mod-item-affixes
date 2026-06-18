@@ -56,11 +56,20 @@ $F_EFFECT_AURA_NAME_2   =  97
 $F_EFFECT_AMPLITUDE_0   =  98
 $F_EFFECT_AMPLITUDE_1   =  99
 $F_EFFECT_AMPLITUDE_2   = 100
+$F_EFF_MULT_VALUE_0     = 101  # float — EffectMultipleValue[0] (chain jump damage multiplier)
+$F_EFF_MULT_VALUE_1     = 102
+$F_EFF_MULT_VALUE_2     = 103
+$F_EFF_CHAIN_TARGETS_0  = 104
+$F_EFF_CHAIN_TARGETS_1  = 105
+$F_EFF_CHAIN_TARGETS_2  = 106
+$F_EFF_TRIGGER_SPELL_0  = 116
+$F_EFF_TRIGGER_SPELL_1  = 117
+$F_EFF_TRIGGER_SPELL_2  = 118
 $F_EFF_DMG_MULT_0       = 216
 $F_EFF_DMG_MULT_1       = 217
 $F_EFF_DMG_MULT_2       = 218
+$F_MANA_COST_PCT        = 204
 $F_SPELL_VISUAL_0       = 131
-$F_SPELL_VISUAL_1       = 132
 $F_SPELL_ICON_ID        = 133
 $F_ACTIVE_ICON_ID       = 134
 $F_SPELL_NAME_0         = 136
@@ -118,20 +127,28 @@ $AuraTypeMap      = @{ PERIODIC_DUMMY=226; DUMMY=4; PERIODIC_DAMAGE=3; PERIODIC_
 $TargetMap        = @{ TARGET_SELF=1; TARGET_UNIT_TARGET_ENEMY=6; TARGET_UNIT_TARGET_ALLY=21; TARGET_UNIT_TARGET_ANY=25; TARGET_UNIT_NEARBY_ENEMY=15 }
 
 # Per-effect field index arrays (index 0/1/2)
-$EffTypeFields   = @($F_EFFECT_0,          $F_EFFECT_1,          $F_EFFECT_2)
-$EffTargetFields = @($F_EFFECT_TARGET_A_0,  $F_EFFECT_TARGET_A_1, $F_EFFECT_TARGET_A_2)
-$EffAuraFields   = @($F_EFFECT_AURA_NAME_0, $F_EFFECT_AURA_NAME_1,$F_EFFECT_AURA_NAME_2)
-$EffAmpFields    = @($F_EFFECT_AMPLITUDE_0, $F_EFFECT_AMPLITUDE_1, $F_EFFECT_AMPLITUDE_2)
-$EffBPFields     = @($F_EFFECT_BASE_PTS_0,  $F_EFFECT_BASE_PTS_1,  $F_EFFECT_BASE_PTS_2)
+$EffTypeFields         = @($F_EFFECT_0,             $F_EFFECT_1,             $F_EFFECT_2)
+$EffTargetFields       = @($F_EFFECT_TARGET_A_0,    $F_EFFECT_TARGET_A_1,    $F_EFFECT_TARGET_A_2)
+$EffAuraFields         = @($F_EFFECT_AURA_NAME_0,   $F_EFFECT_AURA_NAME_1,   $F_EFFECT_AURA_NAME_2)
+$EffAmpFields          = @($F_EFFECT_AMPLITUDE_0,   $F_EFFECT_AMPLITUDE_1,   $F_EFFECT_AMPLITUDE_2)
+$EffBPFields           = @($F_EFFECT_BASE_PTS_0,    $F_EFFECT_BASE_PTS_1,    $F_EFFECT_BASE_PTS_2)
+$EffMultValueFields    = @($F_EFF_MULT_VALUE_0,     $F_EFF_MULT_VALUE_1,     $F_EFF_MULT_VALUE_2)
+$EffChainTargetFields  = @($F_EFF_CHAIN_TARGETS_0,  $F_EFF_CHAIN_TARGETS_1,  $F_EFF_CHAIN_TARGETS_2)
+$EffTriggerSpellFields = @($F_EFF_TRIGGER_SPELL_0,  $F_EFF_TRIGGER_SPELL_1,  $F_EFF_TRIGGER_SPELL_2)
 
-function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]]$strList)
+function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]]$strList, [byte[]]$baseRec)
 {
-    $rec = New-Object byte[] 936
+    if ($null -ne $baseRec)
+        { $rec = $baseRec.Clone() }
+    else
+        { $rec = New-Object byte[] 936 }
 
     SetU32 $rec $F_ID                  ([uint32]$spell.id)
     SetU32 $rec $F_DISPEL              ([uint32]$spell.dispel_type)
-    SetU32 $rec $F_TARGETS             ([uint32]$spell.targets_flag)
-    SetU32 $rec $F_CASTING_TIME_INDEX  ([uint32]$spell.cast_time_index)
+    if ($spell.PSObject.Properties['targets_flag'])
+        { SetU32 $rec $F_TARGETS ([uint32]$spell.targets_flag) }
+    if ($spell.PSObject.Properties['cast_time_index'])
+        { SetU32 $rec $F_CASTING_TIME_INDEX ([uint32]$spell.cast_time_index) }
     SetU32 $rec $F_INTERRUPT_FLAGS     ([uint32]$spell.interrupt_flags)
     SetU32 $rec $F_DURATION_INDEX      ([uint32]$spell.duration_index)
     SetI32 $rec $F_EQUIPPED_ITEM_CLASS -1
@@ -145,7 +162,16 @@ function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]
         else              { SetU32 $rec $F_POWER_TYPE ([uint32]$ptVal) }
     }
 
+    # Flat cost (0 when mana_cost_pct is used instead)
     SetU32 $rec $F_MANA_COST  ([uint32]$spell.cost)
+
+    # Percentage mana cost (overrides flat cost when non-zero)
+    if ($spell.PSObject.Properties['mana_cost_pct'] -and [int]$spell.mana_cost_pct -gt 0)
+    {
+        SetU32 $rec $F_MANA_COST_PCT ([uint32]$spell.mana_cost_pct)
+        SetU32 $rec $F_MANA_COST 0
+    }
+
     SetU32 $rec $F_RANGE_INDEX ([uint32]$spell.range_index)
 
     if ($SchoolMap.ContainsKey([string]$spell.school))
@@ -155,7 +181,7 @@ function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]
     if ($PreventionMap.ContainsKey([string]$spell.prevention_type))
         { SetU32 $rec $F_PREVENTION_TYPE ([uint32]$PreventionMap[[string]$spell.prevention_type]) }
 
-    if ($null -ne $spell.visual_id)
+    if ($spell.PSObject.Properties['visual_id'])
         { SetU32 $rec $F_SPELL_VISUAL_0 ([uint32]$spell.visual_id) }
     SetU32 $rec $F_SPELL_ICON_ID  ([uint32]$spell.icon)
     SetU32 $rec $F_ACTIVE_ICON_ID ([uint32]$spell.icon)
@@ -209,6 +235,18 @@ function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]
 
         if ($null -ne $eff.base_points)
             { SetI32 $rec $EffBPFields[$ei]     ([int]$eff.base_points) }
+
+        # Chain targets (EffectChainTargets) — non-zero enables chaining
+        if ($eff.PSObject.Properties['chain_targets'] -and [int]$eff.chain_targets -gt 0)
+            { SetU32 $rec $EffChainTargetFields[$ei]  ([uint32]$eff.chain_targets) }
+
+        # Chain jump damage multiplier (EffectMultipleValue, float) — 1.0 = full damage on bounce
+        if ($eff.PSObject.Properties['chain_mult'] -and [float]$eff.chain_mult -gt 0.0)
+            { SetF32 $rec $EffMultValueFields[$ei]    ([float]$eff.chain_mult) }
+
+        # Trigger spell (EffectTriggerSpell) — fired when effect type is TRIGGER_SPELL (64)
+        if ($eff.PSObject.Properties['trigger_spell'] -and [int]$eff.trigger_spell -gt 0)
+            { SetU32 $rec $EffTriggerSpellFields[$ei] ([uint32]$eff.trigger_spell) }
     }
 
     return $rec
@@ -255,7 +293,16 @@ Write-Host "  custom_spells.json: $($spells.Count) spell(s) to patch"
 $targetIds = @{}
 foreach ($sp in $spells) { $targetIds[[uint32]$sp.id] = $true }
 
+# Collect base_spell IDs we need to capture during the DBC scan
+$baseSpellIds = @{}
+foreach ($sp in $spells)
+{
+    if ($sp.PSObject.Properties['base_spell'] -and [int]$sp.base_spell -gt 0)
+        { $baseSpellIds[[uint32]$sp.base_spell] = $true }
+}
+
 $existingOffsets = @{}  # id -> byte offset in $raw
+$baseRecords     = @{}  # base spell id -> 936-byte copy of its DBC record
 for ($i = 0; $i -lt [int]$recordCount; $i++)
 {
     $off = $HEADER_SIZE + $i * [int]$recordSize
@@ -265,13 +312,22 @@ for ($i = 0; $i -lt [int]$recordCount; $i++)
         $existingOffsets[$sid] = $off
         Write-Host "  Spell $sid found at record $i -- will replace in-place."
     }
+    if ($baseSpellIds.ContainsKey($sid))
+    {
+        $copy = New-Object byte[] $recordSize
+        [Array]::Copy($raw, $off, $copy, 0, $recordSize)
+        $baseRecords[$sid] = $copy
+    }
 }
 
 $newSpells = @()   # spells that need to be appended
 $records   = @{}   # id -> 936-byte record
 foreach ($sp in $spells)
 {
-    $records[[uint32]$sp.id] = BuildSpellRecord $sp $strList
+    $baseRec = $null
+    if ($sp.PSObject.Properties['base_spell'] -and $baseRecords.ContainsKey([uint32]$sp.base_spell))
+        { $baseRec = $baseRecords[[uint32]$sp.base_spell] }
+    $records[[uint32]$sp.id] = BuildSpellRecord $sp $strList $baseRec
     if (-not $existingOffsets.ContainsKey([uint32]$sp.id))
         { $newSpells += $sp }
 }
@@ -314,7 +370,7 @@ Write-Host "  Patched Spell.dbc: $($dbcBytes.Length) bytes, $newRecordCount reco
 # ---------------------------------------------------------------------------
 # Step 2 — Patch SkillLineAbility.dbc (only for spells with skill_line set)
 # ---------------------------------------------------------------------------
-$slaSpells = @($spells | Where-Object { $null -ne $_.skill_line })
+$slaSpells = @($spells | Where-Object { $_.PSObject.Properties['skill_line'] })
 
 $slaBytes = $null
 if ($slaSpells.Count -gt 0)

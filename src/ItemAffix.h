@@ -7,6 +7,7 @@
 #include "Util.h"
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 // SpellModOp: SPELLMOD_CASTING_TIME=10  (from SpellDefines.h)
@@ -14,8 +15,9 @@
 
 enum AffixType : uint8
 {
-    AFFIX_TYPE_SPELLMOD = 0,   // existing: allocates SpellModifier*
-    AFFIX_TYPE_STAT     = 1,   // new: calls HandleStatFlatModifier / ApplyRatingMod / etc.
+    AFFIX_TYPE_SPELLMOD  = 0,  // allocates SpellModifier* per effect
+    AFFIX_TYPE_STAT      = 1,  // calls HandleStatFlatModifier / ApplyRatingMod / etc.
+    AFFIX_TYPE_SPELL_SWAP = 2, // replaces a base spell with a custom variant on equip
 };
 
 // One talent affix definition loaded from talent_affix_def (world DB).
@@ -113,6 +115,9 @@ struct AffixDefinition
     uint8       itemCategory;     // AffixItemCategory (ITEM_CAT_ANY=0 = rolls on anything)
     uint8       specTree;         // 255=no restriction; 0/1/2=dominant talent tree required
     uint8       roleMask;         // AffixRoleGroup bitmask; 0=any role
+    // SPELL_SWAP chain scaling: index = chainCount-1, pair = (soloSpell, comboSpell).
+    // Loaded from spell_swap_chain_spells. Empty = use effects[0]/[1] only (no scaling).
+    std::vector<std::pair<uint32, uint32>> chainSwapSpells;
 };
 
 struct ActiveStatMod
@@ -144,6 +149,11 @@ struct ItemAffixPlayerData : public DataMap::Base
     ObjectGuid feralAlphaWolfGuid;
     // Eternal Elemental — GUID of the permanent Water Elemental, for cleanup on unequip
     ObjectGuid eternalElementalGuid;
+
+    // --- Spell-swap system ---
+    // base spell ID -> variant spell ID currently taught to the player.
+    // Populated by CollectAndApplySpellSwaps; cleared by RemoveSpellSwaps.
+    std::unordered_map<uint32, uint32> activeSpellSwaps;
 };
 
 // Persisted affix record: one row in item_affix table (applied affixes only)
@@ -222,13 +232,15 @@ public:
     void OnSocketGem(Player* player, Item* gearItem, Item* gemItem, uint8 socketSlot);
 
     // Reapply mods for every currently equipped item.  Called on login.
-    void ReapplyAllEquipped(Player* player);
+    // excludeGuid: skip this item during both apply and spell-swap phases (used by unequip hook).
+    void ReapplyAllEquipped(Player* player, ObjectGuid excludeGuid = ObjectGuid::Empty);
 
     // Remove all active mods for a player.  Called before logout.
     void RemoveAllActiveMods(Player* player);
 
     // Remove ALL active mods then reapply for every currently equipped item.
-    void SyncAffixes(Player* player);
+    // excludeGuid: passed to ReapplyAllEquipped to exclude the item being unequipped.
+    void SyncAffixes(Player* player, ObjectGuid excludeGuid = ObjectGuid::Empty);
 
     AffixDefinition const* GetAffixDef(uint32 id) const;
 
@@ -287,6 +299,19 @@ private:
     // slots must already be loaded via LoadAffixSlots(rawGuid).
     void AppendAffixPayload(std::string& msg, uint64 rawGuid,
                             std::vector<AffixSlotInfo> const& slots);
+
+    // Scan all equipped items for SPELL_SWAP affixes and apply the correct variant.
+    // Called as a post-pass from ReapplyAllEquipped so the full equipped state is visible.
+    // excludeGuid: skip this item during the scan (used when the hook fires before slot vacates).
+    void CollectAndApplySpellSwaps(Player* player, ObjectGuid excludeGuid = ObjectGuid::Empty);
+
+    // Restore original spells for all active swaps. No longer called automatically; kept for
+    // internal use by ForceReapplySpellSwaps.
+    void RemoveSpellSwaps(Player* player, ItemAffixPlayerData* data);
+
+    // Hard-reset: strip all known variants unconditionally, then re-apply from current gear.
+    // Equivalent to old Phase 0 + reapply.  Call for ".affix reapply" or GM correction.
+    void ForceReapplySpellSwaps(Player* player);
 
     void LoadTalentAffixDefs();
     TalentAffixDef const* GetEligibleTalentAffix(Player* player, Item const* item, int8 specOverride = -1);
