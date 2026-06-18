@@ -208,12 +208,30 @@ void Player::ApplyModToSpell(SpellModifier* mod, Spell* spell)
 }
 ```
 
-Run `scripts\apply_core_patches.ps1` to apply all required patches automatically, or see
-`docs/CORE_PATCHES.md` for manual instructions.
+Run `scripts\apply_core_patches.ps1` to apply all required patches automatically. If the script cannot find a match (upstream AzerothCore changed the surrounding code), apply the changes manually — see `CORE_PATCHES.md`.
 
-### Step 3 — Build
+### Step 3 — Configure credentials
 
-Run `Rebuild-Server.bat` from the AzerothCore root, or manually:
+Copy `scripts\db_config.bat.example` to `scripts\db_config.bat` and fill in your local values:
+
+```bat
+set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
+set MYSQL_HOST=127.0.0.1
+set USER=acore
+set PASS=YOUR_PASSWORD
+
+set DB_CHAR=acore_characters
+set DB_WORLD=acore_world
+
+set SERVER_DBC_DIR=C:\path\to\server\bin\data\dbc
+set CLIENT_DATA_DIR=C:\path\to\WoW\Data
+```
+
+`db_config.bat` is gitignored — your credentials are never committed.
+
+### Step 4 — Build
+
+From the AzerothCore source root, run cmake to build and install the worldserver:
 
 ```powershell
 cmake --build "path\to\build" --config RelWithDebInfo --target worldserver
@@ -222,37 +240,28 @@ cmake --build "path\to\build" --config RelWithDebInfo --target INSTALL
 
 Stop the worldserver before the INSTALL step (the binary will be locked).
 
-### Step 4 — Run the SQL files
+After building, copy the module config into place so the worldserver finds it:
 
-**Characters database** — creates `item_affix`, `item_talent_affix`, and `item_imprint`:
-
-```powershell
-Get-Content data\sql\db-characters\item_affix.sql |
-    & mysql.exe -u acore -pPASSWORD acore_characters
-Get-Content data\sql\db-characters\item_talent_affix.sql |
-    & mysql.exe -u acore -pPASSWORD acore_characters
-Get-Content data\sql\db-characters\item_imprint.sql |
-    & mysql.exe -u acore -pPASSWORD acore_characters
+```
+env\dist\configs\modules\mod_item_affixes.conf.dist  →  mod_item_affixes.conf
 ```
 
-**World database** — generates and applies affix/talent/imprint template data:
+(Remove the `.dist` extension. Without this file, the module starts with hardcoded defaults and logs many "Config: Missing property" warnings — it still works, but you lose the ability to tune values.)
 
-```powershell
-.\scripts\build_affixes.ps1
-.\scripts\build_talent_affixes.ps1
-Get-Content data\sql\db-world\affix_template.sql |
-    & mysql.exe -u acore -pPASSWORD acore_world
-Get-Content data\sql\db-world\talent_affix_def.sql |
-    & mysql.exe -u acore -pPASSWORD acore_world
-Get-Content data\sql\db-world\imprint_def.sql |
-    & mysql.exe -u acore -pPASSWORD acore_world
-```
+### Step 5 — Apply SQL and rebuild client files
 
-Or run `scripts\update_affixes.bat` which handles the affix and talent SQL automatically.
+Run `scripts\update.bat` from the module folder. This single script:
 
-> **Before running any `.bat` script**, open it and set `USER`, `PASS`, and `MYSQL` at the top to match your MySQL installation. The scripts ship with placeholder values.
+1. Generates `affix_template.sql` and `talent_affix_def.sql` from their JSON sources
+2. Applies all character-DB and world-DB SQL files
+3. Patches `SpellItemEnchantment.dbc` and rebuilds the client MPQ (affix tooltip names)
+4. Patches `Spell.dbc` / `SkillLineAbility.dbc` and rebuilds the MPQ for custom spells
 
-### Step 5 — Install the client addon
+> The first run auto-detects two free MPQ suffix letters (scanning `patch-Z.MPQ` downward) and saves them to `scripts\local_config.bat`. Subsequent runs reuse the same letters. To pin specific suffixes, set `PATCH_SUFFIX_DBC` and `PATCH_SUFFIX_SPELLS` in `db_config.bat`.
+
+> Without the DBC patch steps, affixes function correctly server-side but no green tooltip line appears in item tooltips.
+
+### Step 6 — Install the client addon
 
 The canonical addon source lives in `addon\ItemAffixes\` inside the module. Copy it to the live
 client path (or symlink the folder):
@@ -264,30 +273,14 @@ WoW Client 3.3.5a\Interface\AddOns\ItemAffixes\
 The addon handles the Roll Menu UI, option picker, reroll frame, tooltip affix display, the Rune
 apply mechanic, and all client↔server communication.
 
-### Step 6 — (Optional) Install the client DBC patch
-
-Affix names appear in item tooltips via `SpellItemEnchantment.dbc`. Run `scripts\patch_dbc.ps1`
-to generate the patch files, then copy or place the output into your WoW client data folder:
-
-```
-WoW Client 3.3.5a\Data\patch-4.MPQ
-WoW Client 3.3.5a\Data\enUS\patch-enUS-4.MPQ
-```
-
-> Before running `patch_dbc.ps1`, update the `$ServerDBC`, `$Patch4`, and `$PatchEnUS4` parameter
-> defaults at the top of the script (or pass them on the command line) to match your server and
-> client paths.
-
-Without the patch, affixes function correctly but no green tooltip line appears.
-
 ### Step 7 — Start worldserver
 
-Look for this in the console:
+Look for these lines in the console:
 
 ```
 mod-item-affixes: loaded N affix template(s).
 mod-item-affixes: loaded N talent affix def(s).
-mod-item-affixes: loaded N imprint def(s).
+mod-item-affixes: Loaded N Imprint definition(s).
 ```
 
 ---
@@ -502,13 +495,18 @@ module is disabled. Re-enabling fully restores all functionality.
 ```
 mod-item-affixes/
 ├── README.md
+├── CORE_PATCHES.md              ← manual ScriptMgr patch instructions (Patch 2)
 ├── CMakeLists.txt
 │
 ├── scripts/
+│   ├── db_config.bat.example    ← credential template — copy to db_config.bat
+│   ├── db_config.bat            ← gitignored — your local MySQL credentials + paths
+│   ├── local_config.bat         ← gitignored — auto-generated; records MPQ suffix letters
+│   ├── update.bat               ← full update: SQL + DBC/MPQ patch rebuild (run this)
+│   ├── update_affixes.bat       ← affix + talent SQL only
+│   ├── update_imprints.bat      ← imprint SQL + client DBC/MPQ rebuild
 │   ├── build_affixes.ps1        ← generates affix_template.sql from affixes/*.json
 │   ├── build_talent_affixes.ps1 ← generates talent_affix_def.sql from talent_affixes/<Class>/*.json
-│   ├── update_affixes.bat       ← runs both build scripts and applies SQL to DB
-│   ├── update_imprints.bat      ← applies imprint SQL and rebuilds client DBC/MPQ
 │   ├── apply_core_patches.ps1   ← applies required engine patches
 │   ├── patch_dbc.ps1            ← syncs SpellItemEnchantment.dbc and rebuilds MPQ
 │   ├── patch_imprint_spells.ps1 ← injects custom imprint spells into Spell.dbc
@@ -556,7 +554,6 @@ mod-item-affixes/
 │   ├── ADDING_AFFIXES.md
 │   ├── ADDING_NEW_IMPRINT.md
 │   ├── ADDING_TALENT_AFFIXES.md
-│   ├── CORE_PATCHES.md
 │   └── ...
 │
 └── data/sql/

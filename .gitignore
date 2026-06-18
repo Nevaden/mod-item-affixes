@@ -4,8 +4,9 @@ docs/
 talent_affixes/PROCESS.md
 affixes/pseudo-code budget
 
-# Local DB credentials — copy from db_config.bat.example
+# Local DB credentials and auto-generated patch slot config — never commit
 scripts/db_config.bat
+scripts/local_config.bat
 
 # OS-generated files
 .DS_Store

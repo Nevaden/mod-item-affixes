@@ -3,6 +3,7 @@ setlocal
 
 set SCRIPT_DIR=%~dp0
 
+if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found.
     echo Copy scripts\db_config.bat.example to scripts\db_config.bat and fill in your local MySQL credentials.
@@ -41,22 +42,22 @@ echo.
 
 REM ── Step 2: Apply SQL ───────────────────────────────────────────────────
 echo [2/4] Applying SQL to databases...
-%MYSQL% -u %USER% -p%PASS% acore_characters < "%SQL_CHARS%"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_CHARS%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Failed to apply item_affix.sql
     pause & exit /b 1
 )
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_WORLD%"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Failed to apply affix_template.sql
     pause & exit /b 1
 )
-%MYSQL% -u %USER% -p%PASS% acore_characters < "%SQL_TALENT_CHARS%"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_TALENT_CHARS%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Failed to apply item_talent_affix.sql
     pause & exit /b 1
 )
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_TALENT_WORLD%"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_TALENT_WORLD%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Failed to apply talent_affix_def.sql
     pause & exit /b 1

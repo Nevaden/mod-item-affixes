@@ -4,5 +4,27 @@ REM MySQL credentials. db_config.bat is gitignored and will never be
 REM committed, so your real password stays out of source control.
 
 set MYSQL="C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe"
+set MYSQL_HOST=127.0.0.1
 set USER=acore
 set PASS=YOUR_PASSWORD
+
+REM Database names — change if your install uses non-default names
+REM (e.g. a parallel test install uses acore_test_characters / acore_test_world)
+set DB_CHAR=acore_characters
+set DB_WORLD=acore_world
+
+REM Server DBC directory (required — where the worldserver reads DBC files from)
+REM Default AzerothCore layout: <root>\bin\data\dbc
+REM Example nested layout:      C:\servers\Standard\bin\data\dbc
+set SERVER_DBC_DIR=C:\path\to\your\server\bin\data\dbc
+
+REM WoW client Data directory (required for MPQ patch output)
+set CLIENT_DATA_DIR=C:\Program Files (x86)\World of Warcraft\Data
+
+REM MPQ patch suffix override (optional).
+REM On first run the patch scripts auto-detect the first free patch-X.MPQ slot
+REM (scanning from Z downward) and save the chosen letters to scripts\local_config.bat
+REM so all future runs reuse the same files. Uncomment to pin to a specific suffix
+REM instead — useful if you already own a patch file you want to reuse:
+REM set PATCH_SUFFIX_DBC=4
+REM set PATCH_SUFFIX_SPELLS=Z

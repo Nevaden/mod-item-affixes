@@ -5,15 +5,54 @@
 param(
     [string]$AffixesDir      = "$PSScriptRoot\..\affixes",
     [string]$ClassAffixesDir = "$PSScriptRoot\..\class_affixes",
-    # Server bin/ always sits 4 levels above a module's scripts/ folder
-    # (<root>\azerothcore\modules\<module>\scripts -> <root>\bin), so this
-    # is derived from the module's own location instead of a fixed drive path.
-    [string]$ServerDBC       = "$PSScriptRoot\..\..\..\..\bin\data\dbc\SpellItemEnchantment.dbc",
-    [string]$MpqBuild        = "$PSScriptRoot\..\tools\mpqbuild.exe",
-    # Configure for your installation: the WoW client's Data folder.
-    [string]$Patch4          = "E:\servers\Wow\WoW HD\data\patch-4.MPQ",
-    [string]$PatchEnUS4      = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-4.MPQ"
+    [string]$MpqBuild        = "$PSScriptRoot\..\tools\mpqbuild.exe"
 )
+
+$LocalConfigPath = Join-Path $PSScriptRoot "local_config.bat"
+
+function Save-LocalConfigEntry([string]$path, [string]$key, [string]$value) {
+    $lines = if (Test-Path $path) {
+        @(Get-Content $path | Where-Object { $_ -notmatch "^set $key=" })
+    } else {
+        @("@echo off",
+          "REM Auto-generated -- records patch slots chosen on first run.",
+          "REM Delete this file to re-detect. Override in db_config.bat to pin a slot.")
+    }
+    ($lines + "set $key=$value") | Set-Content $path -Encoding ASCII
+}
+
+function Find-FreePatchSuffix([string]$dataDir, [string]$localCfg) {
+    $taken = @{}
+    Get-ChildItem "$dataDir\patch-?.MPQ" -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($_.Name -match "^patch-([A-Za-z])\.MPQ$") { $taken[$Matches[1].ToUpper()] = $true }
+    }
+    if (Test-Path $localCfg) {
+        Get-Content $localCfg | Where-Object { $_ -match "^set PATCH_SUFFIX_\w+=([A-Za-z])$" } |
+            ForEach-Object { $taken[$Matches[1].ToUpper()] = $true }
+    }
+    foreach ($code in 90..65) {
+        $letter = [char]$code
+        if (-not $taken["$letter"]) { return "$letter" }
+    }
+    throw "No free patch-[A-Z].MPQ slot in: $dataDir"
+}
+
+$ServerDbcDir = $env:SERVER_DBC_DIR
+if (-not $ServerDbcDir) { throw "SERVER_DBC_DIR is not set. Add it to scripts\db_config.bat." }
+$ServerDBC = Join-Path $ServerDbcDir "SpellItemEnchantment.dbc"
+
+$ClientDataDir = $env:CLIENT_DATA_DIR
+if (-not $ClientDataDir) { throw "CLIENT_DATA_DIR is not set. Add it to scripts\db_config.bat." }
+
+$DbcSuffix = $env:PATCH_SUFFIX_DBC
+if (-not $DbcSuffix) {
+    $DbcSuffix = Find-FreePatchSuffix $ClientDataDir $LocalConfigPath
+    Save-LocalConfigEntry $LocalConfigPath "PATCH_SUFFIX_DBC" $DbcSuffix
+    Write-Host "  Auto-detected DBC patch suffix: $DbcSuffix (saved to scripts\local_config.bat)"
+}
+
+$PatchOut     = Join-Path $ClientDataDir "patch-$DbcSuffix.MPQ"
+$PatchEnUSOut = Join-Path $ClientDataDir "enus\patch-enUS-$DbcSuffix.MPQ"
 
 Write-Host "=== Patching SpellItemEnchantment.dbc ==="
 
@@ -159,10 +198,10 @@ if ($toUpdate.Count -eq 0 -and $toAdd.Count -eq 0) {
 
 # -- 5. Rebuild client MPQ patches ------------------------------------------
 Write-Host "  Rebuilding client MPQ files..."
-$output = & $MpqBuild build "$ServerDBC" "$Patch4" "$PatchEnUS4" 2>&1
+$output = & $MpqBuild build "$ServerDBC" "$PatchOut" "$PatchEnUSOut" 2>&1
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "  patch-4.MPQ      -> $Patch4"
-    Write-Host "  patch-enUS-4.MPQ -> $PatchEnUS4"
+    Write-Host "  patch-$DbcSuffix.MPQ      -> $PatchOut"
+    Write-Host "  patch-enUS-$DbcSuffix.MPQ -> $PatchEnUSOut"
     Write-Host "  MPQ rebuild complete."
 } else {
     Write-Host "  WARNING: mpqbuild.exe failed (exit $LASTEXITCODE)"

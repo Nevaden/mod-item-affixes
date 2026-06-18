@@ -3,8 +3,8 @@
 #
 # Reads ../imprints/custom_spells.json, patches Spell.dbc for every spell
 # listed, patches SkillLineAbility.dbc for spells that have a skill_line entry,
-# then packages the result as patch-z.MPQ and patch-enUS-z.MPQ for the
-# WoW HD client.
+# then packages the result into the configured client patch MPQ files.
+# Patch slot is auto-detected on first run and saved to scripts\local_config.bat.
 #
 # Replaces / supersedes patch_spell_dbc.ps1 and patch_mpq_spells.ps1.
 # Run this whenever custom_spells.json is modified or a new spell is added.
@@ -17,15 +17,56 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ---------------------------------------------------------------------------
-# Paths
+# Paths — configurable via environment variables set in scripts\db_config.bat
 # ---------------------------------------------------------------------------
-$ScriptDir     = Split-Path -Parent $MyInvocation.MyCommand.Path
-$JsonPath      = Join-Path $ScriptDir "..\imprints\custom_spells.json"
-$ServerDbcDir  = "E:\servers\Wow\Standard\bin\data\dbc"
+$ScriptDir       = Split-Path -Parent $MyInvocation.MyCommand.Path
+$JsonPath        = Join-Path $ScriptDir "..\imprints\custom_spells.json"
+$LocalConfigPath = Join-Path $ScriptDir "..\scripts\local_config.bat"
+
+$ServerDbcDir = $env:SERVER_DBC_DIR
+if (-not $ServerDbcDir) { throw "SERVER_DBC_DIR is not set. Add it to scripts\db_config.bat." }
 $ServerSpellDb = Join-Path $ServerDbcDir "Spell.dbc"
 $ServerSlaDb   = Join-Path $ServerDbcDir "SkillLineAbility.dbc"
-$OutMainMpq    = "E:\servers\Wow\WoW HD\data\patch-z.MPQ"
-$OutLocaleMpq  = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-z.MPQ"
+
+function Save-LocalConfigEntry([string]$path, [string]$key, [string]$value) {
+    $lines = if (Test-Path $path) {
+        @(Get-Content $path | Where-Object { $_ -notmatch "^set $key=" })
+    } else {
+        @("@echo off",
+          "REM Auto-generated -- records patch slots chosen on first run.",
+          "REM Delete this file to re-detect. Override in db_config.bat to pin a slot.")
+    }
+    ($lines + "set $key=$value") | Set-Content $path -Encoding ASCII
+}
+
+function Find-FreePatchSuffix([string]$dataDir, [string]$localCfg) {
+    $taken = @{}
+    Get-ChildItem "$dataDir\patch-?.MPQ" -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($_.Name -match "^patch-([A-Za-z])\.MPQ$") { $taken[$Matches[1].ToUpper()] = $true }
+    }
+    if (Test-Path $localCfg) {
+        Get-Content $localCfg | Where-Object { $_ -match "^set PATCH_SUFFIX_\w+=([A-Za-z])$" } |
+            ForEach-Object { $taken[$Matches[1].ToUpper()] = $true }
+    }
+    foreach ($code in 90..65) {
+        $letter = [char]$code
+        if (-not $taken["$letter"]) { return "$letter" }
+    }
+    throw "No free patch-[A-Z].MPQ slot in: $dataDir"
+}
+
+$ClientDataDir = $env:CLIENT_DATA_DIR
+if (-not $ClientDataDir) { throw "CLIENT_DATA_DIR is not set. Add it to scripts\db_config.bat." }
+
+$SpellsSuffix = $env:PATCH_SUFFIX_SPELLS
+if (-not $SpellsSuffix) {
+    $SpellsSuffix = Find-FreePatchSuffix $ClientDataDir $LocalConfigPath
+    Save-LocalConfigEntry $LocalConfigPath "PATCH_SUFFIX_SPELLS" $SpellsSuffix
+    Write-Host "  Auto-detected spell patch suffix: $SpellsSuffix (saved to scripts\local_config.bat)"
+}
+
+$OutMainMpq   = Join-Path $ClientDataDir "patch-$SpellsSuffix.MPQ"
+$OutLocaleMpq = Join-Path $ClientDataDir "enus\patch-enUS-$SpellsSuffix.MPQ"
 
 # ---------------------------------------------------------------------------
 # Spell.dbc field indices (0-based). WotLK 3.3.5a: 234 fields, 936 bytes/record.

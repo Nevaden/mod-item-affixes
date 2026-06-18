@@ -38,19 +38,27 @@ function ApplyPatch($Description, $FilePath, $DetectString, $SearchText, $Replac
         Write-Err "File not found: $FilePath"
     }
 
-    $content = Get-Content $FilePath -Raw -Encoding UTF8
+    $raw = Get-Content $FilePath -Raw -Encoding UTF8
+    $useCrlf = $raw.Contains("`r`n")
 
-    if ($content.Contains($DetectString)) {
+    # Normalize to LF for comparison so here-strings (CRLF) match LF source files
+    $content  = $raw         -replace "`r`n", "`n"
+    $detect   = $DetectString -replace "`r`n", "`n"
+    $search   = $SearchText   -replace "`r`n", "`n"
+    $replace  = $ReplaceText  -replace "`r`n", "`n"
+
+    if ($content.Contains($detect)) {
         Write-Skip $Description
         return
     }
 
-    if (-not $content.Contains($SearchText)) {
+    if (-not $content.Contains($search)) {
         Write-Err ("Search text not found in " + $FilePath + "`n" +
             "  The file may have changed upstream. Apply the patch manually - see CORE_PATCHES.md.")
     }
 
-    $patched = $content.Replace($SearchText, $ReplaceText)
+    $patched = $content.Replace($search, $replace)
+    if ($useCrlf) { $patched = $patched -replace "`n", "`r`n" }
     [System.IO.File]::WriteAllText($FilePath, $patched, [System.Text.UTF8Encoding]::new($false))
     Write-Ok $Description
 }
@@ -76,6 +84,7 @@ $p1_search = @'
     if (mod->ownerAura->IsUsingCharges() && !mod->ownerAura->GetCharges())
         return;
 
+    // register inside spell, proc system uses this to drop charges
     spell->m_appliedMods.insert(mod->ownerAura);
 '@
 $p1_replace = @'
@@ -83,7 +92,7 @@ $p1_replace = @'
     if (mod->ownerAura && mod->ownerAura->IsUsingCharges() && !mod->ownerAura->GetCharges())
         return;
 
-    // register inside spell for charge tracking; skip if no ownerAura (item-affix mods have none)
+    // register inside spell, proc system uses this to drop charges; skip if no ownerAura (item-affix mods have none)
     if (mod->ownerAura)
         spell->m_appliedMods.insert(mod->ownerAura);
 '@

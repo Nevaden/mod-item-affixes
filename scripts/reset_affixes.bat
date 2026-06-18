@@ -3,6 +3,7 @@ setlocal
 
 set SCRIPT_DIR=%~dp0
 
+if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found.
     echo Copy scripts\db_config.bat.example to scripts\db_config.bat and fill in your local MySQL credentials.
@@ -23,7 +24,7 @@ echo.
 echo Press Ctrl+C to cancel, or any key to continue...
 pause > nul
 
-%MYSQL% -u %USER% -p%PASS% acore_characters < "%SQL_RESET%"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_RESET%"
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Failed to apply reset_item_affixes.sql
     pause & exit /b 1

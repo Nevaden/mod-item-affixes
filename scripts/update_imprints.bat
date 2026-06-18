@@ -3,6 +3,7 @@ setlocal
 
 set SCRIPT_DIR=%~dp0
 
+if exist "%SCRIPT_DIR%local_config.bat" call "%SCRIPT_DIR%local_config.bat"
 if not exist "%SCRIPT_DIR%db_config.bat" (
     echo ERROR: scripts\db_config.bat not found.
     echo Copy scripts\db_config.bat.example to scripts\db_config.bat and fill in your local MySQL credentials.
@@ -16,31 +17,31 @@ echo ============================================================
 echo  mod-item-affixes -- IMPRINT UPDATE
 echo.
 echo  Steps:
-echo    1. Apply imprint SQL to acore_world
+echo    1. Apply imprint SQL to world database
 echo    2. Rebuild client DBC / MPQ patch files
 echo ============================================================
 echo.
 
 REM ── Step 1: Apply SQL ───────────────────────────────────────────────────
-echo [1/3] Applying imprint SQL to acore_world...
+echo [1/3] Applying imprint SQL to %DB_WORLD%...
 
 REM Table definitions and type rows
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_DIR%\imprint_def.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_DIR%\imprint_def.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: imprint_def.sql failed & pause & exit /b 1 )
 
 REM Rune item templates
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_DIR%\imprint_rune_items.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_DIR%\imprint_rune_items.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: imprint_rune_items.sql failed & pause & exit /b 1 )
 
 REM Script name bindings (all imprint spells)
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_DIR%\spell_script_names_imprint.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_DIR%\spell_script_names_imprint.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: spell_script_names_imprint.sql failed & pause & exit /b 1 )
 
 REM Server-side spell_dbc overrides for each custom imprint spell
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_DIR%\spell_dbc_celestial_resonance.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_DIR%\spell_dbc_celestial_resonance.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_celestial_resonance.sql failed & pause & exit /b 1 )
 
-%MYSQL% -u %USER% -p%PASS% acore_world < "%SQL_DIR%\spell_dbc_vanishing_backstab.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_DIR%\spell_dbc_vanishing_backstab.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_vanishing_backstab.sql failed & pause & exit /b 1 )
 
 echo   SQL applied successfully.
