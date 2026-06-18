@@ -6,6 +6,11 @@ set MODULE_ROOT=%SCRIPT_DIR%..
 echo ============================================================
 echo  mod-item-affixes -- UNINSTALL
 echo.
+echo  IMPORTANT: Stop worldserver.exe NOW before continuing.
+echo  The script rebuilds the worldserver without the module.
+echo  If worldserver is running, the install step will fail and
+echo  the server will crash on next start looking for removed tables.
+echo.
 echo  WARNING: This permanently removes all mod data:
 echo.
 echo    Characters DB  -- DROPS tables (ALL PLAYER AFFIX DATA LOST):
@@ -19,11 +24,14 @@ echo      spell_dbc      (custom imprint/spell-swap spells)
 echo      spell_script_names  (imprint/spell-swap bindings)
 echo.
 echo    Client  -- REMOVES the two MPQ patch files
-echo    Server  -- REMOVES mod_item_affixes.conf
+echo    Server  -- REMOVES mod_item_affixes.conf and .conf.dist
+echo    CMake   -- Excludes module from next build (if CMAKE+BUILD_DIR set)
 echo.
 echo  After this script you must manually:
-echo    1. Delete the modules\mod-item-affixes folder
-echo    2. Rebuild and reinstall the worldserver
+echo    1. Remove the ItemAffixes addon from your WoW client:
+echo       Interface\AddOns\ItemAffixes\
+echo    2. Restart the WoW client
+echo    3. Restart the worldserver
 echo ============================================================
 echo.
 echo  Type UNINSTALL and press Enter to confirm (Ctrl+C to cancel):
@@ -132,8 +140,8 @@ if not defined CLIENT_DATA_DIR (
 echo.
 
 REM -- Step 4: Remove server config ---------------------------------------------
-echo [4/4] Removing server config...
-set CONF_MODULES=%SERVER_DBC_DIR%\..\..\..\configs\modules
+echo [4/5] Removing server config...
+set CONF_MODULES=%SERVER_DBC_DIR%\..\..\..\env\dist\configs\modules
 if exist "%CONF_MODULES%\mod_item_affixes.conf" (
     del "%CONF_MODULES%\mod_item_affixes.conf"
     echo   Removed: mod_item_affixes.conf
@@ -144,21 +152,50 @@ if exist "%CONF_MODULES%\mod_item_affixes.conf.dist" (
 )
 echo.
 
+REM -- Step 5: Disable module in cmake and rebuild ------------------------------
+echo [5/5] Disabling module in CMake build and rebuilding worldserver...
+if not defined CMAKE (
+    echo   SKIPPED: CMAKE not set in db_config.bat.
+    echo   Run scripts\disable.bat (after filling in CMAKE and BUILD_DIR)
+    echo   or manually reconfigure and rebuild before restarting the worldserver.
+    goto :done
+)
+if not defined BUILD_DIR (
+    echo   SKIPPED: BUILD_DIR not set in db_config.bat.
+    echo   Run scripts\disable.bat (after filling in BUILD_DIR)
+    echo   or manually reconfigure and rebuild before restarting the worldserver.
+    goto :done
+)
+echo   Reconfiguring CMake to exclude mod-item-affixes...
+%CMAKE% -DDISABLED_AC_MODULES=mod-item-affixes "%BUILD_DIR%"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: CMake configure failed. Rebuild manually before restarting worldserver.
+    goto :done
+)
+echo   Building worldserver (this will take a few minutes)...
+%CMAKE% --build "%BUILD_DIR%" --target worldserver --config RelWithDebInfo
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Build failed. Fix build errors then run cmake --install manually.
+    goto :done
+)
+echo   Installing...
+%CMAKE% --install "%BUILD_DIR%" --config RelWithDebInfo
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Install failed. Is worldserver.exe still running?
+    goto :done
+)
+echo   Worldserver rebuilt and installed without mod-item-affixes.
+
+:done
+echo.
 echo ============================================================
-echo  Database and file cleanup complete.
+echo  Uninstall complete.
 echo.
 echo  Remaining manual steps:
-echo    1. Delete modules\mod-item-affixes\
-echo    2. Rebuild worldserver:
-if defined BUILD_DIR (
-    echo         cmake --build "%BUILD_DIR%" --config RelWithDebInfo --target worldserver
-    echo         cmake --install "%BUILD_DIR%" --config RelWithDebInfo
-) else (
-    echo         cmake --build ^<your-build-dir^> --config RelWithDebInfo --target worldserver
-    echo         cmake --install ^<your-build-dir^> --config RelWithDebInfo
-)
+echo    1. Remove the ItemAffixes addon from your WoW client:
+echo       Interface\AddOns\ItemAffixes\
+echo    2. Restart the WoW client (clears MPQ patches and addon)
 echo    3. Restart the worldserver
-echo    4. Restart the WoW client (to unload the MPQ patches)
 echo ============================================================
 echo.
 pause

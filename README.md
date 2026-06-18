@@ -308,11 +308,20 @@ Run `scripts\uninstall.bat`. Type `UNINSTALL` at the confirmation prompt, then t
 2. Drops `affix_template`, `talent_affix_def`, and `imprint_def` from the world DB
 3. Removes rune item rows from `item_template` and custom spell rows from `spell_dbc` / `spell_script_names`
 4. Deletes the client MPQ patch files
-5. Removes `mod_item_affixes.conf` from the server configs folder
+5. Removes `mod_item_affixes.conf` and `.conf.dist` from the server configs folder
+6. Reconfigures cmake with `-DDISABLED_AC_MODULES=mod-item-affixes`, rebuilds, and installs (if `CMAKE` and `BUILD_DIR` are set in `db_config.bat`)
 
-After `uninstall.bat` finishes: delete the `modules/mod-item-affixes/` folder, then rebuild and reinstall the worldserver to produce a binary without the module.
+After `uninstall.bat` finishes, complete these steps manually:
+
+- Remove the `ItemAffixes` addon from your WoW client's `Interface\AddOns\` folder (removes the Alt+Click to roll text from item tooltips)
+- Restart the WoW client
+- Restart the worldserver
 
 > **All player affix data is permanently lost.** The `item_affix`, `item_talent_affix`, and `item_imprint` tables are dropped and cannot be recovered.
+
+### Disable vs. Uninstall
+
+`scripts\disable.bat` is the softer option — it excludes the module from the cmake build and rebuilds the worldserver, but leaves all DB tables and player affix data intact. `scripts\enable.bat` re-enables it. Use disable/enable when you want to temporarily turn off the feature; use uninstall only when you want to permanently remove all mod data.
 
 ---
 
