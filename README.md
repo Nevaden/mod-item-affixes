@@ -180,35 +180,32 @@ removes the Imprint from the item. The returned Rune's allowance count is decrem
 
 ## Installation
 
+> **Important:** Have a working AzerothCore server that you can log in to and create characters on before starting these steps. Do not clone this module into your `modules/` folder until the vanilla server is confirmed working — if the module is present during the initial build it will try to create tables that don't exist yet and prevent the worldserver from starting.
+
 ### Step 1 — Place the module
+
+With the vanilla server verified working, clone the module into your AzerothCore `modules/` directory:
+
+```
+git clone https://github.com/Nevaden/mod-item-affixes modules/mod-item-affixes
+```
 
 ```
 modules/
 └── mod-item-affixes/
 ```
 
-### Step 2 — Apply the required core patch
+### Step 2 — Apply core patches
 
-This module creates `SpellModifier` objects without an owning aura (`ownerAura = nullptr`). The
-stock engine crashes when these are applied mid-cast. Add one null-guard in
-`src/server/game/Entities/Player/Player.cpp` inside `Player::ApplyModToSpell`:
+The module requires several small changes to the AzerothCore engine source that cannot be applied via the module system. Run the patch script from the module's `scripts/` folder:
 
-```cpp
-void Player::ApplyModToSpell(SpellModifier* mod, Spell* spell)
-{
-    if (!spell)
-        return;
-
-    // ownerAura is null for item-affix mods — skip charge logic for those
-    if (mod->ownerAura && mod->ownerAura->IsUsingCharges() && !mod->ownerAura->GetCharges())
-        return;
-
-    if (mod->ownerAura)
-        spell->m_appliedMods.insert(mod->ownerAura);
-}
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\apply_core_patches.ps1
 ```
 
-Run `scripts\apply_core_patches.ps1` to apply all required patches automatically. If the script cannot find a match (upstream AzerothCore changed the surrounding code), apply the changes manually — see `CORE_PATCHES.md`.
+This applies all required patches automatically (null-guard in `Player::ApplyModToSpell`, gem-socket hook across `PlayerScript.h`, `PlayerScript.cpp`, `ScriptMgr.h`, and `ItemHandler.cpp`). Each patch is idempotent — safe to run more than once.
+
+If the script reports `[FAIL]` on any patch, the surrounding upstream code changed. See `CORE_PATCHES.md` for the exact change each patch makes so you can apply it by hand.
 
 ### Step 3 — Configure
 
@@ -221,39 +218,40 @@ set MYSQL_HOST=127.0.0.1
 set USER=acore
 set PASS=YOUR_PASSWORD
 
-REM Database names
+REM Database names (default AzerothCore names — change only if yours differ)
 set DB_CHAR=acore_characters
 set DB_WORLD=acore_world
 
-REM Server DBC directory (where worldserver reads DBC files from)
-set SERVER_DBC_DIR=C:\path\to\server\env\dist\data\dbc
+REM Where your worldserver reads DBC files from
+REM Default AzerothCore layout: <root>\bin\data\dbc
+set SERVER_DBC_DIR=C:\path\to\server\bin\data\dbc
 
-REM WoW client Data directory
+REM Where MPQ patch files are written (must be your WoW client Data folder)
 set CLIENT_DATA_DIR=C:\path\to\WoW\Data
 
-REM CMake build paths (uncomment — required for install/enable/disable scripts)
-REM set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
-REM set BUILD_DIR=C:\path\to\your\azerothcore\build
+REM Required for install/enable/disable scripts — uncomment and fill in
+set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
+set BUILD_DIR=C:\path\to\your\azerothcore\build
 ```
 
 `db_config.bat` is gitignored — your credentials are never committed.
 
-Run `scripts\test_config.bat` to verify all values before proceeding. It checks each setting and reports `[OK]` or `[FAIL]` with a specific fix hint for any failures.
+Run `scripts\test_config.bat` to validate everything before proceeding. Double-click it or run it from a terminal — it checks every required setting and displays `[OK]` or `[FAIL]` with a specific fix hint, then waits for a keypress so you can read the results.
 
 ### Step 4 — Build
 
-From the AzerothCore source root, build and install the worldserver:
+Stop the worldserver, then rebuild and reinstall from your AzerothCore build directory:
 
 ```powershell
 cmake --build "path\to\build" --config RelWithDebInfo --target worldserver
 cmake --install "path\to\build" --config RelWithDebInfo
 ```
 
-Stop the worldserver before the install step (the binary will be locked). After the install cmake will place `mod_item_affixes.conf.dist` in `env\dist\configs\modules\` — copy it to `mod_item_affixes.conf` (remove `.dist`) to enable per-server tuning.
+`cmake --install` places `mod_item_affixes.conf.dist` in `env\dist\configs\modules\`. `install.bat` (next step) copies it to `mod_item_affixes.conf` automatically.
 
 ### Step 5 — Install the client addon
 
-Copy `addon\ItemAffixes\` to your WoW client:
+Copy `addon\ItemAffixes\` to your WoW client's AddOns folder:
 
 ```
 WoW Client 3.3.5a\Interface\AddOns\ItemAffixes\
@@ -261,24 +259,25 @@ WoW Client 3.3.5a\Interface\AddOns\ItemAffixes\
 
 ### Step 6 — Run install.bat
 
-Run `scripts\install.bat` from the module folder. It runs `test_config.bat` first and stops early if anything is misconfigured, then:
+Run `scripts\install.bat`. It validates your config first and stops with a clear error if anything is wrong. When all checks pass it:
 
-1. Creates schema tables in the characters and world DBs
-2. Generates SQL from JSON definitions and applies all data tables
-3. Patches `SpellItemEnchantment.dbc` and rebuilds the client MPQ (affix tooltip names)
-4. Patches `Spell.dbc` / `SkillLineAbility.dbc` and rebuilds the custom spells MPQ
+1. Copies `mod_item_affixes.conf.dist` → `mod_item_affixes.conf` in your server's configs folder
+2. Creates schema tables in the characters and world DBs
+3. Generates SQL from JSON definitions and applies all affix/imprint/spell data
+4. Patches `SpellItemEnchantment.dbc` and rebuilds the client MPQ (affix tooltip names)
+5. Patches `Spell.dbc` / `SkillLineAbility.dbc` and rebuilds the custom spells MPQ
 
-> On first run the scripts auto-detect two free MPQ suffix letters (scanning `patch-Z.MPQ` downward) and save them to `scripts\local_config.bat` for reuse. To pin specific letters instead, set `PATCH_SUFFIX_DBC` and `PATCH_SUFFIX_SPELLS` in `db_config.bat`.
+> On first run the scripts auto-detect two free MPQ suffix letters (scanning `patch-Z.MPQ` downward) and save them to `scripts\local_config.bat` for reuse. To pin specific suffix letters, set `PATCH_SUFFIX_DBC` and `PATCH_SUFFIX_SPELLS` in `db_config.bat`.
 
-If the client is on a separate machine, copy the two new MPQ pairs from your WoW Data folder to that machine after install completes.
+If the client is on a separate machine, copy both new MPQ files from your WoW Data folder to that machine after `install.bat` finishes.
 
 ### Step 7 — Start worldserver
 
-Look for these lines in the console:
+Start the worldserver. Look for these three lines in the console to confirm the module loaded:
 
 ```
-mod-item-affixes: loaded N affix template(s).
-mod-item-affixes: loaded N talent affix def(s).
+mod-item-affixes: loaded NNN affix template(s).
+mod-item-affixes: loaded NNN talent affix def(s).
 mod-item-affixes: Loaded N Imprint definition(s).
 ```
 
@@ -286,15 +285,34 @@ mod-item-affixes: Loaded N Imprint definition(s).
 
 ## Keeping Up to Date
 
-After pulling new mod updates from git, run `scripts\update.bat`. It re-generates SQL from the updated JSON definitions, applies data SQL, and rebuilds the MPQ files. Schema tables are not touched — only affix/imprint/spell data changes.
+After a `git pull` on the module, run `scripts\update.bat`. It re-generates SQL from any updated JSON definitions, applies data-only SQL (affix templates, imprint defs, spell data), and rebuilds both client MPQ files. Schema tables are not touched.
+
+If the pull also includes C++ changes, rebuild and reinstall the worldserver first:
+
+```powershell
+cmake --build "path\to\build" --config RelWithDebInfo --target worldserver
+cmake --install "path\to\build" --config RelWithDebInfo
+```
+
+Then run `scripts\update.bat`.
+
+If the pull adds new core patches, re-run `scripts\apply_core_patches.ps1` — patches that were already applied are skipped automatically.
 
 ---
 
 ## Uninstalling
 
-Run `scripts\uninstall.bat`. It removes all mod data from the databases, deletes the client MPQ files, and removes the server conf. You then delete the module folder and rebuild the worldserver.
+Run `scripts\uninstall.bat`. Type `UNINSTALL` at the confirmation prompt, then the script:
 
-> **All player affix data is permanently lost** — uninstall drops the `item_affix`, `item_talent_affix`, and `item_imprint` tables.
+1. Drops `item_affix`, `item_talent_affix`, and `item_imprint` from the characters DB
+2. Drops `affix_template`, `talent_affix_def`, and `imprint_def` from the world DB
+3. Removes rune item rows from `item_template` and custom spell rows from `spell_dbc` / `spell_script_names`
+4. Deletes the client MPQ patch files
+5. Removes `mod_item_affixes.conf` from the server configs folder
+
+After `uninstall.bat` finishes: delete the `modules/mod-item-affixes/` folder, then rebuild and reinstall the worldserver to produce a binary without the module.
+
+> **All player affix data is permanently lost.** The `item_affix`, `item_talent_affix`, and `item_imprint` tables are dropped and cannot be recovered.
 
 ---
 
@@ -397,7 +415,7 @@ Imprint options appear in the roll menu alongside stat and class skill choices. 
 
 ## Server Configuration
 
-Edit `bin/configs/modules/mod_item_affixes.conf` (created from `conf/mod_item_affixes.conf.dist`):
+Edit `env/dist/configs/modules/mod_item_affixes.conf` (created from `conf/mod_item_affixes.conf.dist` by `install.bat`):
 
 ```ini
 # Roll Menu UI toggles (0=off, 1=on)
@@ -508,7 +526,7 @@ module is disabled. Re-enabling fully restores all functionality.
 ```
 mod-item-affixes/
 ├── README.md
-├── CORE_PATCHES.md              ← manual ScriptMgr patch instructions (Patch 2)
+├── CORE_PATCHES.md              ← reference: what each patch changes (all applied by apply_core_patches.ps1)
 ├── CMakeLists.txt
 │
 ├── scripts/
