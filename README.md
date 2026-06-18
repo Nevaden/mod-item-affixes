@@ -305,17 +305,17 @@ If the pull adds new core patches, re-run `scripts\apply_core_patches.ps1` — p
 Run `scripts\uninstall.bat`. Type `UNINSTALL` at the confirmation prompt, then the script:
 
 1. Drops `item_affix`, `item_talent_affix`, and `item_imprint` from the characters DB
-2. Drops `affix_template`, `talent_affix_def`, and `imprint_def` from the world DB
-3. Removes rune item rows from `item_template` and custom spell rows from `spell_dbc` / `spell_script_names`
-4. Deletes the client MPQ patch files
-5. Removes `mod_item_affixes.conf` and `.conf.dist` from the server configs folder
-6. Reconfigures cmake with `-DDISABLED_AC_MODULES=mod-item-affixes -DMODULE_MOD-ITEM-AFFIXES=disabled`, rebuilds, and installs (if `CMAKE` and `BUILD_DIR` are set in `db_config.bat`)
+2. Drops `affix_template`, `talent_affix_def`, and `imprint_def` from the world DB; removes rune item rows from `item_template` and custom spell rows from `spell_dbc` / `spell_script_names`
+3. **Lists** the client MPQ patch files to remove (see below — not auto-deleted)
+4. Removes `mod_item_affixes.conf` and `.conf.dist` from the server configs folder
+5. Reconfigures cmake with `-DDISABLED_AC_MODULES=mod-item-affixes -DMODULE_MOD-ITEM-AFFIXES=disabled`, rebuilds, and installs (if `CMAKE` and `BUILD_DIR` are set in `db_config.bat`)
 
 After `uninstall.bat` finishes, complete these steps manually:
 
-- Remove the `ItemAffixes` addon from your WoW client's `Interface\AddOns\` folder (removes the Alt+Click to roll text from item tooltips)
-- Restart the WoW client
-- Restart the worldserver
+1. **Delete the MPQ files** listed by step 3. The script shows the exact filenames (read from `scripts\local_config.bat` where the suffix was recorded at install time). Only delete files you know belong to this mod — other mods may share your Data folder and a patch letter could in rare cases belong to something else.
+2. Remove the `ItemAffixes` addon from your WoW client's `Interface\AddOns\ItemAffixes\` folder
+3. Restart the WoW client
+4. Restart the worldserver
 
 > **All player affix data is permanently lost.** The `item_affix`, `item_talent_affix`, and `item_imprint` tables are dropped and cannot be recovered.
 

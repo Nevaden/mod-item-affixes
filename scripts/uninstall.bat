@@ -23,15 +23,15 @@ echo      item_template  (rune items)
 echo      spell_dbc      (custom imprint/spell-swap spells)
 echo      spell_script_names  (imprint/spell-swap bindings)
 echo.
-echo    Client  -- REMOVES the two MPQ patch files
+echo    Client  -- LISTS the MPQ patch files to remove (manual step)
 echo    Server  -- REMOVES mod_item_affixes.conf and .conf.dist
 echo    CMake   -- Excludes module from next build (if CMAKE+BUILD_DIR set)
 echo.
 echo  After this script you must manually:
-echo    1. Remove the ItemAffixes addon from your WoW client:
-echo       Interface\AddOns\ItemAffixes\
-echo    2. Restart the WoW client
-echo    3. Restart the worldserver
+echo    1. Delete the MPQ patch files listed by step 3 from your WoW Data folder
+echo    2. Remove the ItemAffixes addon: Interface\AddOns\ItemAffixes\
+echo    3. Restart the WoW client
+echo    4. Restart the worldserver
 echo ============================================================
 echo.
 echo  Type UNINSTALL and press Enter to confirm (Ctrl+C to cancel):
@@ -101,41 +101,41 @@ if %ERRORLEVEL% neq 0 (
 echo   Deleted spell_script_names rows for custom spells
 echo.
 
-REM -- Step 3: Remove client MPQ files -----------------------------------------
-echo [3/4] Removing client MPQ patch files...
-if not defined CLIENT_DATA_DIR (
-    echo   WARNING: CLIENT_DATA_DIR not set -- cannot remove MPQ files.
-    echo   Remove them manually from your WoW Data folder.
+REM -- Step 3: Identify client MPQ files (manual removal required) -------------
+echo [3/4] Client MPQ files -- manual removal required.
+echo.
+echo   The following files were created by this mod. Verify they belong
+echo   to this mod before deleting -- other mods may share the same Data
+echo   folder and a suffix letter could in rare cases belong to another mod.
+echo.
+if defined PATCH_SUFFIX_DBC (
+    echo   DBC patch (enchantment display):
+    if defined CLIENT_DATA_DIR (
+        echo     %CLIENT_DATA_DIR%\patch-%PATCH_SUFFIX_DBC%.MPQ
+        echo     %CLIENT_DATA_DIR%\enus\patch-enUS-%PATCH_SUFFIX_DBC%.MPQ
+    ) else (
+        echo     patch-%PATCH_SUFFIX_DBC%.MPQ
+        echo     enus\patch-enUS-%PATCH_SUFFIX_DBC%.MPQ
+        echo     (CLIENT_DATA_DIR not set -- locate your WoW Data folder)
+    )
 ) else (
-    set REMOVED_ANY=0
-    if defined PATCH_SUFFIX_DBC (
-        if exist "%CLIENT_DATA_DIR%\patch-%PATCH_SUFFIX_DBC%.MPQ" (
-            del "%CLIENT_DATA_DIR%\patch-%PATCH_SUFFIX_DBC%.MPQ"
-            echo   Removed: patch-%PATCH_SUFFIX_DBC%.MPQ
-            set REMOVED_ANY=1
-        )
-        if exist "%CLIENT_DATA_DIR%\enus\patch-enUS-%PATCH_SUFFIX_DBC%.MPQ" (
-            del "%CLIENT_DATA_DIR%\enus\patch-enUS-%PATCH_SUFFIX_DBC%.MPQ"
-            echo   Removed: enus\patch-enUS-%PATCH_SUFFIX_DBC%.MPQ
-            set REMOVED_ANY=1
-        )
+    echo   DBC patch: suffix not recorded. Check scripts\local_config.bat
+    echo   for PATCH_SUFFIX_DBC, or look for patch-*.MPQ files in your
+    echo   WoW Data folder created at install time.
+)
+echo.
+if defined PATCH_SUFFIX_SPELLS (
+    echo   Spell patch (custom spell data):
+    if defined CLIENT_DATA_DIR (
+        echo     %CLIENT_DATA_DIR%\patch-%PATCH_SUFFIX_SPELLS%.MPQ
+        echo     %CLIENT_DATA_DIR%\enus\patch-enUS-%PATCH_SUFFIX_SPELLS%.MPQ
+    ) else (
+        echo     patch-%PATCH_SUFFIX_SPELLS%.MPQ
+        echo     enus\patch-enUS-%PATCH_SUFFIX_SPELLS%.MPQ
     )
-    if defined PATCH_SUFFIX_SPELLS (
-        if exist "%CLIENT_DATA_DIR%\patch-%PATCH_SUFFIX_SPELLS%.MPQ" (
-            del "%CLIENT_DATA_DIR%\patch-%PATCH_SUFFIX_SPELLS%.MPQ"
-            echo   Removed: patch-%PATCH_SUFFIX_SPELLS%.MPQ
-            set REMOVED_ANY=1
-        )
-        if exist "%CLIENT_DATA_DIR%\enus\patch-enUS-%PATCH_SUFFIX_SPELLS%.MPQ" (
-            del "%CLIENT_DATA_DIR%\enus\patch-enUS-%PATCH_SUFFIX_SPELLS%.MPQ"
-            echo   Removed: enus\patch-enUS-%PATCH_SUFFIX_SPELLS%.MPQ
-            set REMOVED_ANY=1
-        )
-    )
-    if %REMOVED_ANY%==0 (
-        echo   No MPQ suffixes recorded in local_config.bat.
-        echo   Remove the mod's MPQ files manually from: %CLIENT_DATA_DIR%
-    )
+) else (
+    echo   Spell patch: suffix not recorded. Check scripts\local_config.bat
+    echo   for PATCH_SUFFIX_SPELLS.
 )
 echo.
 
@@ -198,13 +198,21 @@ echo   Worldserver rebuilt and installed without mod-item-affixes.
 :done
 echo.
 echo ============================================================
-echo  Uninstall complete.
+echo  Server-side uninstall complete.
 echo.
-echo  Remaining manual steps:
-echo    1. Remove the ItemAffixes addon from your WoW client:
-echo       Interface\AddOns\ItemAffixes\
-echo    2. Restart the WoW client (clears MPQ patches and addon)
-echo    3. Restart the worldserver
+echo  Remaining manual steps -- complete these before restarting:
+echo.
+echo  1. Delete the MPQ files listed in step 3 above from your WoW
+echo     Data folder. Only delete files you confirmed belong to this
+echo     mod. Do NOT blindly delete other patch-*.MPQ files -- they
+echo     may belong to other mods or custom content.
+echo.
+echo  2. Remove the ItemAffixes addon:
+echo     Interface\AddOns\ItemAffixes\
+echo.
+echo  3. Restart the WoW client (picks up MPQ and addon removal)
+echo.
+echo  4. Restart the worldserver
 echo ============================================================
 echo.
 pause
