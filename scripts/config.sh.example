@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# ============================================================
+#  mod-item-affixes -- Linux / macOS configuration
+#  Copy this file to config.sh and fill in every value.
+#  config.sh is gitignored -- your credentials stay local.
+# ============================================================
+
+# -- MySQL connection ---------------------------------------------------------
+MYSQL_HOST=127.0.0.1
+MYSQL_USER=acore
+MYSQL_PASS=YOUR_PASSWORD
+
+# -- Database names -----------------------------------------------------------
+# Default AzerothCore names. Change only if your install uses different names.
+DB_CHAR=acore_characters
+DB_WORLD=acore_world
+
+# -- Server DBC directory -----------------------------------------------------
+# Where your worldserver reads DBC files from.
+# Default AzerothCore layout: <root>/bin/data/dbc
+SERVER_DBC_DIR=/path/to/your/server/bin/data/dbc
+
+# -- CMake build (optional) ---------------------------------------------------
+# Required only for scripts/manage/enable.sh and scripts/manage/disable.sh.
+# CMAKE=cmake
+# BUILD_DIR=/path/to/your/azerothcore/build
+
+# -- Custom ID ranges ---------------------------------------------------------
+# IDs this module inserts into shared world-DB tables and the DBC.
+# Change only if another mod already uses the same range, then re-run install.
+RUNE_ITEM_ID_START=602001
+IMPRINT_SPELL_ID_START=600001
+SPELLSWAP_SPELL_ID_START=699001
