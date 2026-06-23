@@ -1887,7 +1887,7 @@
                     },
                     {
                         "id":  8059,
-                        "name":  "Lightning Bolt: +20% Dmg, Instant Cast",
+                        "name":  "Lightning Bolt: Instant Cast",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -1904,27 +1904,20 @@
                                        "verify_command":  ".spellinfo all 403"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4302,
-                                        "display_name":  "Lightning Bolt: +20% Dmg, Instant Cast"
+                                        "display_name":  "Lightning Bolt: Instant Cast"
                                     }
                     },
                     {
                         "id":  8060,
-                        "name":  "Lava Burst: +20% Dmg, Instant Cast",
+                        "name":  "Lava Burst: Instant Cast",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -1941,27 +1934,20 @@
                                        "verify_command":  ".spellinfo all 51505"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4303,
-                                        "display_name":  "Lava Burst: +20% Dmg, Instant Cast"
+                                        "display_name":  "Lava Burst: Instant Cast"
                                     }
                     },
                     {
                         "id":  8061,
-                        "name":  "Chain Lightning: +20% Dmg, Instant Cast",
+                        "name":  "Chain Lightning: Instant Cast",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -1978,22 +1964,15 @@
                                        "verify_command":  ".spellinfo all 421"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4304,
-                                        "display_name":  "Chain Lightning: +20% Dmg, Instant Cast"
+                                        "display_name":  "Chain Lightning: Instant Cast"
                                     }
                     },
                     {

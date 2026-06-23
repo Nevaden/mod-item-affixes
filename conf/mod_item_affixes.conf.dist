@@ -2,54 +2,157 @@
 # mod-item-affixes configuration
 #############################################
 
-# Allow class skill (SpellMod) affixes to roll. 0 = only stat affixes roll; the "Stats vs Class Skills"
-# type toggle in the roll menu is hidden. 1 = class skill affixes are available (default).
+# ---------------------------------------------------------------------------
+# Core features — what rolls and how often
+# ---------------------------------------------------------------------------
+
+# Allow class skill (SpellMod) affixes to roll. 0 = only stat affixes roll. 1 = enabled (default).
 ItemAffixes.EnableClassSkillAffixes = 1
 
+# Percentage chance (0-100) that each roll option is a class skill affix rather than a stat affix.
+# Applies to the "Any" pool only — has no effect when the player forces Stats or Class Skills via
+# the type selector (EnableClassSkillAffixSelection). Has no effect when EnableClassSkillAffixes = 0
+# or the item is Uncommon (green, stats-only).
+# 20 = roughly 1-in-5 options will be a class skill affix (default).
+ItemAffixes.ClassAffixChance = 20
+
+# Bad-luck streak protection: if this many consecutive non-class options have been shown for
+# an item (counting across all slots, rolls, and rerolls in the session), the next generated
+# option is guaranteed to be a class skill affix, then the streak counter resets to 0.
+# Locked options are not re-rolled so they do not count toward the streak.
+# Set this higher than your ClassAffixChance ratio would suggest to avoid firing too often:
+#   ClassAffixChance=20 (1-in-5) → set this to 6 or higher.
+#   ClassAffixChance=25 (1-in-4) → set this to 5 or higher.
+# 0 = disabled (no streak protection). Default: 0.
+ItemAffixes.BadLuckStreakProtection = 0
+
 # Allow talent affixes to roll (passive bonus ranks in a class talent). 0 = talent affix rows are
-# never generated; the spec tree selector is hidden when class skills are also disabled. 1 = enabled (default).
+# never generated. 1 = enabled (default).
 ItemAffixes.EnableTalentAffixes = 1
 
-# Show stat family (role) selector in the roll menu (Any / Tank / Physical / Caster / Healer / Ranged).
-# Keeping this on lets players steer their roll toward role-appropriate stats, which is recommended for
-# servers with custom classes or non-standard builds where automatic class filtering may not apply.
-# 0 = hidden (rolls from the full eligible pool), 1 = shown (default).
-ItemAffixes.EnableRoleSelection = 1
+# Percentage chance (0-100) that a talent affix is rolled onto each affix slot when the
+# player commits a class affix choice. The talent is chosen independently of which class
+# affix was selected; it uses the spec tree the player chose in the addon UI (if
+# EnableTalentAffixSelection = 1), falling back to the dominant talent tree otherwise.
+# Evaluated once per slot per quality tier. Has no effect when EnableTalentAffixes = 0.
+# Green  (Uncommon):  10% by default.
+# Blue   (Rare):      20% by default.
+# Purple (Epic):      30% by default.
+# Orange (Legendary): 100% by default — legendary items always receive a talent affix.
+ItemAffixes.TalentAffixChanceGreen     = 10
+ItemAffixes.TalentAffixChanceBlue      = 20
+ItemAffixes.TalentAffixChancePurple    = 30
+ItemAffixes.TalentAffixChanceLegendary = 100
 
-# Show main stat selector in the roll menu (Any / Strength / Agility / Intellect / Spirit).
-# Useful for custom builds (e.g. a tanking Rogue that needs Stamina over Agility).
-# 0 = hidden, 1 = shown (default).
+# ---------------------------------------------------------------------------
+# Addon UI selectors — player-facing pickers shown in the roll menu
+#
+# These are OFF by default. Standard servers with unmodified classes and
+# normal talent point totals do not need them: the module auto-detects spec
+# from the dominant talent tree, role from class, and main stat from class.
+#
+# Enable these on servers with custom classes, double talent points, or
+# any situation where auto-detection does not reliably reflect player intent.
+# ---------------------------------------------------------------------------
+
+# Show the "Any / Stats / Class Skills" type selector in the roll menu.
+# 0 = hidden; class skill affixes still roll via the weighted Any pool (ClassAffixChance).
+#     Players cannot force a class-skills-only roll, but class affixes still appear naturally.
+# 1 = shown; players can guarantee a class skill result by choosing "Class Skills".
+# Requires EnableClassSkillAffixes = 1 to have any effect. Default: 0.
+ItemAffixes.EnableClassSkillAffixSelection = 0
+
+# Show the spec tree selector in the roll menu.
+# 0 = hidden; spec is inferred from the player's dominant talent tree for both class affix
+#     weighting and talent affix selection.
+# 1 = shown; the player's explicit choice is used instead. Recommended for servers where
+#     the dominant talent tree is not a reliable indicator of intended spec (e.g. double
+#     talent points spread across trees). Default: 0.
+# Note: the spec selector is always shown when EnableClassSkillAffixes = 1, regardless of
+# this setting, so class affix weighting can be directed by player intent.
+ItemAffixes.EnableTalentAffixSelection = 0
+
+# Show the role selector in the roll menu (Any / Tank / Physical / Caster / Healer / Ranged).
+# 0 = hidden; role is auto-detected from class and spec for all players.
+# 1 = shown selectively; the selector only appears for specs where role is genuinely ambiguous
+#     (currently: Feral Druid, who can be bear tank or cat DPS). All other specs receive
+#     auto-detected role and never see the selector. Default: 0.
+ItemAffixes.EnableRoleSelection = 0
+
+# Show the main stat selector in the roll menu (Any / Strength / Agility / Intellect / Spirit).
+# 0 = hidden; main stat is auto-detected from class and spec for all players.
+# 1 = selective; only shown for the class/spec pairs listed in MainStatSelectorSpecs below. (default).
+# 2 = all classes; every player sees the selector regardless of spec. Intended for heavily
+#     custom servers where auto-detection may not reflect player intent.
 ItemAffixes.EnableMainStatSelection = 1
+
+# Which class/spec pairs receive the main stat selector when EnableMainStatSelection = 1.
+# Comma-separated list of classId:specTree entries. specTree is 0-based (0=left, 1=middle, 2=right
+# as shown in the talent UI).
+#
+# Class IDs:  1=Warrior  2=Paladin  3=Hunter  4=Rogue   5=Priest  6=Death Knight
+#             7=Shaman   8=Mage     9=Warlock  11=Druid
+#
+# Spec trees by class (left → right in talent UI):
+#   Priest:  0=Discipline  1=Holy        2=Shadow
+#   Druid:   0=Balance     1=Feral       2=Restoration
+#   Shaman:  0=Elemental   1=Enhancement 2=Restoration
+#   Paladin: 0=Holy        1=Protection  2=Retribution
+#   (other classes follow the same left-to-right 0/1/2 ordering)
+#
+# Default covers specs where both Intellect and Spirit are valid primary stats:
+#   5:0 = Discipline Priest   5:1 = Holy Priest
+#   11:2 = Restoration Druid  7:2 = Restoration Shaman
+ItemAffixes.MainStatSelectorSpecs = 5:0,5:1,11:2,7:2
+
+# ---------------------------------------------------------------------------
+# Slot and option counts
+# ---------------------------------------------------------------------------
 
 # Number of extra affix slots granted to two-handed weapons to compensate for the dual-wield slot
 # advantage (dual wielders get two 1H weapon slot rolls vs one 2H roll).
 # 0 = no bonus, 1 = one extra slot (default), 2 = two extra slots, etc.
 ItemAffixes.TwoHanderBonusSlots = 1
 
+# Number of affix slots granted per quality tier (non-gem items only). Clamped to 1-6.
+ItemAffixes.SlotCountGreen     = 1
+ItemAffixes.SlotCountBlue      = 2
+ItemAffixes.SlotCountPurple    = 3
+ItemAffixes.SlotCountLegendary = 4
+
 # Number of affix options presented to the player when rolling each quality tier.
 # The player picks one; the rest are discarded. Clamped to 1-6.
-# Green (Uncommon) items: 1 option by default (no choice, rolls immediately).
-# Blue  (Rare)     items: 2 options by default.
-# Purple (Epic)    items: 3 options by default.
-ItemAffixes.OptionsCountGreen  = 3
-ItemAffixes.OptionsCountBlue   = 3
-ItemAffixes.OptionsCountPurple = 4
+# Green  (Uncommon):  1 option by default (no choice, rolls immediately).
+# Blue   (Rare):      2 options by default.
+# Purple (Epic):      3 options by default.
+# Orange (Legendary): 5 options by default.
+ItemAffixes.OptionsCountGreen     = 3
+ItemAffixes.OptionsCountBlue      = 3
+ItemAffixes.OptionsCountPurple    = 4
+ItemAffixes.OptionsCountLegendary = 5
 
 # Number of rerolls granted per quality tier after the initial roll.
 # Each reroll re-generates all unlocked options; locked options are preserved.
-# Green (Uncommon): 0 = no rerolls (pick the only option or keep nothing).
-# Blue  (Rare):     2 rerolls by default.
-# Purple (Epic):    3 rerolls by default.
-ItemAffixes.RerollsGreen  = 0
-ItemAffixes.RerollsBlue   = 3
-ItemAffixes.RerollsPurple = 5
+# Green  (Uncommon):  0 = no rerolls (pick the only option or keep nothing).
+# Blue   (Rare):      3 rerolls by default.
+# Purple (Epic):      5 rerolls by default.
+# Orange (Legendary): 7 rerolls by default.
+ItemAffixes.RerollsGreen     = 0
+ItemAffixes.RerollsBlue      = 3
+ItemAffixes.RerollsPurple    = 5
+ItemAffixes.RerollsLegendary = 7
+
+# ---------------------------------------------------------------------------
+# Stat budgets and multipliers
+# ---------------------------------------------------------------------------
 
 # WotLK item budget fractions — share of the item's total stat budget allocated to one affix roll.
 # The stat exchange rates (AP=0.5x cost, SP=0.86x cost, others=1x) do the balancing automatically.
-# Green items roll one affix, blue two, purple three — smaller fractions per affix keep epics fair.
-ItemAffixes.BudgetFractionGreen  = 0.18
-ItemAffixes.BudgetFractionBlue   = 0.13
-ItemAffixes.BudgetFractionPurple = 0.10
+# Legendary gets slightly less per-slot than epic because it has more slots total.
+ItemAffixes.BudgetFractionGreen     = 0.18
+ItemAffixes.BudgetFractionBlue      = 0.13
+ItemAffixes.BudgetFractionPurple    = 0.10
+ItemAffixes.BudgetFractionLegendary = 0.09
 
 # Minimum roll as a fraction of the computed maximum (variance floor). Valid range: 0.0 to 1.0.
 # 1.0  = always the exact max (no variance) — use this instead of StatMultiplier for consistent max rolls.
@@ -65,12 +168,16 @@ ItemAffixes.BudgetMinRoll = 0.75
 # Does not affect SpellMod affixes (class skill bonuses).
 ItemAffixes.StatMultiplier = 3.0
 
+# ---------------------------------------------------------------------------
+# Imprints and crit rolls
+# ---------------------------------------------------------------------------
+
 # Percentage chance (0-100) that one of the roll options is replaced with a class-eligible
 # Imprint option.  Selecting it applies the Imprint to the item and grants a Rune to bags;
 # the affix slot is returned to UNROLLED so it can still be filled with a normal affix.
 # Once an item has an Imprint (from any source) the option will never appear again on that item.
 # 0 = Imprint options never appear in rolls.  30 = 30% chance (default).
-ItemAffixes.ImprintRollChance = 10
+ItemAffixes.ImprintRollChance = 5
 
 # Number of times an Imprint can be extracted from an item (applied → extract → re-apply).
 # Each extraction decrements the counter; at 0 the Imprint is permanently bound to the item.

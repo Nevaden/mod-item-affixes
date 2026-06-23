@@ -1,6 +1,7 @@
 #include "ItemAffix.h"
 #include "Imprints/ImprintMgr.h"
 #include "Bag.h"
+#include "Pet.h"
 #include "Chat.h"
 #include "Config.h"
 #include "DatabaseEnv.h"
@@ -18,6 +19,7 @@
 #include "Tokenize.h"
 #include "WorldPacket.h"
 #include <cstring>
+#include <sstream>
 
 ItemAffixMgr* ItemAffixMgr::instance()
 {
@@ -202,6 +204,18 @@ static int32 RollBudgetStatValue(uint8 statOp, float budget, float minRoll)
 {
     if (statOp == static_cast<uint8>(GSTAT_MOVE_SPEED))
         return irand(3, 12);
+    if (statOp == static_cast<uint8>(GSTAT_DAMAGE_REDUCTION_PCT))
+        return irand(1, 3);
+    if (statOp == static_cast<uint8>(GSTAT_PET_COOLDOWN_PCT))
+        return irand(10, 25);
+    if (statOp == static_cast<uint8>(GSTAT_PET_HEALTH_PCT))
+        return irand(5, 15);
+    if (statOp == static_cast<uint8>(GSTAT_PET_DAMAGE_PCT))
+        return irand(5, 15);
+    if (statOp == static_cast<uint8>(GSTAT_PET_DMGRED_PCT))
+        return irand(1, 3);
+    if (statOp == static_cast<uint8>(GSTAT_PET_ATTACKSPEED_PCT))
+        return irand(3, 8);
 
     float cost   = GetStatCost(statOp);
     int32 maxVal = static_cast<int32>(std::floor(budget / cost));
@@ -215,9 +229,10 @@ static int32 RollBudgetStatValue(uint8 statOp, float budget, float minRoll)
 float ItemAffixMgr::GetQualityFraction(uint32 quality) const
 {
     float base;
-    if (quality >= 4) base = _budgetFractionPurple;
-    else if (quality >= 3) base = _budgetFractionBlue;
-    else base = _budgetFractionGreen;
+    if      (quality >= ITEM_QUALITY_LEGENDARY) base = _budgetFractionLegendary;
+    else if (quality >= ITEM_QUALITY_EPIC)      base = _budgetFractionPurple;
+    else if (quality >= ITEM_QUALITY_RARE)      base = _budgetFractionBlue;
+    else                                        base = _budgetFractionGreen;
     return base * _statMultiplier;
 }
 
@@ -272,6 +287,22 @@ static void ApplyGenericStat(Player* player, uint8 statOp, int32 value, bool app
             player->ApplyRatingMod(CR_EXPERTISE,         value, apply); break;
         case GSTAT_ARMOR_PEN_RATING:
             player->ApplyRatingMod(CR_ARMOR_PENETRATION, value, apply); break;
+        case GSTAT_HP5:
+            player->ApplyHealthRegenBonus(value, apply); break;
+        case GSTAT_DAMAGE_REDUCTION_PCT:
+            sItemAffixMgr->ApplyDamageReduction(player->GetGUID().GetRawValue(), value, apply);
+            break;
+        case GSTAT_PET_COOLDOWN_PCT:
+        case GSTAT_PET_HEALTH_PCT:
+        case GSTAT_PET_DAMAGE_PCT:
+        case GSTAT_PET_DMGRED_PCT:
+        case GSTAT_PET_ATTACKSPEED_PCT:
+        {
+            sItemAffixMgr->ApplyPetStatBuff(player->GetGUID().GetRawValue(), statOp, value, apply);
+            if (Pet* pet = player->GetPet())
+                sItemAffixMgr->ApplyPetStatDelta(pet, static_cast<GenericStatOp>(statOp), value, apply);
+            break;
+        }
         case GSTAT_MOVE_SPEED:
         {
             // value = percent bonus (e.g., 15 → +15% run speed).
@@ -384,7 +415,7 @@ void ItemAffixMgr::LoadAffixTemplates()
         "spellmod_op2, spellmod_type2, spellmod_value2, "
         "spellmod_op3, spellmod_type3, spellmod_value3, "
         "spellmod_op4, spellmod_type4, spellmod_value4, "
-        "affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask "
+        "affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask, class_mask "
         "FROM affix_template WHERE weight > 0");
 
     if (!result)
@@ -416,6 +447,7 @@ void ItemAffixMgr::LoadAffixTemplates()
         def.itemCategory = f[26].Get<uint8>();
         def.specTree     = f[27].Get<uint8>();
         def.roleMask     = f[28].Get<uint8>();
+        def.classMask    = f[29].Get<uint32>();
         // f[23]=stat_tiers, f[24]=level_min, f[25]=level_max are legacy columns, no longer used.
 
         if (def.affixType == AFFIX_TYPE_SPELLMOD)
@@ -477,11 +509,11 @@ void ItemAffixMgr::LoadAffixTemplates()
         } while (chainResult->NextRow());
     }
 
-    // Generic (family=0) affixes get 3x pool representation so they are
+    // Generic (family=0, no class lock) affixes get 3x pool representation so they are
     // more common than class-specific affixes despite their lower raw count.
     for (auto const& [id, def] : _defs)
     {
-        uint32 poolWeight = (def.spellFamily == 0) ? def.weight * 3 : def.weight;
+        uint32 poolWeight = (def.spellFamily == 0 && def.classMask == 0) ? def.weight * 3 : def.weight;
         for (uint32 i = 0; i < poolWeight; ++i)
             _pool.push_back(id);
     }
@@ -503,10 +535,40 @@ void ItemAffixMgr::LoadAffixTemplates()
         "WHERE ii.guid IS NULL");
     LOG_INFO("module", "mod-item-affixes: purged orphaned affix rows.");
 
-    _enableClassSkillAffixes = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableClassSkillAffixes", true);
-    _enableTalentAffixes     = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableTalentAffixes",     true);
-    _enableRoleSelection     = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableRoleSelection",     true);
-    _enableMainStatSelection = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableMainStatSelection", true);
+    _enableClassSkillAffixes        = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableClassSkillAffixes",        true);
+    _enableClassSkillAffixSelection = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableClassSkillAffixSelection", false);
+    _enableTalentAffixes            = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableTalentAffixes",            true);
+    _enableTalentAffixSelection     = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableTalentAffixSelection",     false);
+    _classAffixChance               = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.ClassAffixChance", 20u), 0u, 100u);
+    _badLuckStreakProtection        = sConfigMgr->GetOption<uint32>("ItemAffixes.BadLuckStreakProtection", 0u);
+    _talentAffixChanceGreen     = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.TalentAffixChanceGreen",     10u),  0u, 100u);
+    _talentAffixChanceBlue      = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.TalentAffixChanceBlue",      50u),  0u, 100u);
+    _talentAffixChancePurple    = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.TalentAffixChancePurple",    50u),  0u, 100u);
+    _talentAffixChanceLegendary = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.TalentAffixChanceLegendary", 100u), 0u, 100u);
+    _optionsCountLegendary = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.OptionsCountLegendary", 5), uint8(1), uint8(6));
+    _rerollsLegendary      = sConfigMgr->GetOption<uint8>("ItemAffixes.RerollsLegendary", 7);
+    _slotCountGreen        = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountGreen",     1), uint8(1), uint8(6));
+    _slotCountBlue         = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountBlue",      2), uint8(1), uint8(6));
+    _slotCountPurple       = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountPurple",    3), uint8(1), uint8(6));
+    _slotCountLegendary    = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountLegendary", 4), uint8(1), uint8(6));
+    _budgetFractionLegendary = sConfigMgr->GetOption<float>("ItemAffixes.BudgetFractionLegendary", 0.09f);
+    _enableRoleSelection     = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableRoleSelection",     false);
+    _enableMainStatSelection = sConfigMgr->GetOption<uint8>("ItemAffixes.EnableMainStatSelection", 0);
+    {
+        _mainStatSelectorSpecs.clear();
+        std::string raw = sConfigMgr->GetOption<std::string>("ItemAffixes.MainStatSelectorSpecs", "5:0,5:1,11:2,7:2");
+        std::istringstream stream(raw);
+        std::string token;
+        while (std::getline(stream, token, ','))
+        {
+            auto colon = token.find(':');
+            if (colon == std::string::npos) continue;
+            auto cls  = Acore::StringTo<uint8>(token.substr(0, colon));
+            auto spec = Acore::StringTo<uint8>(token.substr(colon + 1));
+            if (cls && spec)
+                _mainStatSelectorSpecs.insert({*cls, *spec});
+        }
+    }
     _twoHanderBonusSlots     = sConfigMgr->GetOption<uint8>("ItemAffixes.TwoHanderBonusSlots",     1);
     _budgetFractionGreen     = sConfigMgr->GetOption<float>("ItemAffixes.BudgetFractionGreen",     0.18f);
     _budgetFractionBlue      = sConfigMgr->GetOption<float>("ItemAffixes.BudgetFractionBlue",      0.13f);
@@ -591,6 +653,75 @@ AffixDefinition const* ItemAffixMgr::GetAffixDef(uint32 id) const
 }
 
 // ---------------------------------------------------------------------------
+// Spec-aware auto-detection helpers
+//
+// These determine the appropriate role and main stat for a player when the
+// corresponding selector is either globally disabled or not needed for their
+// spec.  Returning 0 (Any) is intentional for genuinely ambiguous cases where
+// auto-detection would be wrong more often than right.
+// ---------------------------------------------------------------------------
+
+// Returns the role bitmask value that best fits this class/spec.
+// Must match the bitmask encoding used in affix_template.role_mask and the addon UI:
+// 0=Any, 1=Caster, 2=Physical, 4=Tank, 8=Healer, 16=Ranged
+static uint8 GetAutoRole(uint8 playerClass, int specTree)
+{
+    switch (playerClass)
+    {
+        case CLASS_WARRIOR:      return (specTree == 2) ? 4 : 2;
+        case CLASS_PALADIN:      return (specTree == 0) ? 8 : (specTree == 1) ? 4 : 2;
+        case CLASS_HUNTER:       return 16;
+        case CLASS_ROGUE:        return 2;
+        case CLASS_PRIEST:       return (specTree == 2) ? 1 : 8;
+        case CLASS_DEATH_KNIGHT: return (specTree == 0) ? 4 : 2;
+        case CLASS_SHAMAN:       return (specTree == 0) ? 1 : (specTree == 1) ? 2 : 8;
+        case CLASS_MAGE:         return 1;
+        case CLASS_WARLOCK:      return 1;
+        case CLASS_DRUID:        return (specTree == 0) ? 1 : (specTree == 1) ? 2 : 8;
+        default:                 return 0;
+    }
+}
+
+// Returns the main stat value that best fits this class/spec.
+// 0=Any, 1=Str, 2=Agi, 3=Int, 4=Spirit
+static uint8 GetAutoMainStat(uint8 playerClass, int specTree)
+{
+    switch (playerClass)
+    {
+        case CLASS_WARRIOR:      return 1;
+        case CLASS_PALADIN:      return (specTree == 0) ? 3 : 1;
+        case CLASS_HUNTER:       return 2;
+        case CLASS_ROGUE:        return 2;
+        case CLASS_PRIEST:       return (specTree == 2) ? 4 : 3;
+        case CLASS_DEATH_KNIGHT: return 1;
+        case CLASS_SHAMAN:       return (specTree == 1) ? 2 : 3;
+        case CLASS_MAGE:         return 3;
+        case CLASS_WARLOCK:      return 3;
+        case CLASS_DRUID:        return (specTree == 1) ? 2 : 3;
+        default:                 return 0;
+    }
+}
+
+// Returns true when this spec has genuine role ambiguity that auto-detection
+// cannot resolve — the role selector should be shown so the player can clarify.
+// Feral Druid: could be bear tank or cat DPS; the dominant tree cannot tell them apart.
+static bool NeedsRoleSelector(uint8 playerClass, int specTree)
+{
+    return (playerClass == CLASS_DRUID && specTree == 1);
+}
+
+// Returns true when this spec has genuine main-stat ambiguity that auto-detection
+// cannot resolve — both Int and Spirit are valid primary stats depending on build.
+// Disc/Holy Priest, Resto Druid, Resto Shaman all fall into this category.
+static bool NeedsMainStatSelector(uint8 playerClass, int specTree)
+{
+    if (playerClass == CLASS_PRIEST && (specTree == 0 || specTree == 1)) return true;
+    if (playerClass == CLASS_DRUID  && specTree == 2)                    return true;
+    if (playerClass == CLASS_SHAMAN && specTree == 2)                    return true;
+    return false;
+}
+
+// ---------------------------------------------------------------------------
 // GetEligibleTalentAffix  — picks a random talent def this player can roll
 // ---------------------------------------------------------------------------
 
@@ -655,15 +786,17 @@ void ItemAffixMgr::InitTalentAffix(Player* player, Item* item, int8 specOverride
         return;
     }
 
-    // Roll by quality: 10% green, 50% blue, 50% purple+
-    if (quality == ITEM_QUALITY_UNCOMMON && urand(0, 9) != 0)
+    // Roll by quality using configurable per-tier chances.
+    uint32 chance = 0;
+    if      (quality == ITEM_QUALITY_UNCOMMON)         chance = _talentAffixChanceGreen;
+    else if (quality == ITEM_QUALITY_RARE)             chance = _talentAffixChanceBlue;
+    else if (quality == ITEM_QUALITY_EPIC)             chance = _talentAffixChancePurple;
+    else  /* ITEM_QUALITY_LEGENDARY+ */                chance = _talentAffixChanceLegendary;
+
+    if (chance == 0 || urand(0, 99) >= chance)
     {
-        LOG_DEBUG("module", "mod-item-affixes: InitTalentAffix — skipped: green roll miss (guid={})", guid);
-        return;
-    }
-    if (quality >= ITEM_QUALITY_RARE && urand(0, 1) == 0)
-    {
-        LOG_DEBUG("module", "mod-item-affixes: InitTalentAffix — skipped: blue/epic roll miss (guid={})", guid);
+        LOG_DEBUG("module", "mod-item-affixes: InitTalentAffix — skipped: roll miss (quality={} chance={} guid={})",
+            quality, chance, guid);
         return;
     }
 
@@ -791,12 +924,15 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
         if (!def || def->minQuality > itemQuality)
             continue;
 
-        // Green items may only roll generic (family=0) affixes
-        if (genericsOnly && def->spellFamily != 0)
+        if (def->classMask != 0 && !(def->classMask & (1u << (playerClass - 1u))))
             continue;
 
-        // Class skills only: skip stat affixes and family=0 (generic) affixes
-        if (classOnly && (def->spellFamily == 0 || def->affixType == AFFIX_TYPE_STAT))
+        // Green items may only roll truly generic affixes (no class lock, no spell family).
+        if (genericsOnly && (def->spellFamily != 0 || def->classMask != 0))
+            continue;
+
+        // Class skills only: skip generics, but keep class-locked stat affixes.
+        if (classOnly && (def->spellFamily == 0 || def->affixType == AFFIX_TYPE_STAT) && def->classMask == 0)
             continue;
 
         if (def->itemCategory != ITEM_CAT_ANY && item)
@@ -837,11 +973,12 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
             if (!PlayerKnowsCarrierSpell(player, def->carrierSpellId))
                 continue;
         }
-        // Stat affixes: role mask is the sole class gatekeeper; no spell check needed.
-
-        // Stat affixes always go to knownGeneric regardless of spellFamily — that field
-        // is only used for pool-weight expansion and must not affect class weighting.
-        uint8 bucketClass = (def->affixType == AFFIX_TYPE_STAT) ? 0 : affixClass;
+        // Stat affixes: role mask gates by role; classMask gates by class.
+        // Class-locked stat affixes (classMask != 0) go into the class bucket so they
+        // respect ClassAffixChance and spec bucketing just like spellmod affixes.
+        uint8 bucketClass = (def->classMask != 0)          ? playerClass
+                          : (def->affixType == AFFIX_TYPE_STAT) ? 0
+                          : affixClass;
         if (bucketClass == 0)
         {
             knownGeneric.push_back(id);
@@ -859,32 +996,36 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
         }
     }
 
-    // classBoost=2: guarantee a class affix — prefer own spec, fall back to other specs.
-    // Known class entries only; if none are known, fall through to generic selection.
-    if (classBoost >= 2)
+    // classBoost=2 (streak insurance): guarantee a class affix this slot.
+    // Prefer own-spec; fall back to other-spec. If no class affixes known, fall through.
+    if (classBoost >= 2 && (!knownSpecClass.empty() || !knownOtherSpec.empty()))
     {
         if (!knownSpecClass.empty())
             return knownSpecClass[urand(0, static_cast<uint32>(knownSpecClass.size()) - 1)];
-        if (!knownOtherSpec.empty())
-            return knownOtherSpec[urand(0, static_cast<uint32>(knownOtherSpec.size()) - 1)];
-        // No known class affixes for this player — fall through to generic selection.
+        return knownOtherSpec[urand(0, static_cast<uint32>(knownOtherSpec.size()) - 1)];
     }
 
-    // Normal selection: own-spec class affixes get a +100% weight boost (doubled when classBoost=1).
-    // Other-spec known affixes are always eligible at normal weight — spec selection shifts
-    // probability, not eligibility.  If no own-spec affixes are known, other-spec affixes
-    // fill the spec pool so the roll always returns something relevant.
-    // Own-spec affixes get doubled when classBoost >= 1, giving them a +100% weight advantage.
-    // Other-spec known affixes are always eligible at 1x — spec selection shifts probability,
-    // not eligibility.  When own-spec is empty, other-spec fills the entire spec pool.
-    std::vector<uint32> primary;
-    primary.insert(primary.end(), knownSpecClass.begin(), knownSpecClass.end());
-    if (classBoost >= 1)
-        primary.insert(primary.end(), knownSpecClass.begin(), knownSpecClass.end());  // +100% own-spec boost
-    primary.insert(primary.end(), knownOtherSpec.begin(), knownOtherSpec.end());
-    primary.insert(primary.end(), knownGeneric.begin(), knownGeneric.end());
-    if (!primary.empty())
-        return primary[urand(0, static_cast<uint32>(primary.size()) - 1)];
+    // Pre-roll: decide class vs. generic at the configured ratio (_classAffixChance %).
+    // If only one type has eligible affixes, use that type unconditionally.
+    bool hasClass   = !knownSpecClass.empty() || !knownOtherSpec.empty();
+    bool hasGeneric = !knownGeneric.empty();
+
+    bool wantClass = hasClass && (!hasGeneric || urand(0, 99) < _classAffixChance);
+
+    if (wantClass)
+    {
+        // Own-spec entries are doubled when classBoost >= 1 (nudge, not a guarantee).
+        std::vector<uint32> classBucket;
+        classBucket.insert(classBucket.end(), knownSpecClass.begin(), knownSpecClass.end());
+        if (classBoost >= 1)
+            classBucket.insert(classBucket.end(), knownSpecClass.begin(), knownSpecClass.end());
+        classBucket.insert(classBucket.end(), knownOtherSpec.begin(), knownOtherSpec.end());
+        if (!classBucket.empty())
+            return classBucket[urand(0, static_cast<uint32>(classBucket.size()) - 1)];
+    }
+
+    if (!knownGeneric.empty())
+        return knownGeneric[urand(0, static_cast<uint32>(knownGeneric.size()) - 1)];
 
     return 0;
 }
@@ -897,7 +1038,7 @@ std::vector<AffixSlotInfo> ItemAffixMgr::LoadAffixSlots(uint64 itemGuid)
 {
     QueryResult result = CharacterDatabase.Query(
         "SELECT affix_slot, roll_state, affix_id, rolled_value, pending_opts, "
-        "rerolls_remaining, locked_mask "
+        "rerolls_remaining, locked_mask, pending_spec "
         "FROM item_affix WHERE item_guid = {} ORDER BY affix_slot",
         itemGuid);
 
@@ -914,6 +1055,7 @@ std::vector<AffixSlotInfo> ItemAffixMgr::LoadAffixSlots(uint64 itemGuid)
         s.rolledValue      = f[3].Get<int32>();
         s.rerollsRemaining = f[5].Get<uint8>();
         s.lockedMask       = f[6].Get<uint8>();
+        s.pendingSpec      = f[7].Get<int8>();
         std::string opts   = f[4].Get<std::string>();
         if (!opts.empty())
             for (auto part : Acore::Tokenize(opts, ',', false))
@@ -974,6 +1116,97 @@ void ItemAffixMgr::PersistAffix(uint64 itemGuid, uint8 slot, uint32 affixId, int
         affixId, rolledValue, uint8(AFFIX_ROLL_APPLIED));
 }
 
+void ItemAffixMgr::ApplyDamageReduction(uint64 guid, int32 value, bool apply)
+{
+    auto& tracked = _damageReductionPct[guid];
+    tracked = apply ? tracked + value : tracked - value;
+    if (tracked <= 0)
+        _damageReductionPct.erase(guid);
+}
+
+int32 ItemAffixMgr::GetDamageReductionPct(uint64 guid) const
+{
+    auto it = _damageReductionPct.find(guid);
+    return (it != _damageReductionPct.end()) ? it->second : 0;
+}
+
+void ItemAffixMgr::ApplyPetStatBuff(uint64 ownerGuid, uint8 statOp, int32 value, bool apply)
+{
+    auto& buff = _petStatBuffs[ownerGuid];
+    int32 delta = apply ? value : -value;
+    switch (static_cast<GenericStatOp>(statOp))
+    {
+        case GSTAT_PET_COOLDOWN_PCT:     buff.cooldownPct    += delta; break;
+        case GSTAT_PET_HEALTH_PCT:       buff.healthPct      += delta; break;
+        case GSTAT_PET_DAMAGE_PCT:       buff.damagePct      += delta; break;
+        case GSTAT_PET_DMGRED_PCT:       buff.dmgRedPct      += delta; break;
+        case GSTAT_PET_ATTACKSPEED_PCT:  buff.attackSpeedPct += delta; break;
+        default: break;
+    }
+    if (buff.cooldownPct == 0 && buff.healthPct == 0 && buff.damagePct == 0
+        && buff.dmgRedPct == 0 && buff.attackSpeedPct == 0)
+        _petStatBuffs.erase(ownerGuid);
+}
+
+void ItemAffixMgr::ApplyPetStatDelta(Creature* pet, GenericStatOp statOp, int32 value, bool apply)
+{
+    switch (statOp)
+    {
+        case GSTAT_PET_HEALTH_PCT:
+        {
+            uint32 curMax = pet->GetMaxHealth();
+            uint32 newMax = apply ? (curMax * uint32(100 + value) / 100u)
+                                  : (curMax * 100u / uint32(100 + value));
+            if (newMax < 1) newMax = 1;
+            pet->SetMaxHealth(newMax);
+            if (pet->GetHealth() > newMax)
+                pet->SetHealth(newMax);
+            break;
+        }
+        case GSTAT_PET_ATTACKSPEED_PCT:
+            pet->ApplyAttackTimePercentMod(BASE_ATTACK, float(value), apply);
+            break;
+        default: break;  // damagePct / dmgRedPct are handled via UnitScript hooks
+    }
+}
+
+void ItemAffixMgr::ApplyBuffsToPet(Creature* pet, Player* owner)
+{
+    auto it = _petStatBuffs.find(owner->GetGUID().GetRawValue());
+    if (it == _petStatBuffs.end()) return;
+    const PetStatBuff& buff = it->second;
+
+    if (buff.healthPct != 0)
+    {
+        uint32 newMax = pet->GetMaxHealth() * uint32(100 + buff.healthPct) / 100u;
+        if (newMax < 1) newMax = 1;
+        pet->SetMaxHealth(newMax);
+        if (pet->GetHealth() > newMax)
+            pet->SetHealth(newMax);
+    }
+    if (buff.attackSpeedPct != 0)
+        pet->ApplyAttackTimePercentMod(BASE_ATTACK, float(buff.attackSpeedPct), true);
+    // damagePct and dmgRedPct are applied dynamically via UnitScript hooks
+}
+
+int32 ItemAffixMgr::GetPetDamagePct(uint64 ownerGuid) const
+{
+    auto it = _petStatBuffs.find(ownerGuid);
+    return (it != _petStatBuffs.end()) ? it->second.damagePct : 0;
+}
+
+int32 ItemAffixMgr::GetPetDmgRedPct(uint64 ownerGuid) const
+{
+    auto it = _petStatBuffs.find(ownerGuid);
+    return (it != _petStatBuffs.end()) ? it->second.dmgRedPct : 0;
+}
+
+int32 ItemAffixMgr::GetPetCooldownPct(uint64 ownerGuid) const
+{
+    auto it = _petStatBuffs.find(ownerGuid);
+    return (it != _petStatBuffs.end()) ? it->second.cooldownPct : 0;
+}
+
 // ---------------------------------------------------------------------------
 // InitItemSlots  (replaces RollAndAssignAffixes)
 // ---------------------------------------------------------------------------
@@ -1017,9 +1250,10 @@ void ItemAffixMgr::InitItemSlots(Player* player, Item* item)
     }
     else
     {
-        if      (proto->Quality >= ITEM_QUALITY_EPIC)     numSlots = 3;
-        else if (proto->Quality == ITEM_QUALITY_RARE)     numSlots = 2;
-        else if (proto->Quality == ITEM_QUALITY_UNCOMMON) numSlots = 1;
+        if      (proto->Quality >= ITEM_QUALITY_LEGENDARY) numSlots = _slotCountLegendary;
+        else if (proto->Quality >= ITEM_QUALITY_EPIC)     numSlots = _slotCountPurple;
+        else if (proto->Quality == ITEM_QUALITY_RARE)     numSlots = _slotCountBlue;
+        else if (proto->Quality == ITEM_QUALITY_UNCOMMON) numSlots = _slotCountGreen;
         else return;  // white/grey: no affixes
 
         // 2H weapons get bonus slots to compensate for the dual-wield slot advantage.
@@ -1081,9 +1315,10 @@ void ItemAffixMgr::Upgrade2HSlots(Player* player, Item* item)
         return;
 
     uint8 expectedSlots = 0;
-    if      (proto->Quality >= ITEM_QUALITY_EPIC)     expectedSlots = 3 + _twoHanderBonusSlots;
-    else if (proto->Quality == ITEM_QUALITY_RARE)     expectedSlots = 2 + _twoHanderBonusSlots;
-    else if (proto->Quality == ITEM_QUALITY_UNCOMMON) expectedSlots = 1 + _twoHanderBonusSlots;
+    if      (proto->Quality >= ITEM_QUALITY_LEGENDARY) expectedSlots = _slotCountLegendary + _twoHanderBonusSlots;
+    else if (proto->Quality >= ITEM_QUALITY_EPIC)      expectedSlots = _slotCountPurple    + _twoHanderBonusSlots;
+    else if (proto->Quality == ITEM_QUALITY_RARE)      expectedSlots = _slotCountBlue      + _twoHanderBonusSlots;
+    else if (proto->Quality == ITEM_QUALITY_UNCOMMON)  expectedSlots = _slotCountGreen     + _twoHanderBonusSlots;
     else return;
 
     uint64 itemGuid = item->GetGUID().GetRawValue();
@@ -1691,11 +1926,21 @@ void ItemAffixMgr::SendAddonMsg(Player* player, std::string const& payload)
 
 void ItemAffixMgr::SendConfig(Player* player)
 {
+    int     specTree    = GetDominantTalentTree(player);
+    uint8   playerClass = player->getClass();
+    bool    showRole     = _enableRoleSelection     && NeedsRoleSelector(playerClass, specTree);
+    bool    showMainStat = (_enableMainStatSelection == 2)
+                        || (_enableMainStatSelection == 1 && specTree >= 0
+                            && _mainStatSelectorSpecs.count({playerClass, (uint8)specTree}));
+
+    bool showType = _enableClassSkillAffixes && _enableClassSkillAffixSelection;
+    bool showSpec = showType || (_enableTalentAffixes && _enableTalentAffixSelection);
+
     SendAddonMsg(player, Acore::StringFormat("CONFIG|{}|{}|{}|{}",
-        _enableClassSkillAffixes                              ? 1 : 0,  // AFX_CFG_TYPE: show type selector
-        (_enableClassSkillAffixes || _enableTalentAffixes)    ? 1 : 0,  // AFX_CFG_SPEC: show spec selector
-        _enableRoleSelection                                  ? 1 : 0,
-        _enableMainStatSelection                              ? 1 : 0));
+        showType     ? 1 : 0,
+        showSpec     ? 1 : 0,
+        showRole     ? 1 : 0,
+        showMainStat ? 1 : 0));
 }
 
 // ---------------------------------------------------------------------------
@@ -1734,13 +1979,26 @@ std::string ItemAffixMgr::BuildAffixDisplayString(AffixDefinition const* def, in
     {
         if (static_cast<GenericStatOp>(def->statOp) == GSTAT_MOVE_SPEED)
             return Acore::StringFormat("+{}% Move Speed", rolledValue);
+        if (static_cast<GenericStatOp>(def->statOp) == GSTAT_DAMAGE_REDUCTION_PCT)
+            return Acore::StringFormat("-{}% Damage Taken", rolledValue);
+        if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_COOLDOWN_PCT)
+            return Acore::StringFormat("-{}% Pet Cooldowns", rolledValue);
+        if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_HEALTH_PCT)
+            return Acore::StringFormat("+{}% Pet Health", rolledValue);
+        if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_DAMAGE_PCT)
+            return Acore::StringFormat("+{}% Pet Damage", rolledValue);
+        if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_DMGRED_PCT)
+            return Acore::StringFormat("-{}% Pet Dmg Taken", rolledValue);
+        if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_ATTACKSPEED_PCT)
+            return Acore::StringFormat("+{}% Pet Atk Speed", rolledValue);
 
         static const char* statNames[] = {
-            "Stamina", "Strength", "Agility", "Intellect", "Spirit",
-            "Attack Power", "Ranged Attack Power", "Spell Power", "Mp5",
-            "Armor", "Crit Rating", "Haste Rating", "Hit Rating",
-            "Dodge Rating", "Defense Rating", "Parry Rating",
-            "Expertise Rating", "Armor Pen Rating"
+            "Stamina", "Strength", "Agility", "Intellect", "Spirit",       // 0-4
+            "Attack Power", "Ranged Attack Power", "Spell Power", "Mp5",   // 5-8
+            "Armor", "Crit Rating", "Haste Rating", "Hit Rating",          // 9-12
+            "Dodge Rating", "Defense Rating", "Parry Rating",              // 13-15
+            "Expertise Rating", "Armor Pen Rating",                        // 16-17
+            "Move Speed", "Life Leech", "Hp5", "Damage Reduction",        // 18-21
         };
         const char* statName = (def->statOp < sizeof(statNames) / sizeof(statNames[0]))
                              ? statNames[def->statOp] : "Unknown";
@@ -1963,7 +2221,8 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     }
     else
     {
-        if      (quality >= ITEM_QUALITY_EPIC)     numOpts = _optionsCountPurple;
+        if      (quality >= ITEM_QUALITY_LEGENDARY) numOpts = _optionsCountLegendary;
+        else if (quality >= ITEM_QUALITY_EPIC)     numOpts = _optionsCountPurple;
         else if (quality == ITEM_QUALITY_RARE)     numOpts = _optionsCountBlue;
         else { numOpts = _optionsCountGreen; genericsOnly = true; }
 
@@ -1975,35 +2234,22 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
         {
             // Honor player type preference when class skills are available.
             if (type == 1) { genericsOnly = true; }
-            if (type == 2) { classOnly = true; genericsOnly = false; }
+            // type=2 (Class Skills Only) is only respected when the selection UI is enabled.
+            if (type == 2 && _enableClassSkillAffixSelection) { classOnly = true; genericsOnly = false; }
         }
     }
 
-    int8  specForRoll     = (!isGem && spec >= 0) ? spec : -1;
-    uint8 roleForRoll     = _enableRoleSelection ? role : 0;
-    uint8 mainStatForRoll = _enableMainStatSelection ? mainStat : 0;
+    int8  specForRoll    = (!isGem && spec >= 0) ? spec : -1;
+    int   resolvedSpec   = (specForRoll >= 0) ? specForRoll : GetDominantTalentTree(player);
+    uint8 playerClass    = player->getClass();
+    // 255 = sentinel meaning the addon had no selector shown; always auto-detect in that case.
+    uint8 roleForRoll     = (role == 255)     ? GetAutoRole(playerClass, resolvedSpec)     : role;
+    uint8 mainStatForRoll = (mainStat == 255) ? GetAutoMainStat(playerClass, resolvedSpec) : mainStat;
 
-    // Progressive class-affix insurance (non-gems only).
-    uint8 nonClassStreak = 0;
-    if (!isGem && !classOnly && !genericsOnly)
-    {
-        for (auto const& s : slots)
-        {
-            if (s.rollState != AFFIX_ROLL_APPLIED)
-                continue;
-            auto const* appliedDef = GetAffixDef(s.affixId);
-            if (!appliedDef)
-                continue;
-            // Only class-specific spellmod affixes reset the streak; stat affixes do not.
-            bool isClassSpellmod = (appliedDef->affixType == AFFIX_TYPE_SPELLMOD &&
-                                    SpellFamilyToClass(appliedDef->spellFamily) != 0);
-            if (isClassSpellmod)
-                nonClassStreak = 0;
-            else
-                ++nonClassStreak;
-        }
-    }
-    uint8 classBoost = (genericsOnly || classOnly) ? 0 : (nonClassStreak >= 2 ? 2 : nonClassStreak);
+    // Bad-luck streak protection: persistent counter of consecutive non-class options shown
+    // across all rolls and rerolls for this item. Resets to 0 when a class option is generated.
+    uint64 itemGuidForStreak = item->GetGUID().GetRawValue();
+    uint32& optionStreak = _optionStreak[itemGuidForStreak];
 
     // Roll distinct affix IDs, pre-rolling the stat value for each so the
     // player sees exactly what they will get before they choose.
@@ -2013,7 +2259,12 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     std::vector<PendingOpt> opts;
     for (uint32 attempts = 0; opts.size() < numOpts && attempts < 100; ++attempts)
     {
-        uint32 id = RollAffixId(quality, player, item, genericsOnly, classBoost,
+        // Force class if the bad-luck streak has hit the protection threshold.
+        uint8 effectiveBoost = 0;
+        if (!genericsOnly && !classOnly && _badLuckStreakProtection > 0 && optionStreak >= _badLuckStreakProtection)
+            effectiveBoost = 2;
+
+        uint32 id = RollAffixId(quality, player, item, genericsOnly, effectiveBoost,
                                 classOnly, roleForRoll, mainStatForRoll, specForRoll);
         if (!id)
             continue;
@@ -2040,6 +2291,11 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
             continue;
 
         opts.push_back({id, val, false});
+
+        // Update bad-luck streak: class option resets to 0, non-class increments.
+        bool isClassOpt = newDef && newDef->affixType != AFFIX_TYPE_STAT && SpellFamilyToClass(newDef->spellFamily) != 0;
+        if (isClassOpt) optionStreak = 0;
+        else            ++optionStreak;
     }
 
     // 2H weapon bonus: +50% to all affix values, applied after dedup so the
@@ -2110,9 +2366,10 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     uint8 rerolls = 0;
     if (!isGem)
     {
-        if      (quality >= ITEM_QUALITY_EPIC) rerolls = _rerollsPurple;
-        else if (quality == ITEM_QUALITY_RARE) rerolls = _rerollsBlue;
-        else                                    rerolls = _rerollsGreen;
+        if      (quality >= ITEM_QUALITY_LEGENDARY) rerolls = _rerollsLegendary;
+        else if (quality >= ITEM_QUALITY_EPIC)     rerolls = _rerollsPurple;
+        else if (quality == ITEM_QUALITY_RARE)     rerolls = _rerollsBlue;
+        else                                       rerolls = _rerollsGreen;
     }
 
     // Serialize as "id:val:crit,..." so crit state survives logout/relog
@@ -2126,9 +2383,9 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     }
 
     CharacterDatabase.Execute(
-        "UPDATE item_affix SET roll_state = {}, pending_opts = '{}', rerolls_remaining = {}, locked_mask = 0 "
+        "UPDATE item_affix SET roll_state = {}, pending_opts = '{}', rerolls_remaining = {}, locked_mask = 0, pending_spec = {} "
         "WHERE item_guid = {} AND affix_slot = {}",
-        uint8(AFFIX_ROLL_PENDING), optsStr, rerolls, itemGuid, uint32(affixSlot));
+        uint8(AFFIX_ROLL_PENDING), optsStr, rerolls, int8(specForRoll), itemGuid, uint32(affixSlot));
 
     SendRollOptions(player, item, affixSlot, opts, rerolls, 0);
 }
@@ -2184,8 +2441,9 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
 
     // Talent affix for this slot is committed now that the player has made their choice.
     // Must happen before SyncAffixes so the talent row is in the DB when sync reads it.
+    // Use the spec the player selected in the addon UI; falls back to dominant tree if -1.
     if (_enableTalentAffixes)
-        InitTalentAffix(player, item, -1, affixSlot);
+        InitTalentAffix(player, item, slotInfo.pendingSpec, affixSlot);
 
     // Sync immediately if the item is currently equipped
     uint8 bagSlot  = item->GetBagSlot();
@@ -2258,10 +2516,13 @@ void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
         else
         {
             if (type == 1) { genericsOnly = true; }
-            if (type == 2) { classOnly = true; genericsOnly = false; }
+            if (type == 2 && _enableClassSkillAffixSelection) { classOnly = true; genericsOnly = false; }
         }
-        uint8 roleForRoll     = _enableRoleSelection    ? role    : 0;
-        uint8 mainStatForRoll = _enableMainStatSelection ? mainStat : 0;
+        int   resolvedSpec2   = (spec >= 0) ? spec : GetDominantTalentTree(player);
+        uint8 playerClass2    = player->getClass();
+        // 255 = sentinel meaning the addon had no selector shown; always auto-detect in that case.
+        uint8 roleForRoll     = (role == 255)     ? GetAutoRole(playerClass2, resolvedSpec2)     : role;
+        uint8 mainStatForRoll = (mainStat == 255) ? GetAutoMainStat(playerClass2, resolvedSpec2) : mainStat;
 
         // Phase 1: collect locked options into a "chosen" set for dedup.
         std::vector<PendingOpt> finalOpts(slotInfo.pendingOpts);  // start as copy
@@ -2269,6 +2530,9 @@ void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
         for (uint8 j = 0; j < numOpts; ++j)
             if (lockedMask & (1u << j))
                 chosen.push_back(finalOpts[j]);
+
+        // Bad-luck streak protection: same persistent counter as the initial roll.
+        uint32& optionStreak = _optionStreak[itemGuid];
 
         // Phase 2: roll new options for each unlocked slot.
         // keptOriginal[j]=true means roll failed — keep the original value.
@@ -2281,8 +2545,13 @@ void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
             PendingOpt newOpt{0, 0, false};
             for (uint32 attempts = 0; attempts < 100 && newOpt.affixId == 0; ++attempts)
             {
-                // classBoost=1 doubles own-spec entries (same +100% boost as initial roll)
-                uint32 id = RollAffixId(quality, player, item, genericsOnly, 1, classOnly,
+                // classBoost=1 doubles own-spec entries within the class bucket.
+                // Escalate to 2 (force class) if the bad-luck streak hits the protection threshold.
+                uint8 effectiveBoost = 1;
+                if (!genericsOnly && !classOnly && _badLuckStreakProtection > 0 && optionStreak >= _badLuckStreakProtection)
+                    effectiveBoost = 2;
+
+                uint32 id = RollAffixId(quality, player, item, genericsOnly, effectiveBoost, classOnly,
                                         roleForRoll, mainStatForRoll, spec);
                 if (!id)
                     continue;
@@ -2299,6 +2568,11 @@ void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
                     val = RollBudgetStatValue(def->statOp, itemBudget, _budgetMinRoll);
 
                 newOpt = {id, val, false};
+
+                // Update bad-luck streak on each accepted option.
+                bool isClassOpt = def && def->affixType != AFFIX_TYPE_STAT && SpellFamilyToClass(def->spellFamily) != 0;
+                if (isClassOpt) optionStreak = 0;
+                else            ++optionStreak;
             }
 
             if (newOpt.affixId == 0)
@@ -2380,9 +2654,9 @@ void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
         }
 
         CharacterDatabase.Execute(
-            "UPDATE item_affix SET pending_opts = '{}', rerolls_remaining = {} "
+            "UPDATE item_affix SET pending_opts = '{}', rerolls_remaining = {}, pending_spec = {} "
             "WHERE item_guid = {} AND affix_slot = {}",
-            optsStr, newRerolls, itemGuid, uint32(i));
+            optsStr, newRerolls, int8(spec), itemGuid, uint32(i));
 
         SendRollOptions(player, item, i, finalOpts, newRerolls, lockedMask);
         return;

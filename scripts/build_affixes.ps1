@@ -79,7 +79,9 @@ $statOpNames = @{
     5  = "ATTACK_POWER"; 6  = "RANGED_AP"; 7  = "SPELL_POWER"; 8  = "MP5"; 9  = "ARMOR"
     10 = "CRIT_RATING"; 11 = "HASTE_RATING"; 12 = "HIT_RATING"; 13 = "DODGE_RATING"
     14 = "DEFENSE_RATING"; 15 = "PARRY_RATING"; 16 = "EXPERTISE_RATING"; 17 = "ARMOR_PEN_RATING"
-    18 = "MOVE_SPEED"
+    18 = "MOVE_SPEED"; 19 = "LIFE_LEECH"; 20 = "HP5"; 21 = "DAMAGE_REDUCTION_PCT"
+    22 = "PET_COOLDOWN_PCT"; 23 = "PET_HEALTH_PCT"; 24 = "PET_DAMAGE_PCT"
+    25 = "PET_DMGRED_PCT"; 26 = "PET_ATTACKSPEED_PCT"
 }
 
 $itemCatNames = @{
@@ -136,6 +138,7 @@ $lines.Add("  ``level_max``            TINYINT UNSIGNED  NOT NULL DEFAULT 80,")
 $lines.Add("  ``item_category``        TINYINT UNSIGNED  NOT NULL DEFAULT 0,")
 $lines.Add("  ``spec_tree``            TINYINT UNSIGNED  NOT NULL DEFAULT 255,")
 $lines.Add("  ``role_mask``            TINYINT UNSIGNED  NOT NULL DEFAULT 0,")
+$lines.Add("  ``class_mask``           INT UNSIGNED      NOT NULL DEFAULT 0,")
 $lines.Add("  PRIMARY KEY (``id``)")
 $lines.Add(") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;")
 $lines.Add("")
@@ -167,7 +170,8 @@ foreach ($col in @(
     @{ n="level_max";      t="TINYINT UNSIGNED NOT NULL DEFAULT 80" },
     @{ n="item_category";  t="TINYINT UNSIGNED NOT NULL DEFAULT 0" },
     @{ n="spec_tree";      t="TINYINT UNSIGNED NOT NULL DEFAULT 255" },
-    @{ n="role_mask";      t="TINYINT UNSIGNED NOT NULL DEFAULT 0" }
+    @{ n="role_mask";      t="TINYINT UNSIGNED NOT NULL DEFAULT 0" },
+    @{ n="class_mask";     t="INT UNSIGNED NOT NULL DEFAULT 0" }
 )) {
     $varName = "@add_$($col.n -replace '[^a-zA-Z0-9]','_')"
     $lines.Add("SET $varName = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS")
@@ -333,7 +337,8 @@ foreach ($affix in $allAffixes) {
         $lines.Add("-- ----------------------------------------------------------------")
     }
 
-    $safeName = $affix.name -replace "'", "''"
+    $safeName  = $affix.name -replace "'", "''"
+    $classMask = if ($affix.PSObject.Properties['class_mask']) { [int]$affix.class_mask } else { 0 }
     $lines.Add("INSERT INTO ``affix_template``")
     $lines.Add("    (id, name, weight, min_quality, spellmod_op, spellmod_type, spellmod_value,")
     $lines.Add("     spell_family, spell_family_flags0, spell_family_flags1, spell_family_flags2,")
@@ -341,7 +346,7 @@ foreach ($affix in $allAffixes) {
     $lines.Add("     spellmod_op2, spellmod_type2, spellmod_value2,")
     $lines.Add("     spellmod_op3, spellmod_type3, spellmod_value3,")
     $lines.Add("     spellmod_op4, spellmod_type4, spellmod_value4,")
-    $lines.Add("     affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask)")
+    $lines.Add("     affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask, class_mask)")
     $lines.Add("VALUES")
     if ($isStatAffix -or $isSpellSwap) {
         $lines.Add("    ($($affix.id), '$safeName', $($affix.weight), $($affix.min_quality), $op, $typ, $val,")
@@ -350,7 +355,7 @@ foreach ($affix in $allAffixes) {
         $lines.Add("     $op2, $typ2, $val2,")
         $lines.Add("     $op3, $typ3, $val3,")
         $lines.Add("     $op4, $typ4, $val4,")
-        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask)")
+        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask, $classMask)")
     } else {
         $lines.Add("    ($($affix.id), '$safeName', $($affix.weight), $($affix.min_quality), $op, $typ, $($affix.effect.value),")
         $lines.Add("     $family, $f0, $f1, $f2,")
@@ -358,7 +363,7 @@ foreach ($affix in $allAffixes) {
         $lines.Add("     $op2, $typ2, $val2,")
         $lines.Add("     $op3, $typ3, $val3,")
         $lines.Add("     $op4, $typ4, $val4,")
-        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask)")
+        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask, $classMask)")
     }
     $lines.Add("ON DUPLICATE KEY UPDATE")
     $lines.Add("    name = VALUES(name),")
@@ -389,7 +394,8 @@ foreach ($affix in $allAffixes) {
     $lines.Add("    level_max = VALUES(level_max),")
     $lines.Add("    item_category = VALUES(item_category),")
     $lines.Add("    spec_tree = VALUES(spec_tree),")
-    $lines.Add("    role_mask = VALUES(role_mask);")
+    $lines.Add("    role_mask = VALUES(role_mask),
+    class_mask = VALUES(class_mask);")
     $lines.Add("")
 }
 

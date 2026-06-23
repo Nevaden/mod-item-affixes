@@ -1,5 +1,6 @@
 #include "ItemAffix.h"
 #include "Imprints/ImprintMgr.h"
+#include "GameTime.h"
 #include "CellImpl.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
@@ -431,6 +432,106 @@ class spell_vanishing_backstab : public SpellScript
 };
 
 // ============================================================================
+// UnitScript — incoming damage reduction from GSTAT_DAMAGE_REDUCTION_PCT affixes
+// ============================================================================
+
+class ItemAffixUnitScript : public UnitScript
+{
+public:
+    ItemAffixUnitScript() : UnitScript("ItemAffixUnitScript", true, {
+        UNITHOOK_MODIFY_MELEE_DAMAGE,
+        UNITHOOK_MODIFY_SPELL_DAMAGE_TAKEN,
+    }) {}
+
+    void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) override
+    {
+        // Player damage reduction
+        if (target && target->IsPlayer())
+        {
+            int32 pct = std::min(sItemAffixMgr->GetDamageReductionPct(target->GetGUID().GetRawValue()), 75);
+            if (pct > 0)
+                damage = damage * uint32(100 - pct) / 100;
+        }
+        // Pet damage reduction (target is a player-owned pet)
+        if (target && !target->IsPlayer() && target->GetOwnerGUID().IsPlayer())
+        {
+            int32 pct = std::min(sItemAffixMgr->GetPetDmgRedPct(target->GetOwnerGUID().GetRawValue()), 75);
+            if (pct > 0)
+                damage = damage * uint32(100 - pct) / 100;
+        }
+        // Pet damage boost (attacker is a player-owned pet)
+        if (attacker && !attacker->IsPlayer() && attacker->GetOwnerGUID().IsPlayer())
+        {
+            int32 pct = sItemAffixMgr->GetPetDamagePct(attacker->GetOwnerGUID().GetRawValue());
+            if (pct > 0)
+                damage = damage * uint32(100 + pct) / 100;
+        }
+    }
+
+    void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& damage, SpellInfo const* /*spellInfo*/) override
+    {
+        // Player damage reduction
+        if (target && target->IsPlayer())
+        {
+            int32 pct = std::min(sItemAffixMgr->GetDamageReductionPct(target->GetGUID().GetRawValue()), 75);
+            if (pct > 0)
+                damage = damage * (100 - pct) / 100;
+        }
+        // Pet damage reduction (target is a player-owned pet)
+        if (target && !target->IsPlayer() && target->GetOwnerGUID().IsPlayer())
+        {
+            int32 pct = std::min(sItemAffixMgr->GetPetDmgRedPct(target->GetOwnerGUID().GetRawValue()), 75);
+            if (pct > 0)
+                damage = damage * (100 - pct) / 100;
+        }
+        // Pet spell damage boost (attacker is a player-owned pet — e.g., Imp Firebolt)
+        if (attacker && !attacker->IsPlayer() && attacker->GetOwnerGUID().IsPlayer())
+        {
+            int32 pct = sItemAffixMgr->GetPetDamagePct(attacker->GetOwnerGUID().GetRawValue());
+            if (pct > 0)
+                damage = damage * (100 + pct) / 100;
+        }
+    }
+};
+
+// ============================================================================
+// AllCreatureScript — apply pet stat buffs when a player's pet enters the world
+// ============================================================================
+
+class ItemAffixPetScript : public AllCreatureScript
+{
+public:
+    ItemAffixPetScript() : AllCreatureScript("ItemAffixPetScript") {}
+
+    void OnCreatureAddWorld(Creature* creature) override
+    {
+        if (!creature || !creature->GetOwnerGUID().IsPlayer())
+            return;
+        Unit* owner = creature->GetOwner();
+        if (!owner || !owner->IsPlayer())
+            return;
+        sItemAffixMgr->ApplyBuffsToPet(creature, owner->ToPlayer());
+    }
+
+    void OnAllCreatureUpdate(Creature* creature, uint32 diff) override
+    {
+        if (!creature->GetOwnerGUID().IsPlayer()) return;
+        int32 pct = sItemAffixMgr->GetPetCooldownPct(creature->GetOwnerGUID().GetRawValue());
+        if (pct <= 0) return;
+
+        uint32 extraMs = uint32(diff) * uint32(pct) / 100;
+        if (extraMs == 0) return;
+
+        uint32 now = uint32(GameTime::GetGameTimeMS().count());
+        for (auto& [spellId, cooldown] : creature->m_CreatureSpellCooldowns)
+        {
+            if (cooldown.end > now)
+                cooldown.end = (cooldown.end > now + extraMs) ? (cooldown.end - extraMs) : now;
+        }
+    }
+};
+
+// ============================================================================
 // Registration
 // ============================================================================
 
@@ -438,6 +539,8 @@ void AddSC_item_affix_scripts()
 {
     new ItemAffixWorldScript();
     new ItemAffixPlayerScript();
+    new ItemAffixUnitScript();
+    new ItemAffixPetScript();
     RegisterSpellScript(spell_divine_storm_imprint);
     RegisterSpellScript(spell_feral_spirit_imprint);
     RegisterSpellScript(spell_summon_water_elemental_imprint);

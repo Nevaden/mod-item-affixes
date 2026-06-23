@@ -711,6 +711,738 @@
                                         "enchant_id":  4281,
                                         "display_name":  "Scourge Strike: +20% Dmg, +5% Crit"
                                     }
+                    },
+                    {
+                        "id":  10022,
+                        "name":  "Blood Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  45902,
+                                       "flags":  [
+                                                     4194304,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45902"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4282,
+                                        "display_name":  "Blood Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  10023,
+                        "name":  "Blood Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  45902,
+                                       "flags":  [
+                                                     4194304,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45902"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4283,
+                                        "display_name":  "Blood Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10024,
+                        "name":  "Blood Strike: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  45902,
+                                       "flags":  [
+                                                     4194304,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45902"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4284,
+                                        "display_name":  "Blood Strike: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10025,
+                        "name":  "Heart Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  55050,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 55050"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4285,
+                                        "display_name":  "Heart Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  10026,
+                        "name":  "Heart Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  55050,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 55050"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4286,
+                                        "display_name":  "Heart Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10027,
+                        "name":  "Heart Strike: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  55050,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 55050"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4287,
+                                        "display_name":  "Heart Strike: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  10028,
+                        "name":  "Heart Strike: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  55050,
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 55050"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4288,
+                                        "display_name":  "Heart Strike: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10029,
+                        "name":  "Blood Boil: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  48721,
+                                       "flags":  [
+                                                     262144,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48721"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4289,
+                                        "display_name":  "Blood Boil: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  10030,
+                        "name":  "Blood Boil: -2s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  48721,
+                                       "flags":  [
+                                                     262144,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48721"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4290,
+                                        "display_name":  "Blood Boil: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  10031,
+                        "name":  "Blood Boil: +15% DoT, -2s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  48721,
+                                       "flags":  [
+                                                     262144,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48721"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -2000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4291,
+                                        "display_name":  "Blood Boil: +15% DoT, -2s CD"
+                                    }
+                    },
+                    {
+                        "id":  10032,
+                        "name":  "Death Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  49998,
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 49998"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4292,
+                                        "display_name":  "Death Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  10033,
+                        "name":  "Death Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  49998,
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 49998"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4293,
+                                        "display_name":  "Death Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10034,
+                        "name":  "Death Strike: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  49998,
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 49998"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4294,
+                                        "display_name":  "Death Strike: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10035,
+                        "name":  "Plague Strike: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  45462,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45462"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4295,
+                                        "display_name":  "Plague Strike: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  10036,
+                        "name":  "Plague Strike: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  45462,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45462"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4296,
+                                        "display_name":  "Plague Strike: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  10037,
+                        "name":  "Plague Strike: +15% DoT, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  45462,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 45462"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4297,
+                                        "display_name":  "Plague Strike: +15% DoT, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  10038,
+                        "name":  "Rune Strike: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  56815,
+                                       "flags":  [
+                                                     0,
+                                                     536870912,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 56815"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4298,
+                                        "display_name":  "Rune Strike: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  10039,
+                        "name":  "Rune Strike: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  56815,
+                                       "flags":  [
+                                                     0,
+                                                     536870912,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 56815"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4299,
+                                        "display_name":  "Rune Strike: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10040,
+                        "name":  "Rune Strike: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  56815,
+                                       "flags":  [
+                                                     0,
+                                                     536870912,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 56815"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4300,
+                                        "display_name":  "Rune Strike: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  10041,
+                        "name":  "Army of the Dead: -30s Cooldown",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  42650,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 42650"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -30000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4301,
+                                        "display_name":  "Army of the Dead: -30s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  10042,
+                        "name":  "Army of the Dead: -60s Cooldown",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  4,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  42650,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 42650"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -60000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4302,
+                                        "display_name":  "Army of the Dead: -60s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  10043,
+                        "name":  "Summon Gargoyle: -15s Cooldown",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  49206,
+                                       "flags":  [
+                                                     0,
+                                                     128,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 49206"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4303,
+                                        "display_name":  "Summon Gargoyle: -15s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  10044,
+                        "name":  "Summon Gargoyle: -30s Cooldown",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  4,
+                        "target":  {
+                                       "family":  15,
+                                       "family_name":  "DEATH_KNIGHT",
+                                       "carrier_spell_id":  49206,
+                                       "flags":  [
+                                                     0,
+                                                     128,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 49206"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -30000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4304,
+                                        "display_name":  "Summon Gargoyle: -30s Cooldown"
+                                    }
                     }
                 ],
     "affix_examples":  [

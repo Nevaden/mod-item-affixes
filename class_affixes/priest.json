@@ -96,7 +96,7 @@
                     {
                         "id":  1003,
                         "name":  "Smite: Instant Cast",
-                        "weight":  20,
+                        "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  2,
                         "target":  {
@@ -641,7 +641,7 @@
                     {
                         "id":  1020,
                         "name":  "Lightwell: Instant Cast",
-                        "weight":  20,
+                        "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  2,
                         "target":  {
@@ -1366,7 +1366,7 @@
                     {
                         "id":  1043,
                         "name":  "Flash Heal: Instant Cast",
-                        "weight":  20,
+                        "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  2,
                         "target":  {

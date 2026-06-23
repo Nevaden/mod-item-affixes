@@ -222,7 +222,7 @@
                     },
                     {
                         "id":  7007,
-                        "name":  "Starfire: +20% Dmg, Instant Cast",
+                        "name":  "Starfire: Instant Cast",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -239,22 +239,15 @@
                                        "verify_command":  ".spellinfo all 2912"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4169,
-                                        "display_name":  "Starfire: +20% Dmg, Instant Cast"
+                                        "display_name":  "Starfire: Instant Cast"
                                     }
                     },
                     {
@@ -1114,6 +1107,2068 @@
                         "tooltip":  {
                                         "enchant_id":  4196,
                                         "display_name":  "Rake: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7035,
+                        "name":  "Wrath: Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5176,
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5176"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4197,
+                                        "display_name":  "Wrath: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  7036,
+                        "name":  "Healing Touch: Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5185,
+                                       "flags":  [
+                                                     8192,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5185"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4198,
+                                        "display_name":  "Healing Touch: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  7037,
+                        "name":  "Regrowth: Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  8936,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 8936"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4199,
+                                        "display_name":  "Regrowth: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  7038,
+                        "name":  "Insect Swarm: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5570,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5570"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4200,
+                                        "display_name":  "Insect Swarm: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  7039,
+                        "name":  "Insect Swarm: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5570,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5570"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4201,
+                                        "display_name":  "Insect Swarm: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7040,
+                        "name":  "Insect Swarm: +20% DoT, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5570,
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5570"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4202,
+                                        "display_name":  "Insect Swarm: +20% DoT, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7041,
+                        "name":  "Typhoon: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50516,
+                                       "flags":  [
+                                                     0,
+                                                     16777216,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50516"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4203,
+                                        "display_name":  "Typhoon: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7042,
+                        "name":  "Typhoon: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50516,
+                                       "flags":  [
+                                                     0,
+                                                     16777216,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50516"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4204,
+                                        "display_name":  "Typhoon: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7043,
+                        "name":  "Typhoon: -10s Cooldown",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50516,
+                                       "flags":  [
+                                                     0,
+                                                     16777216,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50516"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4205,
+                                        "display_name":  "Typhoon: -10s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7044,
+                        "name":  "Typhoon: +20% Dmg, -10s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50516,
+                                       "flags":  [
+                                                     0,
+                                                     16777216,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50516"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -10000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4206,
+                                        "display_name":  "Typhoon: +20% Dmg, -10s CD"
+                                    }
+                    },
+                    {
+                        "id":  7045,
+                        "name":  "Force of Nature: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33831,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33831"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4207,
+                                        "display_name":  "Force of Nature: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7046,
+                        "name":  "Force of Nature: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33831,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33831"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4208,
+                                        "display_name":  "Force of Nature: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7047,
+                        "name":  "Force of Nature: -30s Cooldown",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33831,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33831"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -30000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4209,
+                                        "display_name":  "Force of Nature: -30s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7048,
+                        "name":  "Force of Nature: +20% Dmg, -30s CD",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33831,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33831"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -30000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4210,
+                                        "display_name":  "Force of Nature: +20% Dmg, -30s CD"
+                                    }
+                    },
+                    {
+                        "id":  7049,
+                        "name":  "Entangling Roots: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  339,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 339"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4211,
+                                        "display_name":  "Entangling Roots: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7050,
+                        "name":  "Entangling Roots: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  339,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 339"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4212,
+                                        "display_name":  "Entangling Roots: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7051,
+                        "name":  "Entangling Roots: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  339,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 339"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4213,
+                                        "display_name":  "Entangling Roots: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  7052,
+                        "name":  "Entangling Roots: +25% Duration, -500ms Cast",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  339,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 339"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  10,
+                                        "op_name":  "CASTING_TIME",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -500
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4214,
+                                        "display_name":  "Entangling Roots: +25% Duration, -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  7053,
+                        "name":  "Entangling Roots: Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  339,
+                                       "flags":  [
+                                                     512,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 339"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4215,
+                                        "display_name":  "Entangling Roots: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  7054,
+                        "name":  "Faerie Fire: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  770,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 770"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4216,
+                                        "display_name":  "Faerie Fire: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7055,
+                        "name":  "Faerie Fire: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  770,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 770"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4217,
+                                        "display_name":  "Faerie Fire: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7056,
+                        "name":  "Faerie Fire: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  770,
+                                       "flags":  [
+                                                     1024,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 770"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4218,
+                                        "display_name":  "Faerie Fire: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7057,
+                        "name":  "Shred: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5221,
+                                       "flags":  [
+                                                     32768,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5221"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4219,
+                                        "display_name":  "Shred: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7058,
+                        "name":  "Shred: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5221,
+                                       "flags":  [
+                                                     32768,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5221"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4220,
+                                        "display_name":  "Shred: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7059,
+                        "name":  "Shred: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5221,
+                                       "flags":  [
+                                                     32768,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5221"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4221,
+                                        "display_name":  "Shred: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7060,
+                        "name":  "Ferocious Bite: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  22568,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 22568"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4222,
+                                        "display_name":  "Ferocious Bite: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7061,
+                        "name":  "Ferocious Bite: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  22568,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 22568"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4223,
+                                        "display_name":  "Ferocious Bite: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7062,
+                        "name":  "Ferocious Bite: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  22568,
+                                       "flags":  [
+                                                     8388608,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 22568"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4224,
+                                        "display_name":  "Ferocious Bite: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7063,
+                        "name":  "Mangle: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33876,
+                                       "flags":  [
+                                                     0,
+                                                     1088,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33876"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4225,
+                                        "display_name":  "Mangle: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7064,
+                        "name":  "Mangle: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33876,
+                                       "flags":  [
+                                                     0,
+                                                     1088,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33876"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4226,
+                                        "display_name":  "Mangle: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7065,
+                        "name":  "Mangle: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33876,
+                                       "flags":  [
+                                                     0,
+                                                     1088,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33876"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4227,
+                                        "display_name":  "Mangle: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7066,
+                        "name":  "Swipe: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  779,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     1024
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 779"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4228,
+                                        "display_name":  "Swipe: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7067,
+                        "name":  "Swipe: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  779,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     1024
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 779"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4229,
+                                        "display_name":  "Swipe: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7068,
+                        "name":  "Swipe: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  779,
+                                       "flags":  [
+                                                     0,
+                                                     1048576,
+                                                     1024
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 779"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4230,
+                                        "display_name":  "Swipe: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7069,
+                        "name":  "Maul: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  6807,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6807"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4231,
+                                        "display_name":  "Maul: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7070,
+                        "name":  "Maul: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  6807,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6807"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4232,
+                                        "display_name":  "Maul: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7071,
+                        "name":  "Maul: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  6807,
+                                       "flags":  [
+                                                     2048,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6807"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4233,
+                                        "display_name":  "Maul: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7072,
+                        "name":  "Ravage: +15% Damage",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  6785,
+                                       "flags":  [
+                                                     65536,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6785"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4234,
+                                        "display_name":  "Ravage: +15% Damage"
+                                    }
+                    },
+                    {
+                        "id":  7073,
+                        "name":  "Ravage: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  6785,
+                                       "flags":  [
+                                                     65536,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6785"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4235,
+                                        "display_name":  "Ravage: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7074,
+                        "name":  "Ravage: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  6785,
+                                       "flags":  [
+                                                     65536,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 6785"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4236,
+                                        "display_name":  "Ravage: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7075,
+                        "name":  "Lacerate: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33745,
+                                       "flags":  [
+                                                     0,
+                                                     256,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33745"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4237,
+                                        "display_name":  "Lacerate: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  7076,
+                        "name":  "Lacerate: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33745,
+                                       "flags":  [
+                                                     0,
+                                                     256,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33745"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4238,
+                                        "display_name":  "Lacerate: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7077,
+                        "name":  "Lacerate: +20% DoT, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  33745,
+                                       "flags":  [
+                                                     0,
+                                                     256,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 33745"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4239,
+                                        "display_name":  "Lacerate: +20% DoT, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7078,
+                        "name":  "Tiger's Fury: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5217,
+                                       "flags":  [
+                                                     0,
+                                                     0,
+                                                     2048
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5217"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4240,
+                                        "display_name":  "Tiger's Fury: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7079,
+                        "name":  "Tiger's Fury: -15s Cooldown",
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5217,
+                                       "flags":  [
+                                                     0,
+                                                     0,
+                                                     2048
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5217"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -15000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4241,
+                                        "display_name":  "Tiger's Fury: -15s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7080,
+                        "name":  "Tiger's Fury: +25% Duration, -15s CD",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  5217,
+                                       "flags":  [
+                                                     0,
+                                                     0,
+                                                     2048
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5217"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -15000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4242,
+                                        "display_name":  "Tiger's Fury: +25% Duration, -15s CD"
+                                    }
+                    },
+                    {
+                        "id":  7081,
+                        "name":  "Savage Roar: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  52610,
+                                       "flags":  [
+                                                     0,
+                                                     268435456,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 52610"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4243,
+                                        "display_name":  "Savage Roar: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7082,
+                        "name":  "Savage Roar: +40% Duration",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  52610,
+                                       "flags":  [
+                                                     0,
+                                                     268435456,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 52610"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  40
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4244,
+                                        "display_name":  "Savage Roar: +40% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7083,
+                        "name":  "Wild Growth: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  48438,
+                                       "flags":  [
+                                                     0,
+                                                     67108864,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48438"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4245,
+                                        "display_name":  "Wild Growth: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  7084,
+                        "name":  "Wild Growth: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  48438,
+                                       "flags":  [
+                                                     0,
+                                                     67108864,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48438"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4246,
+                                        "display_name":  "Wild Growth: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7085,
+                        "name":  "Wild Growth: -2s Cooldown",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  48438,
+                                       "flags":  [
+                                                     0,
+                                                     67108864,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48438"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -2000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4247,
+                                        "display_name":  "Wild Growth: -2s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7086,
+                        "name":  "Wild Growth: +20% Heal, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  48438,
+                                       "flags":  [
+                                                     0,
+                                                     67108864,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 48438"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4248,
+                                        "display_name":  "Wild Growth: +20% Heal, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  7087,
+                        "name":  "Nourish: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50464,
+                                       "flags":  [
+                                                     0,
+                                                     33554432,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50464"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4249,
+                                        "display_name":  "Nourish: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  7088,
+                        "name":  "Nourish: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50464,
+                                       "flags":  [
+                                                     0,
+                                                     33554432,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50464"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4250,
+                                        "display_name":  "Nourish: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7089,
+                        "name":  "Nourish: -500ms Cast",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50464,
+                                       "flags":  [
+                                                     0,
+                                                     33554432,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50464"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -500
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4251,
+                                        "display_name":  "Nourish: -500ms Cast"
+                                    }
+                    },
+                    {
+                        "id":  7090,
+                        "name":  "Nourish: Instant Cast",
+                        "weight":  5,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  50464,
+                                       "flags":  [
+                                                     0,
+                                                     33554432,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 50464"
+                                   },
+                        "effect":  {
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4252,
+                                        "display_name":  "Nourish: Instant Cast"
+                                    }
+                    },
+                    {
+                        "id":  7091,
+                        "name":  "Swiftmend: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  18562,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 18562"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4253,
+                                        "display_name":  "Swiftmend: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  7092,
+                        "name":  "Swiftmend: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  18562,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 18562"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4254,
+                                        "display_name":  "Swiftmend: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7093,
+                        "name":  "Swiftmend: -7s Cooldown",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  18562,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 18562"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -7000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4255,
+                                        "display_name":  "Swiftmend: -7s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7094,
+                        "name":  "Swiftmend: +20% Heal, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  18562,
+                                       "flags":  [
+                                                     0,
+                                                     2,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 18562"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4256,
+                                        "display_name":  "Swiftmend: +20% Heal, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  7095,
+                        "name":  "Innervate: -60s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  29166,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29166"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -60000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4257,
+                                        "display_name":  "Innervate: -60s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7096,
+                        "name":  "Innervate: -90s Cooldown",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  29166,
+                                       "flags":  [
+                                                     0,
+                                                     4096,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 29166"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -90000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4258,
+                                        "display_name":  "Innervate: -90s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7097,
+                        "name":  "Tranquility: +15% Healing",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  740,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 740"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4259,
+                                        "display_name":  "Tranquility: +15% Healing"
+                                    }
+                    },
+                    {
+                        "id":  7098,
+                        "name":  "Tranquility: -60s Cooldown",
+                        "weight":  80,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  740,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 740"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -60000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4260,
+                                        "display_name":  "Tranquility: -60s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  7099,
+                        "name":  "Tranquility: +20% Heal, -60s CD",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  7,
+                                       "family_name":  "DRUID",
+                                       "carrier_spell_id":  740,
+                                       "flags":  [
+                                                     128,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 740"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  11,
+                                        "op_name":  "COOLDOWN",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  -60000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4261,
+                                        "display_name":  "Tranquility: +20% Heal, -60s CD"
                                     }
                     }
                 ],

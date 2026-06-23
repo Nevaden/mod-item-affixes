@@ -65,7 +65,7 @@
                     },
                     {
                         "id":  2002,
-                        "name":  "Fireball: +20% Dmg, Instant",
+                        "name":  "Fireball: Instant Cast",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -82,22 +82,15 @@
                                        "verify_command":  ".spellinfo all 133"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  3952,
-                                        "display_name":  "Fireball: +20% Dmg, Instant"
+                                        "display_name":  "Fireball: Instant Cast"
                                     }
                     },
                     {
@@ -491,7 +484,7 @@
                     {
                         "id":  2015,
                         "name":  "Blast Wave: +15% Damage",
-                        "_purpose":  "Flags shared with Ice Lance (flags=[131072,0,0]) â€” this affix affects both spells.",
+                        "_purpose":  "Flags shared with Ice Lance (flags=[131072,0,0]) Ã¢â‚¬â€ this affix affects both spells.",
                         "weight":  100,
                         "spec_tree":  1,
                         "min_quality":  1,
@@ -522,7 +515,7 @@
                     {
                         "id":  2016,
                         "name":  "Blast Wave: -5s Cooldown",
-                        "_purpose":  "Flags shared with Ice Lance â€” cooldown mod has no effect on Ice Lance (no CD), harmless overlap.",
+                        "_purpose":  "Flags shared with Ice Lance Ã¢â‚¬â€ cooldown mod has no effect on Ice Lance (no CD), harmless overlap.",
                         "weight":  100,
                         "spec_tree":  1,
                         "min_quality":  1,
@@ -1225,7 +1218,7 @@
                     {
                         "id":  2036,
                         "name":  "Ice Lance: +15% Damage",
-                        "_purpose":  "Flags shared with Blast Wave (flags=[131072,0,0]) â€” this affix affects both spells.",
+                        "_purpose":  "Flags shared with Blast Wave (flags=[131072,0,0]) Ã¢â‚¬â€ this affix affects both spells.",
                         "weight":  100,
                         "spec_tree":  2,
                         "min_quality":  1,
@@ -1256,7 +1249,7 @@
                     {
                         "id":  2037,
                         "name":  "Ice Lance: +5% Crit",
-                        "_purpose":  "Flags shared with Blast Wave â€” crit mod also applies to Blast Wave.",
+                        "_purpose":  "Flags shared with Blast Wave Ã¢â‚¬â€ crit mod also applies to Blast Wave.",
                         "weight":  100,
                         "spec_tree":  2,
                         "min_quality":  1,
@@ -1727,7 +1720,7 @@
                     {
                         "id":  2052,
                         "name":  "Frostbolt: Instant Cast",
-                        "weight":  20,
+                        "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  2,
                         "target":  {
@@ -1799,48 +1792,6 @@
                         "tooltip":  {
                                         "enchant_id":  4003,
                                         "display_name":  "Frostbolt: +20% Dmg, -750ms Cast"
-                                    }
-                    },
-                    {
-                        "id":  2054,
-                        "name":  "Frostbolt: +20% Dmg, Instant Cast",
-                        "weight":  5,
-                        "spec_tree":  2,
-                        "min_quality":  3,
-                        "target":  {
-                                       "family":  3,
-                                       "family_name":  "MAGE",
-                                       "carrier_spell_id":  116,
-                                       "flags":  [
-                                                     32,
-                                                     0,
-                                                     0
-                                                 ],
-                                       "flags_hex":  [
-                                                         "0x00000020",
-                                                         "0x00000000",
-                                                         "0x00000000"
-                                                     ],
-                                       "verified":  false,
-                                       "verify_command":  ".spellinfo all 116"
-                                   },
-                        "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
-                                   },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
-                        "tooltip":  {
-                                        "enchant_id":  4004,
-                                        "display_name":  "Frostbolt: +20% Dmg, Instant Cast"
                                     }
                     },
                     {
@@ -1935,7 +1886,7 @@
                     },
                     {
                         "id":  2058,
-                        "name":  "Frostfire Bolt: +20% Dmg, Instant Cast",
+                        "name":  "Frostfire Bolt: Instant Cast",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -1952,22 +1903,15 @@
                                        "verify_command":  ".spellinfo all 44614"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4310,
-                                        "display_name":  "Frostfire Bolt: +20% Dmg, Instant Cast"
+                                        "display_name":  "Frostfire Bolt: Instant Cast"
                                     }
                     },
                     {
@@ -2619,7 +2563,7 @@
                     },
                     {
                         "id":  2078,
-                        "name":  "Arcane Blast: +20% Dmg, Instant Cast",
+                        "name":  "Arcane Blast: Instant Cast",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -2636,22 +2580,15 @@
                                        "verify_command":  ".spellinfo all 30451"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4330,
-                                        "display_name":  "Arcane Blast: +20% Dmg, Instant Cast"
+                                        "display_name":  "Arcane Blast: Instant Cast"
                                     }
                     }
                 ],

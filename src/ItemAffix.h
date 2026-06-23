@@ -5,6 +5,7 @@
 #include "Player.h"     // SpellModifier, SpellModType (107=FLAT, 108=PCT), SpellModOp
 #include "SpellDefines.h" // SpellModOp enum values
 #include "Util.h"
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -83,6 +84,15 @@ enum GenericStatOp : uint8
     GSTAT_EXPERTISE_RATING = 16,
     GSTAT_ARMOR_PEN_RATING = 17,
     GSTAT_MOVE_SPEED       = 18,  // flat percent bonus to run speed (value=10 → +10%)
+    GSTAT_LIFE_LEECH            = 19,  // reserved — not yet implemented in ApplyGenericStat
+    GSTAT_HP5                   = 20,  // health regeneration per 5 seconds
+    GSTAT_DAMAGE_REDUCTION_PCT  = 21,  // % reduction to all incoming damage (tracked in _damageReductionPct)
+    // Pet-focused stats — applied to the player's active summon
+    GSTAT_PET_COOLDOWN_PCT      = 22,  // % reduction to pet ability cooldowns (OnAllCreatureUpdate)
+    GSTAT_PET_HEALTH_PCT        = 23,  // % increase to pet max health
+    GSTAT_PET_DAMAGE_PCT        = 24,  // % increase to all pet damage dealt (UnitScript hook)
+    GSTAT_PET_DMGRED_PCT        = 25,  // % reduction to all damage taken by pet (UnitScript hook)
+    GSTAT_PET_ATTACKSPEED_PCT   = 26,  // % increase to pet attack speed (faster attacks)
 };
 
 enum AffixRollState : uint8
@@ -115,6 +125,7 @@ struct AffixDefinition
     uint8       itemCategory;     // AffixItemCategory (ITEM_CAT_ANY=0 = rolls on anything)
     uint8       specTree;         // 255=no restriction; 0/1/2=dominant talent tree required
     uint8       roleMask;         // AffixRoleGroup bitmask; 0=any role
+    uint32      classMask;        // (1<<(classId-1)) bitmask; 0 = any class
     // SPELL_SWAP chain scaling: index = chainCount-1, pair = (soloSpell, comboSpell).
     // Loaded from spell_swap_chain_spells. Empty = use effects[0]/[1] only (no scaling).
     std::vector<std::pair<uint32, uint32>> chainSwapSpells;
@@ -189,6 +200,7 @@ struct AffixSlotInfo
     std::vector<PendingOpt> pendingOpts;           // populated when PENDING
     uint8                   rerollsRemaining = 0;  // rerolls left for this pending slot
     uint8                   lockedMask       = 0;  // bitmask: bit N = option N is locked
+    int8                    pendingSpec      = -1; // spec tree from addon at roll time; -1=dominant tree
 };
 
 class ItemAffixMgr
@@ -210,6 +222,18 @@ public:
 
     // Send CONFIG message to client with server-side feature toggle flags.
     void SendConfig(Player* player);
+
+    // Damage reduction % tracking for GSTAT_DAMAGE_REDUCTION_PCT affixes.
+    void  ApplyDamageReduction(uint64 guid, int32 value, bool apply);
+    int32 GetDamageReductionPct(uint64 guid) const;
+
+    // Pet stat buff tracking for GSTAT_PET_* affixes.
+    void  ApplyPetStatBuff(uint64 ownerGuid, uint8 statOp, int32 value, bool apply);
+    void  ApplyPetStatDelta(Creature* pet, GenericStatOp statOp, int32 value, bool apply);
+    void  ApplyBuffsToPet(Creature* pet, Player* owner);
+    int32 GetPetDamagePct(uint64 ownerGuid) const;
+    int32 GetPetDmgRedPct(uint64 ownerGuid) const;
+    int32 GetPetCooldownPct(uint64 ownerGuid) const;
 
     // Apply talent affix SpellMods for this item.  Called on equip (via ReapplyAllEquipped).
     void ApplyTalentAffixes(Player* player, Item* item);
@@ -321,22 +345,49 @@ private:
     std::vector<uint32> _pool;
     std::unordered_set<uint64> _pendingReroll;  // player GUIDs awaiting a reroll on next ROLL msg
 
-    bool  _enableClassSkillAffixes  = true;  // when false, only stat affixes roll; type selector hidden
-    bool  _enableTalentAffixes      = true;  // when false, talent affix rows never roll; spec selector hidden if class skills also off
-    bool  _enableRoleSelection      = true;
-    bool  _enableMainStatSelection  = true;
+    bool  _enableClassSkillAffixes          = true;   // when false, only stat affixes roll
+    bool  _enableClassSkillAffixSelection   = false;  // when false, type selector hidden; class affixes still roll at Any weight
+    bool  _enableTalentAffixes              = true;   // when false, talent affix rows never roll
+    bool  _enableTalentAffixSelection       = false;  // when false, spec selector hidden; talent rolls use dominant tree
+    uint32 _classAffixChance                = 20;    // % chance (0-100) each roll option is a class affix rather than a stat affix
+    uint32 _badLuckStreakProtection         = 0;     // consecutive non-class options before next is forced class; 0 = disabled
+    std::unordered_map<uint64, uint32> _optionStreak; // item GUID → consecutive non-class options seen this session
+    uint32 _talentAffixChanceGreen          = 10;    // % chance (0-100) an uncommon item rolls a talent affix
+    uint32 _talentAffixChanceBlue           = 50;    // % chance (0-100) a rare item rolls a talent affix
+    uint32 _talentAffixChancePurple         = 50;    // % chance (0-100) an epic item rolls a talent affix
+    uint32 _talentAffixChanceLegendary      = 100;   // % chance (0-100) a legendary+ item rolls a talent affix
+    bool  _enableRoleSelection      = false;  // when false, role selector hidden; rolls from full eligible pool
+    uint8 _enableMainStatSelection  = 0;      // 0=hidden, 1=selective (ambiguous specs), 2=all classes
+    std::set<std::pair<uint8,uint8>> _mainStatSelectorSpecs; // (classId, specTree) pairs shown when mode=1
+    std::unordered_map<uint64, int32> _damageReductionPct;   // playerGuid → total % damage reduction from affixes
+
+    struct PetStatBuff {
+        int32 cooldownPct    = 0;
+        int32 healthPct      = 0;
+        int32 damagePct      = 0;
+        int32 dmgRedPct      = 0;
+        int32 attackSpeedPct = 0;
+    };
+    std::unordered_map<uint64, PetStatBuff> _petStatBuffs;  // ownerGuid → accumulated pet stat buffs
     uint8 _twoHanderBonusSlots      = 1;     // extra affix slots granted to 2H weapons (0 = no bonus)
     // Configurable option counts and reroll counts per quality tier
     uint8 _optionsCountGreen        = 1;     // how many options offered for green-quality items
     uint8 _optionsCountBlue         = 2;     // how many options offered for blue-quality items
-    uint8 _optionsCountPurple       = 3;     // how many options offered for purple+ items
+    uint8 _optionsCountPurple       = 3;     // how many options offered for purple (epic) items
+    uint8 _optionsCountLegendary    = 5;     // how many options offered for legendary+ items
     uint8 _rerollsGreen             = 0;     // player rerolls allowed for green items
     uint8 _rerollsBlue              = 2;     // player rerolls allowed for blue items
-    uint8 _rerollsPurple            = 3;     // player rerolls allowed for purple+ items
+    uint8 _rerollsPurple            = 3;     // player rerolls allowed for purple (epic) items
+    uint8 _rerollsLegendary         = 7;     // player rerolls allowed for legendary+ items
+    uint8 _slotCountGreen           = 1;     // affix slots granted to uncommon (green) items
+    uint8 _slotCountBlue            = 2;     // affix slots granted to rare (blue) items
+    uint8 _slotCountPurple          = 3;     // affix slots granted to epic (purple) items
+    uint8 _slotCountLegendary       = 4;     // affix slots granted to legendary+ items
     // WotLK item budget fractions — share of total item budget allocated to one affix roll
-    float _budgetFractionGreen  = 0.18f;  // green quality  (1 affix)
-    float _budgetFractionBlue   = 0.13f;  // blue quality   (2 affixes)
-    float _budgetFractionPurple = 0.10f;  // purple quality (3 affixes)
+    float _budgetFractionGreen      = 0.18f;  // green quality     (1 affix)
+    float _budgetFractionBlue       = 0.13f;  // blue quality      (2 affixes)
+    float _budgetFractionPurple     = 0.10f;  // epic quality      (3 affixes)
+    float _budgetFractionLegendary  = 0.09f;  // legendary quality (4 affixes)
     float  _budgetMinRoll        = 0.75f;  // minimum roll as fraction of max (variance floor)
     float  _statMultiplier       = 1.0f;   // global stat scaler (>1 = power fantasy, <1 = conservative)
     uint32 _imprintRollChance    = 30;     // % chance an Imprint option replaces the last roll option

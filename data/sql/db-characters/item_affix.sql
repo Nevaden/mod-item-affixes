@@ -45,6 +45,12 @@ SET @add_lm = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
     'SELECT 1');
 PREPARE _s FROM @add_lm; EXECUTE _s; DEALLOCATE PREPARE _s;
 
+SET @add_ps = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='item_affix' AND COLUMN_NAME='pending_spec')=0,
+    'ALTER TABLE `item_affix` ADD COLUMN `pending_spec` TINYINT NOT NULL DEFAULT -1 COMMENT ''Spec tree selected via addon at roll time; -1=fall back to dominant talent tree''',
+    'SELECT 1');
+PREPARE _s FROM @add_ps; EXECUTE _s; DEALLOCATE PREPARE _s;
+
 -- Migrate existing applied affixes to roll_state=2
 UPDATE `item_affix` SET `roll_state` = 2 WHERE `affix_id` != 0 AND `roll_state` = 0;
 

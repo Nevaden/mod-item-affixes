@@ -8,6 +8,7 @@ affixes/pseudo-code budget
 scripts/config.bat
 scripts/config.sh
 scripts/local_config.bat
+scripts/db_config.bat
 
 # OS-generated files
 .DS_Store

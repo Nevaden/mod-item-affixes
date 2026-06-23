@@ -931,7 +931,7 @@
                     },
                     {
                         "id":  9029,
-                        "name":  "Soul Fire: +20% Dmg, Instant Cast",
+                        "name":  "Soul Fire: Instant Cast",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -948,25 +948,17 @@
                                        "verify_command":  ".spellinfo all 6353"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4259,
-                                        "display_name":  "Soul Fire: +20% Dmg, Instant Cast"
+                                        "display_name":  "Soul Fire: Instant Cast"
                                     }
                     },
-
                     {
                         "id":  9030,
                         "name":  "Drain Life: +15% Damage",
@@ -977,7 +969,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  689,
-                                       "flags":  [8, 0, 0],
+                                       "flags":  [
+                                                     8,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 689"
                                    },
@@ -1003,7 +999,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  689,
-                                       "flags":  [8, 0, 0],
+                                       "flags":  [
+                                                     8,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 689"
                                    },
@@ -1029,7 +1029,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  689,
-                                       "flags":  [8, 0, 0],
+                                       "flags":  [
+                                                     8,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 689"
                                    },
@@ -1052,7 +1056,6 @@
                                         "display_name":  "Drain Life: +15% Dmg, +2s Duration"
                                     }
                     },
-
                     {
                         "id":  9033,
                         "name":  "Seed of Corruption: +15% DoT",
@@ -1063,7 +1066,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  27243,
-                                       "flags":  [0, 16, 0],
+                                       "flags":  [
+                                                     0,
+                                                     16,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 27243"
                                    },
@@ -1089,7 +1096,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  27243,
-                                       "flags":  [0, 16, 0],
+                                       "flags":  [
+                                                     0,
+                                                     16,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 27243"
                                    },
@@ -1115,7 +1126,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  27243,
-                                       "flags":  [0, 16, 0],
+                                       "flags":  [
+                                                     0,
+                                                     16,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 27243"
                                    },
@@ -1138,7 +1153,6 @@
                                         "display_name":  "Seed of Corruption: +20% DoT, +3s Duration"
                                     }
                     },
-
                     {
                         "id":  9036,
                         "name":  "Drain Soul: +15% Damage",
@@ -1149,7 +1163,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  1120,
-                                       "flags":  [16384, 0, 0],
+                                       "flags":  [
+                                                     16384,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 1120"
                                    },
@@ -1175,7 +1193,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  1120,
-                                       "flags":  [16384, 0, 0],
+                                       "flags":  [
+                                                     16384,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 1120"
                                    },
@@ -1201,7 +1223,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  1120,
-                                       "flags":  [16384, 0, 0],
+                                       "flags":  [
+                                                     16384,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 1120"
                                    },
@@ -1224,7 +1250,71 @@
                                         "display_name":  "Drain Soul: +20% Dmg, +3s Duration"
                                     }
                     },
-
+                    {
+                        "id":  9060,
+                        "name":  "Pet: -Cooldowns",
+                        "affix_type":  1,
+                        "weight":  70,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "family":  0,
+                        "class_mask":  256,
+                        "stat":  {"op": 22, "op_name": "PET_COOLDOWN_PCT"},
+                        "item_category":  0,
+                        "tooltip":  {"enchant_id": 0}
+                    },
+                    {
+                        "id":  9061,
+                        "name":  "Pet: +Health%",
+                        "affix_type":  1,
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "family":  0,
+                        "class_mask":  256,
+                        "stat":  {"op": 23, "op_name": "PET_HEALTH_PCT"},
+                        "item_category":  0,
+                        "tooltip":  {"enchant_id": 0}
+                    },
+                    {
+                        "id":  9062,
+                        "name":  "Pet: +Damage%",
+                        "affix_type":  1,
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "family":  0,
+                        "class_mask":  256,
+                        "stat":  {"op": 24, "op_name": "PET_DAMAGE_PCT"},
+                        "item_category":  0,
+                        "tooltip":  {"enchant_id": 0}
+                    },
+                    {
+                        "id":  9063,
+                        "name":  "Pet: Dmg Reduction",
+                        "affix_type":  1,
+                        "weight":  60,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "family":  0,
+                        "class_mask":  256,
+                        "stat":  {"op": 25, "op_name": "PET_DMGRED_PCT"},
+                        "item_category":  0,
+                        "tooltip":  {"enchant_id": 0}
+                    },
+                    {
+                        "id":  9064,
+                        "name":  "Pet: +Atk Speed",
+                        "affix_type":  1,
+                        "weight":  80,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "family":  0,
+                        "class_mask":  256,
+                        "stat":  {"op": 26, "op_name": "PET_ATTACKSPEED_PCT"},
+                        "item_category":  0,
+                        "tooltip":  {"enchant_id": 0}
+                    },
                     {
                         "id":  9041,
                         "name":  "Health Funnel: +15% Transfer",
@@ -1235,7 +1325,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  755,
-                                       "flags":  [16777216, 0, 0],
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 755"
                                    },
@@ -1261,7 +1355,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  755,
-                                       "flags":  [16777216, 0, 0],
+                                       "flags":  [
+                                                     16777216,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 755"
                                    },
@@ -1284,7 +1382,6 @@
                                         "display_name":  "Health Funnel: +20% Transfer, -10% Cost"
                                     }
                     },
-
                     {
                         "id":  9043,
                         "name":  "Demon/Fel Armor: +10% Effect",
@@ -1295,7 +1392,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  706,
-                                       "flags":  [0, 536870944, 0],
+                                       "flags":  [
+                                                     0,
+                                                     536870944,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 706"
                                    },
@@ -1321,7 +1422,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  706,
-                                       "flags":  [0, 536870944, 0],
+                                       "flags":  [
+                                                     0,
+                                                     536870944,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 706"
                                    },
@@ -1344,7 +1449,6 @@
                                         "display_name":  "Demon/Fel Armor: +15% Effect, -10% Cost"
                                     }
                     },
-
                     {
                         "id":  9045,
                         "name":  "Chaos Bolt: +15% Damage",
@@ -1355,7 +1459,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  50796,
-                                       "flags":  [0, 131072, 0],
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 50796"
                                    },
@@ -1381,7 +1489,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  50796,
-                                       "flags":  [0, 131072, 0],
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 50796"
                                    },
@@ -1407,7 +1519,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  50796,
-                                       "flags":  [0, 131072, 0],
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 50796"
                                    },
@@ -1433,7 +1549,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  50796,
-                                       "flags":  [0, 131072, 0],
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 50796"
                                    },
@@ -1456,7 +1576,6 @@
                                         "display_name":  "Chaos Bolt: +20% Dmg, -500ms Cast"
                                     }
                     },
-
                     {
                         "id":  9049,
                         "name":  "Rain of Fire: +15% Damage",
@@ -1467,7 +1586,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  5740,
-                                       "flags":  [32, 0, 0],
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 5740"
                                    },
@@ -1493,7 +1616,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  5740,
-                                       "flags":  [32, 0, 0],
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 5740"
                                    },
@@ -1519,7 +1646,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  5740,
-                                       "flags":  [32, 0, 0],
+                                       "flags":  [
+                                                     32,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 5740"
                                    },
@@ -1542,10 +1673,9 @@
                                         "display_name":  "Rain of Fire: +20% Dmg, +25% Radius"
                                     }
                     },
-
                     {
                         "id":  9055,
-                        "name":  "Shadow Bolt: +20% Dmg, Instant Cast",
+                        "name":  "Shadow Bolt: Instant Cast",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -1553,32 +1683,29 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  686,
-                                       "flags":  [1, 0, 0],
+                                       "flags":  [
+                                                     1,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 686"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4285,
-                                        "display_name":  "Shadow Bolt: +20% Dmg, Instant Cast"
+                                        "display_name":  "Shadow Bolt: Instant Cast"
                                     }
                     },
                     {
                         "id":  9056,
-                        "name":  "Incinerate: +20% Dmg, Instant Cast",
+                        "name":  "Incinerate: Instant Cast",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -1586,32 +1713,29 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  29722,
-                                       "flags":  [2097152, 0, 0],
+                                       "flags":  [
+                                                     2097152,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 29722"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4286,
-                                        "display_name":  "Incinerate: +20% Dmg, Instant Cast"
+                                        "display_name":  "Incinerate: Instant Cast"
                                     }
                     },
                     {
                         "id":  9057,
-                        "name":  "Immolate: +20% Dmg, Instant Cast",
+                        "name":  "Immolate: Instant Cast",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -1619,32 +1743,29 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  348,
-                                       "flags":  [16, 0, 0],
+                                       "flags":  [
+                                                     16,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 348"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4287,
-                                        "display_name":  "Immolate: +20% Dmg, Instant Cast"
+                                        "display_name":  "Immolate: Instant Cast"
                                     }
                     },
                     {
                         "id":  9058,
-                        "name":  "Chaos Bolt: +20% Dmg, Instant Cast",
+                        "name":  "Chaos Bolt: Instant Cast",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -1652,32 +1773,29 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  50796,
-                                       "flags":  [0, 131072, 0],
+                                       "flags":  [
+                                                     0,
+                                                     131072,
+                                                     0
+                                                 ],
                                        "verified":  true,
                                        "verify_command":  ".spellinfo all 50796"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4288,
-                                        "display_name":  "Chaos Bolt: +20% Dmg, Instant Cast"
+                                        "display_name":  "Chaos Bolt: Instant Cast"
                                     }
                     },
                     {
                         "id":  9059,
-                        "name":  "Haunt: +20% Dmg, Instant Cast",
+                        "name":  "Haunt: Instant Cast",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -1685,30 +1803,26 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  48181,
-                                       "flags":  [0, 262144, 0],
+                                       "flags":  [
+                                                     0,
+                                                     262144,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 48181"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
-                                       "modifier":  108,
-                                       "modifier_name":  "PCT",
-                                       "value":  20
+                                       "op":  10,
+                                       "op_name":  "CASTING_TIME",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
                                    },
-                        "effect2":  {
-                                        "op":  10,
-                                        "op_name":  "CASTING_TIME",
-                                        "modifier":  107,
-                                        "modifier_name":  "FLAT",
-                                        "value":  -10000
-                                    },
                         "tooltip":  {
                                         "enchant_id":  4289,
-                                        "display_name":  "Haunt: +20% Dmg, Instant Cast"
+                                        "display_name":  "Haunt: Instant Cast"
                                     }
                     },
-
                     {
                         "id":  9052,
                         "name":  "Hellfire: +15% Damage",
@@ -1719,7 +1833,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  1949,
-                                       "flags":  [64, 0, 0],
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 1949"
                                    },
@@ -1745,7 +1863,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  1949,
-                                       "flags":  [64, 0, 0],
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 1949"
                                    },
@@ -1771,7 +1893,11 @@
                                        "family":  5,
                                        "family_name":  "WARLOCK",
                                        "carrier_spell_id":  1949,
-                                       "flags":  [64, 0, 0],
+                                       "flags":  [
+                                                     64,
+                                                     0,
+                                                     0
+                                                 ],
                                        "verified":  false,
                                        "verify_command":  ".spellinfo all 1949"
                                    },

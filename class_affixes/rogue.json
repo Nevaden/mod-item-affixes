@@ -1062,6 +1062,618 @@
                                         "enchant_id":  4161,
                                         "display_name":  "Garrote: +15% DoT"
                                     }
+                    },
+                    {
+                        "id":  6034,
+                        "name":  "Mutilate: +20% Dmg, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1329,
+                                       "flags":  [
+                                                     0,
+                                                     2097152,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1329"
+                                   },
+                        "effect":  {
+                                       "op":  0,
+                                       "op_name":  "DAMAGE",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4340,
+                                        "display_name":  "Mutilate: +20% Dmg, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6035,
+                        "name":  "Hemorrhage: +5% Crit",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  16511,
+                                       "flags":  [
+                                                     41943040,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 16511"
+                                   },
+                        "effect":  {
+                                       "op":  7,
+                                       "op_name":  "CRITICAL_CHANCE",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  5
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4341,
+                                        "display_name":  "Hemorrhage: +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6036,
+                        "name":  "Hemorrhage: +15% DoT, +5% Crit",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  16511,
+                                       "flags":  [
+                                                     41943040,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 16511"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  7,
+                                        "op_name":  "CRITICAL_CHANCE",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  5
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4342,
+                                        "display_name":  "Hemorrhage: +15% DoT, +5% Crit"
+                                    }
+                    },
+                    {
+                        "id":  6037,
+                        "name":  "Rupture: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1943,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1943"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4343,
+                                        "display_name":  "Rupture: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  6038,
+                        "name":  "Rupture: +20% DoT, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1943,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1943"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4344,
+                                        "display_name":  "Rupture: +20% DoT, +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  6039,
+                        "name":  "Garrote: +3s Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  703,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 703"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  3000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4345,
+                                        "display_name":  "Garrote: +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  6040,
+                        "name":  "Garrote: +20% DoT, +3s Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  703,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 703"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  20
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  107,
+                                        "modifier_name":  "FLAT",
+                                        "value":  3000
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4346,
+                                        "display_name":  "Garrote: +20% DoT, +3s Duration"
+                                    }
+                    },
+                    {
+                        "id":  6041,
+                        "name":  "Shadowstep: -5s Cooldown",
+                        "weight":  100,
+                        "spec_tree":  2,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  36554,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 36554"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -5000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4347,
+                                        "display_name":  "Shadowstep: -5s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  6042,
+                        "name":  "Shadowstep: -10s Cooldown",
+                        "weight":  10,
+                        "spec_tree":  2,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  36554,
+                                       "flags":  [
+                                                     0,
+                                                     512,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 36554"
+                                   },
+                        "effect":  {
+                                       "op":  11,
+                                       "op_name":  "COOLDOWN",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -10000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4348,
+                                        "display_name":  "Shadowstep: -10s Cooldown"
+                                    }
+                    },
+                    {
+                        "id":  6043,
+                        "name":  "Slice and Dice: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  5171,
+                                       "flags":  [
+                                                     262144,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5171"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4349,
+                                        "display_name":  "Slice and Dice: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  6044,
+                        "name":  "Slice and Dice: +50% Duration",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  5171,
+                                       "flags":  [
+                                                     262144,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 5171"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  50
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4350,
+                                        "display_name":  "Slice and Dice: +50% Duration"
+                                    }
+                    },
+                    {
+                        "id":  6045,
+                        "name":  "Deadly Poison: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2818,
+                                       "flags":  [
+                                                     65536,
+                                                     524288,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2818"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4351,
+                                        "display_name":  "Deadly Poison: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  6046,
+                        "name":  "Deadly Poison: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  0,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2818,
+                                       "flags":  [
+                                                     65536,
+                                                     524288,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2818"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4352,
+                                        "display_name":  "Deadly Poison: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  6047,
+                        "name":  "Deadly Poison: +15% DoT, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  2818,
+                                       "flags":  [
+                                                     65536,
+                                                     524288,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 2818"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4353,
+                                        "display_name":  "Deadly Poison: +15% DoT, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  6048,
+                        "name":  "Wound Poison: +15% DoT",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  13219,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 13219"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4354,
+                                        "display_name":  "Wound Poison: +15% DoT"
+                                    }
+                    },
+                    {
+                        "id":  6049,
+                        "name":  "Wound Poison: +25% Duration",
+                        "weight":  100,
+                        "spec_tree":  1,
+                        "min_quality":  1,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  13219,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 13219"
+                                   },
+                        "effect":  {
+                                       "op":  1,
+                                       "op_name":  "DURATION",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  25
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4355,
+                                        "display_name":  "Wound Poison: +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  6050,
+                        "name":  "Wound Poison: +15% DoT, +25% Duration",
+                        "weight":  10,
+                        "spec_tree":  1,
+                        "min_quality":  2,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  13219,
+                                       "flags":  [
+                                                     268435456,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 13219"
+                                   },
+                        "effect":  {
+                                       "op":  22,
+                                       "op_name":  "DOT",
+                                       "modifier":  108,
+                                       "modifier_name":  "PCT",
+                                       "value":  15
+                                   },
+                        "effect2":  {
+                                        "op":  1,
+                                        "op_name":  "DURATION",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  25
+                                    },
+                        "tooltip":  {
+                                        "enchant_id":  4356,
+                                        "display_name":  "Wound Poison: +15% DoT, +25% Duration"
+                                    }
+                    },
+                    {
+                        "id":  6051,
+                        "name":  "Rupture: Free Cast",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  1943,
+                                       "flags":  [
+                                                     1048576,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 1943"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4357,
+                                        "display_name":  "Rupture: Free Cast"
+                                    }
+                    },
+                    {
+                        "id":  6052,
+                        "name":  "Garrote: Free Cast",
+                        "weight":  10,
+                        "spec_tree":  0,
+                        "min_quality":  3,
+                        "target":  {
+                                       "family":  8,
+                                       "family_name":  "ROGUE",
+                                       "carrier_spell_id":  703,
+                                       "flags":  [
+                                                     256,
+                                                     0,
+                                                     0
+                                                 ],
+                                       "verified":  false,
+                                       "verify_command":  ".spellinfo all 703"
+                                   },
+                        "effect":  {
+                                       "op":  14,
+                                       "op_name":  "COST",
+                                       "modifier":  107,
+                                       "modifier_name":  "FLAT",
+                                       "value":  -1000
+                                   },
+                        "tooltip":  {
+                                        "enchant_id":  4358,
+                                        "display_name":  "Garrote: Free Cast"
+                                    }
                     }
                 ],
     "affix_examples":  [

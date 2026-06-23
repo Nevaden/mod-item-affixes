@@ -373,8 +373,17 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask)
         end
         f._rerollBtn:SetScript("OnClick", function()
             if not anyUnlocked then return end
+            local roleVal = AFX_CFG_ROLE == 1 and AFX_PREF_ROLE or 255
+            local mainVal = AFX_CFG_MAIN == 1 and AFX_PREF_MAIN or 255
+            if AFX_DEBUG then
+                print("|cff44DDFF[AFX]|r REROLL sending:"
+                    .. " spec=" .. AFX_PREF_SPEC .. " (cfg=" .. AFX_CFG_SPEC .. ")"
+                    .. " type=" .. AFX_PREF_TYPE .. " (cfg=" .. AFX_CFG_TYPE .. ")"
+                    .. " role=" .. roleVal .. " (cfg=" .. AFX_CFG_ROLE .. ")"
+                    .. " main=" .. mainVal .. " (cfg=" .. AFX_CFG_MAIN .. ")")
+            end
             AFXM:SendToServer("REROLL|" .. bag .. "|" .. slot .. "|" .. AFX_PREF_SPEC
-                .. "|" .. AFX_PREF_TYPE .. "|" .. AFX_PREF_ROLE .. "|" .. AFX_PREF_MAIN)
+                .. "|" .. AFX_PREF_TYPE .. "|" .. roleVal .. "|" .. mainVal)
         end)
         f._rerollBtn:Show()
     else
@@ -623,9 +632,17 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem)
     f._rollBtn:SetScript("OnClick", function()
         local typeVal = f._isGem and 1   or AFX_PREF_TYPE
         local specVal = f._isGem and 255 or AFX_PREF_SPEC
-        local mainVal = AFX_PREF_MAIN
+        local roleVal = AFX_CFG_ROLE == 1 and AFX_PREF_ROLE or 255
+        local mainVal = AFX_CFG_MAIN == 1 and AFX_PREF_MAIN or 255
+        if AFX_DEBUG then
+            print("|cff44DDFF[AFX]|r ROLL sending:"
+                .. " type=" .. typeVal .. " (cfg=" .. AFX_CFG_TYPE .. ")"
+                .. " spec=" .. specVal .. " (cfg=" .. AFX_CFG_SPEC .. ")"
+                .. " role=" .. roleVal .. " (cfg=" .. AFX_CFG_ROLE .. ")"
+                .. " main=" .. mainVal .. " (cfg=" .. AFX_CFG_MAIN .. ")")
+        end
         AFXM:SendToServer("ROLL|" .. f._bag .. "|" .. f._slot .. "|"
-            .. typeVal .. "|" .. specVal .. "|" .. AFX_PREF_ROLE
+            .. typeVal .. "|" .. specVal .. "|" .. roleVal
             .. "|" .. mainVal)
         f:Hide()
     end)
