@@ -33,6 +33,7 @@ $spellsToAdd = @(
               0 = [uint32]600002  # ID
              64 = [uint32]2       # Targets: TARGET_FLAG_UNIT
             112 = [uint32]16      # CastingTimeIndex: 1500 ms
+            116 = [uint32]0   # RecoveryTime: 20000 ms (20 s cooldown)
             160 = [uint32]31      # DurationIndex: 8000 ms
             184 = [uint32]5       # RangeIndex: 40 yards Long Range
             284 = [uint32]6       # Effect_1: SPELL_EFFECT_APPLY_AURA

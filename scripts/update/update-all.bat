@@ -1,14 +1,21 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 set SCRIPT_DIR=%~dp0
 set SCRIPTS_ROOT=%SCRIPT_DIR%..
 set MODULE_ROOT=%SCRIPT_DIR%..\..
 set SQL_WORLD=%MODULE_ROOT%\data\sql\db-world
+set SQL_IMPRINTS=%SQL_WORLD%\imprints
 
 echo ============================================================
-echo  mod-item-affixes -- UPDATE: All
-echo  Regenerates SQL from JSON and reloads all affix, imprint,
-echo  and spell data. Run after: git pull
+echo  mod-item-affixes -- FULL UPDATE  (run after any git pull)
+echo.
+echo  Covers everything in one shot:
+echo    [1] Generic, class, and talent affixes (JSON -> SQL -> DB)
+echo    [2] All imprint definitions, rune items, creatures,
+echo        spell DBC overrides, and script bindings
+echo    [3] Client patch files (Spell.dbc + SkillLineAbility.dbc)
+echo.
+echo  Safe to re-run at any time -- all SQL uses upserts.
 echo  Does NOT touch player data or DB schema.
 echo ============================================================
 echo.
@@ -34,18 +41,11 @@ echo   Done.
 echo.
 
 echo [2/3] Applying imprint data...
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\imprint_def.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: imprint_def.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\imprint_rune_items.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: imprint_rune_items.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_script_names_imprint.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_script_names_imprint.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_dbc_celestial_resonance.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_celestial_resonance.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_dbc_vanishing_backstab.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_vanishing_backstab.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_dbc_arcane_shot_variants.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_arcane_shot_variants.sql failed & pause & exit /b 1 )
+for %%f in ("%SQL_IMPRINTS%\*.sql") do (
+    echo   Applying %%~nxf...
+    %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%%f"
+    if !ERRORLEVEL! neq 0 ( echo ERROR: %%~nxf failed & pause & exit /b 1 )
+)
 echo   Done.
 echo.
 

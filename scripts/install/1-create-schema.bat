@@ -18,12 +18,12 @@ if not exist "%SCRIPTS_ROOT%\config.bat" (
 )
 call "%SCRIPTS_ROOT%\config.bat"
 
-echo Creating character DB tables in %DB_CHAR%...
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_CHARS%\item_affix.sql"
+echo Creating character DB tables in %DB_CHARACTERS%...
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHARACTERS% < "%SQL_CHARS%\item_affix.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: item_affix.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_CHARS%\item_talent_affix.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHARACTERS% < "%SQL_CHARS%\item_talent_affix.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: item_talent_affix.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHAR% < "%SQL_CHARS%\item_imprint.sql"
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHARACTERS% < "%SQL_CHARS%\item_imprint.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: item_imprint.sql failed & pause & exit /b 1 )
 echo   item_affix, item_talent_affix, item_imprint created.
 echo.

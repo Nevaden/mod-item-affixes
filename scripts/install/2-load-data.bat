@@ -1,9 +1,10 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 set SCRIPT_DIR=%~dp0
 set SCRIPTS_ROOT=%SCRIPT_DIR%..
 set MODULE_ROOT=%SCRIPT_DIR%..\..
 set SQL_WORLD=%MODULE_ROOT%\data\sql\db-world
+set SQL_IMPRINTS=%SQL_WORLD%\imprints
 
 echo ============================================================
 echo  mod-item-affixes -- INSTALL Step 2 of 3: Load Data
@@ -28,24 +29,21 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: build_talent_affixes.ps1 failed & pause & ex
 echo   SQL generated.
 echo.
 
-echo Applying world DB data to %DB_WORLD%...
+echo Applying affix data to %DB_WORLD%...
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\affix_template.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: affix_template.sql failed & pause & exit /b 1 )
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\talent_affix_def.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: talent_affix_def.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\imprint_def.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: imprint_def.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\imprint_rune_items.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: imprint_rune_items.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_script_names_imprint.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_script_names_imprint.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_dbc_celestial_resonance.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_celestial_resonance.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_dbc_vanishing_backstab.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_vanishing_backstab.sql failed & pause & exit /b 1 )
-%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\spell_dbc_arcane_shot_variants.sql"
-if %ERRORLEVEL% neq 0 ( echo ERROR: spell_dbc_arcane_shot_variants.sql failed & pause & exit /b 1 )
-echo   All data applied.
+echo   Affix data applied.
+echo.
+
+echo Applying imprint data to %DB_WORLD%...
+for %%f in ("%SQL_IMPRINTS%\*.sql") do (
+    echo   Applying %%~nxf...
+    %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%%f"
+    if !ERRORLEVEL! neq 0 ( echo ERROR: %%~nxf failed & pause & exit /b 1 )
+)
+echo   Imprint data applied.
 echo.
 
 echo ============================================================

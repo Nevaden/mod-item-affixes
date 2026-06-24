@@ -11,6 +11,9 @@ void RegisterFeralAlphaImprint();
 void RegisterCelestialResonanceImprint();
 void RegisterVanishingBackstabImprint();
 void RegisterEternalElementalImprint();
+void RegisterRakeStormImprint();
+void RegisterAncientTigerImprint();
+void RegisterLunarCascadeImprint();
 
 void Addmod_item_affixesScripts()
 {
@@ -29,4 +32,7 @@ void Addmod_item_affixesScripts()
     RegisterCelestialResonanceImprint();
     RegisterVanishingBackstabImprint();
     RegisterEternalElementalImprint();
+    RegisterRakeStormImprint();
+    RegisterAncientTigerImprint();
+    RegisterLunarCascadeImprint();
 }

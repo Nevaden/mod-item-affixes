@@ -4,8 +4,7 @@
 
 param(
     [string]$AffixesDir      = "$PSScriptRoot\..\affixes",
-    [string]$ClassAffixesDir = "$PSScriptRoot\..\class_affixes",
-    [string]$MpqBuild        = "$PSScriptRoot\..\tools\mpqbuild.exe"
+    [string]$ClassAffixesDir = "$PSScriptRoot\..\class_affixes"
 )
 
 $LocalConfigPath = Join-Path $PSScriptRoot "local_config.bat"
@@ -196,15 +195,109 @@ if ($toUpdate.Count -eq 0 -and $toAdd.Count -eq 0) {
     Write-Host "  DBC updated: $newRecCount records, $newStrSize bytes string block"
 }
 
-# -- 5. Rebuild client MPQ patches ------------------------------------------
-Write-Host "  Rebuilding client MPQ files..."
-$output = & $MpqBuild build "$ServerDBC" "$PatchOut" "$PatchEnUSOut" 2>&1
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "  patch-$DbcSuffix.MPQ      -> $PatchOut"
-    Write-Host "  patch-enUS-$DbcSuffix.MPQ -> $PatchEnUSOut"
-    Write-Host "  MPQ rebuild complete."
-} else {
-    Write-Host "  WARNING: mpqbuild.exe failed (exit $LASTEXITCODE)"
-    Write-Host $output
-    exit 1
+# -- 5. Rebuild client MPQ patches (pure PowerShell — no external tools) ----
+Write-Host "  Building client MPQ files..."
+
+# MPQ crypt table
+$CryptTable = New-Object long[] 1280
+$ctSeed = [long]0x00100001
+for ($i = 0; $i -lt 256; $i++) {
+    for ($k = 0; $k -lt 5; $k++) {
+        $j      = $i + $k * 256
+        $ctSeed = ($ctSeed * 125 + 3) % 0x2AAAAB
+        $t1     = ($ctSeed -band 0xFFFFL) -shl 16
+        $ctSeed = ($ctSeed * 125 + 3) % 0x2AAAAB
+        $t2     = $ctSeed -band 0xFFFFL
+        $CryptTable[$j] = $t1 -bor $t2
+    }
 }
+
+function MpqHashDbc([string]$name, [int]$hashType) {
+    $s1 = [long]0x7FED7FED
+    $s2 = [long]0xEEEEEEEE
+    foreach ($c in $name.ToUpper().ToCharArray()) {
+        $ch    = [int][char]$c
+        $entry = $CryptTable[$hashType * 256 + $ch]
+        $s1    = ($entry -bxor (($s1 + $s2) -band 0xFFFFFFFFL)) -band 0xFFFFFFFFL
+        $s2    = ($ch + $s1 + $s2 + ($s2 -shl 5) + 3) -band 0xFFFFFFFFL
+    }
+    return $s1 -band 0xFFFFFFFFL
+}
+
+function MpqEncryptDbc([byte[]]$data, [int]$startByte, [int]$dwordCount, [long]$key) {
+    $seed = [long]0xEEEEEEEE
+    $k    = $key -band 0xFFFFFFFFL
+    for ($i = 0; $i -lt $dwordCount; $i++) {
+        $byteOff = $startByte + $i * 4
+        $val  = [long][BitConverter]::ToUInt32($data, $byteOff)
+        $seed = ($seed + $CryptTable[0x400 + ($k -band 0xFFL)]) -band 0xFFFFFFFFL
+        $enc  = ($val -bxor (($k + $seed) -band 0xFFFFFFFFL)) -band 0xFFFFFFFFL
+        $k    = ((( (-bnot $k) -band 0xFFFFFFFFL) -shl 21) + 0x11111111L) -bor ($k -shr 11)
+        $k    = $k -band 0xFFFFFFFFL
+        $seed = ($val + $seed + ($seed -shl 5) + 3) -band 0xFFFFFFFFL
+        [BitConverter]::GetBytes([uint32]$enc).CopyTo($data, $byteOff)
+    }
+}
+
+$htKey = MpqHashDbc "(hash table)"  3
+$btKey = MpqHashDbc "(block table)" 3
+
+# Single file: SpellItemEnchantment.dbc
+$internalPath = "DBFilesClient\SpellItemEnchantment.dbc"
+$fileData     = [System.IO.File]::ReadAllBytes($ServerDBC)
+
+$HT_SIZE       = 4   # power-of-2 >= 4x file count (1 file -> 4 slots)
+$FILE_DATA_START = 32
+$htOff  = [long]($FILE_DATA_START + $fileData.Length)
+$btOff  = $htOff + $HT_SIZE * 16
+$archSz = $btOff + 16   # 1 block table entry
+
+# Hash table
+$htBytes = New-Object byte[] ($HT_SIZE * 16)
+for ($i = 0; $i -lt $HT_SIZE; $i++)
+    { [BitConverter]::GetBytes([int]-1).CopyTo($htBytes, $i * 16 + 12) }
+$slot = [int]((MpqHashDbc $internalPath 0) % $HT_SIZE)
+$so   = $slot * 16
+[BitConverter]::GetBytes([uint32](MpqHashDbc $internalPath 1)).CopyTo($htBytes, $so + 0)
+[BitConverter]::GetBytes([uint32](MpqHashDbc $internalPath 2)).CopyTo($htBytes, $so + 4)
+[BitConverter]::GetBytes([uint16]0).CopyTo($htBytes, $so + 8)
+[BitConverter]::GetBytes([uint16]0).CopyTo($htBytes, $so + 10)
+[BitConverter]::GetBytes([uint32]0).CopyTo($htBytes, $so + 12)
+MpqEncryptDbc $htBytes 0 ($HT_SIZE * 4) $htKey
+
+# Block table
+$MPQ_FILE_EXISTS = [int]([System.Convert]::ToInt32("80000000", 16))
+$btBytes = New-Object byte[] 16
+[BitConverter]::GetBytes([uint32]$FILE_DATA_START).CopyTo($btBytes, 0)
+[BitConverter]::GetBytes([uint32]$fileData.Length).CopyTo($btBytes, 4)
+[BitConverter]::GetBytes([uint32]$fileData.Length).CopyTo($btBytes, 8)
+[BitConverter]::GetBytes($MPQ_FILE_EXISTS).CopyTo($btBytes,        12)
+MpqEncryptDbc $btBytes 0 4 $btKey
+
+# MPQ header (32 bytes)
+$mpqHdr = New-Object byte[] 32
+[System.Text.Encoding]::ASCII.GetBytes("MPQ").CopyTo($mpqHdr, 0)
+$mpqHdr[3] = 0x1A
+[BitConverter]::GetBytes([uint32]32).CopyTo($mpqHdr,       4)
+[BitConverter]::GetBytes([uint32]$archSz).CopyTo($mpqHdr,  8)
+[BitConverter]::GetBytes([uint16]0).CopyTo($mpqHdr,       12)
+[BitConverter]::GetBytes([uint16]3).CopyTo($mpqHdr,       14)
+[BitConverter]::GetBytes([uint32]$htOff).CopyTo($mpqHdr,  16)
+[BitConverter]::GetBytes([uint32]$btOff).CopyTo($mpqHdr,  20)
+[BitConverter]::GetBytes([uint32]$HT_SIZE).CopyTo($mpqHdr,24)
+[BitConverter]::GetBytes([uint32]1).CopyTo($mpqHdr,       28)
+
+# Assemble and write
+$mpqBytes = New-Object byte[] $archSz
+[Array]::Copy($mpqHdr,   0, $mpqBytes, 0,                    32)
+[Array]::Copy($fileData, 0, $mpqBytes, $FILE_DATA_START,      $fileData.Length)
+[Array]::Copy($htBytes,  0, $mpqBytes, [int]$htOff,           $htBytes.Length)
+[Array]::Copy($btBytes,  0, $mpqBytes, [int]$btOff,           $btBytes.Length)
+
+$null = [System.IO.Directory]::CreateDirectory((Split-Path $PatchOut     -Parent))
+$null = [System.IO.Directory]::CreateDirectory((Split-Path $PatchEnUSOut -Parent))
+[System.IO.File]::WriteAllBytes($PatchOut,     $mpqBytes)
+[System.IO.File]::WriteAllBytes($PatchEnUSOut, $mpqBytes)
+Write-Host "  patch-$DbcSuffix.MPQ      -> $PatchOut"
+Write-Host "  patch-enUS-$DbcSuffix.MPQ -> $PatchEnUSOut"
+Write-Host "  MPQ rebuild complete."

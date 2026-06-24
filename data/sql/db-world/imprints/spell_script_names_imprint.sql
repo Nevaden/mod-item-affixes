@@ -11,3 +11,22 @@ VALUES
   -- Rogue: Vanishing Backstab (custom spell 600003)
   (600003, 'spell_vanishing_backstab')
 ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
+
+-- Druid: Rake (all ranks) → spell_rake_imprint
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
+SELECT `spell_id`, 'spell_rake_imprint'
+FROM `spell_ranks`
+WHERE `first_spell_id` = 1822
+ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
+
+-- Druid: Tiger's Fury (single rank 5217) → spell_tigers_fury_imprint
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
+VALUES (5217, 'spell_tigers_fury_imprint')
+ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
+
+-- Druid: Moonfire (all ranks) → spell_moonfire_imprint
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
+SELECT `spell_id`, 'spell_moonfire_imprint'
+FROM `spell_ranks`
+WHERE `first_spell_id` = 8921
+ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);

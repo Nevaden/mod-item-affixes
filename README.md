@@ -270,7 +270,7 @@ After `git pull`, run the appropriate update script. Schema tables are never tou
 
 | Need | Script |
 |------|--------|
-| Update everything (affixes + imprints + client patch) | `scripts\update\all.bat` / `.sh` |
+| Update everything (affixes + imprints + client patch) | `scripts\update\update-all.bat` / `.sh` |
 | Affix / talent data only | `scripts\update\affixes.bat` / `.sh` |
 | Imprint definitions only | `scripts\update\imprints.bat` / `.sh` |
 | Client MPQ files only | `scripts\update\client-patch.bat` *(Windows only)* |
@@ -541,7 +541,7 @@ mod-item-affixes/
 │   │   └── 3-rebuild-server.bat / .sh  ← cmake disable + rebuild
 │   │
 │   ├── update/                      ← run after git pull or content edits
-│   │   ├── all.bat / .sh              ← updates affixes + imprints + client patch
+│   │   ├── update-all.bat / .sh       ← updates affixes + imprints + client patch
 │   │   ├── affixes.bat / .sh          ← affix + talent data only
 │   │   ├── imprints.bat / .sh         ← imprint SQL + client spell patch
 │   │   ├── client-patch.bat           ← rebuilds MPQ files (Windows only)

@@ -13,7 +13,7 @@ set PASS=YOUR_PASSWORD
 
 REM -- Database names -----------------------------------------------------------
 REM Default AzerothCore names. Change only if your install uses different names.
-set DB_CHAR=acore_characters
+set DB_CHARACTERS=acore_characters
 set DB_WORLD=acore_world
 
 REM -- Server DBC directory -----------------------------------------------------
@@ -32,11 +32,17 @@ REM set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
 REM set BUILD_DIR=C:\path\to\your\azerothcore\build
 
 REM -- MPQ patch suffix (optional) ----------------------------------------------
-REM On first run the patch scripts auto-detect two free suffix letters (scanning
-REM Z downward) and save them to scripts\local_config.bat for reuse. Uncomment
-REM here to pin specific letters instead.
-REM set PATCH_SUFFIX_DBC=Z
-REM set PATCH_SUFFIX_SPELLS=Y
+REM On first run the patch scripts automatically find two free patch-X.MPQ slots
+REM in your client Data folder, create the files, and save the chosen letters to
+REM scripts\local_config.bat so every future run overwrites the same two files.
+REM You do not need to set anything here.
+REM
+REM Only uncomment and fill in a letter if you already know which specific
+REM patch-X.MPQ files you want this mod to use (e.g. you are reinstalling and
+REM want to reuse the same slots). Using a letter taken by another mod will
+REM silently overwrite it.
+REM set PATCH_SUFFIX_DBC=
+REM set PATCH_SUFFIX_SPELLS=
 
 REM -- Custom ID ranges ---------------------------------------------------------
 REM IDs this module inserts into shared world-DB tables and the DBC.
