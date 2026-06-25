@@ -165,7 +165,7 @@ ApplyPatch "Patch 2c: ScriptMgr OnPlayerSocketGem dispatcher" `
 # ---------------------------------------------------------------------------
 
 $p2d_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptMgr.h"
-$p2d_detect = "void OnPlayerSocketGem(Player* player, Item* item, Item* gem, uint8 slot);"
+$p2d_detect = "void OnPlayerSocketGem("  # match any parameter-name variant
 $p2d_search = "    void OnPlayerUnequip(Player* player, Item* it);"
 $p2d_replace = @'
     void OnPlayerUnequip(Player* player, Item* it);
