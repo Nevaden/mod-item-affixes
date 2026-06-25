@@ -193,11 +193,14 @@ git clone https://github.com/Nevaden/mod-item-affixes modules/mod-item-affixes
 
 Then apply the required engine patches (idempotent — safe to run more than once):
 
-```powershell
-# Windows
+```
+# Windows — double-click or run from the module folder:
+scripts\install\0-apply-core-patches.bat
+
+# Windows (command line / CI):
 powershell -ExecutionPolicy Bypass -File scripts\apply_core_patches.ps1
 
-# Linux / macOS
+# Linux / macOS:
 pwsh -File scripts/apply_core_patches.ps1
 ```
 
@@ -530,7 +533,8 @@ mod-item-affixes/
 │   ├── build_talent_affixes.ps1     ← generates talent_affix_def.sql from talent_affixes/
 │   ├── patch_dbc.ps1                ← patches SpellItemEnchantment.dbc and rebuilds MPQ
 │   │
-│   ├── install/                     ← run in order: 1, 2, 3
+│   ├── install/                     ← run in order: 0 (pre-build), then 1, 2, 3
+│   │   ├── 0-apply-core-patches.bat   ← applies engine patches; run BEFORE cmake/build
 │   │   ├── 1-create-schema.bat / .sh  ← creates DB tables; copies .conf.dist to .conf
 │   │   ├── 2-load-data.bat / .sh      ← loads all affix/imprint/spell SQL
 │   │   └── 3-patch-client.bat         ← patches DBC + rebuilds MPQ (Windows only)

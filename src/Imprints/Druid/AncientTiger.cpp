@@ -131,7 +131,7 @@ public:
         if (!caster || !caster->IsAlive() || !caster->IsInWorld())
             return true;
 
-        auto* data = caster->CustomData.GetDefault<ItemAffixPlayerData>("ItemAffixPlayerData");
+        auto* data = caster->CustomData.GetDefault<ItemAffixPlayerData>("ItemAffixData");
 
         // Dismiss any previous spirit tiger still alive
         if (!data->ancientTigerGuid.IsEmpty())
@@ -193,7 +193,7 @@ public:
 
     void OnUnequip(Player* player, uint64 /*itemGuid*/) override
     {
-        auto* data = player->CustomData.GetDefault<ItemAffixPlayerData>("ItemAffixPlayerData");
+        auto* data = player->CustomData.GetDefault<ItemAffixPlayerData>("ItemAffixData");
         if (data->ancientTigerGuid.IsEmpty())
             return;
 
