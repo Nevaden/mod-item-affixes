@@ -41,8 +41,8 @@ function Save-LocalConfigEntry([string]$path, [string]$key, [string]$value) {
 
 function Find-FreePatchSuffix([string]$dataDir, [string]$localCfg) {
     $taken = @{}
-    Get-ChildItem "$dataDir\patch-?.MPQ" -ErrorAction SilentlyContinue | ForEach-Object {
-        if ($_.Name -match "^patch-([A-Za-z])\.MPQ$") { $taken[$Matches[1].ToUpper()] = $true }
+    Get-ChildItem "$dataDir\patch-?.mpq" -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($_.Name -match "^patch-([A-Za-z])\.mpq$") { $taken[$Matches[1].ToUpper()] = $true }
     }
     if (Test-Path $localCfg) {
         Get-Content $localCfg | Where-Object { $_ -match "^set PATCH_SUFFIX_\w+=([A-Za-z])$" } |
@@ -52,7 +52,7 @@ function Find-FreePatchSuffix([string]$dataDir, [string]$localCfg) {
         $letter = [char]$code
         if (-not $taken["$letter"]) { return "$letter" }
     }
-    throw "No free patch-[A-Z].MPQ slot in: $dataDir"
+    throw "No free patch-[A-Z].mpq slot in: $dataDir"
 }
 
 $ClientDataDir = $env:CLIENT_DATA_DIR
@@ -65,8 +65,8 @@ if (-not $SpellsSuffix) {
     Write-Host "  Auto-detected spell patch suffix: $SpellsSuffix (saved to scripts\local_config.bat)"
 }
 
-$OutMainMpq   = Join-Path $ClientDataDir "patch-$SpellsSuffix.MPQ"
-$OutLocaleMpq = Join-Path $ClientDataDir "enus\patch-enUS-$SpellsSuffix.MPQ"
+$OutMainMpq   = Join-Path $ClientDataDir "patch-$SpellsSuffix.mpq"
+$OutLocaleMpq = Join-Path $ClientDataDir "enus\patch-enUS-$SpellsSuffix.mpq"
 
 # ---------------------------------------------------------------------------
 # Spell.dbc field indices (0-based). WotLK 3.3.5a: 234 fields, 936 bytes/record.

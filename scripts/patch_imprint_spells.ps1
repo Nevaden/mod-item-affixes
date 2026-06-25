@@ -1,8 +1,8 @@
 param(
     [string]$SpellDBC   = "C:\AzerothCore\bin\data\dbc\Spell.dbc",
     [string]$MpqCreate  = "$PSScriptRoot\..\tools\mpqcreate.ps1",
-    [string]$PatchZ     = "C:\World of Warcraft\Data\patch-z.MPQ",
-    [string]$PatchEnUSZ = "C:\World of Warcraft\Data\enUS\patch-enUS-z.MPQ"
+    [string]$PatchZ     = "C:\World of Warcraft\Data\patch-z.mpq",
+    [string]$PatchEnUSZ = "C:\World of Warcraft\Data\enUS\patch-enUS-z.mpq"
 )
 
 $ErrorActionPreference = "Stop"

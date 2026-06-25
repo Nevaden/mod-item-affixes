@@ -22,8 +22,8 @@ function Save-LocalConfigEntry([string]$path, [string]$key, [string]$value) {
 
 function Find-FreePatchSuffix([string]$dataDir, [string]$localCfg) {
     $taken = @{}
-    Get-ChildItem "$dataDir\patch-?.MPQ" -ErrorAction SilentlyContinue | ForEach-Object {
-        if ($_.Name -match "^patch-([A-Za-z])\.MPQ$") { $taken[$Matches[1].ToUpper()] = $true }
+    Get-ChildItem "$dataDir\patch-?.mpq" -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($_.Name -match "^patch-([A-Za-z])\.mpq$") { $taken[$Matches[1].ToUpper()] = $true }
     }
     if (Test-Path $localCfg) {
         Get-Content $localCfg | Where-Object { $_ -match "^set PATCH_SUFFIX_\w+=([A-Za-z])$" } |
@@ -33,7 +33,7 @@ function Find-FreePatchSuffix([string]$dataDir, [string]$localCfg) {
         $letter = [char]$code
         if (-not $taken["$letter"]) { return "$letter" }
     }
-    throw "No free patch-[A-Z].MPQ slot in: $dataDir"
+    throw "No free patch-[A-Z].mpq slot in: $dataDir"
 }
 
 $ServerDbcDir = $env:SERVER_DBC_DIR
@@ -50,8 +50,8 @@ if (-not $DbcSuffix) {
     Write-Host "  Auto-detected DBC patch suffix: $DbcSuffix (saved to scripts\local_config.bat)"
 }
 
-$PatchOut     = Join-Path $ClientDataDir "patch-$DbcSuffix.MPQ"
-$PatchEnUSOut = Join-Path $ClientDataDir "enus\patch-enUS-$DbcSuffix.MPQ"
+$PatchOut     = Join-Path $ClientDataDir "patch-$DbcSuffix.mpq"
+$PatchEnUSOut = Join-Path $ClientDataDir "enus\patch-enUS-$DbcSuffix.mpq"
 
 Write-Host "=== Patching SpellItemEnchantment.dbc ==="
 
@@ -298,6 +298,6 @@ $null = [System.IO.Directory]::CreateDirectory((Split-Path $PatchOut     -Parent
 $null = [System.IO.Directory]::CreateDirectory((Split-Path $PatchEnUSOut -Parent))
 [System.IO.File]::WriteAllBytes($PatchOut,     $mpqBytes)
 [System.IO.File]::WriteAllBytes($PatchEnUSOut, $mpqBytes)
-Write-Host "  patch-$DbcSuffix.MPQ      -> $PatchOut"
-Write-Host "  patch-enUS-$DbcSuffix.MPQ -> $PatchEnUSOut"
+Write-Host "  patch-$DbcSuffix.mpq      -> $PatchOut"
+Write-Host "  patch-enUS-$DbcSuffix.mpq -> $PatchEnUSOut"
 Write-Host "  MPQ rebuild complete."

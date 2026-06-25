@@ -1,5 +1,5 @@
 # patch_mpq_spells.ps1
-# Creates patch-z.MPQ and patch-enUS-z.MPQ containing Celestial Resonance (spell 600002).
+# Creates patch-z.mpq and patch-enUS-z.mpq containing Celestial Resonance (spell 600002).
 #
 # USAGE:
 #   .\patch_mpq_spells.ps1
@@ -17,8 +17,8 @@ $ErrorActionPreference = "Stop"
 # Paths
 # ---------------------------------------------------------------------------
 $ServerDbcPath = "E:\servers\Wow\Standard\bin\data\dbc\Spell.dbc"
-$OutMainMpq    = "E:\servers\Wow\WoW HD\data\patch-z.MPQ"
-$OutLocaleMpq  = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-z.MPQ"
+$OutMainMpq    = "E:\servers\Wow\WoW HD\data\patch-z.mpq"
+$OutLocaleMpq  = "E:\servers\Wow\WoW HD\data\enus\patch-enUS-z.mpq"
 $InternalPath  = "DBFilesClient\Spell.dbc"   # path WoW uses internally to look up the DBC
 
 # ---------------------------------------------------------------------------
