@@ -12,21 +12,19 @@ VALUES
   (600003, 'spell_vanishing_backstab')
 ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
 
--- Druid: Rake (all ranks) → spell_rake_imprint
+-- Druid: Maul (all ranks) → spell_maul_imprint
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
-SELECT `spell_id`, 'spell_rake_imprint'
+SELECT `spell_id`, 'spell_maul_imprint'
 FROM `spell_ranks`
-WHERE `first_spell_id` = 1822
+WHERE `first_spell_id` = 6807
 ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
 
--- Druid: Tiger's Fury (single rank 5217) → spell_tigers_fury_imprint
+-- Druid: Tiger's Fury (all ranks) → spell_tigers_fury_imprint
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
-VALUES (5217, 'spell_tigers_fury_imprint')
+SELECT `spell_id`, 'spell_tigers_fury_imprint'
+FROM `spell_ranks`
+WHERE `first_spell_id` = 5217
 ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
 
--- Druid: Moonfire (all ranks) → spell_moonfire_imprint
-INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
-SELECT `spell_id`, 'spell_moonfire_imprint'
-FROM `spell_ranks`
-WHERE `first_spell_id` = 8921
-ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
+-- Remove stale Rake and Moonfire entries left from previous versions
+DELETE FROM `spell_script_names` WHERE `ScriptName` IN ('spell_rake_imprint', 'spell_moonfire_imprint');

@@ -18,9 +18,8 @@ enum ImprintId : uint32
     IMPRINT_CELESTIAL_RESONANCE  = 5,
     IMPRINT_VANISHING_BACKSTAB   = 6,
     IMPRINT_ETERNAL_ELEMENTAL    = 7,
-    IMPRINT_RAKE_STORM           = 8,
+    IMPRINT_APEX_MAUL            = 8,
     IMPRINT_ANCIENT_TIGER        = 9,
-    IMPRINT_LUNAR_CASCADE        = 10,
 };
 
 // ---------------------------------------------------------------------------

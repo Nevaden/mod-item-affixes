@@ -5,7 +5,6 @@
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "SpellInfo.h"
-#include "TemporarySummon.h"
 #include "Map.h"
 #include "Log.h"
 
@@ -143,26 +142,11 @@ public:
             data->ancientTigerGuid.Clear();
         }
 
-        // Capture guardian SummonProperties from an existing controlled unit (any)
-        // to ensure the tiger is registered as a proper guardian — follows owner,
-        // attributes kills, and appears on the pet frame.  Fall back to nullptr if
-        // there are no existing summons (the engine handles null gracefully).
-        SummonPropertiesEntry const* guardianProps = nullptr;
-        for (Unit* ctrl : caster->m_Controlled)
-        {
-            if (TempSummon* ts = ctrl->ToTempSummon(); ts && ts->m_Properties)
-            {
-                guardianProps = ts->m_Properties;
-                break;
-            }
-        }
-
         TempSummon* tiger = caster->SummonCreature(
             CREATURE_ANCIENT_TIGER,
             caster->GetPositionX(), caster->GetPositionY(), caster->GetPositionZ(),
             caster->GetOrientation(),
-            TEMPSUMMON_DEAD_DESPAWN, 0,
-            guardianProps);
+            TEMPSUMMON_DEAD_DESPAWN, 0);
 
         if (!tiger)
             return true;

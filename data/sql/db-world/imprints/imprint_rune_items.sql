@@ -9,7 +9,7 @@
 -- spellid_1=600001 (SPELL_EFFECT_SCRIPT_EFFECT, instant, self-target) so right-click
 -- triggers CMSG_USE_ITEM which the addon intercepts via UseContainerItem hook.
 
-DELETE FROM `item_template` WHERE `entry` IN (602001, 602002, 602003, 602004, 602005, 602006, 602007, 602008, 602009, 602010);
+DELETE FROM `item_template` WHERE `entry` IN (602001, 602002, 602003, 602004, 602005, 602006, 602007, 602008, 602009);
 
 -- Helper macro: all the filler zero columns are identical for every rune.
 -- Columns listed explicitly to be safe across schema versions.
@@ -199,8 +199,8 @@ INSERT INTO `item_template` (
  1, 'Transform Summon Water Elemental on any equippable item: your Water Elemental becomes permanent (lasts until slain) and is 50% larger.',
  0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0,0, 0,0, 0, 0, -1, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 17),
 
--- 602008: Rake Storm Rune (Druid Feral — Rake spreads to nearby enemies)
-(602008, 15, 0, -1, 'Rake Storm Rune',
+-- 602008: Apex Maul Rune (Druid Feral — Maul spreads all debuffs to nearby enemies)
+(602008, 15, 0, -1, 'Apex Maul Rune',
  39201, 4, 0, 0,
  1, 0, 0,
  0, -1, -1,
@@ -217,7 +217,7 @@ INSERT INTO `item_template` (
  0,0,0,0,-1,0,-1,
  0,0,0,0,-1,0,-1,
  0,0,0,0,-1,0,-1,
- 1, 'Transform Rake on any equippable item: Rake erupts outward — simultaneously applied to up to 3 additional enemies within 8 yards.',
+ 1, 'Transform Maul on any equippable item: every debuff on your target is instantly spread to all enemies within 10 yards.',
  0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0,0, 0,0, 0, 0, -1, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 17),
 
 -- 602009: Ancient Tiger Rune (Druid Feral — Tiger's Fury summons a permanent spirit tiger)
@@ -239,25 +239,6 @@ INSERT INTO `item_template` (
  0,0,0,0,-1,0,-1,
  0,0,0,0,-1,0,-1,
  1, 'Transform Tiger''s Fury on any equippable item: channels the fury of an ancient spirit — a spectral tiger companion manifests and fights at your side until slain.',
- 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0,0, 0,0, 0, 0, -1, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 17),
-
--- 602010: Lunar Cascade Rune (Druid Balance — Moonfire spreads to nearby enemies)
-(602010, 15, 0, -1, 'Lunar Cascade Rune',
- 39201, 4, 0, 0,
- 1, 0, 0,
- 0, -1, -1,
- 80, 1,
- 0, 0, 0, 0, 0, 0, 0,
- 0, 1, 0,
- 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0,
- 0, 0,
- 0, 0, 0, 0, 0, 0,
- 0, 0, 0, 0, 0, 0, 0,
- 0, 0, 0,
- 600001,0,0,0,-1,0,-1,
- 0,0,0,0,-1,0,-1,
- 0,0,0,0,-1,0,-1,
- 0,0,0,0,-1,0,-1,
- 0,0,0,0,-1,0,-1,
- 1, 'Transform Moonfire on any equippable item: Moonfire cascades outward — simultaneously strikes up to 3 additional enemies within 12 yards with full damage and full DoT.',
  0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0,0, 0,0, 0, 0, -1, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 17);
+
+-- 602010 slot reserved for future Druid Balance imprint

@@ -162,9 +162,6 @@ struct ItemAffixPlayerData : public DataMap::Base
     ObjectGuid eternalElementalGuid;
     // Ancient Tiger — GUID of the permanent spirit tiger, for cleanup on unequip
     ObjectGuid ancientTigerGuid;
-    // Re-entrance guards for cascade imprints (prevent triggered casts from re-triggering)
-    bool rakeStormActive    = false;
-    bool lunarCascadeActive = false;
 
     // --- Spell-swap system ---
     // base spell ID -> variant spell ID currently taught to the player.

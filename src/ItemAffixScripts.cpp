@@ -215,10 +215,10 @@ class spell_hammer_righteous_imprint : public SpellScript
     }
 };
 
-// Druid: Rake (all ranks via spell_ranks) — Rake Storm
-class spell_rake_imprint : public SpellScript
+// Druid: Maul (all ranks via spell_ranks) — Apex Maul
+class spell_maul_imprint : public SpellScript
 {
-    PrepareSpellScript(spell_rake_imprint);
+    PrepareSpellScript(spell_maul_imprint);
 
     void HandleAfterCast()
     {
@@ -230,7 +230,7 @@ class spell_rake_imprint : public SpellScript
 
     void Register() override
     {
-        AfterCast += SpellCastFn(spell_rake_imprint::HandleAfterCast);
+        AfterCast += SpellCastFn(spell_maul_imprint::HandleAfterCast);
     }
 };
 
@@ -250,25 +250,6 @@ class spell_tigers_fury_imprint : public SpellScript
     void Register() override
     {
         AfterCast += SpellCastFn(spell_tigers_fury_imprint::HandleAfterCast);
-    }
-};
-
-// Druid: Moonfire (all ranks via spell_ranks) — Lunar Cascade
-class spell_moonfire_imprint : public SpellScript
-{
-    PrepareSpellScript(spell_moonfire_imprint);
-
-    void HandleAfterCast()
-    {
-        Player* caster = GetCaster()->ToPlayer();
-        if (!caster)
-            return;
-        sImprintMgr->OnSpellAfterCast(caster, GetSpellInfo());
-    }
-
-    void Register() override
-    {
-        AfterCast += SpellCastFn(spell_moonfire_imprint::HandleAfterCast);
     }
 };
 
@@ -602,9 +583,8 @@ void AddSC_item_affix_scripts()
     RegisterSpellScript(spell_feral_spirit_imprint);
     RegisterSpellScript(spell_summon_water_elemental_imprint);
     RegisterSpellScript(spell_hammer_righteous_imprint);
-    RegisterSpellScript(spell_rake_imprint);
+    RegisterSpellScript(spell_maul_imprint);
     RegisterSpellScript(spell_tigers_fury_imprint);
-    RegisterSpellScript(spell_moonfire_imprint);
     RegisterSpellScript(spell_disenchant_imprint);
     RegisterSpellScript(spell_celestial_resonance);
     RegisterSpellScript(spell_vanishing_backstab);
