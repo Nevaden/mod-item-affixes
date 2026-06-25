@@ -71,22 +71,49 @@ public:
         {
             _rakeTimer  = urand(RAKE_COOLDOWN_MIN,  RAKE_COOLDOWN_MAX);
             _shredTimer = urand(SHRED_COOLDOWN_MIN, SHRED_COOLDOWN_MAX);
+            // Passive: never picks targets independently; UpdateAI drives all combat.
+            me->SetReactState(REACT_PASSIVE);
+            if (Unit* owner = me->GetCharmerOrOwner())
+                me->GetMotionMaster()->MoveFollow(owner, 1.0f, me->GetFollowAngle());
+        }
+
+        // Instead of returning to spawn, follow the owner.
+        void EnterEvadeMode(EvadeReason why) override
+        {
+            if (!_EnterEvadeMode(why))
+                return;
+            me->SetReactState(REACT_PASSIVE);
+            if (Unit* owner = me->GetCharmerOrOwner())
+                me->GetMotionMaster()->MoveFollow(owner, 1.0f, me->GetFollowAngle());
         }
 
         void UpdateAI(uint32 diff) override
         {
-            // Always mirror the owner's current target — ensures target switches
-            // feel responsive (max 100ms lag at default UpdateAI interval).
-            if (Unit* owner = me->GetCharmerOrOwner())
+            Unit* owner = me->GetCharmerOrOwner();
+            if (!owner)
+                return;
+
+            Unit* ownerTarget = owner->GetVictim();
+
+            if (ownerTarget)
             {
-                if (Unit* ownerTarget = owner->GetVictim())
+                // Target changed — stop current attack first so Attack() accepts the new target.
+                if (me->GetVictim() != ownerTarget)
                 {
-                    if (me->GetVictim() != ownerTarget)
-                        AttackStart(ownerTarget);
+                    me->AttackStop();
+                    AttackStart(ownerTarget);
                 }
             }
+            else
+            {
+                // Owner left combat — disengage and follow.
+                if (me->GetVictim())
+                    me->AttackStop();
+                me->GetMotionMaster()->MoveFollow(owner, 1.0f, me->GetFollowAngle());
+                return;
+            }
 
-            if (!UpdateVictim())
+            if (!me->GetVictim())
                 return;
 
             // Rake — periodic bleed DoT, 6–9 s cooldown
@@ -152,6 +179,10 @@ public:
             return true;
 
         tiger->SetFaction(caster->GetFaction());
+        tiger->SetOwnerGUID(caster->GetGUID()); // required for GetCharmerOrOwner() in AI
+        // Mark as player-controlled so tapping/kill-credit/XP/loot resolve to the owner
+        // and the combat log flags the unit for damage-meter addons correctly.
+        tiger->SetUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED);
         tiger->SetLevel(caster->GetLevel(), false);
         tiger->SetObjectScale(TIGER_SCALE);
         ScaleTigerStats(caster, tiger, TIGER_DAMAGE_SCALE);

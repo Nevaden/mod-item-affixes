@@ -12,11 +12,18 @@ VALUES
   (600003, 'spell_vanishing_backstab')
 ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
 
--- Druid: Maul (all ranks) → spell_maul_imprint
+-- Druid: Mangle cat (all ranks) → spell_mangle_imprint
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
-SELECT `spell_id`, 'spell_maul_imprint'
+SELECT `spell_id`, 'spell_mangle_imprint'
 FROM `spell_ranks`
-WHERE `first_spell_id` = 6807
+WHERE `first_spell_id` = 33876
+ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
+
+-- Druid: Mangle bear (all ranks) → spell_mangle_imprint
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`)
+SELECT `spell_id`, 'spell_mangle_imprint'
+FROM `spell_ranks`
+WHERE `first_spell_id` = 33878
 ON DUPLICATE KEY UPDATE `ScriptName` = VALUES(`ScriptName`);
 
 -- Druid: Tiger's Fury (all ranks) → spell_tigers_fury_imprint

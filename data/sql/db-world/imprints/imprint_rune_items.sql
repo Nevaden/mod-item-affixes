@@ -199,8 +199,8 @@ INSERT INTO `item_template` (
  1, 'Transform Summon Water Elemental on any equippable item: your Water Elemental becomes permanent (lasts until slain) and is 50% larger.',
  0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0,0, 0,0, 0, 0, -1, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 17),
 
--- 602008: Apex Maul Rune (Druid Feral — Maul spreads all debuffs to nearby enemies)
-(602008, 15, 0, -1, 'Apex Maul Rune',
+-- 602008: Apex Mangle Rune (Druid Feral — Mangle spreads all debuffs to nearby enemies)
+(602008, 15, 0, -1, 'Apex Mangle Rune',
  39201, 4, 0, 0,
  1, 0, 0,
  0, -1, -1,
@@ -217,7 +217,7 @@ INSERT INTO `item_template` (
  0,0,0,0,-1,0,-1,
  0,0,0,0,-1,0,-1,
  0,0,0,0,-1,0,-1,
- 1, 'Transform Maul on any equippable item: every debuff on your target is instantly spread to all enemies within 10 yards.',
+ 1, 'Transform Mangle on any equippable item: every debuff on your Mangle target is instantly spread to all enemies within 10 yards.',
  0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0,0, 0,0, 0, 0, -1, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 17),
 
 -- 602009: Ancient Tiger Rune (Druid Feral — Tiger's Fury summons a permanent spirit tiger)

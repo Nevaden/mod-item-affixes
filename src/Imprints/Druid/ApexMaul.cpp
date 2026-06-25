@@ -8,14 +8,17 @@
 #include "CellImpl.h"
 #include "Log.h"
 
-static constexpr uint32 SPELL_MAUL_RANK1 = 6807;
-static constexpr float  SPREAD_RANGE     = 10.0f;
+// Cat Mangle rank 1 and Bear Mangle rank 1 — both checked so either form triggers.
+static constexpr uint32 SPELL_MANGLE_CAT_RANK1  = 33876;
+static constexpr uint32 SPELL_MANGLE_BEAR_RANK1 = 33878;
+static constexpr float  SPREAD_RANGE            = 10.0f;
 
-// All enemies within range of origin, excluding origin itself.
-static std::vector<Unit*> FindNearbyEnemies(Unit* origin, float range)
+// All alive enemies within range of origin that are hostile to ref.
+// Pass the caster as ref so we find mobs hostile to the player, not the mob's enemies.
+static std::vector<Unit*> FindNearbyEnemies(Unit* origin, Unit* ref, float range)
 {
     std::list<Unit*> candidates;
-    Acore::AnyUnfriendlyUnitInObjectRangeCheck check(origin, origin, range);
+    Acore::AnyUnfriendlyUnitInObjectRangeCheck check(origin, ref, range);
     Acore::UnitListSearcher<Acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(origin, candidates, check);
     Cell::VisitObjects(origin, searcher, range);
 
@@ -27,25 +30,31 @@ static std::vector<Unit*> FindNearbyEnemies(Unit* origin, float range)
 }
 
 // ---------------------------------------------------------------------------
-// ApexMaulImprint — Maul copies every debuff on the primary target to all
-// enemies within 10 yards, preserving remaining duration and stack count.
+// ApexMangleImprint — Mangle (cat or bear) copies every debuff on the primary
+// target to all enemies within 10 yards, preserving remaining duration and
+// stack count.
 // ---------------------------------------------------------------------------
-class ApexMaulImprint : public ImprintEffect
+class ApexMangleImprint : public ImprintEffect
 {
 public:
-    uint32 ImprintId() const override { return IMPRINT_APEX_MAUL; }
+    uint32 ImprintId() const override { return IMPRINT_APEX_MANGLE; }
 
     std::string const& Name() const override
     {
-        static const std::string name = "Apex Maul";
+        static const std::string name = "Apex Mangle";
         return name;
     }
 
     std::vector<std::pair<uint32, std::string>> SpellTooltipOverrides() const override
     {
-        return {{ SPELL_MAUL_RANK1,
-            "Apex Maul: every debuff on your Maul target is instantly spread "
-            "to all enemies within 10 yards, preserving duration and stacks." }};
+        return {
+            { SPELL_MANGLE_CAT_RANK1,
+              "Apex Mangle: every debuff on your Mangle target is instantly spread "
+              "to all enemies within 10 yards, preserving duration and stacks." },
+            { SPELL_MANGLE_BEAR_RANK1,
+              "Apex Mangle: every debuff on your Mangle target is instantly spread "
+              "to all enemies within 10 yards, preserving duration and stacks." },
+        };
     }
 
     void OnEquip  (Player* /*player*/, uint64 /*itemGuid*/) override {}
@@ -53,14 +62,15 @@ public:
 
     void OnSpellAfterCast(Player* caster, SpellInfo const* spellInfo) override
     {
-        if (sSpellMgr->GetFirstSpellInChain(spellInfo->Id) != SPELL_MAUL_RANK1)
+        uint32 first = sSpellMgr->GetFirstSpellInChain(spellInfo->Id);
+        if (first != SPELL_MANGLE_CAT_RANK1 && first != SPELL_MANGLE_BEAR_RANK1)
             return;
 
         Unit* victim = caster->GetVictim();
         if (!victim || !victim->IsAlive() || !victim->IsInWorld())
             return;
 
-        // Snapshot debuffs before we touch any aura maps.
+        // Snapshot debuffs before touching any aura maps.
         struct DebuffSnap { uint32 spellId; int32 duration; uint8 stacks; };
         std::vector<DebuffSnap> debuffs;
 
@@ -75,10 +85,8 @@ public:
         if (debuffs.empty())
             return;
 
-        // Search around the primary target — enemies cluster near the tank/target,
-        // not necessarily near a bear Druid who may be anywhere in the pack.
-        std::vector<Unit*> spread = FindNearbyEnemies(victim, SPREAD_RANGE);
-        // Exclude the victim itself (they already have the debuffs).
+        // Search around the primary target for mobs hostile to the caster.
+        std::vector<Unit*> spread = FindNearbyEnemies(victim, caster, SPREAD_RANGE);
         spread.erase(std::remove(spread.begin(), spread.end(), victim), spread.end());
 
         if (spread.empty())
@@ -98,7 +106,7 @@ public:
             }
         }
 
-        LOG_DEBUG("module", "mod-item-affixes: ApexMaul — spread {} debuff(s) to {} target(s) for {}",
+        LOG_DEBUG("module", "mod-item-affixes: ApexMangle — spread {} debuff(s) to {} target(s) for {}",
             debuffs.size(), spread.size(), caster->GetName());
     }
 };
@@ -106,8 +114,8 @@ public:
 // ---------------------------------------------------------------------------
 // Registration
 // ---------------------------------------------------------------------------
-void RegisterApexMaulImprint()
+void RegisterApexMangleImprint()
 {
-    static ApexMaulImprint effect;
+    static ApexMangleImprint effect;
     sImprintMgr->RegisterEffect(&effect);
 }

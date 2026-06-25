@@ -215,10 +215,10 @@ class spell_hammer_righteous_imprint : public SpellScript
     }
 };
 
-// Druid: Maul (all ranks via spell_ranks) — Apex Maul
-class spell_maul_imprint : public SpellScript
+// Druid: Mangle cat + bear (all ranks via spell_ranks) — Apex Mangle
+class spell_mangle_imprint : public SpellScript
 {
-    PrepareSpellScript(spell_maul_imprint);
+    PrepareSpellScript(spell_mangle_imprint);
 
     void HandleAfterCast()
     {
@@ -230,7 +230,7 @@ class spell_maul_imprint : public SpellScript
 
     void Register() override
     {
-        AfterCast += SpellCastFn(spell_maul_imprint::HandleAfterCast);
+        AfterCast += SpellCastFn(spell_mangle_imprint::HandleAfterCast);
     }
 };
 
@@ -583,7 +583,7 @@ void AddSC_item_affix_scripts()
     RegisterSpellScript(spell_feral_spirit_imprint);
     RegisterSpellScript(spell_summon_water_elemental_imprint);
     RegisterSpellScript(spell_hammer_righteous_imprint);
-    RegisterSpellScript(spell_maul_imprint);
+    RegisterSpellScript(spell_mangle_imprint);
     RegisterSpellScript(spell_tigers_fury_imprint);
     RegisterSpellScript(spell_disenchant_imprint);
     RegisterSpellScript(spell_celestial_resonance);

@@ -11,7 +11,7 @@ void RegisterFeralAlphaImprint();
 void RegisterCelestialResonanceImprint();
 void RegisterVanishingBackstabImprint();
 void RegisterEternalElementalImprint();
-void RegisterApexMaulImprint();
+void RegisterApexMangleImprint();
 void RegisterAncientTigerImprint();
 
 void Addmod_item_affixesScripts()
@@ -31,6 +31,6 @@ void Addmod_item_affixesScripts()
     RegisterCelestialResonanceImprint();
     RegisterVanishingBackstabImprint();
     RegisterEternalElementalImprint();
-    RegisterApexMaulImprint();
+    RegisterApexMangleImprint();
     RegisterAncientTigerImprint();
 }

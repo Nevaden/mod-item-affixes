@@ -198,6 +198,54 @@ ApplyPatch "Patch 2e: HandleSocketOpcode OnPlayerSocketGem callback (gem affixes
            $p2e_file $p2e_detect $p2e_search $p2e_replace
 
 # ---------------------------------------------------------------------------
+# Patch 3: Unit::DealDamage - count player-owned summon damage as player damage
+# File: src/server/game/Entities/Unit/Unit.cpp
+#
+# Without this, the damagedByPlayer flag (which gates loot and XP eligibility)
+# is only set for players, vehicles moved by players, and charmed units.
+# Player-owned TempSummons (SetOwnerGUID) were excluded, so their solo kills
+# granted no loot or XP to the owning player.
+# ---------------------------------------------------------------------------
+
+$p3_file   = Join-Path $AzerothCoreRoot "src\server\game\Entities\Unit\Unit.cpp"
+$p3_detect = "attacker->GetOwnerGUID().IsPlayer()"
+$p3_search = @'
+            bool damagedByPlayer = unDamage && attacker && (attacker->IsPlayer() || attacker->m_movedByPlayer != nullptr
+                || attacker->GetCharmerGUID().IsPlayer());
+'@
+$p3_replace = @'
+            bool damagedByPlayer = unDamage && attacker && (attacker->IsPlayer() || attacker->m_movedByPlayer != nullptr
+                || attacker->GetCharmerGUID().IsPlayer() || attacker->GetOwnerGUID().IsPlayer());
+'@
+
+ApplyPatch "Patch 3: Unit::DealDamage - player-owned summon damage counts as player damage (loot/XP)" `
+           $p3_file $p3_detect $p3_search $p3_replace
+
+# ---------------------------------------------------------------------------
+# Patch 4: Unit::EngageWithTarget - tap mob for loot when player-owned summon engages
+# File: src/server/game/Entities/Unit/Unit.cpp
+#
+# The 3.0.8 tap-on-aggro block only ran when IsPlayer(). Player-owned summons
+# (IsControlledByPlayer()) were excluded, so the mob's loot recipient was never
+# set at combat start for summon-initiated combat.
+# ---------------------------------------------------------------------------
+
+$p4_detect = "IsPlayer() || IsControlledByPlayer()"
+$p4_search = @'
+    if (Creature* creature = target->ToCreature())
+        if (!creature->hasLootRecipient() && IsPlayer())
+            creature->SetLootRecipient(this);
+'@
+$p4_replace = @'
+    if (Creature* creature = target->ToCreature())
+        if (!creature->hasLootRecipient() && (IsPlayer() || IsControlledByPlayer()))
+            creature->SetLootRecipient(this);
+'@
+
+ApplyPatch "Patch 4: Unit::EngageWithTarget - player-owned summons tap mob on engage (loot recipient)" `
+           $p3_file $p4_detect $p4_search $p4_replace
+
+# ---------------------------------------------------------------------------
 # Done
 # ---------------------------------------------------------------------------
 

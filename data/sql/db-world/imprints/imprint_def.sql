@@ -63,7 +63,7 @@ VALUES
   (5, 'Celestial Resonance',    602005, 2, 16,  1, 15237),  -- Priest Holy         / Holy Nova (level 20)
   (6, 'Vanishing Backstab',     602006, 2,  8,  1,    53),  -- Rogue Combat        / Backstab  (level 1)
   (7, 'Eternal Elemental',      602007, 2, 128,  2, 31687),  -- Mage Frost          / Summon Water Elemental
-  (8, 'Apex Maul',              602008, 2, 1024, 1,  6807),  -- Druid Feral         / Maul
+  (8, 'Apex Mangle',            602008, 2, 1024, 1, 33876),  -- Druid Feral         / Mangle (cat rank 1; bear shares the talent)
   (9, 'Ancient Tiger',          602009, 2, 1024, 1,  5217)   -- Druid Feral         / Tiger's Fury
 ON DUPLICATE KEY UPDATE
   `name`            = VALUES(`name`),
