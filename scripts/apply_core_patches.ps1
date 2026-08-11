@@ -246,6 +246,43 @@ ApplyPatch "Patch 4: Unit::EngageWithTarget - player-owned summons tap mob on en
            $p3_file $p4_detect $p4_search $p4_replace
 
 # ---------------------------------------------------------------------------
+# Patch 5: ChatHandler - suppress spurious "unknown message type" log spam
+# File: src/server/game/Handlers/ChatHandler.cpp
+#
+# Modules that intercept LANG_ADDON chat messages via OnPlayerBeforeSendChatMessage
+# (this module included - see ItemAffixScripts.cpp) commonly set type=0 as a
+# "message handled, suppress delivery" sentinel after consuming the message.
+# Without this patch, that sentinel falls through to the dispatch switch's
+# default case and logs an "unknown message type" error on every single
+# addon-message exchange (e.g. every tooltip fetch, every roll, etc).
+# ---------------------------------------------------------------------------
+
+$p5_file   = Join-Path $AzerothCoreRoot "src\server\game\Handlers\ChatHandler.cpp"
+$p5_detect = "message handled, suppress delivery"
+$p5_search = @'
+    sScriptMgr->OnPlayerBeforeSendChatMessage(_player, type, lang, msg);
+
+    switch (type)
+'@
+$p5_replace = @'
+    sScriptMgr->OnPlayerBeforeSendChatMessage(_player, type, lang, msg);
+
+    // Some modules (e.g. mod-item-affixes) use type=0 + lang=LANG_ADDON as a
+    // "message handled, suppress delivery" sentinel via OnPlayerBeforeSendChatMessage.
+    // Catch it here rather than falling through to the switch's default case, which
+    // would otherwise log a spurious "unknown message type" error every time.
+    if (type == 0 && lang == LANG_ADDON)
+    {
+        return;
+    }
+
+    switch (type)
+'@
+
+ApplyPatch "Patch 5: ChatHandler - suppress addon-message suppression-sentinel log spam" `
+           $p5_file $p5_detect $p5_search $p5_replace
+
+# ---------------------------------------------------------------------------
 # Done
 # ---------------------------------------------------------------------------
 
