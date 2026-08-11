@@ -7,11 +7,11 @@ DELETE FROM `creature_template`       WHERE `entry` = 601105;
 DELETE FROM `creature_template_model` WHERE `CreatureID` = 601105;
 
 INSERT INTO `creature_template`
-    (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `npcflag`,
+    (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `unit_class`,
      `unit_flags`, `unit_flags2`,
      `AIName`, `ScriptName`, `MovementType`, `flags_extra`, `VerifiedBuild`)
 VALUES
-    (601105, 'Holy Nova Beacon', 80, 80, 35, 0,
+    (601105, 'Holy Nova Beacon', 80, 80, 35, 0, 1,
      0x02000002,  -- NON_ATTACKABLE | NOT_SELECTABLE
      0,
      '', '', 0,

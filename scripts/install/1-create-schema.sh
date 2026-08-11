@@ -25,7 +25,8 @@ echo "Creating character DB tables in $DB_CHAR..."
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_affix.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_talent_affix.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_imprint.sql"
-echo "  item_affix, item_talent_affix, item_imprint created."
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_gem_affix.sql"
+echo "  item_affix, item_talent_affix, item_imprint, item_gem_affix created."
 echo
 
 echo "============================================================"
