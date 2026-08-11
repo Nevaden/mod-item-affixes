@@ -8,12 +8,12 @@ DELETE FROM `creature_template`       WHERE `entry`      = 601106;
 DELETE FROM `creature_template_model` WHERE `CreatureID` = 601106;
 
 INSERT INTO `creature_template`
-    (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `npcflag`,
+    (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `unit_class`,
      `unit_flags`, `unit_flags2`, `CreatureImmunitiesId`,
      `BaseAttackTime`, `RangeAttackTime`,
      `AIName`, `ScriptName`, `MovementType`, `flags_extra`, `VerifiedBuild`)
 VALUES
-    (601106, 'Ancient Tiger', 80, 80, 35, 0,
+    (601106, 'Ancient Tiger', 80, 80, 35, 0, 1,
      0, 2048, 0,
      2000, 0,
      '', 'npc_ancient_tiger', 0, 0, 0);
