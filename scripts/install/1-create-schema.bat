@@ -25,7 +25,9 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: item_affix.sql failed & pause & exit /b 1 )
 if %ERRORLEVEL% neq 0 ( echo ERROR: item_talent_affix.sql failed & pause & exit /b 1 )
 %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHARACTERS% < "%SQL_CHARS%\item_imprint.sql"
 if %ERRORLEVEL% neq 0 ( echo ERROR: item_imprint.sql failed & pause & exit /b 1 )
-echo   item_affix, item_talent_affix, item_imprint created.
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_CHARACTERS% < "%SQL_CHARS%\item_gem_affix.sql"
+if %ERRORLEVEL% neq 0 ( echo ERROR: item_gem_affix.sql failed & pause & exit /b 1 )
+echo   item_affix, item_talent_affix, item_imprint, item_gem_affix created.
 echo.
 
 REM Copy mod_item_affixes.conf.dist -> .conf if not already done

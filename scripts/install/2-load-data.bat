@@ -37,6 +37,15 @@ if %ERRORLEVEL% neq 0 ( echo ERROR: talent_affix_def.sql failed & pause & exit /
 echo   Affix data applied.
 echo.
 
+echo Applying spec-tree data to %DB_WORLD%...
+for %%f in ("%SQL_WORLD%\affix_spec_tree_*.sql") do (
+    echo   Applying %%~nxf...
+    %MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%%f"
+    if !ERRORLEVEL! neq 0 ( echo ERROR: %%~nxf failed & pause & exit /b 1 )
+)
+echo   Spec-tree data applied.
+echo.
+
 echo Applying imprint data to %DB_WORLD%...
 for %%f in ("%SQL_IMPRINTS%\*.sql") do (
     echo   Applying %%~nxf...
