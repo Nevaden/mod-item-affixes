@@ -36,6 +36,23 @@ Calls `sScriptMgr->OnPlayerSocketGem(...)` just before the gem item is destroyed
 
 ---
 
+## Patch 5 — `ChatHandler` addon-message suppression-sentinel log spam
+
+**File:** `src/server/game/Handlers/ChatHandler.cpp`
+**Applied by:** `scripts/apply_core_patches.ps1`
+
+This module (and potentially others) intercepts `LANG_ADDON` chat messages via
+`OnPlayerBeforeSendChatMessage` and sets `type = 0` as a "message handled,
+suppress delivery" sentinel after consuming the message server-side (see
+`ItemAffixScripts.cpp`). Without this patch, that sentinel falls through to
+the dispatch switch's `default` case and logs a spurious
+`CHAT: unknown message type 0, lang: 4294967295` error on every single
+addon-message exchange — which in practice means every tooltip fetch, every
+roll, every imprint action, etc. This patch adds an early return immediately
+after the `OnPlayerBeforeSendChatMessage` call to catch the sentinel cleanly.
+
+---
+
 ## After applying patches
 
 Rebuild the worldserver. See README.md → **Step 4: Build** for the command.

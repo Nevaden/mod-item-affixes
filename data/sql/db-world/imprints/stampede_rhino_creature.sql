@@ -9,12 +9,12 @@ DELETE FROM `creature_template_model` WHERE `CreatureID` = 601104;
 DELETE FROM `creature_template_spell` WHERE `CreatureID` = 601104;
 
 INSERT INTO `creature_template`
-    (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `npcflag`,
+    (`entry`, `name`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `unit_class`,
      `unit_flags`, `unit_flags2`, `CreatureImmunitiesId`,
      `BaseAttackTime`, `RangeAttackTime`,
      `AIName`, `ScriptName`, `MovementType`, `flags_extra`, `VerifiedBuild`)
 VALUES
-    (601104, 'Spirit Rhino', 80, 80, 35, 0,
+    (601104, 'Spirit Rhino', 80, 80, 35, 0, 1,
      0, 2048, 95,
      2000, 0,
      '', 'npc_spirit_rhino', 0, 0, 0);

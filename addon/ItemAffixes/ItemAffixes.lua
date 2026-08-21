@@ -27,7 +27,7 @@ end
 -- cache[bag][slot] = { slotCount=N, slots={ {state, text}, ... } }
 local cache = {}
 local initialized = false
-
+local AddAffixLines  -- forward declaration; real definition is further down
 -- imprintDescOverrides[spellId]  = description string  (for SetAction which gives spell ID)
 -- imprintDescByName[spellName]   = description string  (for SetSpell which gives spellbook slot)
 -- Both populated by IMPRINT_DESC server messages; cleared by IMPRINT_DESC_CLEAR.
@@ -893,7 +893,7 @@ end
 -- Tooltip helpers
 -- ============================================================================
 
-local function AddAffixLines(tooltip, bag, slot)
+AddAffixLines = function(tooltip, bag, slot)
     -- Bail out if the slot is empty — prevents stale cache data on empty slots.
     if bag == 255 then
         if not GetInventoryItemLink("player", slot) then return end
@@ -1062,9 +1062,11 @@ local function StartOnUpdateDetector()
                 wasDown = true
                 local focus = GetMouseFocus()
                 if focus then
-                    local name = focus:GetName() or ""
-                    if name:find("^ContainerFrame%d+Item") then
-                        TryRollBagItem(focus:GetParent():GetID(), focus:GetID())
+                    local slot = focus.GetID and focus:GetID()
+                    local parent = focus.GetParent and focus:GetParent()
+                    local bag = parent and parent.GetID and parent:GetID()
+                    if slot and slot > 0 and bag and bag ~= nil and bag >= 0 and bag <= 4 then
+                        TryRollBagItem(bag, slot)
                     end
                 end
             end
@@ -1810,6 +1812,36 @@ local function CancelImprintApplyMode()
     UIErrorsFrame:AddMessage("|cffA335EE[Imprint]|r Apply mode cancelled.")
 end
 
+local function FindHoveredBagSlot()
+    -- Method 1: Blizzard-named frames + IsMouseOver (works for default/skinned bags).
+    for bag = 0, 4 do
+        local numSlots = GetContainerNumSlots(bag)
+        for m = 1, numSlots do
+            local btn = _G["ContainerFrame" .. (bag + 1) .. "Item" .. m]
+            if btn and btn:IsVisible() and btn:IsMouseOver() then
+                return bag, btn:GetID()
+            end
+        end
+    end
+
+    -- Method 2: full frame-list scan via EnumerateFrames — geometric like
+    -- Method 1 (not blocked by our overlay), and doesn't require knowing
+    -- ElvUI's (or any other bag addon's) specific frame naming scheme.
+    local f2 = EnumerateFrames()
+    while f2 do
+        if f2:IsVisible() and f2:IsMouseOver() then
+            local slot   = f2.GetID and f2:GetID()
+            local parent = f2.GetParent and f2:GetParent()
+            local bag    = parent and parent.GetID and parent:GetID()
+            if slot and slot > 0 and bag and bag >= 0 and bag <= 4 then
+                return bag, slot
+            end
+        end
+        f2 = EnumerateFrames(f2)
+    end
+    return nil, nil
+end
+
 local function GetOrCreateApplyOverlay()
     if _applyOverlay then return _applyOverlay end
     local f = CreateFrame("Button", "AFXImprintApplyOverlay", UIParent)
@@ -1818,52 +1850,34 @@ local function GetOrCreateApplyOverlay()
     f:EnableMouse(true)
     f:Hide()
 
-    -- Use OnMouseDown (not OnClick/OnMouseUp) so the click is consumed on press.
     -- Bag items require a matching Down+Up pair to trigger their OnClick; since our
     -- overlay consumes the Down event, the bag item never sees a paired Up and cannot
     -- fire its equip/use action.
-    f:SetScript("OnMouseDown", function(self, button)
-        if button == "RightButton" then
+f:SetScript("OnMouseDown", function(self, button)
+    if button == "RightButton" then
+        CancelImprintApplyMode()
+        CloseDropDownMenus()
+
+    elseif button == "LeftButton" then
+        local targetBag, targetSlot = FindHoveredBagSlot()
+
+        if not targetBag then
             CancelImprintApplyMode()
-            CloseDropDownMenus()
-
-        elseif button == "LeftButton" then
-            -- IsMouseOver() is geometric and works even though our frame has focus.
-            local targetBag, targetSlot = nil, nil
-            for bag = 0, 4 do
-                local numSlots = GetContainerNumSlots(bag)
-                for m = 1, numSlots do
-                    local btn = _G["ContainerFrame" .. (bag + 1) .. "Item" .. m]
-                    if btn and btn:IsVisible() and btn:IsMouseOver() then
-                        targetBag  = bag
-                        targetSlot = btn:GetID()
-                        break
-                    end
-                end
-                if targetBag then break end
-            end
-
-            if not targetBag then
-                -- Clicked empty space — cancel so the player knows they need to retry.
-                CancelImprintApplyMode()
-                return
-            end
-
-            if targetBag == _applyRuneBag and targetSlot == _applyRuneSlot then
-                CancelImprintApplyMode()  -- clicked the rune itself
-            else
-                local rb, rs = _applyRuneBag, _applyRuneSlot
-                _applyRuneBag, _applyRuneSlot = nil, nil
-                HideApplyIndicator()
-                self:Hide()
-                AFXM:SendToServer("IMPRINT_APPLY|" .. rb .. "|" .. rs
-                    .. "|" .. targetBag .. "|" .. targetSlot)
-                -- No ClearCursor() needed: OnMouseDown fires before WoW's pickup
-                -- (which happens on MouseUp), so no item was ever picked up.
-            end
+            return
         end
-    end)
 
+        if targetBag == _applyRuneBag and targetSlot == _applyRuneSlot then
+            CancelImprintApplyMode()
+        else
+            local rb, rs = _applyRuneBag, _applyRuneSlot
+            _applyRuneBag, _applyRuneSlot = nil, nil
+            HideApplyIndicator()
+            self:Hide()
+            AFXM:SendToServer("IMPRINT_APPLY|" .. rb .. "|" .. rs
+                .. "|" .. targetBag .. "|" .. targetSlot)
+        end
+    end
+end)
     -- Synthesize item tooltips while in apply mode.
     -- The overlay blocks bag item OnEnter events, so we drive GameTooltip manually
     -- via SetBagItem.  Our existing SetBagItem hook then appends affix lines as normal.
