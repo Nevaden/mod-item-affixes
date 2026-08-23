@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: Item Affixes: Toast Alerts
+## Notes: Optional companion for ItemAffixes. Adds a toast+sound when you pick a Critical or Imprint roll option, and a chat alert when you equip an item that still has affix rolls to do. Disable freely -- ItemAffixes works fine without it.
+## Version: 0.0.2
+## Author: Rykaerdoe
+## Dependencies: ItemAffixes
+## RequiredDeps: ItemAffixes
+
+ItemAffixesToast.lua
