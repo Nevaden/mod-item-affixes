@@ -699,4 +699,4 @@ See `docs/ADDING_AFFIXES.md` for a full authoring guide.
 
 The Player Progression Lifesteal node's damage-to-heal mechanism is ported
 from [ZhengPeiRu21/mod-leech](https://github.com/ZhengPeiRu21/mod-leech)
-(GNU AGPL v3), the standalone AzerothCore module it replaces.
+(MIT License), the standalone AzerothCore module it replaces.

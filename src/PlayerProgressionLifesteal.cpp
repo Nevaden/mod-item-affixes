@@ -2,7 +2,7 @@
 // Heals the player for rank * 4% of the damage they deal (5 ranks, 20% max).
 //
 // Damage/heal logic ported from ZhengPeiRu21's mod-leech
-// (https://github.com/ZhengPeiRu21/mod-leech, GNU AGPL v3), the standalone
+// (https://github.com/ZhengPeiRu21/mod-leech, MIT License), the standalone
 // module this node replaces — same OnDamage/pet-vs-owner structure and the
 // same heal spell (18984), just driven by node rank instead of a flat
 // config value, and always-on rather than dungeon-gated.
