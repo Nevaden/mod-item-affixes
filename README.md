@@ -255,6 +255,15 @@ Copy `addon\ItemAffixes\` to your WoW client's AddOns folder:
 WoW Client 3.3.5a\Interface\AddOns\ItemAffixes\
 ```
 
+**Optional companion addon — ItemAffixesToast**: toasts and plays a sound the
+instant a roll produces a Critical or Imprint option (independent of whether
+it's picked), and posts a chat alert when equipping an item that still has
+affix rolls to do. Fully self-contained — hooks `ItemAffixes` from the
+outside via `hooksecurefunc`, no changes needed to `ItemAffixes` itself.
+Copy `addon\ItemAffixesToast\` alongside `ItemAffixes\` the same way, or
+skip it — the base addon works identically either way. Toggle it
+independently in the in-game AddOns list.
+
 ### Step 6 — Start worldserver
 
 Start the worldserver. Look for these lines in the console to confirm the module loaded:
@@ -396,6 +405,21 @@ Two class skill options are now locked. Type was switched to "Stats" and Stat Fa
 ![Imprint option - Eternal Elemental](screenshots/imprint%20option%20-%20eternal%20elemental.png)
 
 Imprint options appear in the roll menu alongside stat and class skill choices. Selecting one applies the Imprint and refunds the affix slot. Imprints display their Return Allowance count in the tooltip so players know whether disenchanting will yield a Rune.
+
+### Player Progression — Affixes tab
+![Player Progression - Affixes tab](screenshots/Progression-Affixes.png)
+
+Account-wide meta-XP, spent per-character on bonuses to the roll process itself: reroll tier, options tier, an extra affix slot, crit roll chance, a meta-XP % multiplier, and the gate that unlocks class/spellmod affixes when `ItemAffixes.ProgressionGateClassAffixes` is enabled.
+
+### Player Progression — Player tab
+![Player Progression - Player tab](screenshots/Progression-Player.png)
+
+Flat + % hybrid bonuses to primary stats, Attack Power, Spell Power, Crit/Haste Rating, and MP5 — the flat half feels strong at low level, the % half keeps scaling with gear at cap.
+
+### Player Progression — Misc tab
+![Player Progression - Misc tab](screenshots/Progression-Misc.png)
+
+Move Speed, Armor, Damage Reduction, a character XP % multiplier, and Boss Drops — extra item rolls from a boss's own loot table, summed across every eligible group member's own investment.
 
 ---
 
