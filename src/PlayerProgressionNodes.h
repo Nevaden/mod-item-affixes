@@ -52,6 +52,10 @@ enum ProgressionNodeId : uint16
     // Bespoke — read directly via GetNodeBonus, not applied through
     // ApplyProgressionStats (no flat/pct/teach channel; see PlayerProgressionBossDrops.cpp).
     NODE_BOSS_DROPS = 26,  // +N extra item rolls (summed across the group) from a boss's own loot table per kill
+
+    // Bespoke — read directly via GetNodeBonus from a UnitScript::OnDamage hook,
+    // not applied through ApplyProgressionStats (see PlayerProgressionLifesteal.cpp).
+    NODE_LIFESTEAL = 27,  // % of damage dealt returned as self-healing (valuePerRank is percent)
 };
 
 // ---------------------------------------------------------------------------

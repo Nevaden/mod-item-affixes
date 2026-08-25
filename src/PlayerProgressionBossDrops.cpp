@@ -9,8 +9,9 @@
 // follow normal group/FFA loot rules and are visible to every looter exactly
 // like the rest of the boss's drops — this was a deliberate simplification
 // over trying to make the bonus visible only to the contributing player(s),
-// which would have required much hackier machinery (see docs/PLAYER_PROGRESSION
-// _PLAN.md's "Boss Drops" section for the design discussion).
+// which would have required much hackier machinery (a ConditionList sentinel
+// hack fighting the per-player conditional-item maps, which lock in before
+// any hook a module can reach).
 //
 // Each rank is an independent extra roll of the whole table, not a guaranteed
 // item — it can whiff on a low-drop-rate table, same as a real extra kill would.

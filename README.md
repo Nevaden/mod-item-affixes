@@ -694,3 +694,9 @@ One row per imprinted item or Rune.
 | `enchant_id`    | `SpellItemEnchantment.dbc` ID for the green tooltip line (0=none)        |
 
 See `docs/ADDING_AFFIXES.md` for a full authoring guide.
+
+## Credits
+
+The Player Progression Lifesteal node's damage-to-heal mechanism is ported
+from [ZhengPeiRu21/mod-leech](https://github.com/ZhengPeiRu21/mod-leech)
+(GNU AGPL v3), the standalone AzerothCore module it replaces.

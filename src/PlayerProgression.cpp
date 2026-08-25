@@ -133,6 +133,10 @@ namespace
         { NODE_DAMAGE_REDUCTION_PCT, "DamageReductionPct",  ProgressionCategory::PROG_CAT_MISC, 0, int16(GSTAT_DAMAGE_REDUCTION_PCT), 3, 1.0f },
         { NODE_CHARACTER_XP_PCT,     "CharacterXpPct",      ProgressionCategory::PROG_CAT_MISC, 0, -1,                                5, 5.0f },
         { NODE_BOSS_DROPS,           "BossDrops",           ProgressionCategory::PROG_CAT_MISC, 0, -1,                                2, 1.0f },
+        // valuePerRank is percent (4%/rank); 5 ranks = 20% lifesteal max, matching
+        // the live server's tuned Leech.Amount=0.20 (mod-leech itself removed in
+        // favor of this node) — see PlayerProgressionLifesteal.cpp.
+        { NODE_LIFESTEAL,            "Lifesteal",           ProgressionCategory::PROG_CAT_MISC, 0, -1,                                5, 4.0f },
     };
 }
 

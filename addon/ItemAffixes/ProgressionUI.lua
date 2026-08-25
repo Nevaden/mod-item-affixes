@@ -33,13 +33,14 @@ local NODE_INFO = {
     [22] = { name = "Damage Reduction",     category = "Misc",    suffix = "%" },
     [24] = { name = "Character XP Bonus",   category = "Misc",    suffix = "%" },
     [26] = { name = "Boss Drops",           category = "Misc",    suffix = " extra item(s)" },
+    [27] = { name = "Lifesteal",            category = "Misc",    suffix = "%" },
 }
 
 local CATEGORY_ORDER = { "Affixes", "Player", "Misc" }
 local NODES_BY_CATEGORY = {
     Affixes = { 1, 2, 3, 4, 5, 6 },
     Player  = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 },
-    Misc    = { 20, 21, 22, 24, 26 },
+    Misc    = { 20, 21, 22, 24, 26, 27 },
 }
 
 local function FormatGold(copper)

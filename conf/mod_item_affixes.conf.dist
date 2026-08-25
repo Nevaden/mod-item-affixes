@@ -253,6 +253,13 @@ ItemAffixes.ProgressionCharacterXpPctValuePerRank     = 10
 # through the normal stat/aura/teach channels; see PlayerProgressionBossDrops.cpp.
 ItemAffixes.ProgressionBossDropsMaxRank              = 2
 ItemAffixes.ProgressionBossDropsValuePerRank          = 1
+# % of damage dealt returned as self-healing (ValuePerRank is percent, 4%/rank;
+# 5 ranks = 20% max, matching the live server's tuned Leech.Amount=0.20 from
+# the now-removed mod-leech module). Always active, no dungeon-only gate.
+# Bespoke — not applied through the normal stat/aura/teach channels; see
+# PlayerProgressionLifesteal.cpp.
+ItemAffixes.ProgressionLifestealMaxRank              = 5
+ItemAffixes.ProgressionLifestealValuePerRank          = 4
 
 # ---------------------------------------------------------------------------
 # Class affix gate (Player Progression integration)
