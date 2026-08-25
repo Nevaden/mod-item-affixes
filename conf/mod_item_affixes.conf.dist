@@ -221,7 +221,7 @@ ItemAffixes.ProgressionSpellPowerMaxRank     = 5
 ItemAffixes.ProgressionSpellPowerValuePerRank = 10
 # % is NOT a real aura (no native "% of current spell power" exists) — recomputed in
 # C++ from gear/gem/enchant spell power only on equip/unequip, buffs never included.
-# See docs/PLAYER_PROGRESSION_PLAN.md and PlayerProgression.cpp's ApplySpellPowerDynamicBonus.
+# See PlayerProgression.cpp's ApplySpellPowerDynamicBonus.
 ItemAffixes.ProgressionSpellPowerValuePerRankPct = 2
 ItemAffixes.ProgressionCritRatingMaxRank         = 5
 ItemAffixes.ProgressionCritRatingValuePerRank     = 8

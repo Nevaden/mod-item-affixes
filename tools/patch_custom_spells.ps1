@@ -429,10 +429,8 @@ $dbcBytes = CombineBytes (CombineBytes $hdrAndRecs $appendBytes) $newStrBlock
 Write-Host "  Patched Spell.dbc: $($dbcBytes.Length) bytes, $newRecordCount records"
 
 # Write back to the SERVER's own Spell.dbc so sSpellMgr actually loads the new/
-# updated spells at next startup. (Previously this only fed the client MPQ below
-# — the server's copy was never touched, so custom spells added after this
-# script replaced the older patch_spell_dbc.ps1/patch_mpq_spells.ps1 split never
-# actually existed server-side no matter how many times the worldserver restarted.)
+# updated spells at next startup — the client MPQ patch below is not sufficient
+# on its own; the server needs its own copy of the same records.
 $serverBackup = "$ServerSpellDb.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
 Copy-Item -Path $ServerSpellDb -Destination $serverBackup
 [System.IO.File]::WriteAllBytes($ServerSpellDb, $dbcBytes)

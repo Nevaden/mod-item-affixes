@@ -255,13 +255,15 @@ Copy `addon\ItemAffixes\` to your WoW client's AddOns folder:
 WoW Client 3.3.5a\Interface\AddOns\ItemAffixes\
 ```
 
-**Optional companion addon — ItemAffixesToast**: toasts and plays a sound the
-instant a roll produces a Critical or Imprint option (independent of whether
-it's picked), and posts a chat alert when equipping an item that still has
-affix rolls to do. Fully self-contained — hooks `ItemAffixes` from the
-outside via `hooksecurefunc`, no changes needed to `ItemAffixes` itself.
-Copy `addon\ItemAffixesToast\` alongside `ItemAffixes\` the same way, or
-skip it — the base addon works identically either way. Toggle it
+**Optional companion addon — ItemAffixesToast** (by [Rykaerdoe](https://github.com/Rykaerdoe)):
+toasts and plays a sound the instant a roll produces a Critical or Imprint
+option (independent of whether it's picked), and posts a chat alert when
+equipping an item that still has affix rolls to do. Fully self-contained —
+hooks `ItemAffixes` from the outside via `hooksecurefunc`, no changes needed
+to `ItemAffixes` itself. Copy `addon\ItemAffixesToast\` alongside
+`ItemAffixes\` the same way, or skip it — the base addon works identically
+either way. The sound is set by `AFX_TOAST_SOUND_ID` near the top of
+`ItemAffixesToast.lua` — change the ID there for a different sound. Toggle it
 independently in the in-game AddOns list.
 
 ### Step 6 — Start worldserver
@@ -405,6 +407,11 @@ Two class skill options are now locked. Type was switched to "Stats" and Stat Fa
 ![Imprint option - Eternal Elemental](screenshots/imprint%20option%20-%20eternal%20elemental.png)
 
 Imprint options appear in the roll menu alongside stat and class skill choices. Selecting one applies the Imprint and refunds the affix slot. Imprints display their Return Allowance count in the tooltip so players know whether disenchanting will yield a Rune.
+
+### Critical roll toast (ItemAffixesToast)
+![Critical Roll toast](screenshots/Toast%20Example.png)
+
+With the optional [ItemAffixesToast](#step-5--install-the-client-addon) addon installed, a Critical roll pops this toast and plays a sound the instant it's generated — before you've even picked an option — so it's never missed.
 
 ### Player Progression — Affixes tab
 ![Player Progression - Affixes tab](screenshots/Progression-Affixes.png)

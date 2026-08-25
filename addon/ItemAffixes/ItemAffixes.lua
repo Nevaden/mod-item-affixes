@@ -661,10 +661,10 @@ function AFXM:OnServerMsg(msg)
         if sub == "STATE" then
             -- PROG|STATE|xp|pointsAvailable|respecCostCopper|currentTier|totalNodeChunks
             -- Node data itself arrives in separate PROG|NODES chunks (see below) — a single
-            -- message with every node inline used to blow past WotLK's 255-char chat message
-            -- cap once the node count grew large enough, silently dropping whichever nodes
-            -- landed past the cutoff (this is what happened to Heal Ability). Buffer here and
-            -- commit atomically once every expected chunk has arrived.
+            -- message with every node inline would blow past WotLK's 255-char chat message
+            -- cap once the node count grows large enough, silently dropping whichever nodes
+            -- land past the cutoff. Buffer here and commit atomically once every expected
+            -- chunk has arrived.
             AFXM._progPending = {
                 xp              = tonumber(parts[3]) or 0,
                 pointsAvailable = tonumber(parts[4]) or 0,

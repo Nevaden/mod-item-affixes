@@ -21,8 +21,7 @@ struct AccountProgressionState
 // ---------------------------------------------------------------------------
 // ActiveProgressionMod — one currently-applied permanent stat bonus, mirroring
 // ItemAffix.h's ActiveStatMod. Tracked per character so removal always undoes
-// exactly what was applied, never a recomputed guess — see the "Safety" design
-// note in docs/PLAYER_PROGRESSION_PLAN.md for why (the move-speed incident).
+// exactly what was applied, never a recomputed guess.
 // ---------------------------------------------------------------------------
 struct ActiveProgressionMod
 {
@@ -33,7 +32,6 @@ struct ActiveProgressionMod
 // ---------------------------------------------------------------------------
 // PlayerProgressionMgr — singleton owning the account-wide XP pool and the
 // generic per-character node/rank state for the Player Progression system.
-// See docs/PLAYER_PROGRESSION_PLAN.md for the full design.
 // ---------------------------------------------------------------------------
 class PlayerProgressionMgr
 {
@@ -126,14 +124,12 @@ private:
     //    _activeMods (mirrors ItemAffix.h's ActiveStatMod pattern).
     //  - %: any node with a pctSpellId grants a real spell aura via
     //    CastCustomSpell/RemoveAurasDueToSpell, tracked in _activePctSpells.
-    //    Never a raw setter (e.g. SetSpeed) — that's what caused the historical
-    //    "insane speed" incident (see the design doc). Move Speed is a pure-%
-    //    bespoke node (no statOp) that goes through this same channel.
+    //    Never a raw setter (e.g. SetSpeed) — the engine's own recalculation
+    //    silently overwrites those. Move Speed is a pure-% bespoke node (no
+    //    statOp) that goes through this same channel.
     //  - Taught spell: a node with a teachSpellId grants a real, player-visible
     //    spellbook entry via Player::learnSpell/removeSpell (not an aura),
-    //    tracked in _activeTaughtSpells. No node currently uses this channel —
-    //    proven working (see docs/PLAYER_PROGRESSION_PLAN.md) but unused since
-    //    the one node built for it (Heal Ability) was retired unshipped.
+    //    tracked in _activeTaughtSpells. No node currently uses this channel.
     //  - Dynamic recompute (Spell Power only): no native aura multiplies existing
     //    spell power, so the % component is a flat Player::ApplySpellPowerBonus
     //    amount recomputed from Player::GetBaseSpellPowerBonus() (gear/gems/

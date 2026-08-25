@@ -46,10 +46,10 @@ end
 -- Disables (and visually greys) the "Class Skills" toggle button in a type-selector
 -- group when the server says class affixes are currently unavailable for this item
 -- (ProgressionGateClassAffixes not unlocked, or ClassAffixMaxPerItem already
--- reached — see ItemAffix.cpp's IsClassAffixesBlocked). Falls the preference back to
--- Stats if it was pointed at Class Skills when that stopped being a valid choice —
--- picking it and rolling used to silently produce zero options and just close the
--- window with nothing shown, since RollAffixId would filter every class affix out.
+-- reached — see ItemAffix.cpp's IsClassAffixesBlocked). Falls the preference back
+-- to Stats if it was pointed at Class Skills when that stopped being a valid
+-- choice, since rolling with zero eligible class affixes would otherwise close
+-- the window with nothing to show.
 local function ApplyClassSkillsBlocked(typeGroup, blocked)
     for _, btn in ipairs(typeGroup) do
         if btn._value == 2 then

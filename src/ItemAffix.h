@@ -324,9 +324,9 @@ private:
                        uint8 preferredRole = 0, uint8 preferredMainStat = 0,
                        int8 spec = -1);
     // Shared source of truth for both RollAffixId's own filtering and the DATA packet's
-    // "classSkillsBlocked" flag (so the addon can hide the dead-end Class Skills selector
-    // before the player ever picks it) — see docs/PLAYER_PROGRESSION_PLAN.md's Class Affix
-    // Gate section. item may be null (only the ProgressionGateClassAffixes check applies then).
+    // "classSkillsBlocked" flag, so the addon can hide the dead-end Class Skills selector
+    // before the player ever picks it. item may be null (only the ProgressionGateClassAffixes
+    // check applies then).
     bool IsClassAffixesBlocked(Player* player, Item* item);
     float GetQualityFraction(uint32 quality) const;
     std::vector<AffixSlotInfo>  LoadAffixSlots(uint64 itemGuid);

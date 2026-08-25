@@ -15,13 +15,12 @@
 // Custom spell (see imprints/custom_spells.json, patched into Spell.dbc by
 // tools/patch_custom_spells.ps1) carrying a single SPELL_AURA_MOD_SPEED_ALWAYS
 // effect. Applied via CastCustomSpell with the total percent as an override —
-// this is a real, engine-tracked aura, not a raw SetSpeed() call, specifically
-// because raw SetSpeed is silently overwritten by Unit::UpdateSpeed() on any
-// aura/mount/dismount recalculation (this was the root cause of the movement
-// speed bug — see docs/PLAYER_PROGRESSION_PLAN.md). Routing through a real
-// aura means the engine's own UpdateSpeed() includes it in every recalculation
-// automatically and composes it correctly with mounts, sprint, and any other
-// speed source, the same way it already does for real game content.
+// this is a real, engine-tracked aura, not a raw SetSpeed() call, since raw
+// SetSpeed is silently overwritten by Unit::UpdateSpeed() on any aura/mount/
+// dismount recalculation. Routing through a real aura means the engine's own
+// UpdateSpeed() includes it in every recalculation automatically and composes
+// it correctly with mounts, sprint, and any other speed source, the same way
+// it already does for real game content.
 static constexpr uint32 SPELL_PROGRESSION_MOVE_SPEED = 699100;
 
 // Percent-component custom spells (see imprints/custom_spells.json) for the
@@ -398,8 +397,7 @@ float PlayerProgressionMgr::GetNodeBonus(uint64 guid, uint16 nodeId) const
 }
 
 // ---------------------------------------------------------------------------
-// Permanent stat application — see the Safety section of
-// docs/PLAYER_PROGRESSION_PLAN.md. Always call as a matched Remove-then-Apply
+// Permanent stat application. Always call as a matched Remove-then-Apply
 // pair on any state change; both guard against being called while already applied.
 // ---------------------------------------------------------------------------
 
@@ -681,13 +679,12 @@ void PlayerProgressionMgr::SendProgState(Player* player)
 
     // WotLK's chat protocol (which SendAddonMsg's packets masquerade as, via
     // CHAT_MSG_WHISPER) hard-caps a single message at 255 chars (see
-    // ChatHandler.cpp's own `msg.length() > 255` check) — a single PROG|STATE
-    // message with every node inline blew past that once the node count grew
-    // past ~15 (this is exactly what silently dropped a node's data mid-session
-    // during Heal Ability testing: its segment landed past the cutoff and never
-    // reached the client). Node data
-    // is now split across multiple PROG|NODES chunks, each kept comfortably
-    // under the limit; the header (xp/points/cost/tier) always fits alone.
+    // ChatHandler.cpp's own `msg.length() > 255` check). A single PROG|STATE
+    // message with every node inline would blow past that once the node count
+    // grows large enough — any node past the cutoff silently never reaches the
+    // client. Node data is split across multiple PROG|NODES chunks instead,
+    // each kept comfortably under the limit; the header (xp/points/cost/tier)
+    // always fits alone.
     std::vector<std::string> segments;
     segments.reserve(_nodeDefs.size());
     for (auto const& [nodeId, def] : _nodeDefs)

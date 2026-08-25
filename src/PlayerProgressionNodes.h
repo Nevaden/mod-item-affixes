@@ -46,11 +46,8 @@ enum ProgressionNodeId : uint16
     // 23 (Flat HP) retired — overlapped almost entirely with Stamina, which
     // already converts to HP natively. Never reuse this id.
     NODE_CHARACTER_XP_PCT     = 24,  // % bonus to the character's own kill/quest/explore/BG XP
-    // 25 (Heal Ability / "Emergency Mend") retired — built, but the taught spell never
-    // rendered in the client spellbook despite an extensive debugging pass (mechanism
-    // itself proven working via a First Aid test). See "Retired: Heal Ability" in
-    // docs/PLAYER_PROGRESSION_PLAN.md's backlog for the full writeup before trying again.
-    // Never reuse this id.
+    // 25 (Heal Ability / "Emergency Mend") retired — a taught spell that never
+    // rendered in the client spellbook. Never reuse this id.
 
     // Bespoke — read directly via GetNodeBonus, not applied through
     // ApplyProgressionStats (no flat/pct/teach channel; see PlayerProgressionBossDrops.cpp).
