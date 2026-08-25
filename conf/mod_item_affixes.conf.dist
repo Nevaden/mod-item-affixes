@@ -126,10 +126,10 @@ ItemAffixes.SlotCountLegendary = 4
 # Blue   (Rare):      2 options by default.
 # Purple (Epic):      3 options by default.
 # Orange (Legendary): 5 options by default.
-ItemAffixes.OptionsCountGreen     = 3
-ItemAffixes.OptionsCountBlue      = 3
-ItemAffixes.OptionsCountPurple    = 4
-ItemAffixes.OptionsCountLegendary = 5
+ItemAffixes.OptionsCountGreen     = 1
+ItemAffixes.OptionsCountBlue      = 2
+ItemAffixes.OptionsCountPurple    = 3
+ItemAffixes.OptionsCountLegendary = 4
 
 # Number of rerolls granted per quality tier after the initial roll.
 # Each reroll re-generates all unlocked options; locked options are preserved.
@@ -141,6 +141,135 @@ ItemAffixes.RerollsGreen     = 0
 ItemAffixes.RerollsBlue      = 3
 ItemAffixes.RerollsPurple    = 5
 ItemAffixes.RerollsLegendary = 7
+
+# ---------------------------------------------------------------------------
+# Player Progression — account-wide XP pool and talent tree
+# ---------------------------------------------------------------------------
+
+# Master toggle for the meta-progression system.
+ItemAffixes.ProgressionEnabled = 1
+
+# % of every character XP gain (kills/quests/exploration/BG) skimmed into the
+# account-wide meta-progression pool. Does not reduce the character XP granted.
+ItemAffixes.ProgressionTricklePct = 2
+
+# Meta-XP granted when a slot commits PENDING -> APPLIED (player picks an
+# option), scaled by the item's quality. Green is intentionally tiny relative
+# to blue/purple/legendary so vendoring greens for XP is a bad trade, not a
+# hard-blocked farm.
+ItemAffixes.ProgressionXpGreen     = 1
+ItemAffixes.ProgressionXpBlue      = 10
+ItemAffixes.ProgressionXpPurple    = 25
+ItemAffixes.ProgressionXpLegendary = 50
+
+# Flat lifetime XP cost per talent point (points_total = xp / this value).
+ItemAffixes.ProgressionXpPerPoint = 500
+
+# Respec cost (in copper) = Base + PerLevel * character level. Flat fee, not
+# an escalating/repeat-based curve.
+ItemAffixes.ProgressionRespecBaseCopper     = 10000
+ItemAffixes.ProgressionRespecPerLevelCopper = 500
+
+# Each Progression node has its own MaxRank (how many points can be invested
+# in it) and ValuePerRank (bonus granted per point — meaning depends on the
+# node: flat rerolls/options/slots, a %, or a stat magnitude). These are
+# fully independent per node — there is no shared/global rank ceiling.
+#
+# When ProgressionGateClassAffixes is off (default), class affixes work
+# exactly as they do today, ungated — see the "Class affix" section below.
+
+# Affixes tab
+ItemAffixes.ProgressionRerollTierMaxRank            = 3
+ItemAffixes.ProgressionRerollTierValuePerRank        = 1
+ItemAffixes.ProgressionOptionsTierMaxRank           = 3
+ItemAffixes.ProgressionOptionsTierValuePerRank       = 1
+ItemAffixes.ProgressionSlotMaxRank                  = 1
+ItemAffixes.ProgressionSlotValuePerRank              = 1
+ItemAffixes.ProgressionCritRollChanceMaxRank        = 5
+ItemAffixes.ProgressionCritRollChanceValuePerRank    = 2
+ItemAffixes.ProgressionUnlockClassAffixesMaxRank    = 1
+ItemAffixes.ProgressionUnlockClassAffixesValuePerRank = 1
+# % bonus to meta-progression XP itself (trickle + per-affix) — a "snowball" node,
+# safe to be generous since it only accelerates this pool, not character power.
+ItemAffixes.ProgressionMetaXpPctMaxRank             = 5
+ItemAffixes.ProgressionMetaXpPctValuePerRank         = 10
+
+# Player tab (permanent character stats — reuses the same GenericStatOp
+# pipeline item affixes use for the flat part, applied on login and removed
+# on logout. ValuePerRankPct is the % component, granted as a real spell aura
+# — see PlayerProgression.cpp. Not every stat has one: Spell Power/Crit/Haste
+# stay flat-only this pass (no clean % mechanism / deferred, see the plan).
+ItemAffixes.ProgressionStaminaMaxRank         = 5
+ItemAffixes.ProgressionStaminaValuePerRank     = 10
+ItemAffixes.ProgressionStaminaValuePerRankPct  = 2
+ItemAffixes.ProgressionStrengthMaxRank         = 5
+ItemAffixes.ProgressionStrengthValuePerRank    = 6
+ItemAffixes.ProgressionStrengthValuePerRankPct = 2
+ItemAffixes.ProgressionAgilityMaxRank          = 5
+ItemAffixes.ProgressionAgilityValuePerRank     = 6
+ItemAffixes.ProgressionAgilityValuePerRankPct  = 2
+ItemAffixes.ProgressionIntellectMaxRank         = 5
+ItemAffixes.ProgressionIntellectValuePerRank     = 6
+ItemAffixes.ProgressionIntellectValuePerRankPct  = 2
+ItemAffixes.ProgressionSpiritMaxRank         = 5
+ItemAffixes.ProgressionSpiritValuePerRank     = 6
+ItemAffixes.ProgressionSpiritValuePerRankPct  = 2
+ItemAffixes.ProgressionAttackPowerMaxRank         = 5
+ItemAffixes.ProgressionAttackPowerValuePerRank     = 12
+ItemAffixes.ProgressionAttackPowerValuePerRankPct  = 2
+ItemAffixes.ProgressionSpellPowerMaxRank     = 5
+ItemAffixes.ProgressionSpellPowerValuePerRank = 10
+# % is NOT a real aura (no native "% of current spell power" exists) — recomputed in
+# C++ from gear/gem/enchant spell power only on equip/unequip, buffs never included.
+# See docs/PLAYER_PROGRESSION_PLAN.md and PlayerProgression.cpp's ApplySpellPowerDynamicBonus.
+ItemAffixes.ProgressionSpellPowerValuePerRankPct = 2
+ItemAffixes.ProgressionCritRatingMaxRank         = 5
+ItemAffixes.ProgressionCritRatingValuePerRank     = 8
+# Direct % crit chance (melee+ranged and spell both, same magnitude) — not "% of
+# rating", no such aura exists; bypasses the level-dependent rating conversion curve.
+ItemAffixes.ProgressionCritRatingValuePerRankPct  = 1
+ItemAffixes.ProgressionHasteRatingMaxRank         = 5
+ItemAffixes.ProgressionHasteRatingValuePerRank     = 8
+# Direct % haste (melee, ranged, and spell casting speed, same magnitude) — same
+# reasoning as Crit above.
+ItemAffixes.ProgressionHasteRatingValuePerRankPct  = 1
+ItemAffixes.ProgressionMp5MaxRank     = 5
+ItemAffixes.ProgressionMp5ValuePerRank = 4
+
+# Misc tab
+ItemAffixes.ProgressionMoveSpeedMaxRank              = 5
+ItemAffixes.ProgressionMoveSpeedValuePerRank          = 10
+ItemAffixes.ProgressionArmorMaxRank              = 5
+ItemAffixes.ProgressionArmorValuePerRank          = 20
+ItemAffixes.ProgressionArmorValuePerRankPct       = 2
+ItemAffixes.ProgressionDamageReductionPctMaxRank     = 3
+ItemAffixes.ProgressionDamageReductionPctValuePerRank = 1
+# % bonus to the character's own kill/quest/explore/BG XP — applied before the
+# trickle skim, so it also indirectly grows the meta-XP pool.
+ItemAffixes.ProgressionCharacterXpPctMaxRank         = 5
+ItemAffixes.ProgressionCharacterXpPctValuePerRank     = 10
+# +N extra item roll(s) from a boss's own loot table per kill, summed across every
+# eligible group member (each contributes their own rank). Bespoke — not applied
+# through the normal stat/aura/teach channels; see PlayerProgressionBossDrops.cpp.
+ItemAffixes.ProgressionBossDropsMaxRank              = 2
+ItemAffixes.ProgressionBossDropsValuePerRank          = 1
+
+# ---------------------------------------------------------------------------
+# Class affix gate (Player Progression integration)
+# ---------------------------------------------------------------------------
+
+# When enabled, class/spellmod affixes only roll for a character that has
+# invested the Unlock Class Affixes node above. When disabled (default),
+# class affixes work exactly as they always have — EnableClassSkillAffixes/
+# ClassAffixChance remain the sole governing config either way. Independent
+# of ClassAffixMaxPerItem below; combine as you like.
+ItemAffixes.ProgressionGateClassAffixes = 1
+
+# Caps how many class/spellmod affixes a single item can ever have APPLIED
+# at once. 0 = unlimited (default, no behavior change). 1 = at most one class
+# affix per item (most common setting); raise to allow more. Independent
+# toggle — works with or without the gate above.
+ItemAffixes.ClassAffixMaxPerItem = 1
 
 # ---------------------------------------------------------------------------
 # Stat budgets and multipliers

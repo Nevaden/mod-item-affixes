@@ -1,5 +1,6 @@
 #include "ItemAffix.h"
 #include "Imprints/ImprintMgr.h"
+#include "PlayerProgression.h"
 #include "GameTime.h"
 #include "CellImpl.h"
 #include "GridNotifiers.h"
@@ -29,6 +30,11 @@ public:
 
     void OnBeforeWorldInitialized() override
     {
+        // Loaded first: ItemAffixMgr's roll logic reads PlayerProgressionMgr's node
+        // registry (class-affix gate, bonus lookups) — no runtime ordering hazard
+        // either way since both finish before any player can log in, but this keeps
+        // the dependency direction obvious.
+        sPlayerProgressionMgr->LoadConfig();
         sItemAffixMgr->LoadAffixTemplates();
         sImprintMgr->LoadConfig();
         sImprintMgr->LoadDefs();
@@ -66,6 +72,7 @@ public:
         PLAYERHOOK_ON_EQUIP,
         PLAYERHOOK_ON_UNEQUIP_ITEM,
         PLAYERHOOK_ON_BEFORE_SEND_CHAT_MESSAGE,
+        PLAYERHOOK_ON_GIVE_EXP,
     }) {}
 
     void OnPlayerLogin(Player* player) override
@@ -82,6 +89,7 @@ public:
                 sImprintMgr->OnItemEquipped(player, item);
         }
         sImprintMgr->SendImprintDescriptions(player);
+        sPlayerProgressionMgr->OnPlayerLogin(player);
     }
 
     void OnPlayerBeforeLogout(Player* player) override
@@ -95,6 +103,17 @@ public:
             if (item)
                 sImprintMgr->OnItemUnequipped(player, item);
         }
+        sPlayerProgressionMgr->OnPlayerLogout(player);
+    }
+
+    // Skims ItemAffixes.ProgressionTricklePct of every character XP gain into the
+    // account-wide meta-progression pool. amount is read-only here — the trickle
+    // is a separate pool, not a reduction of character XP.
+    void OnPlayerGiveXP(Player* player, uint32& amount, Unit* /*victim*/, uint8 /*xpSource*/) override
+    {
+        // Character XP bonus first so the trickle skim below sees the boosted amount.
+        sPlayerProgressionMgr->ApplyCharacterXpBonus(player, amount);
+        sPlayerProgressionMgr->GrantTrickleXP(player, amount);
     }
 
     void OnPlayerStoreNewItem(Player* player, Item* item, uint32 /*count*/) override
@@ -115,6 +134,9 @@ public:
         if (it)
             sItemAffixMgr->SendItemStatus(player, it);
         sImprintMgr->SyncImprints(player);
+        // Gear-only trigger for Spell Power's dynamic % component — deliberately
+        // NOT re-triggered by buffs (see PlayerProgression.cpp's own comment).
+        sPlayerProgressionMgr->RecomputeSpellPowerBonus(player);
     }
 
     void OnPlayerUnequip(Player* player, Item* it) override
@@ -123,6 +145,7 @@ public:
         // so without the exclusion Phase 2 would immediately re-apply the variant we just removed.
         sItemAffixMgr->SyncAffixes(player, it ? it->GetGUID() : ObjectGuid::Empty);
         sImprintMgr->SyncImprints(player);
+        sPlayerProgressionMgr->RecomputeSpellPowerBonus(player);
     }
 
     // Intercept AFXM addon messages sent as LANG_ADDON whispers from the client.

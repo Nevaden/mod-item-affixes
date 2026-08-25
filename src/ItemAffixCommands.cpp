@@ -1,10 +1,12 @@
 #include "Bag.h"
 #include "Chat.h"
 #include "CommandScript.h"
+#include "Creature.h"
 #include "DatabaseEnv.h"
 #include "Item.h"
 #include "ItemAffix.h"
 #include "Player.h"
+#include "PlayerProgression.h"
 #include "RBAC.h"
 
 using namespace Acore::ChatCommands;
@@ -16,10 +18,18 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
+        static ChatCommandTable progressionCommandTable =
+        {
+            { "info",       HandleAffixProgressionInfoCommand,       rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "grantxp",    HandleAffixProgressionGrantXpCommand,    rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "reset",      HandleAffixProgressionResetCommand,      rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "bossdebug",  HandleAffixProgressionBossDebugCommand,  rbac::RBAC_PERM_COMMAND_GM, Console::No },
+        };
         static ChatCommandTable affixCommandTable =
         {
-            { "reroll", HandleAffixRerollCommand, rbac::RBAC_PERM_COMMAND_GM, Console::No },
-            { "info",   HandleAffixInfoCommand,   rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "reroll",       HandleAffixRerollCommand, rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "info",         HandleAffixInfoCommand,   rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "progression",  progressionCommandTable },
         };
         static ChatCommandTable commandTable =
         {
@@ -108,6 +118,73 @@ public:
         if (!anyItem)
             handler->SendSysMessage("No equipped items have affix data.");
 
+        return true;
+    }
+
+    // .affix progression info — shows the account's shared XP alongside this
+    // character's own invested node ranks (ranks are per-character, XP is per-account).
+    static bool HandleAffixProgressionInfoCommand(ChatHandler* handler)
+    {
+        uint32 accountId = handler->GetSession()->GetAccountId();
+        uint64 guid = handler->GetSession()->GetPlayer()->GetGUID().GetRawValue();
+
+        AccountProgressionState account = sPlayerProgressionMgr->GetAccountState(accountId);
+        handler->PSendSysMessage("|cffFFFF00[Progression]|r account xp={}", account.xp);
+
+        auto ranks = sPlayerProgressionMgr->GetCharacterNodeRanks(guid);
+        bool anyInvested = false;
+        for (auto const& [nodeId, rank] : ranks)
+        {
+            if (rank == 0)
+                continue;
+            anyInvested = true;
+            handler->PSendSysMessage("  node {} = rank {}", nodeId, rank);
+        }
+        if (!anyInvested)
+            handler->SendSysMessage("  (no nodes invested on this character)");
+        return true;
+    }
+
+    // .affix progression grantxp <amount> — grants raw meta-XP for testing.
+    static bool HandleAffixProgressionGrantXpCommand(ChatHandler* handler, uint32 amount)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        sPlayerProgressionMgr->GrantXp(player, amount);
+        handler->PSendSysMessage("|cffFFFF00[Progression]|r Granted {} meta-XP.", amount);
+        return true;
+    }
+
+    // .affix progression reset — resets THIS character's invested nodes with no
+    // gold cost (support use). Other characters on the account are unaffected.
+    static bool HandleAffixProgressionResetCommand(ChatHandler* handler)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        sPlayerProgressionMgr->ForceReset(player);
+        handler->SendSysMessage("|cffFFFF00[Progression]|r Reset this character's invested nodes to 0 (no gold charged).");
+        return true;
+    }
+
+    // .affix progression bossdebug — select a creature, reports whether the
+    // Boss Drops node (id 26) would trigger on it and this character's own
+    // current rank/bonus. Mirrors mod_custom_loot's ".rewardtoken debug".
+    static bool HandleAffixProgressionBossDebugCommand(ChatHandler* handler)
+    {
+        Creature* target = handler->getSelectedCreature();
+        if (!target)
+        {
+            handler->SendSysMessage("Select a creature first.");
+            return true;
+        }
+
+        uint64 guid = handler->GetSession()->GetPlayer()->GetGUID().GetRawValue();
+        uint8 rank = sPlayerProgressionMgr->GetNodeRank(guid, NODE_BOSS_DROPS);
+
+        handler->PSendSysMessage("|cffFFFF00[Progression]|r Creature: {} (entry {})", target->GetName(), target->GetEntry());
+        handler->PSendSysMessage("  isWorldBoss:    {}", target->isWorldBoss()   ? "YES" : "no");
+        handler->PSendSysMessage("  IsDungeonBoss:  {}", target->IsDungeonBoss() ? "YES" : "no");
+        handler->PSendSysMessage("  lootid:         {}", target->GetCreatureTemplate() ? target->GetCreatureTemplate()->lootid : 0);
+        handler->PSendSysMessage("  Would trigger:  {}", (target->isWorldBoss() || target->IsDungeonBoss()) ? "YES" : "NO");
+        handler->PSendSysMessage("  Your Boss Drops rank: {} (bonus rolls this character contributes: {})", rank, rank);
         return true;
     }
 };

@@ -1,6 +1,7 @@
 void AddSC_item_affix_scripts();
 void AddSC_item_affix_commands();
 void AddSC_item_imprint_commands();
+void AddSC_progression_boss_drops();
 
 // Registers each concrete ImprintEffect with ImprintMgr.
 // Add a call here for every new Imprint type.
@@ -22,6 +23,9 @@ void Addmod_item_affixesScripts()
 
     // --- Imprint command script ---
     AddSC_item_imprint_commands();
+
+    // --- Player Progression: Boss Drops node ---
+    AddSC_progression_boss_drops();
 
     // --- Register all Imprint effect handlers ---
     RegisterSanctuaryStormImprint();

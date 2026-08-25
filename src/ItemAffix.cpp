@@ -1,5 +1,7 @@
 #include "ItemAffix.h"
 #include "Imprints/ImprintMgr.h"
+#include "PlayerProgression.h"
+#include "PlayerProgressionNodes.h"
 #include "Bag.h"
 #include "Pet.h"
 #include "Chat.h"
@@ -265,6 +267,8 @@ static void ApplyGenericStat(Player* player, uint8 statOp, int32 value, bool app
             player->ApplyManaRegenBonus(value, apply); break;
         case GSTAT_ARMOR:
             player->HandleStatFlatModifier(UNIT_MOD_ARMOR,               TOTAL_VALUE, fval, apply); break;
+        case GSTAT_MAX_HEALTH:
+            player->HandleStatFlatModifier(UNIT_MOD_HEALTH,              TOTAL_VALUE, fval, apply); break;
         case GSTAT_CRIT_RATING:
             player->ApplyRatingMod(CR_CRIT_MELEE,        value, apply);
             player->ApplyRatingMod(CR_CRIT_RANGED,       value, apply);
@@ -320,6 +324,11 @@ static void ApplyGenericStat(Player* player, uint8 statOp, int32 value, bool app
         default:
             LOG_ERROR("module", "mod-item-affixes: unknown GenericStatOp {}", statOp); break;
     }
+}
+
+void ItemAffixMgr::ApplyPlayerStat(Player* player, uint8 statOp, int32 value, bool apply)
+{
+    ApplyGenericStat(player, statOp, value, apply);
 }
 
 // ---------------------------------------------------------------------------
@@ -537,6 +546,8 @@ void ItemAffixMgr::LoadAffixTemplates()
 
     _enableClassSkillAffixes        = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableClassSkillAffixes",        true);
     _enableClassSkillAffixSelection = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableClassSkillAffixSelection", false);
+    _progressionGateClassAffixes    = sConfigMgr->GetOption<bool>  ("ItemAffixes.ProgressionGateClassAffixes",    false);
+    _classAffixMaxPerItem           = sConfigMgr->GetOption<uint32>("ItemAffixes.ClassAffixMaxPerItem",            0);
     _enableTalentAffixes            = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableTalentAffixes",            true);
     _enableTalentAffixSelection     = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableTalentAffixSelection",     false);
     _classAffixChance               = std::clamp(sConfigMgr->GetOption<uint32>("ItemAffixes.ClassAffixChance", 20u), 0u, 100u);
@@ -894,6 +905,40 @@ void ItemAffixMgr::RemoveTalentAffixes(Player* player, Item* item)
 // RollAffixId
 // ---------------------------------------------------------------------------
 
+// Player Progression integration (both default off — zero behavior change unless
+// an admin opts in via config):
+//  - ProgressionGateClassAffixes: class/spellmod affixes only roll for a character
+//    that has invested the Unlock Class Affixes node.
+//  - ClassAffixMaxPerItem: class/spellmod affixes stop rolling for an item once
+//    it already has this many APPLIED (pending-but-unchosen doesn't count). 0 = unlimited.
+bool ItemAffixMgr::IsClassAffixesBlocked(Player* player, Item* item)
+{
+    if (!player)
+        return true;
+
+    bool classAffixesBlocked = false;
+    if (_progressionGateClassAffixes)
+    {
+        uint64 guid = player->GetGUID().GetRawValue();
+        classAffixesBlocked = sPlayerProgressionMgr->GetNodeRank(guid, NODE_UNLOCK_CLASS_AFFIXES) == 0;
+    }
+    if (!classAffixesBlocked && _classAffixMaxPerItem > 0 && item)
+    {
+        uint32 appliedClassAffixCount = 0;
+        for (AffixSlotInfo const& slot : LoadAffixSlots(item->GetGUID().GetRawValue()))
+        {
+            if (slot.rollState != AFFIX_ROLL_APPLIED || slot.affixId == 0)
+                continue;
+            auto const* appliedDef = GetAffixDef(slot.affixId);
+            if (appliedDef && appliedDef->affixType != AFFIX_TYPE_STAT)
+                ++appliedClassAffixCount;
+        }
+        if (appliedClassAffixCount >= _classAffixMaxPerItem)
+            classAffixesBlocked = true;
+    }
+    return classAffixesBlocked;
+}
+
 uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
                                   bool genericsOnly, uint8 classBoost,
                                   bool classOnly,
@@ -917,6 +962,8 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
 
     // Resolve the player's active spec once — needed to bucket own-spec vs. other-spec.
     int8 resolvedSpec = (spec >= 0) ? spec : static_cast<int8>(GetDominantTalentTree(player));
+
+    bool classAffixesBlocked = IsClassAffixesBlocked(player, item);
 
     for (uint32 id : _pool)
     {
@@ -979,6 +1026,8 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
         uint8 bucketClass = (def->classMask != 0)          ? playerClass
                           : (def->affixType == AFFIX_TYPE_STAT) ? 0
                           : affixClass;
+        if (bucketClass != 0 && classAffixesBlocked)
+            continue;
         if (bucketClass == 0)
         {
             knownGeneric.push_back(id);
@@ -1259,6 +1308,9 @@ void ItemAffixMgr::InitItemSlots(Player* player, Item* item)
         // 2H weapons get bonus slots to compensate for the dual-wield slot advantage.
         if (Is2HWeapon(item))
             numSlots += _twoHanderBonusSlots;
+
+        // Player Progression: flat bonus from the Slot node, never a regression.
+        numSlots += uint8(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_SLOT));
     }
 
     uint64 itemGuid = item->GetGUID().GetRawValue();
@@ -2050,6 +2102,42 @@ void ItemAffixMgr::SendRollOptions(Player* player, Item* item, uint8 affixSlot,
 }
 
 // ---------------------------------------------------------------------------
+// RefreshAllItemStatus  — re-sends DATA for every affix-bearing item the
+// player has equipped or in bags. See ItemAffix.h for why this exists.
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::RefreshAllItemStatus(Player* player)
+{
+    if (!player)
+        return;
+
+    // Equipped items (slot 0-18 in INVENTORY_SLOT_BAG_0)
+    for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
+    {
+        if (Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+            if (!LoadAffixSlots(item->GetGUID().GetRawValue()).empty())
+                SendItemStatus(player, item);
+    }
+    // Backpack (slots 23-38 in INVENTORY_SLOT_BAG_0)
+    for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
+    {
+        if (Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+            if (!LoadAffixSlots(item->GetGUID().GetRawValue()).empty())
+                SendItemStatus(player, item);
+    }
+    // Extra bags (bag slots 19-22)
+    for (uint8 bagSlot = INVENTORY_SLOT_BAG_START; bagSlot < INVENTORY_SLOT_BAG_END; ++bagSlot)
+    {
+        Bag* bag = player->GetBagByPos(bagSlot);
+        if (!bag) continue;
+        for (uint32 s = 0; s < bag->GetBagSize(); ++s)
+            if (Item* item = bag->GetItemByPos(s))
+                if (!LoadAffixSlots(item->GetGUID().GetRawValue()).empty())
+                    SendItemStatus(player, item);
+    }
+}
+
+// ---------------------------------------------------------------------------
 // SendItemStatus  — sends DATA packet with full slot states for one item
 // ---------------------------------------------------------------------------
 
@@ -2110,6 +2198,14 @@ void ItemAffixMgr::SendItemStatus(Player* player, Item* item, std::string const&
     // Flag rune items so the Lua apply mechanic enables right-click apply mode.
     if (sImprintMgr->IsRune(item))
         msg += "|isRune";
+
+    // Tells the Lua Roll UI to disable the "Class Skills" selector for this item —
+    // avoids the dead-end where picking it produces zero eligible options and the
+    // roll menu just silently closes with nothing to show (same check RollAffixId
+    // itself uses, see IsClassAffixesBlocked). Gems never offer Class Skills at all
+    // (roll menu already forces stats-only for them), so skip the check there.
+    if ((!proto || proto->Class != ITEM_CLASS_GEM) && IsClassAffixesBlocked(player, item))
+        msg += "|classSkillsBlocked";
 
     // Append talent affix segments.
     // extraTalentLine is passed by InitTalentAffix immediately after an async INSERT
@@ -2226,6 +2322,10 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
         else if (quality == ITEM_QUALITY_RARE)     numOpts = _optionsCountBlue;
         else { numOpts = _optionsCountGreen; genericsOnly = true; }
 
+        // Player Progression: flat bonus from the Options Tier node, never a regression.
+        uint8 optionsBonus = uint8(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_OPTIONS_TIER));
+        numOpts = std::min<uint8>(numOpts + optionsBonus, 6);
+
         if (!_enableClassSkillAffixes)
         {
             genericsOnly = true;  // class skills globally disabled — stat affixes only
@@ -2321,10 +2421,13 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     }
 
     // Crit roll: per-option chance (configurable via ItemAffixes.CritRollChance), applied after 2H bonus.
+    // Player Progression: flat bonus from the Crit Roll Chance node, never a regression.
     // STAT: multiply rolledValue by 1.5 (ceiling). SPELLMOD: escalate flag value.
+    uint32 effectiveCritChance = std::min<uint32>(_critRollChance +
+        uint32(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_CRIT_ROLL_CHANCE)), 100);
     for (PendingOpt& opt : opts)
     {
-        if (!_critRollEnabled || urand(0, 99) >= _critRollChance)
+        if (!_critRollEnabled || urand(0, 99) >= effectiveCritChance)
             continue;
         opt.isCrit = true;
         auto const* d = GetAffixDef(opt.affixId);
@@ -2360,7 +2463,22 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
     }
 
     if (opts.empty())
+    {
+        // Zero eligible options — most commonly type=2 (Class Skills) requested while
+        // blocked (ProgressionGateClassAffixes not unlocked, or ClassAffixMaxPerItem
+        // already reached). The addon normally disables that selector before this can
+        // happen (see SendItemStatus's classSkillsBlocked flag), but its cache can go
+        // briefly stale relative to live node investment (invest/respec doesn't proactively
+        // push a fresh DATA packet) — this is the server-side safety net so a stale client
+        // still gets a clear message instead of a roll menu that silently closes with
+        // nothing shown. Slot stays UNROLLED; the player can just try again.
+        auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+        std::string reason = classOnly
+            ? "Class Skills isn't available for this item right now."
+            : "No eligible affix options right now — try again.";
+        SendAddonMsg(player, Acore::StringFormat("ERR|{}|{}|{}", luaBag, luaSlot, reason));
         return;
+    }
 
     // Rerolls granted based on quality tier (gems always get 0)
     uint8 rerolls = 0;
@@ -2370,6 +2488,10 @@ void ItemAffixMgr::HandleRollRequest(Player* player, Item* item, uint8 affixSlot
         else if (quality >= ITEM_QUALITY_EPIC)     rerolls = _rerollsPurple;
         else if (quality == ITEM_QUALITY_RARE)     rerolls = _rerollsBlue;
         else                                       rerolls = _rerollsGreen;
+
+        // Player Progression: flat bonus from the Reroll Tier node, never a regression.
+        uint8 rerollBonus = uint8(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_REROLL_TIER));
+        rerolls = std::min<uint8>(rerolls + rerollBonus, 255);
     }
 
     // Serialize as "id:val:crit,..." so crit state survives logout/relog
@@ -2434,10 +2556,18 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
     // Use the value that was rolled when options were generated — no second roll.
     int32 rolledValue = chosen.rolledValue;
 
-    CharacterDatabase.Execute(
+    // DirectExecute (synchronous) — SyncAffixes and SendItemStatus below both
+    // immediately re-read item_affix via CharacterDatabase.Query (also sync);
+    // a plain async Execute here would race those reads, same class of bug
+    // documented for InitTalentAffix elsewhere in this file.
+    CharacterDatabase.DirectExecute(
         "UPDATE item_affix SET roll_state = {}, affix_id = {}, rolled_value = {}, pending_opts = '' "
         "WHERE item_guid = {} AND affix_slot = {}",
         uint8(AFFIX_ROLL_APPLIED), chosen.affixId, rolledValue, itemGuid, uint32(affixSlot));
+
+    // Player Progression: PENDING -> APPLIED is the one-shot per-affix XP trigger.
+    if (ItemTemplate const* proto = item->GetTemplate())
+        sPlayerProgressionMgr->GrantAffixXP(player, proto->Quality);
 
     // Talent affix for this slot is committed now that the player has made their choice.
     // Must happen before SyncAffixes so the talent row is in the DB when sync reads it.
@@ -2463,6 +2593,14 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
         displayText = "!" + displayText;
     SendAddonMsg(player, Acore::StringFormat("APPLY|{}|{}|{}|{}|{}",
         uint32(luaBag), uint32(luaSlot), uint32(affixSlot), displayText, unrolledLeft));
+
+    // APPLY above only patches this one slot's cached display text — it doesn't
+    // touch classSkillsBlocked, so a class/spellmod pick here (which is exactly
+    // what can push an item over ClassAffixMaxPerItem) left the addon's cached
+    // hint stale until the next full DATA refresh. Push one now so the very next
+    // Alt+Click on this item already shows the correct Class Skills grey-out
+    // state instead of needing one failed roll attempt to self-correct.
+    SendItemStatus(player, item);
 }
 
 // ---------------------------------------------------------------------------
@@ -2604,11 +2742,14 @@ void ItemAffixMgr::HandleRerollRequest(Player* player, Item* item, int8 spec,
         }
 
         // Crit roll on genuinely new unlocked options.
+        // Player Progression: flat bonus from the Crit Roll Chance node, never a regression.
+        uint32 effectiveCritChance = std::min<uint32>(_critRollChance +
+            uint32(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_CRIT_ROLL_CHANCE)), 100);
         for (uint8 j = 0; j < numOpts; ++j)
         {
             if ((lockedMask & (1u << j)) || keptOriginal[j])
                 continue;
-            if (!_critRollEnabled || urand(0, 99) >= _critRollChance)
+            if (!_critRollEnabled || urand(0, 99) >= effectiveCritChance)
                 continue;
             finalOpts[j].isCrit = true;
             auto const* d = GetAffixDef(finalOpts[j].affixId);
@@ -2865,6 +3006,12 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
 
     std::string cmd(parts[0]);
 
+    if (cmd == "PROG")
+    {
+        sPlayerProgressionMgr->HandleAddonMessage(player, parts);
+        return;
+    }
+
     if (cmd == "CONFIG")
     {
         SendConfig(player);
@@ -2873,30 +3020,7 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
 
     if (cmd == "ALLDATA")
     {
-        // Equipped items (slot 0-18 in INVENTORY_SLOT_BAG_0)
-        for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
-        {
-            if (Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
-                if (!LoadAffixSlots(item->GetGUID().GetRawValue()).empty())
-                    SendItemStatus(player, item);
-        }
-        // Backpack (slots 23-38 in INVENTORY_SLOT_BAG_0)
-        for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
-        {
-            if (Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
-                if (!LoadAffixSlots(item->GetGUID().GetRawValue()).empty())
-                    SendItemStatus(player, item);
-        }
-        // Extra bags (bag slots 19-22)
-        for (uint8 bagSlot = INVENTORY_SLOT_BAG_START; bagSlot < INVENTORY_SLOT_BAG_END; ++bagSlot)
-        {
-            Bag* bag = player->GetBagByPos(bagSlot);
-            if (!bag) continue;
-            for (uint32 s = 0; s < bag->GetBagSize(); ++s)
-                if (Item* item = bag->GetItemByPos(s))
-                    if (!LoadAffixSlots(item->GetGUID().GetRawValue()).empty())
-                        SendItemStatus(player, item);
-        }
+        RefreshAllItemStatus(player);
         // Re-send imprint spell descriptions so the addon has them after every /reload.
         sImprintMgr->SendImprintDescriptions(player);
         return;

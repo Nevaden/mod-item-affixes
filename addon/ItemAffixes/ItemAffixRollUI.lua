@@ -43,10 +43,36 @@ local function BuildToggleBtn(parent, label, w, group, value, prefVar)
     return btn
 end
 
+-- Disables (and visually greys) the "Class Skills" toggle button in a type-selector
+-- group when the server says class affixes are currently unavailable for this item
+-- (ProgressionGateClassAffixes not unlocked, or ClassAffixMaxPerItem already
+-- reached — see ItemAffix.cpp's IsClassAffixesBlocked). Falls the preference back to
+-- Stats if it was pointed at Class Skills when that stopped being a valid choice —
+-- picking it and rolling used to silently produce zero options and just close the
+-- window with nothing shown, since RollAffixId would filter every class affix out.
+local function ApplyClassSkillsBlocked(typeGroup, blocked)
+    for _, btn in ipairs(typeGroup) do
+        if btn._value == 2 then
+            if blocked then
+                btn:Disable()
+                btn:SetText("|cff555555" .. btn._label .. "|r")
+                if AFX_PREF_TYPE == 2 then
+                    AFX_PREF_TYPE = 1
+                    for _, b in ipairs(typeGroup) do b:Refresh(b) end
+                end
+            else
+                btn:Enable()
+                btn:Refresh(btn)
+            end
+        end
+    end
+end
+
 -- Called from AFXM:OnServerMsg when an OPTS message arrives.
 -- rerolls    = number of rerolls remaining (0 = no reroll button shown)
 -- lockedMask = bitmask: bit N set means option N is locked
-function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask)
+-- classSkillsBlocked = true if the server says Class Skills isn't a valid reroll type for this item
+function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, classSkillsBlocked)
     rerolls    = rerolls    or 0
     lockedMask = lockedMask or 0
     if AFX_DEBUG then
@@ -354,6 +380,7 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask)
 
     -- Refresh all toggle button visuals from current preference globals
     for _, b in ipairs(f._typeSection._group) do b:Refresh(b) end
+    ApplyClassSkillsBlocked(f._typeSection._group, classSkillsBlocked)
     for _, b in ipairs(f._specSection._group) do b:Refresh(b) end
     for _, b in ipairs(f._roleSection._group) do b:Refresh(b) end
     for _, b in ipairs(f._mainSection._group) do b:Refresh(b) end
@@ -412,7 +439,8 @@ end)
 -- Roll Menu frame: preference landing page shown before rolling
 -- ============================================================================
 
-function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem)
+-- classSkillsBlocked = true if the server says Class Skills isn't a valid roll type for this item
+function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
     if AFX_DEBUG then
         print("|cff44DDFF[AFX]|r ShowRollMenu bag=" .. tostring(bag)
             .. " slot=" .. tostring(slot) .. " rolls=" .. tostring(rollsLeft))
@@ -620,6 +648,7 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem)
 
     -- Refresh all toggle visuals from current globals
     for _, b in ipairs(f._typeSection._group) do b:Refresh(b) end
+    ApplyClassSkillsBlocked(f._typeSection._group, classSkillsBlocked and not isGem)
     for _, b in ipairs(f._specSection._group) do b:Refresh(b) end
     for _, b in ipairs(f._roleSection._group) do b:Refresh(b) end
     for _, b in ipairs(f._mainSection._group) do b:Refresh(b) end

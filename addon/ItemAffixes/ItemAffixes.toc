@@ -8,3 +8,4 @@
 ItemAffixes.lua
 ItemAffixRollUI.xml
 ItemAffixRollUI.lua
+ProgressionUI.lua

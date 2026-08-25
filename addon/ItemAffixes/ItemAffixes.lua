@@ -570,6 +570,8 @@ function AFXM:OnServerMsg(msg)
                         cache[bag][slot].isGem = true
                     elseif parts[i] == "isRune" then
                         cache[bag][slot].isRune = true
+                    elseif parts[i] == "classSkillsBlocked" then
+                        cache[bag][slot].classSkillsBlocked = true
                     else
                         local impName, impCount = parts[i]:match("^imprint:(.+):(%d+)$")
                         if impName then
@@ -620,7 +622,8 @@ function AFXM:OnServerMsg(msg)
         if not bag or not slot or (affixSlot == nil) then return end
         local options = {}
         for i = 7, #parts do options[#options + 1] = parts[i] end
-        AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls or 0, lockedMask or 0)
+        local classSkillsBlocked = cache[bag] and cache[bag][slot] and cache[bag][slot].classSkillsBlocked
+        AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls or 0, lockedMask or 0, classSkillsBlocked)
 
     elseif cmd == "APPLY" then
         local bag       = tonumber(parts[2])
@@ -651,6 +654,62 @@ function AFXM:OnServerMsg(msg)
             print("|cff44DDFF[ItemAffixes]|r CONFIG type=" .. AFX_CFG_TYPE
                 .. " spec=" .. AFX_CFG_SPEC .. " role=" .. AFX_CFG_ROLE
                 .. " main=" .. AFX_CFG_MAIN)
+        end
+
+    elseif cmd == "PROG" then
+        local sub = parts[2]
+        if sub == "STATE" then
+            -- PROG|STATE|xp|pointsAvailable|respecCostCopper|currentTier|totalNodeChunks
+            -- Node data itself arrives in separate PROG|NODES chunks (see below) — a single
+            -- message with every node inline used to blow past WotLK's 255-char chat message
+            -- cap once the node count grew large enough, silently dropping whichever nodes
+            -- landed past the cutoff (this is what happened to Heal Ability). Buffer here and
+            -- commit atomically once every expected chunk has arrived.
+            AFXM._progPending = {
+                xp              = tonumber(parts[3]) or 0,
+                pointsAvailable = tonumber(parts[4]) or 0,
+                respecCost      = tonumber(parts[5]) or 0,
+                currentTier     = tonumber(parts[6]) or 1,
+                nodes           = {},
+            }
+            AFXM._progTotalChunks = tonumber(parts[7]) or 0
+            AFXM._progChunksSeen  = 0
+            if AFXM._progTotalChunks == 0 then
+                AFXM.progState = AFXM._progPending
+                AFXM._progPending = nil
+                if AFXM.UpdateProgressionFrame then
+                    AFXM:UpdateProgressionFrame()
+                end
+            end
+        elseif sub == "NODES" then
+            -- PROG|NODES|chunkIndex|totalChunks|id:rank:maxRank:unlockTier:valuePerRank:valuePerRankPct|...
+            if not AFXM._progPending then return end
+            for i = 5, #parts do
+                local nodeId, rank, maxRank, unlockTier, valuePerRank, valuePerRankPct =
+                    parts[i]:match("^(%d+):(%d+):(%d+):(%d+):([%d%.%-]+):([%d%.%-]+)$")
+                if nodeId then
+                    AFXM._progPending.nodes[tonumber(nodeId)] = {
+                        rank            = tonumber(rank),
+                        maxRank         = tonumber(maxRank),
+                        unlockTier      = tonumber(unlockTier),
+                        valuePerRank    = tonumber(valuePerRank),
+                        valuePerRankPct = tonumber(valuePerRankPct),
+                    }
+                end
+            end
+            AFXM._progChunksSeen = AFXM._progChunksSeen + 1
+            if AFXM._progChunksSeen >= AFXM._progTotalChunks then
+                AFXM.progState = AFXM._progPending
+                AFXM._progPending = nil
+                if AFXM.UpdateProgressionFrame then
+                    AFXM:UpdateProgressionFrame()
+                end
+            end
+        elseif sub == "ERR" then
+            print("|cffFF4444[ItemAffixes]|r Progression: " .. (parts[3] or "Unknown error"))
+            -- A failed action (e.g. respec with insufficient gold) may have nil'd the
+            -- local draft in anticipation of a STATE reply that never came — resync.
+            AFXM:SendToServer("PROG|QUERY")
         end
 
     elseif cmd == "PEEKDATA" then
@@ -1007,7 +1066,7 @@ local function TryRollBagItem(bag, slot)
         if s.state == "P" then hasPending = true end
     end
     if hasUnrolled then
-        AFXM:ShowRollMenu(bag, slot, rollsLeft, data.isGem)
+        AFXM:ShowRollMenu(bag, slot, rollsLeft, data.isGem, data.classSkillsBlocked)
     elseif hasPending then
         -- Re-request existing OPTS (logout recovery)
         AFXM:SendToServer("ROLL|" .. bag .. "|" .. slot)
@@ -2409,6 +2468,17 @@ SlashCmdList["ROLLAFFIX"] = function()
         TryRollBagItem(focus:GetParent():GetID(), focus:GetID())
     else
         print("|cff44DDFF[ItemAffixes]|r Not hovering a bag item (hovering: " .. name .. ")")
+    end
+end
+
+-- ============================================================================
+-- /prog — open the Player Progression frame
+-- ============================================================================
+
+SLASH_AFXPROGRESSION1 = "/prog"
+SlashCmdList["AFXPROGRESSION"] = function()
+    if AFXM.ShowProgressionFrame then
+        AFXM:ShowProgressionFrame()
     end
 end
 

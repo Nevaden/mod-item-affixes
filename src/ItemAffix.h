@@ -93,6 +93,7 @@ enum GenericStatOp : uint8
     GSTAT_PET_DAMAGE_PCT        = 24,  // % increase to all pet damage dealt (UnitScript hook)
     GSTAT_PET_DMGRED_PCT        = 25,  // % reduction to all damage taken by pet (UnitScript hook)
     GSTAT_PET_ATTACKSPEED_PCT   = 26,  // % increase to pet attack speed (faster attacks)
+    GSTAT_MAX_HEALTH            = 27,  // flat bonus to max health (Player Progression's Flat HP node)
 };
 
 enum AffixRollState : uint8
@@ -270,11 +271,23 @@ public:
 
     AffixDefinition const* GetAffixDef(uint32 id) const;
 
+    // Apply/remove one generic stat value directly on a player, independent of any
+    // item — used by PlayerProgressionMgr for permanent talent-granted stat bonuses.
+    // apply=false must be called with the exact same value that was applied; see
+    // ApplyGenericStat (ItemAffix.cpp) for per-statOp behavior.
+    void ApplyPlayerStat(Player* player, uint8 statOp, int32 value, bool apply);
+
     // Addon message protocol entry point.  Called from OnPlayerBeforeSendChatMessage.
     void HandleAddonMessage(Player* player, std::string const& payload);
 
     // Push current affix slot state for one item to the client.
     void SendItemStatus(Player* player, Item* item, std::string const& extraTalentLine = "");
+
+    // Re-sends DATA for every equipped/bagged item with affix slots — used so
+    // client-cached hints that depend on Player Progression state (currently:
+    // classSkillsBlocked) update live on invest/respec instead of only at next
+    // login. Called from PlayerProgressionMgr's INVEST/RESPEC handlers.
+    void RefreshAllItemStatus(Player* player);
 
     // Reset all affix rows for an item and re-initialize with UNROLLED slots.
     // Clears any old PERM_ENCHANTMENT_SLOT data.  Called by .affix reroll command.
@@ -310,6 +323,11 @@ private:
                        bool classOnly = false,
                        uint8 preferredRole = 0, uint8 preferredMainStat = 0,
                        int8 spec = -1);
+    // Shared source of truth for both RollAffixId's own filtering and the DATA packet's
+    // "classSkillsBlocked" flag (so the addon can hide the dead-end Class Skills selector
+    // before the player ever picks it) — see docs/PLAYER_PROGRESSION_PLAN.md's Class Affix
+    // Gate section. item may be null (only the ProgressionGateClassAffixes check applies then).
+    bool IsClassAffixesBlocked(Player* player, Item* item);
     float GetQualityFraction(uint32 quality) const;
     std::vector<AffixSlotInfo>  LoadAffixSlots(uint64 itemGuid);
     std::vector<ItemAffixRecord> LoadItemAffixes(uint64 itemGuid);
@@ -352,6 +370,13 @@ private:
     bool  _enableTalentAffixes              = true;   // when false, talent affix rows never roll
     bool  _enableTalentAffixSelection       = false;  // when false, spec selector hidden; talent rolls use dominant tree
     uint32 _classAffixChance                = 20;    // % chance (0-100) each roll option is a class affix rather than a stat affix
+    // Player Progression integration: when gated, class affixes only roll for a
+    // character that has invested NODE_UNLOCK_CLASS_AFFIXES. Independent of the
+    // per-item cap below — an admin can combine either, neither, or both. Gate
+    // defaults false and cap defaults 0 so servers not opting into progression
+    // see zero behavior change.
+    bool   _progressionGateClassAffixes     = false;
+    uint32 _classAffixMaxPerItem            = 0;     // 0 = unlimited (no cap); N = block once N class/spellmod affixes are APPLIED
     uint32 _badLuckStreakProtection         = 0;     // consecutive non-class options before next is forced class; 0 = disabled
     std::unordered_map<uint64, uint32> _optionStreak; // item GUID → consecutive non-class options seen this session
     uint32 _talentAffixChanceGreen          = 10;    // % chance (0-100) an uncommon item rolls a talent affix

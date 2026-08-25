@@ -76,6 +76,7 @@ $F_ID                   =   0
 $F_DISPEL               =   2
 $F_TARGETS              =  16
 $F_CASTING_TIME_INDEX   =  28
+$F_RECOVERY_TIME        =  29  # individual spell cooldown (ms) — distinct from GCD (start_recovery_time)
 $F_INTERRUPT_FLAGS      =  31
 $F_DURATION_INDEX       =  40
 $F_POWER_TYPE           =  41
@@ -103,6 +104,9 @@ $F_EFF_MULT_VALUE_2     = 103
 $F_EFF_CHAIN_TARGETS_0  = 104
 $F_EFF_CHAIN_TARGETS_1  = 105
 $F_EFF_CHAIN_TARGETS_2  = 106
+$F_EFF_MISC_VALUE_0     = 110  # EffectMiscValue — meaning depends on aura (e.g. which stat/school)
+$F_EFF_MISC_VALUE_1     = 111
+$F_EFF_MISC_VALUE_2     = 112
 $F_EFF_TRIGGER_SPELL_0  = 116
 $F_EFF_TRIGGER_SPELL_1  = 117
 $F_EFF_TRIGGER_SPELL_2  = 118
@@ -163,8 +167,15 @@ $PowerTypeMap     = @{ mana=0; rage=1; focus=2; energy=3; happiness=4; runes=5; 
 $SchoolMap        = @{ physical=1; holy=2; fire=4; nature=8; frost=16; shadow=32; arcane=64 }
 $DmgClassMap      = @{ none=0; magic=1; melee=2; ranged=3 }
 $PreventionMap    = @{ none=0; silence=1; pacify=2 }
-$EffectTypeMap    = @{ DUMMY=3; APPLY_AURA=6; SCHOOL_DAMAGE=2; HEAL=10; ENERGIZE=30; TRIGGER_SPELL=64 }
-$AuraTypeMap      = @{ PERIODIC_DUMMY=226; DUMMY=4; PERIODIC_DAMAGE=3; PERIODIC_HEAL=8; DUMMY_AURA=4 }
+$EffectTypeMap    = @{ DUMMY=3; APPLY_AURA=6; SCHOOL_DAMAGE=2; HEAL=10; ENERGIZE=30; TRIGGER_SPELL=64; HEAL_PCT=136 }
+$AuraTypeMap      = @{
+    PERIODIC_DUMMY=226; DUMMY=4; PERIODIC_DAMAGE=3; PERIODIC_HEAL=8; DUMMY_AURA=4
+    MOD_SPEED_ALWAYS=129; MOD_PERCENT_STAT=80; MOD_ATTACK_POWER_PCT=166; MOD_RESISTANCE_PCT=101
+    MOD_RANGED_ATTACK_POWER_PCT=167
+    MOD_TOTAL_STAT_PERCENTAGE=137
+    MOD_WEAPON_CRIT_PERCENT=52; MOD_SPELL_CRIT_CHANCE=57
+    MOD_MELEE_HASTE=138; MOD_RANGED_HASTE=140; HASTE_SPELLS=216
+}
 $TargetMap        = @{ TARGET_SELF=1; TARGET_UNIT_TARGET_ENEMY=6; TARGET_UNIT_TARGET_ALLY=21; TARGET_UNIT_TARGET_ANY=25; TARGET_UNIT_NEARBY_ENEMY=15 }
 
 # Per-effect field index arrays (index 0/1/2)
@@ -176,6 +187,7 @@ $EffBPFields           = @($F_EFFECT_BASE_PTS_0,    $F_EFFECT_BASE_PTS_1,    $F_
 $EffMultValueFields    = @($F_EFF_MULT_VALUE_0,     $F_EFF_MULT_VALUE_1,     $F_EFF_MULT_VALUE_2)
 $EffChainTargetFields  = @($F_EFF_CHAIN_TARGETS_0,  $F_EFF_CHAIN_TARGETS_1,  $F_EFF_CHAIN_TARGETS_2)
 $EffTriggerSpellFields = @($F_EFF_TRIGGER_SPELL_0,  $F_EFF_TRIGGER_SPELL_1,  $F_EFF_TRIGGER_SPELL_2)
+$EffMiscValueFields    = @($F_EFF_MISC_VALUE_0,     $F_EFF_MISC_VALUE_1,     $F_EFF_MISC_VALUE_2)
 
 function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]]$strList, [byte[]]$baseRec)
 {
@@ -190,6 +202,8 @@ function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]
         { SetU32 $rec $F_TARGETS ([uint32]$spell.targets_flag) }
     if ($spell.PSObject.Properties['cast_time_index'])
         { SetU32 $rec $F_CASTING_TIME_INDEX ([uint32]$spell.cast_time_index) }
+    if ($spell.PSObject.Properties['cooldown_ms'] -and [int]$spell.cooldown_ms -gt 0)
+        { SetU32 $rec $F_RECOVERY_TIME ([uint32]$spell.cooldown_ms) }
     SetU32 $rec $F_INTERRUPT_FLAGS     ([uint32]$spell.interrupt_flags)
     SetU32 $rec $F_DURATION_INDEX      ([uint32]$spell.duration_index)
     SetI32 $rec $F_EQUIPPED_ITEM_CLASS -1
@@ -288,6 +302,12 @@ function BuildSpellRecord([object]$spell, [System.Collections.Generic.List[byte]
         # Trigger spell (EffectTriggerSpell) — fired when effect type is TRIGGER_SPELL (64)
         if ($eff.PSObject.Properties['trigger_spell'] -and [int]$eff.trigger_spell -gt 0)
             { SetU32 $rec $EffTriggerSpellFields[$ei] ([uint32]$eff.trigger_spell) }
+
+        # Misc value (EffectMiscValue) — meaning depends on the aura, e.g. which stat
+        # (SPELL_AURA_MOD_PERCENT_STAT) or which resistance school (SPELL_AURA_MOD_RESISTANCE_PCT).
+        # Signed (int32), so 0 is a valid real value — must check property presence, not truthiness.
+        if ($eff.PSObject.Properties['misc_value'])
+            { SetI32 $rec $EffMiscValueFields[$ei] ([int]$eff.misc_value) }
     }
 
     return $rec
@@ -408,6 +428,16 @@ $dbcBytes = CombineBytes (CombineBytes $hdrAndRecs $appendBytes) $newStrBlock
 [BitConverter]::GetBytes($newStrBlockSz).CopyTo($dbcBytes, 16)
 Write-Host "  Patched Spell.dbc: $($dbcBytes.Length) bytes, $newRecordCount records"
 
+# Write back to the SERVER's own Spell.dbc so sSpellMgr actually loads the new/
+# updated spells at next startup. (Previously this only fed the client MPQ below
+# — the server's copy was never touched, so custom spells added after this
+# script replaced the older patch_spell_dbc.ps1/patch_mpq_spells.ps1 split never
+# actually existed server-side no matter how many times the worldserver restarted.)
+$serverBackup = "$ServerSpellDb.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+Copy-Item -Path $ServerSpellDb -Destination $serverBackup
+[System.IO.File]::WriteAllBytes($ServerSpellDb, $dbcBytes)
+Write-Host "  Wrote server Spell.dbc: $ServerSpellDb (backup: $serverBackup)"
+
 # ---------------------------------------------------------------------------
 # Step 2 — Patch SkillLineAbility.dbc (only for spells with skill_line set)
 # ---------------------------------------------------------------------------
@@ -484,6 +514,12 @@ if ($slaSpells.Count -gt 0)
     [BitConverter]::GetBytes($newSlaCount).CopyTo($slaBytes, 4)
     # string block size unchanged -- no new strings added
     Write-Host "  Patched SkillLineAbility.dbc: $($slaBytes.Length) bytes, $newSlaCount records"
+
+    # Write back to the SERVER's own SkillLineAbility.dbc — same gap as Spell.dbc above.
+    $slaServerBackup = "$ServerSlaDb.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+    Copy-Item -Path $ServerSlaDb -Destination $slaServerBackup
+    [System.IO.File]::WriteAllBytes($ServerSlaDb, $slaBytes)
+    Write-Host "  Wrote server SkillLineAbility.dbc: $ServerSlaDb (backup: $slaServerBackup)"
 }
 else
 {
