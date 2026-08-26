@@ -5,6 +5,9 @@
 ## Author: Server Team
 ## SavedVariablesPerCharacter: ItemAffixes_SwapBarSlots
 
+Locales\enUS.lua
+Locales\zhCN.lua
+
 ItemAffixes.lua
 ItemAffixRollUI.xml
 ItemAffixRollUI.lua

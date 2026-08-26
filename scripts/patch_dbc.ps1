@@ -53,6 +53,27 @@ if (-not $DbcSuffix) {
 $PatchOut     = Join-Path $ClientDataDir "patch-$DbcSuffix.mpq"
 $PatchEnUSOut = Join-Path $ClientDataDir "enus\patch-enUS-$DbcSuffix.mpq"
 
+# Optional, testing-only: also drop an identical copy of the patch MPQ into other
+# locale subfolders (e.g. "zhCN") so a non-enUS client's file-priority picks it up.
+# Off by default -- this project's live install is enUS-only; set CLIENT_TEST_LOCALES
+# (comma-separated, e.g. "zhCN,deDE") in your local config.bat only when you need to
+# test a client running one of those locales, then unset it again.
+#
+# IMPORTANT CAVEAT: this only affects which archive file wins for a given internal
+# DBC path -- it does NOT touch the record's own per-locale Name_Lang_* string field
+# or its Name_Lang_Mask (see the layout comment above). The record above is written
+# with only the enUS name field populated, exactly as before. Whether a client whose
+# locale isn't enUS falls back to that enUS text or renders it blank is something we
+# do not have a verified answer for (the mask bit layout does not match the simple
+# per-locale bit-index assumption we initially tried decoding it against) -- that is
+# exactly what testing with a real non-enUS client is for. Populating the record's
+# own per-locale string field for real translated text is tracked separately as
+# follow-up localization work, not attempted here.
+$ExtraLocales = @()
+if ($env:CLIENT_TEST_LOCALES) {
+    $ExtraLocales = $env:CLIENT_TEST_LOCALES -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+}
+
 Write-Host "=== Patching SpellItemEnchantment.dbc ==="
 
 # -- 1. Collect needed enchant IDs from active affixes (stat + class) -------
@@ -300,4 +321,12 @@ $null = [System.IO.Directory]::CreateDirectory((Split-Path $PatchEnUSOut -Parent
 [System.IO.File]::WriteAllBytes($PatchEnUSOut, $mpqBytes)
 Write-Host "  patch-$DbcSuffix.mpq      -> $PatchOut"
 Write-Host "  patch-enUS-$DbcSuffix.mpq -> $PatchEnUSOut"
+
+foreach ($locale in $ExtraLocales) {
+    $extraOut = Join-Path $ClientDataDir "$($locale.ToLower())\patch-$locale-$DbcSuffix.mpq"
+    $null = [System.IO.Directory]::CreateDirectory((Split-Path $extraOut -Parent))
+    [System.IO.File]::WriteAllBytes($extraOut, $mpqBytes)
+    Write-Host "  patch-$locale-$DbcSuffix.mpq -> $extraOut  (CLIENT_TEST_LOCALES, testing only)"
+}
+
 Write-Host "  MPQ rebuild complete."

@@ -44,6 +44,15 @@ REM silently overwrite it.
 REM set PATCH_SUFFIX_DBC=
 REM set PATCH_SUFFIX_SPELLS=
 
+REM -- Locale testing (optional) --------------------------------------------------
+REM Off by default. The patch scripts normally write only the root patch-X.mpq
+REM plus a locale-tagged copy in enus\ (this project's live install is enUS-only).
+REM Set this to a comma-separated list of client locale codes (e.g. "zhCN,deDE")
+REM ONLY when you need to test the mod against a client running one of those
+REM locales -- it adds an identical MPQ copy in that locale's own subfolder so
+REM the client's file-priority picks it up. Unset it again for normal builds.
+REM set CLIENT_TEST_LOCALES=zhCN
+
 REM -- Custom ID ranges ---------------------------------------------------------
 REM IDs this module inserts into shared world-DB tables and the DBC.
 REM Change only if another mod already uses the same range, then re-run install.

@@ -156,10 +156,10 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
         ts._height = 44
         local tLbl = ts:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         tLbl:SetPoint("TOPLEFT", ts, "TOPLEFT", 0, 0)
-        tLbl:SetText("Roll type:")
+        tLbl:SetText(AFXL["Roll type:"])
         tLbl:SetTextColor(0.9, 0.9, 0.6)
         local tg = {}
-        local typeInfo = {{"Any", 0, 60}, {"Stats", 1, 60}, {"Class Skills", 2, 100}}
+        local typeInfo = {{AFXL["Any"], 0, 60}, {AFXL["Stats"], 1, 60}, {AFXL["Class Skills"], 2, 100}}
         local prevB
         for i, info in ipairs(typeInfo) do
             local b = BuildToggleBtn(ts, info[1], info[3], tg, info[2], "AFX_PREF_TYPE")
@@ -184,19 +184,19 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
         ss._height = 78
         local sLbl = ss:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         sLbl:SetPoint("TOPLEFT", ss, "TOPLEFT", 0, 0)
-        sLbl:SetText("Spec:")
+        sLbl:SetText(AFXL["Spec:"])
         sLbl:SetTextColor(0.9, 0.9, 0.6)
         local sDesc1 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
         sDesc1:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -2)
-        sDesc1:SetText("Selects which spec's passive talent bonus can roll on this item.")
+        sDesc1:SetText(AFXL["Selects which spec's passive talent bonus can roll on this item."])
         sDesc1:SetTextColor(0.65, 0.65, 0.65)
         local sDesc2 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
         sDesc2:SetPoint("TOPLEFT", sDesc1, "BOTTOMLEFT", 0, -1)
-        sDesc2:SetText("Also doubles the chance of rolling class affixes for that spec tree.")
+        sDesc2:SetText(AFXL["Also doubles the chance of rolling class affixes for that spec tree."])
         sDesc2:SetTextColor(0.65, 0.65, 0.65)
         local sg = {}
         local specBtns = {}
-        specBtns[1] = BuildToggleBtn(ss, "Any", 52, sg, 255, "AFX_PREF_SPEC")
+        specBtns[1] = BuildToggleBtn(ss, AFXL["Any"], 52, sg, 255, "AFX_PREF_SPEC")
         specBtns[1]:SetPoint("TOPLEFT", sDesc2, "BOTTOMLEFT", 0, -4)
         for i = 2, 4 do
             specBtns[i] = BuildToggleBtn(ss, "?", 86, sg, i - 2, "AFX_PREF_SPEC")
@@ -212,10 +212,10 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
         rs._height = 44
         local rLbl = rs:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         rLbl:SetPoint("TOPLEFT", rs, "TOPLEFT", 0, 0)
-        rLbl:SetText("Stat family:")
+        rLbl:SetText(AFXL["Stat family:"])
         rLbl:SetTextColor(0.9, 0.9, 0.6)
         local rg = {}
-        local roleInfo = {{"Any",0,48},{"Tank",4,52},{"Physical",2,68},{"Caster",1,58},{"Healer",8,58},{"Ranged",16,62}}
+        local roleInfo = {{AFXL["Any"],0,48},{AFXL["Tank"],4,52},{AFXL["Physical"],2,68},{AFXL["Caster"],1,58},{AFXL["Healer"],8,58},{AFXL["Ranged"],16,62}}
         prevB = nil
         for i, info in ipairs(roleInfo) do
             local b = BuildToggleBtn(rs, info[1], info[3], rg, info[2], "AFX_PREF_ROLE")
@@ -232,10 +232,10 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
         ms._height = 44
         local mLbl = ms:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         mLbl:SetPoint("TOPLEFT", ms, "TOPLEFT", 0, 0)
-        mLbl:SetText("Main stat:")
+        mLbl:SetText(AFXL["Main stat:"])
         mLbl:SetTextColor(0.9, 0.9, 0.6)
         local mg = {}
-        local mainInfo = {{"Any",0,48},{"Strength",1,74},{"Agility",2,68},{"Intellect",3,78},{"Spirit",4,62}}
+        local mainInfo = {{AFXL["Any"],0,48},{AFXL["Strength"],1,74},{AFXL["Agility"],2,68},{AFXL["Intellect"],3,78},{AFXL["Spirit"],4,62}}
         prevB = nil
         for i, info in ipairs(mainInfo) do
             local b = BuildToggleBtn(ms, info[1], info[3], mg, info[2], "AFX_PREF_MAIN")
@@ -293,7 +293,7 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
         f._rerollBtn:Hide()
     end  -- end one-time build
 
-    f._title:SetText("Choose an Affix")
+    f._title:SetText(AFXL["Choose an Affix"])
     f._numOpts = #options
     f._rerolls = rerolls
 
@@ -374,7 +374,7 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
     local specs = CLASS_SPEC_NAMES[classFile] or {"Tree 1", "Tree 2", "Tree 3"}
     local sb = f._specSection._specBtns
     for i = 1, 3 do
-        sb[i + 1]._label = specs[i]
+        sb[i + 1]._label = AFXL[specs[i]] or specs[i]
         sb[i + 1]:Refresh(sb[i + 1])
     end
 
@@ -390,7 +390,7 @@ function AFXM:ShowRollFrame(bag, slot, affixSlot, options, rerolls, lockedMask, 
 
     -- Configure reroll button
     if rerolls > 0 then
-        f._rerollBtn:SetText("Reroll (" .. rerolls .. ")")
+        f._rerollBtn:SetText(string.format(AFXL["Reroll (%d)"], rerolls))
         if anyUnlocked then
             f._rerollBtn:Enable()
             f._rerollBtn:SetAlpha(1.0)
@@ -472,7 +472,7 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
         f._title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
         f._title:SetPoint("TOP", f, "TOP", 0, -14)
         f._title:SetTextColor(1, 0.82, 0)
-        f._title:SetText("Choose Your Affix")
+        f._title:SetText(AFXL["Choose Your Affix"])
 
         f._subtitle = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         f._subtitle:SetPoint("TOP", f._title, "BOTTOM", 0, -4)
@@ -488,10 +488,10 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
         f._typeSection = ts
         local tLbl = ts:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         tLbl:SetPoint("TOPLEFT", ts, "TOPLEFT", 0, 0)
-        tLbl:SetText("What to roll?")
+        tLbl:SetText(AFXL["What to roll?"])
         tLbl:SetTextColor(0.9, 0.9, 0.6)
         local tg = {}
-        local typeInfo = {{"Any", 0, 65}, {"Stats", 1, 65}, {"Class Skills", 2, 115}}
+        local typeInfo = {{AFXL["Any"], 0, 65}, {AFXL["Stats"], 1, 65}, {AFXL["Class Skills"], 2, 115}}
         local prevB
         for i, info in ipairs(typeInfo) do
             local b = BuildToggleBtn(ts, info[1], info[3], tg, info[2], "AFX_PREF_TYPE")
@@ -520,22 +520,22 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
         f._specSection = ss
         local sLbl = ss:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         sLbl:SetPoint("TOPLEFT", ss, "TOPLEFT", 0, 0)
-        sLbl:SetText("Talent Tree:")
+        sLbl:SetText(AFXL["Talent Tree:"])
         sLbl:SetTextColor(0.9, 0.9, 0.6)
         local sDesc1 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
         sDesc1:SetPoint("TOPLEFT", sLbl, "BOTTOMLEFT", 0, -2)
-        sDesc1:SetText("Selects which spec's passive talent bonus can roll on this item.")
+        sDesc1:SetText(AFXL["Selects which spec's passive talent bonus can roll on this item."])
         sDesc1:SetTextColor(0.65, 0.65, 0.65)
         local sDesc2 = ss:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
         sDesc2:SetPoint("TOPLEFT", sDesc1, "BOTTOMLEFT", 0, -1)
-        sDesc2:SetText("Also doubles the chance of rolling class affixes for that spec tree.")
+        sDesc2:SetText(AFXL["Also doubles the chance of rolling class affixes for that spec tree."])
         sDesc2:SetTextColor(0.65, 0.65, 0.65)
         local sg = {}
         local specBtns = {}
-        specBtns[1] = BuildToggleBtn(ss, "Any", 60, sg, 255, "AFX_PREF_SPEC")
+        specBtns[1] = BuildToggleBtn(ss, AFXL["Any"], 60, sg, 255, "AFX_PREF_SPEC")
         specBtns[1]:SetPoint("TOPLEFT", sDesc2, "BOTTOMLEFT", 0, -4)
         for i = 2, 4 do
-            specBtns[i] = BuildToggleBtn(ss, "Spec"..i, 95, sg, i-2, "AFX_PREF_SPEC")
+            specBtns[i] = BuildToggleBtn(ss, AFXL["Spec"]..i, 95, sg, i-2, "AFX_PREF_SPEC")
             specBtns[i]:SetPoint("LEFT", specBtns[i-1], "RIGHT", 4, 0)
         end
         ss._group = sg
@@ -548,10 +548,10 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
         f._roleSection = rs
         local rLbl = rs:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         rLbl:SetPoint("TOPLEFT", rs, "TOPLEFT", 0, 0)
-        rLbl:SetText("Stat family?")
+        rLbl:SetText(AFXL["Stat family?"])
         rLbl:SetTextColor(0.9, 0.9, 0.6)
         local rg = {}
-        local roleInfo = {{"Any",0,55},{"Tank",4,60},{"Physical",2,80},{"Caster",1,65},{"Healer",8,65},{"Ranged",16,75}}
+        local roleInfo = {{AFXL["Any"],0,55},{AFXL["Tank"],4,60},{AFXL["Physical"],2,80},{AFXL["Caster"],1,65},{AFXL["Healer"],8,65},{AFXL["Ranged"],16,75}}
         prevB = nil
         for i, info in ipairs(roleInfo) do
             local b = BuildToggleBtn(rs, info[1], info[3], rg, info[2], "AFX_PREF_ROLE")
@@ -568,10 +568,10 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
         f._mainSection = ms
         local mLbl = ms:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         mLbl:SetPoint("TOPLEFT", ms, "TOPLEFT", 0, 0)
-        mLbl:SetText("Main stat?")
+        mLbl:SetText(AFXL["Main stat?"])
         mLbl:SetTextColor(0.9, 0.9, 0.6)
         local mg = {}
-        local mainInfo = {{"Any",0,55},{"Strength",1,85},{"Agility",2,80},{"Intellect",3,90},{"Spirit",4,70}}
+        local mainInfo = {{AFXL["Any"],0,55},{AFXL["Strength"],1,85},{AFXL["Agility"],2,80},{AFXL["Intellect"],3,90},{AFXL["Spirit"],4,70}}
         prevB = nil
         for i, info in ipairs(mainInfo) do
             local b = BuildToggleBtn(ms, info[1], info[3], mg, info[2], "AFX_PREF_MAIN")
@@ -615,7 +615,7 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
         -- Roll Affix button (always shown at bottom)
         f._rollBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
         f._rollBtn:SetSize(140, 34)
-        f._rollBtn:SetText("Roll Affix")
+        f._rollBtn:SetText(AFXL["Roll Affix"])
         f._rollBtn:SetPoint("BOTTOM", f, "BOTTOM", 0, 16)
 
         f:SetScript("OnHide", function()
@@ -635,14 +635,14 @@ function AFXM:ShowRollMenu(bag, slot, rollsLeft, isGem, classSkillsBlocked)
     f._slot  = slot
     f._isGem = isGem or false
 
-    f._subtitle:SetText("Rolls remaining: " .. rollsLeft)
+    f._subtitle:SetText(string.format(AFXL["Rolls remaining: %d"], rollsLeft))
 
     -- Populate spec button labels for this character's class
     local _, classFile = UnitClass("player")
     local specs = CLASS_SPEC_NAMES[classFile] or {"Tree 1", "Tree 2", "Tree 3"}
     local sb = f._specSection._specBtns
     for i = 1, 3 do
-        sb[i+1]._label = specs[i]
+        sb[i+1]._label = AFXL[specs[i]] or specs[i]
         sb[i+1]:Refresh(sb[i+1])
     end
 

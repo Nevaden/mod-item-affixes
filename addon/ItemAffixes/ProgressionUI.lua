@@ -11,6 +11,9 @@
 
 local AFXM = _G["AFXM"]
 
+-- Names/suffixes are kept as English keys here (canonical data, matched against
+-- PlayerProgressionNodes.h on the server) and looked up through AFXL at display
+-- time in BuildRow/UpdateProgressionFrame below.
 local NODE_INFO = {
     [1]  = { name = "Reroll Tier",          category = "Affixes", suffix = " reroll(s)" },
     [2]  = { name = "Options Tier",         category = "Affixes", suffix = " option(s)" },
@@ -35,6 +38,10 @@ local NODE_INFO = {
     [26] = { name = "Boss Drops",           category = "Misc",    suffix = " extra item(s)" },
     [27] = { name = "Lifesteal",            category = "Misc",    suffix = "%" },
 }
+
+local function L_Suffix(suffix)
+    return AFXL[suffix] or suffix -- "%" and "" are not translation keys, pass through
+end
 
 local CATEGORY_ORDER = { "Affixes", "Player", "Misc" }
 local NODES_BY_CATEGORY = {
@@ -108,9 +115,9 @@ end
 -- Escape and the "Discard" button both dismiss via OnCancel in classic StaticPopup;
 -- both mean the same thing here (drop the unapplied staged points).
 StaticPopupDialogs["AFX_PROGRESSION_UNSAVED_CONFIRM"] = {
-    text = "You have unapplied Progression changes. Apply them before closing?",
-    button1 = "Apply",
-    button2 = "Discard",
+    text = AFXL["You have unapplied Progression changes. Apply them before closing?"],
+    button1 = AFXL["Apply"],
+    button2 = AFXL["Discard"],
     OnAccept = function()
         ApplyDraft()
         if _G["AFXProgressionFrame"] then _G["AFXProgressionFrame"]:Hide() end
@@ -126,9 +133,9 @@ StaticPopupDialogs["AFX_PROGRESSION_UNSAVED_CONFIRM"] = {
 }
 
 StaticPopupDialogs["AFX_PROGRESSION_RESPEC_CONFIRM"] = {
-    text = "Respec your Progression tree? This resets every node on this character to 0 for a gold fee so you can re-invest your points.",
-    button1 = "Respec",
-    button2 = "Cancel",
+    text = AFXL["Respec your Progression tree? This resets every node on this character to 0 for a gold fee so you can re-invest your points."],
+    button1 = AFXL["Respec"],
+    button2 = AFXL["Cancel"],
     OnAccept = function()
         AFXM.progDraft = nil  -- next STATE reply reinitializes fresh, see ProgressionUI.lua header note
         AFXM:SendToServer("PROG|RESPEC")
@@ -152,7 +159,7 @@ local function BuildRow(parent, nodeId, y)
     label:SetPoint("TOPLEFT", parent, "TOPLEFT", 4, y)
     label:SetWidth(150)
     label:SetJustifyH("LEFT")
-    label:SetText(info.name .. ":")
+    label:SetText((AFXL[info.name] or info.name) .. ":")
 
     local minusBtn = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     minusBtn:SetSize(24, ROW_HEIGHT - 2)
@@ -240,7 +247,7 @@ local function BuildFrame()
     f._title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     f._title:SetPoint("TOP", f, "TOP", 0, cursorY)
     f._title:SetTextColor(1, 0.82, 0)
-    f._title:SetText("Player Progression")
+    f._title:SetText(AFXL["Player Progression"])
     cursorY = cursorY - 22
 
     cursorY = cursorY - 10
@@ -262,7 +269,7 @@ local function BuildFrame()
     for _, category in ipairs(CATEGORY_ORDER) do
         local tabBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
         tabBtn:SetSize(90, TAB_HEIGHT)
-        tabBtn:SetText(category)
+        tabBtn:SetText(AFXL[category] or category)
         tabBtn:SetPoint("TOPLEFT", f, "TOPLEFT", tabX, cursorY)
         tabBtn:SetScript("OnClick", function()
             f._activeCategory = category
@@ -306,7 +313,7 @@ local function BuildFrame()
     local applyBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     applyBtn:SetSize(140, 24)
     applyBtn:SetPoint("TOP", f, "TOP", 0, cursorY)
-    applyBtn:SetText("Apply")
+    applyBtn:SetText(AFXL["Apply"])
     applyBtn:SetScript("OnClick", function(self)
         -- Disable immediately so a fast double-click can't re-send the same staged
         -- points before the server's confirmation round-trip updates progState.
@@ -327,7 +334,7 @@ local function BuildFrame()
     local respecBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     respecBtn:SetSize(140, 24)
     respecBtn:SetPoint("TOP", f, "TOP", 0, cursorY)
-    respecBtn:SetText("Respec")
+    respecBtn:SetText(AFXL["Respec"])
     respecBtn:SetScript("OnClick", function()
         StaticPopup_Show("AFX_PROGRESSION_RESPEC_CONFIRM")
     end)
@@ -345,9 +352,9 @@ function AFXM:UpdateProgressionFrame()
     local s = AFXM.progState
     if not f or not s or not f:IsShown() then return end
 
-    f._xpText:SetText("Lifetime Meta-XP: " .. s.xp)
-    f._pointsText:SetText("Points Available: " .. LocalPointsRemaining())
-    f._respecCostText:SetText("Respec cost: " .. FormatGold(s.respecCost))
+    f._xpText:SetText(string.format(AFXL["Lifetime Meta-XP: %s"], s.xp))
+    f._pointsText:SetText(string.format(AFXL["Points Available: %s"], LocalPointsRemaining()))
+    f._respecCostText:SetText(string.format(AFXL["Respec cost: %s"], FormatGold(s.respecCost)))
 
     -- Tab highlight + visible content
     for category, tabBtn in pairs(f._tabs) do
@@ -368,9 +375,9 @@ function AFXM:UpdateProgressionFrame()
             local locked = node.unlockTier > s.currentTier
             local suffix = ""
             if draftRank ~= node.rank then
-                suffix = "  |cffFFFF00(pending)|r"
+                suffix = "  |cffFFFF00" .. AFXL["(pending)"] .. "|r"
             elseif locked then
-                suffix = "  |cff888888(locked)|r"
+                suffix = "  |cff888888" .. AFXL["(locked)"] .. "|r"
             end
             -- Flat and % are independent contributions — a hybrid node (e.g. Stamina)
             -- shows both ("+18, +6%"); a pure-% bespoke node (e.g. Move Speed, where the
@@ -379,7 +386,7 @@ function AFXM:UpdateProgressionFrame()
             local pctValue  = draftRank * (node.valuePerRankPct or 0)
             local valueParts = {}
             if flatValue > 0 then
-                table.insert(valueParts, "+" .. flatValue .. NODE_INFO[nodeId].suffix)
+                table.insert(valueParts, "+" .. flatValue .. L_Suffix(NODE_INFO[nodeId].suffix))
             end
             if pctValue > 0 then
                 table.insert(valueParts, "+" .. pctValue .. "%")

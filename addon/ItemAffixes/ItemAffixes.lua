@@ -125,7 +125,7 @@ local function AddPeekLines(tooltip, uniqueId)
     if not data then
         RequestPeek(uniqueId)
         if tooltip == GameTooltip then
-            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:AddLine("|cff888888" .. AFXL["[Fetching affixes...]"] .. "|r")
             tooltip:Show()
         end
         return
@@ -144,7 +144,7 @@ local function AddPeekLines(tooltip, uniqueId)
         for _, s in ipairs(data.slots) do
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
             if s.state == "U" or s.state == "P" then
-                tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
+                tooltip:AddLine("|cff888888" .. AFXL["[Affix slot not yet rolled]"] .. "|r")
             elseif s.state == "A" and s.text and s.text ~= "" then
                 if s.text:sub(1, 1) == "!" then
                     tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
@@ -165,9 +165,9 @@ local function AddPeekLines(tooltip, uniqueId)
         local impLine = "|cffA335EE[Imprint] " .. data.imprintText
         if data.imprintCount ~= nil then
             if data.imprintCount > 0 then
-                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+                impLine = impLine .. " " .. string.format(AFXL["(%d remaining)"], data.imprintCount)
             else
-                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+                impLine = impLine .. "|r |cffFF4444" .. AFXL["(0 remaining - no rune on disenchant)"]
             end
         end
         tooltip:AddLine(impLine .. "|r")
@@ -213,7 +213,7 @@ local function AddInspectLines(tooltip, unit, slot)
         -- somehow missed. Request a single slot as fallback.
         RequestPeekUnit(unit, slot)
         if tooltip == GameTooltip then
-            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:AddLine("|cff888888" .. AFXL["[Fetching affixes...]"] .. "|r")
             tooltip:Show()
         end
         return
@@ -230,7 +230,7 @@ local function AddInspectLines(tooltip, unit, slot)
         for _, s in ipairs(data.slots) do
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
             if s.state == "U" or s.state == "P" then
-                tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
+                tooltip:AddLine("|cff888888" .. AFXL["[Affix slot not yet rolled]"] .. "|r")
             elseif s.state == "A" and s.text and s.text ~= "" then
                 if s.text:sub(1, 1) == "!" then
                     tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
@@ -251,9 +251,9 @@ local function AddInspectLines(tooltip, unit, slot)
         local impLine = "|cffA335EE[Imprint] " .. data.imprintText
         if data.imprintCount ~= nil then
             if data.imprintCount > 0 then
-                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+                impLine = impLine .. " " .. string.format(AFXL["(%d remaining)"], data.imprintCount)
             else
-                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+                impLine = impLine .. "|r |cffFF4444" .. AFXL["(0 remaining - no rune on disenchant)"]
             end
         end
         tooltip:AddLine(impLine .. "|r")
@@ -322,7 +322,7 @@ local function AddAuctionLines(tooltip, owner, itemId, buyout, auctionType, inde
     RequestPeekAuction(owner, itemId, buyout, auctionType, index)
     if not data then
         if tooltip == GameTooltip then
-            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:AddLine("|cff888888" .. AFXL["[Fetching affixes...]"] .. "|r")
             tooltip:Show()
         end
         return
@@ -339,7 +339,7 @@ local function AddAuctionLines(tooltip, owner, itemId, buyout, auctionType, inde
         for _, s in ipairs(data.slots) do
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
             if s.state == "U" or s.state == "P" then
-                tooltip:AddLine("|cff888888[Affix slot not yet rolled]|r")
+                tooltip:AddLine("|cff888888" .. AFXL["[Affix slot not yet rolled]"] .. "|r")
             elseif s.state == "A" and s.text and s.text ~= "" then
                 if s.text:sub(1, 1) == "!" then
                     tooltip:AddLine("|cffFFD700" .. s.text:sub(2) .. "|r", 1, 0.84, 0)
@@ -360,9 +360,9 @@ local function AddAuctionLines(tooltip, owner, itemId, buyout, auctionType, inde
         local impLine = "|cffA335EE[Imprint] " .. data.imprintText
         if data.imprintCount ~= nil then
             if data.imprintCount > 0 then
-                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+                impLine = impLine .. " " .. string.format(AFXL["(%d remaining)"], data.imprintCount)
             else
-                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+                impLine = impLine .. "|r |cffFF4444" .. AFXL["(0 remaining - no rune on disenchant)"]
             end
         end
         tooltip:AddLine(impLine .. "|r")
@@ -706,7 +706,7 @@ function AFXM:OnServerMsg(msg)
                 end
             end
         elseif sub == "ERR" then
-            print("|cffFF4444[ItemAffixes]|r Progression: " .. (parts[3] or "Unknown error"))
+            print("|cffFF4444[ItemAffixes]|r " .. AFXL["Progression:"] .. " " .. (parts[3] or AFXL["Unknown error"]))
             -- A failed action (e.g. respec with insufficient gold) may have nil'd the
             -- local draft in anticipation of a STATE reply that never came — resync.
             AFXM:SendToServer("PROG|QUERY")
@@ -976,7 +976,7 @@ AddAffixLines = function(tooltip, bag, slot)
         -- Show a placeholder only on the main tooltip; comparison tooltips get lines
         -- appended in-place when the DATA response arrives, so no indicator is needed.
         if tooltip == GameTooltip then
-            tooltip:AddLine("|cff888888[Fetching affixes...]|r")
+            tooltip:AddLine("|cff888888" .. AFXL["[Fetching affixes...]"] .. "|r")
             tooltip:Show()
         end
         return
@@ -991,7 +991,7 @@ AddAffixLines = function(tooltip, bag, slot)
     for _, s in ipairs(data.slots) do
         if s.state == "U" or s.state == "P" then
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
-            tooltip:AddLine("|cffFFFF00[Alt+Click to Roll Affix]|r", 1, 1, 0)
+            tooltip:AddLine("|cffFFFF00" .. AFXL["[Alt+Click to Roll Affix]"] .. "|r", 1, 1, 0)
             break
         elseif s.state == "A" and s.text and s.text ~= "" then
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
@@ -1008,9 +1008,9 @@ AddAffixLines = function(tooltip, bag, slot)
         local impLine = "|cffA335EE[Imprint] " .. data.imprintText
         if data.imprintCount ~= nil then
             if data.imprintCount > 0 then
-                impLine = impLine .. " (" .. data.imprintCount .. " remaining)"
+                impLine = impLine .. " " .. string.format(AFXL["(%d remaining)"], data.imprintCount)
             else
-                impLine = impLine .. "|r |cffFF4444(0 remaining - no rune on disenchant)"
+                impLine = impLine .. "|r |cffFF4444" .. AFXL["(0 remaining - no rune on disenchant)"]
             end
         end
         tooltip:AddLine(impLine .. "|r")
@@ -1026,7 +1026,7 @@ AddAffixLines = function(tooltip, bag, slot)
     if data.gemTexts then
         for _, gemText in ipairs(data.gemTexts) do
             if not addedSep then tooltip:AddLine(" "); addedSep = true end
-            tooltip:AddLine("|cff00CCCC" .. gemText .. " (from gem)|r", 0, 0.8, 0.8)
+            tooltip:AddLine("|cff00CCCC" .. gemText .. " " .. AFXL["(from gem)"] .. "|r", 0, 0.8, 0.8)
         end
     end
     if addedSep then tooltip:Show() end
@@ -1233,9 +1233,8 @@ local function HookTalentButtonTooltips()
                 end
 
                 -- 3. Append gold bonus note and force tooltip resize.
-                GameTooltip:AddLine("|cffd4af37+" .. bonus
-                    .. " affix bonus (effective "
-                    .. effectiveRank .. "/" .. maxRank .. ")|r")
+                GameTooltip:AddLine("|cffd4af37+" .. bonus .. " "
+                    .. string.format(AFXL["affix bonus (effective %d/%d)"], effectiveRank, maxRank) .. "|r")
                 GameTooltip:Show()
             end)
         end
@@ -1868,7 +1867,7 @@ local function CancelImprintApplyMode()
     _applyRuneSlot = nil
     HideApplyIndicator()
     HideApplyOverlay()
-    UIErrorsFrame:AddMessage("|cffA335EE[Imprint]|r Apply mode cancelled.")
+    UIErrorsFrame:AddMessage("|cffA335EE[Imprint]|r " .. AFXL["Apply mode cancelled."])
 end
 
 local function FindHoveredBagSlot()
@@ -1986,7 +1985,7 @@ local function EnterImprintApplyMode(bag, slot, imprintName)
     ShowApplyIndicator(bag, slot)
     ShowApplyOverlay()
     UIErrorsFrame:AddMessage("|cffA335EE[Imprint: " .. (imprintName or "?") .. "]|r "
-        .. "Left-click a target item to apply.  Right-click to cancel.")
+        .. AFXL["Left-click a target item to apply.  Right-click to cancel."])
 end
 
 -- Only enter apply mode here (right-click rune when NOT in apply mode).
@@ -2449,8 +2448,10 @@ end)
 -- Key bindings
 -- ============================================================================
 
-BINDING_HEADER_ITEMAFFIXES    = "Item Affixes"
-BINDING_NAME_ITEMAFFIXES_ROLL = "Roll Item Affix (hover item + use key)"
+-- Set to English defaults here in case Locales/enUS.lua somehow loaded after this
+-- file; Locales/<locale>.lua overwrites these globals directly when applicable.
+BINDING_HEADER_ITEMAFFIXES    = BINDING_HEADER_ITEMAFFIXES    or "Item Affixes"
+BINDING_NAME_ITEMAFFIXES_ROLL = BINDING_NAME_ITEMAFFIXES_ROLL or "Roll Item Affix (hover item + use key)"
 
 -- ============================================================================
 -- /roll — hover a bag item then type /roll
@@ -2460,14 +2461,14 @@ SLASH_ROLLAFFIX1 = "/roll"
 SlashCmdList["ROLLAFFIX"] = function()
     local focus = GetMouseFocus()
     if not focus then
-        print("|cff44DDFF[ItemAffixes]|r Hover over a bag item first, then type /roll.")
+        print("|cff44DDFF[ItemAffixes]|r " .. AFXL["Hover over a bag item first, then type /roll."])
         return
     end
     local name = focus:GetName() or ""
     if name:find("^ContainerFrame%d+Item") then
         TryRollBagItem(focus:GetParent():GetID(), focus:GetID())
     else
-        print("|cff44DDFF[ItemAffixes]|r Not hovering a bag item (hovering: " .. name .. ")")
+        print("|cff44DDFF[ItemAffixes]|r " .. string.format(AFXL["Not hovering a bag item (hovering: %s)"], name))
     end
 end
 
