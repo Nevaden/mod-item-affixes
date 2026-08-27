@@ -356,7 +356,11 @@ function AFXM:UpdateProgressionFrame()
         else
             tabBtn:Enable()
         end
-        f._content[category]:SetShown(category == f._activeCategory)
+        if category == f._activeCategory then
+            f._content[category]:Show()
+        else
+            f._content[category]:Hide()
+        end
     end
 
     -- Every row updates regardless of which tab is visible, so switching tabs

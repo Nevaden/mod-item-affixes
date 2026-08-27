@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS_ROOT="$SCRIPT_DIR/.."
 MODULE_ROOT="$SCRIPT_DIR/../.."
 SQL_CHARS="$MODULE_ROOT/data/sql/db-characters"
+SQL_AUTH="$MODULE_ROOT/data/sql/db-auth"
 
 echo "============================================================"
 echo " mod-item-affixes -- INSTALL Step 1 of 3: Create DB Schema"
@@ -27,6 +28,13 @@ mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_imprint.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_gem_affix.sql"
 echo "  item_affix, item_talent_affix, item_imprint, item_gem_affix created."
+echo
+
+echo "Creating Player Progression tables..."
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_AUTH" < "$SQL_AUTH/account_meta_progression.sql"
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/character_meta_progression.sql"
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/character_progression_nodes.sql"
+echo "  account_meta_progression, character_meta_progression, character_progression_nodes created."
 echo
 
 echo "============================================================"
