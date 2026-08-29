@@ -193,6 +193,33 @@ local function BuildRow(parent, nodeId, y)
     return { label = label, minusBtn = minusBtn, value = value, plusBtn = plusBtn }
 end
 
+-- Repositions a row's two absolutely-anchored elements (value/plusBtn follow
+-- automatically, since they're anchored relative to minusBtn/value rather
+-- than to the parent directly).
+local function SetRowPosition(row, y)
+    row.label:ClearAllPoints()
+    row.label:SetPoint("TOPLEFT", row.label:GetParent(), "TOPLEFT", 4, y)
+    row.minusBtn:ClearAllPoints()
+    row.minusBtn:SetPoint("TOPLEFT", row.minusBtn:GetParent(), "TOPLEFT", 160, y + 3)
+end
+
+-- A row is 4 independent widgets, not one Frame, so each needs its own
+-- Show()/Hide() call. Explicit branches rather than :SetShown() -- that
+-- Frame convenience method is Retail-only and doesn't exist on 3.3.5a.
+local function SetRowShown(row, shown)
+    if shown then
+        row.label:Show()
+        row.minusBtn:Show()
+        row.value:Show()
+        row.plusBtn:Show()
+    else
+        row.label:Hide()
+        row.minusBtn:Hide()
+        row.value:Hide()
+        row.plusBtn:Hide()
+    end
+end
+
 local function BuildFrame()
     local f = CreateFrame("Frame", "AFXProgressionFrame", UIParent)
     f:SetWidth(FRAME_WIDTH)
@@ -365,42 +392,63 @@ function AFXM:UpdateProgressionFrame()
 
     -- Every row updates regardless of which tab is visible, so switching tabs
     -- shows correct state instantly with no extra round-trip.
-    for nodeId, node in pairs(s.nodes) do
-        local row = f._rows[nodeId]
-        if row then
-            local draftRank = DraftRank(nodeId)
-            local locked = node.unlockTier > s.currentTier
-            local suffix = ""
-            if draftRank ~= node.rank then
-                suffix = "  |cffFFFF00(pending)|r"
-            elseif locked then
-                suffix = "  |cff888888(locked)|r"
-            end
-            -- Flat and % are independent contributions — a hybrid node (e.g. Stamina)
-            -- shows both ("+18, +6%"); a pure-% bespoke node (e.g. Move Speed, where the
-            -- percent itself lives in valuePerRank, not valuePerRankPct) shows just the one.
-            local flatValue = draftRank * (node.valuePerRank or 0)
-            local pctValue  = draftRank * (node.valuePerRankPct or 0)
-            local valueParts = {}
-            if flatValue > 0 then
-                table.insert(valueParts, "+" .. flatValue .. NODE_INFO[nodeId].suffix)
-            end
-            if pctValue > 0 then
-                table.insert(valueParts, "+" .. pctValue .. "%")
-            end
-            local valueText = (#valueParts > 0) and ("  (" .. table.concat(valueParts, ", ") .. ")") or ""
-            row.value:SetText(draftRank .. " / " .. node.maxRank .. valueText .. suffix)
+    --
+    -- Iterates NODES_BY_CATEGORY (a static, ordered list) rather than
+    -- pairs(s.nodes) (server data, unordered in Lua) for two reasons: nodes
+    -- with maxRank == 0 (disabled via config) need to be hidden and skipped
+    -- entirely rather than shown blank, and the remaining visible rows need
+    -- to re-stack with no gap left behind -- both need a stable, known order
+    -- to compute correct positions from.
+    for _, category in ipairs(CATEGORY_ORDER) do
+        local visibleY = 0
+        for _, nodeId in ipairs(NODES_BY_CATEGORY[category]) do
+            local row = f._rows[nodeId]
+            local node = s.nodes[nodeId]
+            if row then
+                if not node or node.maxRank == 0 then
+                    -- Not yet received, or disabled via MaxRank=0 config -- hide
+                    -- and don't consume a visible slot (no gap left behind).
+                    SetRowShown(row, false)
+                else
+                    SetRowPosition(row, visibleY)
+                    SetRowShown(row, true)
+                    visibleY = visibleY - ROW_HEIGHT
 
-            if draftRank > node.rank then
-                row.minusBtn:Enable()
-            else
-                row.minusBtn:Disable()
-            end
+                    local draftRank = DraftRank(nodeId)
+                    local locked = node.unlockTier > s.currentTier
+                    local suffix = ""
+                    if draftRank ~= node.rank then
+                        suffix = "  |cffFFFF00(pending)|r"
+                    elseif locked then
+                        suffix = "  |cff888888(locked)|r"
+                    end
+                    -- Flat and % are independent contributions — a hybrid node (e.g. Stamina)
+                    -- shows both ("+18, +6%"); a pure-% bespoke node (e.g. Move Speed, where the
+                    -- percent itself lives in valuePerRank, not valuePerRankPct) shows just the one.
+                    local flatValue = draftRank * (node.valuePerRank or 0)
+                    local pctValue  = draftRank * (node.valuePerRankPct or 0)
+                    local valueParts = {}
+                    if flatValue > 0 then
+                        table.insert(valueParts, "+" .. flatValue .. NODE_INFO[nodeId].suffix)
+                    end
+                    if pctValue > 0 then
+                        table.insert(valueParts, "+" .. pctValue .. "%")
+                    end
+                    local valueText = (#valueParts > 0) and ("  (" .. table.concat(valueParts, ", ") .. ")") or ""
+                    row.value:SetText(draftRank .. " / " .. node.maxRank .. valueText .. suffix)
 
-            if not locked and LocalPointsRemaining() > 0 and draftRank < node.maxRank then
-                row.plusBtn:Enable()
-            else
-                row.plusBtn:Disable()
+                    if draftRank > node.rank then
+                        row.minusBtn:Enable()
+                    else
+                        row.minusBtn:Disable()
+                    end
+
+                    if not locked and LocalPointsRemaining() > 0 and draftRank < node.maxRank then
+                        row.plusBtn:Enable()
+                    else
+                        row.plusBtn:Disable()
+                    end
+                end
             end
         end
     end
