@@ -174,6 +174,37 @@ local function ParseDataMessage(parts)
 end
 
 -- ----------------------------------------------------------------------------
+-- Points-gained toast/chat notification.
+-- PROG|STATE|xp|pointsAvailable|respecCostCopper|currentTier|totalNodeChunks
+--
+-- Fires whenever pointsAvailable increases from what we last saw -- covers
+-- both passive XP-earned points and a respec refunding spent ones back,
+-- since the client has no way to distinguish the two from this message
+-- alone (both just look like the same number going up).
+-- ----------------------------------------------------------------------------
+
+local lastPointsAvailable = nil  -- nil until the first PROG|STATE arrives, so
+                                  -- login/reload syncing in your current total
+                                  -- never reads as a false "gain"
+
+local function ParseProgStateMessage(parts)
+    local pointsAvailable = tonumber(parts[4])
+    if not pointsAvailable then return end
+
+    if lastPointsAvailable and pointsAvailable > lastPointsAvailable then
+        local gained = pointsAvailable - lastPointsAvailable
+        local pointWord = (gained == 1) and "point" or "points"
+
+        ShowToast("|cff00FF96Progression Point!|r\n" .. gained .. " gained -- "
+            .. pointsAvailable .. " to spend")
+        print("|cff00FF96[Item Affixes]|r You gained " .. gained .. " Progression "
+            .. pointWord .. "! (" .. pointsAvailable .. " available to spend)")
+    end
+
+    lastPointsAvailable = pointsAvailable
+end
+
+-- ----------------------------------------------------------------------------
 -- Hook AFXM.OnServerMsg to see every message ItemAffixes itself processes,
 -- without needing any access to its internal (local) state.
 -- ----------------------------------------------------------------------------
@@ -190,6 +221,10 @@ hooksecurefunc(AFXM, "OnServerMsg", function(_, msg)
         ParseOptsMessage(parts)
     elseif cmd == "DATA" then
         ParseDataMessage(parts)
+    elseif cmd == "PROG" then
+        if parts[2] == "STATE" then
+            ParseProgStateMessage(parts)
+        end
     end
 end)
 
