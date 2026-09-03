@@ -77,7 +77,6 @@ public:
 
     void OnPlayerLogin(Player* player) override
     {
-        sItemAffixMgr->ClearLegacyEnchants(player);
         sItemAffixMgr->UpgradeAll2HSlots(player);
         sItemAffixMgr->ReapplyAllEquipped(player);
         sItemAffixMgr->SendConfig(player);

@@ -290,12 +290,8 @@ public:
     void RefreshAllItemStatus(Player* player);
 
     // Reset all affix rows for an item and re-initialize with UNROLLED slots.
-    // Clears any old PERM_ENCHANTMENT_SLOT data.  Called by .affix reroll command.
+    // Called by .affix reroll command.
     void RerollItem(Player* player, Item* item);
-
-    // Clear stale PERM_ENCHANTMENT_SLOT from all bag+equipped items that have affix rows.
-    // Called on login to eliminate leftovers from the pre-addon enchant-slot display system.
-    void ClearLegacyEnchants(Player* player);
 
     // Mark/clear "pending reroll" mode: next ROLL message rerolls the item instead of rolling.
     void  SetPendingReroll(uint64 playerGuid);

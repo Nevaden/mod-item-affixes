@@ -2858,11 +2858,6 @@ void ItemAffixMgr::RerollItem(Player* player, Item* item)
     if (equipped)
         RemoveAffixes(player, item);
 
-    // Clear any legacy PERM_ENCHANTMENT_SLOT that the old system may have set.
-    // ClearEnchantment marks the item dirty; it will be written on the next character save.
-    if (item->GetEnchantmentId(PERM_ENCHANTMENT_SLOT))
-        item->ClearEnchantment(PERM_ENCHANTMENT_SLOT);
-
     // Wipe existing affix rows
     CharacterDatabase.Execute(
         "DELETE FROM item_affix WHERE item_guid = {}", itemGuid);
@@ -2873,44 +2868,6 @@ void ItemAffixMgr::RerollItem(Player* player, Item* item)
     // Re-apply affixes from the fresh (empty) state if equipped
     if (equipped)
         SyncAffixes(player);
-}
-
-// ---------------------------------------------------------------------------
-// ClearLegacyEnchants  — strips PERM_ENCHANTMENT_SLOT from every item with affix rows
-// ---------------------------------------------------------------------------
-
-void ItemAffixMgr::ClearLegacyEnchants(Player* player)
-{
-    if (!player)
-        return;
-
-    auto clearIfNeeded = [&](Item* item)
-    {
-        if (!item || !item->GetEnchantmentId(PERM_ENCHANTMENT_SLOT))
-            return;
-        uint64 guid = item->GetGUID().GetRawValue();
-        QueryResult r = CharacterDatabase.Query(
-            "SELECT 1 FROM item_affix WHERE item_guid = {} LIMIT 1", guid);
-        if (r)
-            item->ClearEnchantment(PERM_ENCHANTMENT_SLOT);
-    };
-
-    // Equipped items
-    for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
-        clearIfNeeded(player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot));
-
-    // Backpack
-    for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
-        clearIfNeeded(player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot));
-
-    // Extra bags
-    for (uint8 bagSlot = INVENTORY_SLOT_BAG_START; bagSlot < INVENTORY_SLOT_BAG_END; ++bagSlot)
-    {
-        Bag* bag = player->GetBagByPos(bagSlot);
-        if (!bag) continue;
-        for (uint32 s = 0; s < bag->GetBagSize(); ++s)
-            clearIfNeeded(bag->GetItemByPos(s));
-    }
 }
 
 // ---------------------------------------------------------------------------
