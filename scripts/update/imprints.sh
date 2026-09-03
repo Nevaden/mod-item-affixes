@@ -6,10 +6,11 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS_ROOT="$SCRIPT_DIR/.."
 MODULE_ROOT="$SCRIPT_DIR/../.."
 SQL_WORLD="$MODULE_ROOT/data/sql/db-world"
+SQL_IMPRINTS="$SQL_WORLD/imprints"
 
 echo "============================================================"
 echo " mod-item-affixes -- UPDATE: Imprints"
-echo " Run after editing imprint_def.sql or custom_spells.json"
+echo " Run after editing imprint_def.sql, an imprints/*.sql file, or custom_spells.json"
 echo "============================================================"
 echo
 
@@ -18,12 +19,15 @@ if [ ! -f "$CONFIG" ]; then echo "ERROR: scripts/config.sh not found."; exit 1; 
 source "$CONFIG"
 
 echo "Applying imprint SQL to $DB_WORLD..."
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/imprint_def.sql"
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/imprint_rune_items.sql"
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/spell_script_names_imprint.sql"
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/spell_dbc_celestial_resonance.sql"
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/spell_dbc_vanishing_backstab.sql"
-mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/spell_dbc_arcane_shot_variants.sql"
+for f in "$SQL_IMPRINTS"/*.sql; do
+    [ -e "$f" ] || continue
+    # imprint_rune_item.sql (singular) is a legacy single-entry (item 601001)
+    # superseded by imprint_rune_items.sql (plural, current 602001+ set) --
+    # re-applying it would reintroduce a dead item_template row.
+    [ "$(basename "$f")" = "imprint_rune_item.sql" ] && continue
+    echo "  Applying $(basename "$f")..."
+    mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$f"
+done
 echo "  Done."
 
 if command -v pwsh &>/dev/null; then
