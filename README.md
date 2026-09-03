@@ -700,3 +700,9 @@ See `docs/ADDING_AFFIXES.md` for a full authoring guide.
 The Player Progression Lifesteal node's damage-to-heal mechanism is ported
 from [ZhengPeiRu21/mod-leech](https://github.com/ZhengPeiRu21/mod-leech)
 (MIT License), the standalone AzerothCore module it replaces.
+
+Thanks to [Rykaerdoe](https://github.com/Rykaerdoe) for the ItemAffixesToast
+companion addon and for a round of Progression fixes and polish: a crash on
+3.3.5a caused by the Retail-only `Frame:SetShown`, hiding config-disabled
+(`MaxRank=0`) nodes instead of showing a dead `0/0` row, a points-gained
+toast/chat notification, and stale paths in the update scripts.
