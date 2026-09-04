@@ -73,6 +73,8 @@ public:
         PLAYERHOOK_ON_UNEQUIP_ITEM,
         PLAYERHOOK_ON_BEFORE_SEND_CHAT_MESSAGE,
         PLAYERHOOK_ON_GIVE_EXP,
+        PLAYERHOOK_ON_BEFORE_QUEST_REWARD,
+        PLAYERHOOK_ON_QUEST_COMPUTE_EXP,
     }) {}
 
     void OnPlayerLogin(Player* player) override
@@ -125,6 +127,19 @@ public:
         Creature* /*vendor*/, VendorItem const* /*crItem*/, bool /*bStore*/) override
     {
         sItemAffixMgr->InitItemSlots(player, item);
+    }
+
+    // D3ExcludeQuestRewards: mark/clear "mid quest-reward" so InitItemSlots
+    // (triggered by OnPlayerStoreNewItem for each reward item, in between
+    // these two calls) can tell a quest-reward item apart from any other.
+    void OnPlayerBeforeQuestReward(Player* player, Quest const* /*quest*/) override
+    {
+        sItemAffixMgr->SetQuestRewardInProgress(player->GetGUID().GetRawValue(), true);
+    }
+
+    void OnPlayerQuestComputeXP(Player* player, Quest const* /*quest*/, uint32& /*xpValue*/) override
+    {
+        sItemAffixMgr->SetQuestRewardInProgress(player->GetGUID().GetRawValue(), false);
     }
 
     void OnPlayerEquip(Player* player, Item* it, uint8 /*bag*/, uint8 /*slot*/, bool /*update*/) override

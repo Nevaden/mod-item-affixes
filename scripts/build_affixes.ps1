@@ -139,6 +139,7 @@ $lines.Add("  ``item_category``        TINYINT UNSIGNED  NOT NULL DEFAULT 0,")
 $lines.Add("  ``spec_tree``            TINYINT UNSIGNED  NOT NULL DEFAULT 255,")
 $lines.Add("  ``role_mask``            TINYINT UNSIGNED  NOT NULL DEFAULT 0,")
 $lines.Add("  ``class_mask``           INT UNSIGNED      NOT NULL DEFAULT 0,")
+$lines.Add("  ``loot_bucket``          TINYINT UNSIGNED  NOT NULL DEFAULT 0,")
 $lines.Add("  PRIMARY KEY (``id``)")
 $lines.Add(") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;")
 $lines.Add("")
@@ -171,7 +172,8 @@ foreach ($col in @(
     @{ n="item_category";  t="TINYINT UNSIGNED NOT NULL DEFAULT 0" },
     @{ n="spec_tree";      t="TINYINT UNSIGNED NOT NULL DEFAULT 255" },
     @{ n="role_mask";      t="TINYINT UNSIGNED NOT NULL DEFAULT 0" },
-    @{ n="class_mask";     t="INT UNSIGNED NOT NULL DEFAULT 0" }
+    @{ n="class_mask";     t="INT UNSIGNED NOT NULL DEFAULT 0" },
+    @{ n="loot_bucket";    t="TINYINT UNSIGNED NOT NULL DEFAULT 0" }
 )) {
     $varName = "@add_$($col.n -replace '[^a-zA-Z0-9]','_')"
     $lines.Add("SET $varName = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS")
@@ -203,6 +205,18 @@ foreach ($affix in $allAffixes) {
 
     $isStatAffix  = ($affix.PSObject.Properties['affix_type'] -and [int]$affix.affix_type -eq 1)
     $isSpellSwap  = ($affix.PSObject.Properties['affix_type'] -and [int]$affix.affix_type -eq 2)
+
+    # D3 loot mode: optional per-affix override of the prefix/suffix bucket.
+    # 0 = auto (default by affix_type at runtime: SPELLMOD/SPELL_SWAP -> prefix,
+    #           STAT -> suffix), 1 = force prefix, 2 = force suffix.
+    $lootBucket = 0
+    if ($affix.PSObject.Properties['loot_bucket']) {
+        switch ([string]$affix.loot_bucket) {
+            "prefix" { $lootBucket = 1 }
+            "suffix" { $lootBucket = 2 }
+            default  { $lootBucket = 0 }
+        }
+    }
 
     if ($isSpellSwap) {
         # ---- spell-swap affix path ----
@@ -346,7 +360,7 @@ foreach ($affix in $allAffixes) {
     $lines.Add("     spellmod_op2, spellmod_type2, spellmod_value2,")
     $lines.Add("     spellmod_op3, spellmod_type3, spellmod_value3,")
     $lines.Add("     spellmod_op4, spellmod_type4, spellmod_value4,")
-    $lines.Add("     affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask, class_mask)")
+    $lines.Add("     affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask, class_mask, loot_bucket)")
     $lines.Add("VALUES")
     if ($isStatAffix -or $isSpellSwap) {
         $lines.Add("    ($($affix.id), '$safeName', $($affix.weight), $($affix.min_quality), $op, $typ, $val,")
@@ -355,7 +369,7 @@ foreach ($affix in $allAffixes) {
         $lines.Add("     $op2, $typ2, $val2,")
         $lines.Add("     $op3, $typ3, $val3,")
         $lines.Add("     $op4, $typ4, $val4,")
-        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask, $classMask)")
+        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask, $classMask, $lootBucket)")
     } else {
         $lines.Add("    ($($affix.id), '$safeName', $($affix.weight), $($affix.min_quality), $op, $typ, $($affix.effect.value),")
         $lines.Add("     $family, $f0, $f1, $f2,")
@@ -363,7 +377,7 @@ foreach ($affix in $allAffixes) {
         $lines.Add("     $op2, $typ2, $val2,")
         $lines.Add("     $op3, $typ3, $val3,")
         $lines.Add("     $op4, $typ4, $val4,")
-        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask, $classMask)")
+        $lines.Add("     $affixType, $statOp, '$statTiersStr', $levelMin, $levelMax, $itemCat, $specTree, $roleMask, $classMask, $lootBucket)")
     }
     $lines.Add("ON DUPLICATE KEY UPDATE")
     $lines.Add("    name = VALUES(name),")
@@ -395,7 +409,8 @@ foreach ($affix in $allAffixes) {
     $lines.Add("    item_category = VALUES(item_category),")
     $lines.Add("    spec_tree = VALUES(spec_tree),")
     $lines.Add("    role_mask = VALUES(role_mask),
-    class_mask = VALUES(class_mask);")
+    class_mask = VALUES(class_mask),
+    loot_bucket = VALUES(loot_bucket);")
     $lines.Add("")
 }
 

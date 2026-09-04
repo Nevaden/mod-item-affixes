@@ -21,6 +21,17 @@ enum AffixType : uint8
     AFFIX_TYPE_SPELL_SWAP = 2, // replaces a base spell with a custom variant on equip
 };
 
+// D3 loot mode only (ItemAffixes.LootMode=1) — which bucket an affix rolls
+// into. Manual mode ignores this entirely. 0=auto lets the default-by-type
+// rule decide (SPELLMOD/SPELL_SWAP -> prefix, STAT -> suffix); the JSON
+// "loot_bucket" field can force either bucket per-affix for later curation.
+enum AffixLootBucket : uint8
+{
+    AFFIX_LOOT_BUCKET_AUTO   = 0,
+    AFFIX_LOOT_BUCKET_PREFIX = 1,
+    AFFIX_LOOT_BUCKET_SUFFIX = 2,
+};
+
 // One talent affix definition loaded from talent_affix_def (world DB).
 struct TalentAffixDef
 {
@@ -96,6 +107,12 @@ enum GenericStatOp : uint8
     GSTAT_MAX_HEALTH            = 27,  // flat bonus to max health (Player Progression's Flat HP node)
 };
 
+enum ItemAffixLootMode : uint8
+{
+    LOOT_MODE_MANUAL = 0,  // current behavior: items drop UNROLLED, player picks via the roll UI
+    LOOT_MODE_D3     = 1,  // items arrive fully rolled and APPLIED on pickup, no player interaction
+};
+
 enum AffixRollState : uint8
 {
     AFFIX_ROLL_UNROLLED = 0,   // slot exists, not yet rolled
@@ -127,6 +144,7 @@ struct AffixDefinition
     uint8       specTree;         // 255=no restriction; 0/1/2=dominant talent tree required
     uint8       roleMask;         // AffixRoleGroup bitmask; 0=any role
     uint32      classMask;        // (1<<(classId-1)) bitmask; 0 = any class
+    AffixLootBucket lootBucket;   // D3 loot mode only; AFFIX_LOOT_BUCKET_AUTO by default
     // SPELL_SWAP chain scaling: index = chainCount-1, pair = (soloSpell, comboSpell).
     // Loaded from spell_swap_chain_spells. Empty = use effects[0]/[1] only (no scaling).
     std::vector<std::pair<uint32, uint32>> chainSwapSpells;
@@ -221,7 +239,8 @@ public:
     // Roll a talent affix at first-roll time.  specOverride: 0/1/2=explicit tree, -1=use dominant.
     // No-op if item quality < rare, talent affix already assigned, or no eligible defs exist.
     // Blues: 50% chance.  Purple+: 100% chance.
-    void InitTalentAffix(Player* player, Item* item, int8 specOverride = -1, uint8 affixSlot = 0);
+    void InitTalentAffix(Player* player, Item* item, int8 specOverride = -1, uint8 affixSlot = 0,
+                          bool includeOtherSpecWeighted = false, uint32 ownSpecWeight = 1);
 
     // Send CONFIG message to client with server-side feature toggle flags.
     void SendConfig(Player* player);
@@ -298,6 +317,13 @@ public:
     bool  IsPendingReroll(uint64 playerGuid) const;
     void  ClearPendingReroll(uint64 playerGuid);
 
+    // Mark/clear "mid quest-reward" state, driven by the core's
+    // OnPlayerBeforeQuestReward (set) / OnPlayerQuestComputeXP (clear) hooks --
+    // see ItemAffixScripts.cpp. Lets InitItemSlots tell a quest-reward item
+    // apart from any other newly-stored item, for D3ExcludeQuestRewards.
+    void SetQuestRewardInProgress(uint64 playerGuid, bool inProgress);
+    bool IsQuestRewardInProgress(uint64 playerGuid) const;
+
 private:
     // Roll N distinct affix IDs for a pending slot; sets row to PENDING and sends OPTS.
     void HandleRollRequest(Player* player, Item* item, uint8 affixSlot,
@@ -318,12 +344,18 @@ private:
                        bool genericsOnly = false, uint8 classBoost = 0,
                        bool classOnly = false,
                        uint8 preferredRole = 0, uint8 preferredMainStat = 0,
-                       int8 spec = -1);
+                       int8 spec = -1, uint32 ownSpecWeight = 1,
+                       bool ignoreClassAffixMaxPerItem = false);
+
+    // LootMode=1 only -- called from InitItemSlots. Rolls and APPLIES every
+    // new slot in [existingCount, numSlots) immediately, split into a
+    // prefix/suffix bucket. See docs/D3_LOOT_MODE_PLAN.md.
+    void AutoRollD3Item(Player* player, Item* item, uint8 existingCount, uint8 numSlots, bool isGem);
     // Shared source of truth for both RollAffixId's own filtering and the DATA packet's
     // "classSkillsBlocked" flag, so the addon can hide the dead-end Class Skills selector
     // before the player ever picks it. item may be null (only the ProgressionGateClassAffixes
     // check applies then).
-    bool IsClassAffixesBlocked(Player* player, Item* item);
+    bool IsClassAffixesBlocked(Player* player, Item* item, bool ignoreMaxPerItem = false);
     float GetQualityFraction(uint32 quality) const;
     std::vector<AffixSlotInfo>  LoadAffixSlots(uint64 itemGuid);
     std::vector<ItemAffixRecord> LoadItemAffixes(uint64 itemGuid);
@@ -354,12 +386,14 @@ private:
     void ForceReapplySpellSwaps(Player* player);
 
     void LoadTalentAffixDefs();
-    TalentAffixDef const* GetEligibleTalentAffix(Player* player, Item const* item, int8 specOverride = -1);
+    TalentAffixDef const* GetEligibleTalentAffix(Player* player, Item const* item, int8 specOverride = -1,
+                                                  bool includeOtherSpecWeighted = false, uint32 ownSpecWeight = 1);
 
     std::unordered_map<uint32, AffixDefinition>  _defs;
     std::unordered_map<uint32, TalentAffixDef>   _talentDefs;
     std::vector<uint32> _pool;
     std::unordered_set<uint64> _pendingReroll;  // player GUIDs awaiting a reroll on next ROLL msg
+    std::unordered_set<uint64> _questRewardInProgress;  // player GUIDs currently mid-RewardQuest
 
     bool  _enableClassSkillAffixes          = true;   // when false, only stat affixes roll
     bool  _enableClassSkillAffixSelection   = false;  // when false, type selector hidden; class affixes still roll at Any weight
@@ -406,6 +440,20 @@ private:
     uint8 _slotCountBlue            = 2;     // affix slots granted to rare (blue) items
     uint8 _slotCountPurple          = 3;     // affix slots granted to epic (purple) items
     uint8 _slotCountLegendary       = 4;     // affix slots granted to legendary+ items
+    uint8 _lootMode                 = 0;     // 0=Manual (current, player picks), 1=D3-style auto-roll on pickup
+    uint32 _d3DominantSpecWeight    = 0;     // D3 mode only: how many EXTRA times the player's dominant-spec
+                                              // pool is counted vs. other-spec, for both prefix affixes and
+                                              // talent affixes. 0 = fully random (default; every spec equally
+                                              // likely); 1 = dominant spec counted twice (2x), 2 = 3x, etc.
+    bool  _d3ExcludeQuestRewards    = true;  // D3 mode only: quest reward items stay Manual-mode (UNROLLED)
+                                              // instead of auto-rolling, so turning in a quest still feels
+                                              // like picking a reward. Default true (this was the original ask).
+    bool  _d3OverrideClassAffixMaxPerItem = false;  // D3 mode only. false (default) = ClassAffixMaxPerItem
+                                              // and the Progression class-affix gate both still cap prefix
+                                              // rolls exactly like manual mode, so extra prefix slots beyond
+                                              // the cap fall back to suffix. true = the prefix/suffix formula
+                                              // in AutoRollD3Item is authoritative instead; the item always
+                                              // gets its full prefixCount regardless of the manual-mode cap.
     // WotLK item budget fractions — share of total item budget allocated to one affix roll
     float _budgetFractionGreen      = 0.18f;  // green quality     (1 affix)
     float _budgetFractionBlue       = 0.13f;  // blue quality      (2 affixes)

@@ -3,6 +3,60 @@
 #############################################
 
 # ---------------------------------------------------------------------------
+# Loot mode — the biggest switch in this file
+# ---------------------------------------------------------------------------
+
+# 0 = Manual (default): items drop with UNROLLED affix slots; the player
+#     Alt+Clicks to pick from rolled options via the roll UI, same as always.
+# 1 = D3-style: items arrive fully rolled and APPLIED the instant they're
+#     picked up (looted, quest-rewarded, bought, mailed, etc.) — no picker
+#     UI, no player interaction. Slots split into a prefix bucket (class
+#     skill / SpellMod affixes) and a suffix bucket (stat affixes), each
+#     filled in order so prefixes always display before suffixes. The
+#     split size comes from the existing SlotCount*/TwoHanderBonusSlots/
+#     Progression-slot-bonus total for the item — there is no separate
+#     slot-count config for this mode. Talent affixes and Imprints still
+#     roll independently on top, governed by their own settings below.
+# Most of the "Core features" and "Addon UI selectors" settings below only
+# apply to Manual mode — LootMode=1 bypasses the picker entirely, so there
+# is nothing for a player to select.
+ItemAffixes.LootMode = 0
+
+# D3 mode only (no effect in Manual mode). How strongly prefix (class/SpellMod)
+# affixes and talent affixes should favor the player's dominant talent tree,
+# without ever fully locking out the other two — weighted, not exclusive.
+# Internally this adds N extra copies of the dominant-spec candidate pool on
+# top of its normal one, before picking against the combined other-spec pool.
+# 0 = fully random (default) — every eligible spec equally likely, no bias
+#     at all. Sensible default if your server also offers a reforge/reroll
+#     option, since a fully random spread + the ability to fix a bad roll
+#     later is a more open-ended playstyle than baking in a bias up front.
+# 1 = dominant spec counted twice (roughly 2x as likely per candidate as any
+#     other single spec). 2 = 3x. 3 = 4x. Etc — higher is more spec-focused.
+ItemAffixes.D3DominantSpecWeight = 0
+
+# D3 mode only (no effect in Manual mode). 1 = quest reward items stay
+# Manual-mode (drop UNROLLED, player picks) even though the server default is
+# D3 — so turning in a quest still feels like picking a reward. 0 = quest
+# rewards also auto-roll like everything else. Default: 1 (enabled).
+ItemAffixes.D3ExcludeQuestRewards = 1
+
+# D3 mode only (no effect in Manual mode). Whether ClassAffixMaxPerItem (and,
+# transitively, the Progression "Unlock Class Affixes" gate) still caps how
+# many prefix (class/SpellMod) affixes a D3-rolled item can get.
+# 0 = respect it (default) — same cap manual mode uses. An item's prefix
+#     slots beyond the cap fall back to rolling extra suffixes instead, e.g.
+#     with ClassAffixMaxPerItem=1 a purple 2H weapon (prefixCount=2) gets 1
+#     prefix + 3 suffix rather than 2+2. This is intentional, not a bug —
+#     it keeps class-affix scarcity consistent between Manual and D3 modes.
+# 1 = ignore it — the prefix/suffix formula in AutoRollD3Item becomes
+#     authoritative instead, so an item always gets its full computed
+#     prefixCount (e.g. a real 2/2 split on that same weapon). The
+#     Progression gate itself is never affected by this setting either way —
+#     it's still enforced, exactly like manual mode.
+ItemAffixes.D3OverrideClassAffixMaxPerItem = 0
+
+# ---------------------------------------------------------------------------
 # Core features — what rolls and how often
 # ---------------------------------------------------------------------------
 

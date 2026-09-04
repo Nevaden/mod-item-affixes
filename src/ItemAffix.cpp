@@ -424,7 +424,8 @@ void ItemAffixMgr::LoadAffixTemplates()
         "spellmod_op2, spellmod_type2, spellmod_value2, "
         "spellmod_op3, spellmod_type3, spellmod_value3, "
         "spellmod_op4, spellmod_type4, spellmod_value4, "
-        "affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask, class_mask "
+        "affix_type, stat_op, stat_tiers, level_min, level_max, item_category, spec_tree, role_mask, class_mask, "
+        "loot_bucket "
         "FROM affix_template WHERE weight > 0");
 
     if (!result)
@@ -457,6 +458,7 @@ void ItemAffixMgr::LoadAffixTemplates()
         def.specTree     = f[27].Get<uint8>();
         def.roleMask     = f[28].Get<uint8>();
         def.classMask    = f[29].Get<uint32>();
+        def.lootBucket   = static_cast<AffixLootBucket>(f[30].Get<uint8>());
         // f[23]=stat_tiers, f[24]=level_min, f[25]=level_max are legacy columns, no longer used.
 
         if (def.affixType == AFFIX_TYPE_SPELLMOD)
@@ -562,6 +564,10 @@ void ItemAffixMgr::LoadAffixTemplates()
     _slotCountBlue         = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountBlue",      2), uint8(1), uint8(6));
     _slotCountPurple       = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountPurple",    3), uint8(1), uint8(6));
     _slotCountLegendary    = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.SlotCountLegendary", 4), uint8(1), uint8(6));
+    _lootMode              = std::clamp(sConfigMgr->GetOption<uint8>("ItemAffixes.LootMode", 0), uint8(0), uint8(1));
+    _d3DominantSpecWeight  = sConfigMgr->GetOption<uint32>("ItemAffixes.D3DominantSpecWeight", 0u);
+    _d3ExcludeQuestRewards = sConfigMgr->GetOption<bool>("ItemAffixes.D3ExcludeQuestRewards", true);
+    _d3OverrideClassAffixMaxPerItem = sConfigMgr->GetOption<bool>("ItemAffixes.D3OverrideClassAffixMaxPerItem", false);
     _budgetFractionLegendary = sConfigMgr->GetOption<float>("ItemAffixes.BudgetFractionLegendary", 0.09f);
     _enableRoleSelection     = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableRoleSelection",     false);
     _enableMainStatSelection = sConfigMgr->GetOption<uint8>("ItemAffixes.EnableMainStatSelection", 0);
@@ -736,7 +742,8 @@ static bool NeedsMainStatSelector(uint8 playerClass, int specTree)
 // GetEligibleTalentAffix  — picks a random talent def this player can roll
 // ---------------------------------------------------------------------------
 
-TalentAffixDef const* ItemAffixMgr::GetEligibleTalentAffix(Player* player, Item const* item, int8 specOverride)
+TalentAffixDef const* ItemAffixMgr::GetEligibleTalentAffix(Player* player, Item const* item, int8 specOverride,
+                                                             bool includeOtherSpecWeighted, uint32 ownSpecWeight)
 {
     if (_talentDefs.empty())
         return nullptr;
@@ -745,29 +752,42 @@ TalentAffixDef const* ItemAffixMgr::GetEligibleTalentAffix(Player* player, Item 
     int    specTree = (specOverride >= 0) ? specOverride : GetDominantTalentTree(player);
     uint8  itemCat  = item ? GetItemCategory(item) : ITEM_CAT_ANY;
 
-    std::vector<TalentAffixDef const*> eligible;
+    // Default (includeOtherSpecWeighted=false): identical to the old behavior --
+    // other-spec talents are hard-excluded, only ownSpec ever gets populated.
+    // D3 mode passes includeOtherSpecWeighted=true so a dominant-spec bias can be
+    // applied without fully locking out the other two trees (see AutoRollD3Item).
+    std::vector<TalentAffixDef const*> ownSpec, otherSpec;
     for (auto const& [id, def] : _talentDefs)
     {
         if (def.classMask != 0 && !(def.classMask & classBit))
             continue;
-        if (def.specTree != -1 && def.specTree != static_cast<int8>(specTree))
-            continue;
         if (def.itemCategory != ITEM_CAT_ANY && !ItemMatchesCategory(itemCat, def.itemCategory))
             continue;
-        eligible.push_back(&def);
+
+        bool isOwnSpec = (def.specTree == -1) || (def.specTree == static_cast<int8>(specTree));
+        if (isOwnSpec)
+            ownSpec.push_back(&def);
+        else if (includeOtherSpecWeighted)
+            otherSpec.push_back(&def);
     }
 
-    if (eligible.empty())
+    std::vector<TalentAffixDef const*> pool;
+    for (uint32 i = 0; i < std::max(1u, ownSpecWeight); ++i)
+        pool.insert(pool.end(), ownSpec.begin(), ownSpec.end());
+    pool.insert(pool.end(), otherSpec.begin(), otherSpec.end());
+
+    if (pool.empty())
         return nullptr;
 
-    return eligible[urand(0, static_cast<uint32>(eligible.size()) - 1)];
+    return pool[urand(0, static_cast<uint32>(pool.size()) - 1)];
 }
 
 // ---------------------------------------------------------------------------
 // InitTalentAffix  — auto-rolls talent affix for a newly acquired item
 // ---------------------------------------------------------------------------
 
-void ItemAffixMgr::InitTalentAffix(Player* player, Item* item, int8 specOverride, uint8 affixSlot)
+void ItemAffixMgr::InitTalentAffix(Player* player, Item* item, int8 specOverride, uint8 affixSlot,
+                                    bool includeOtherSpecWeighted, uint32 ownSpecWeight)
 {
     if (_talentDefs.empty() || !player || !item)
     {
@@ -811,7 +831,8 @@ void ItemAffixMgr::InitTalentAffix(Player* player, Item* item, int8 specOverride
         return;
     }
 
-    TalentAffixDef const* def = GetEligibleTalentAffix(player, item, specOverride);
+    TalentAffixDef const* def = GetEligibleTalentAffix(player, item, specOverride,
+                                                         includeOtherSpecWeighted, ownSpecWeight);
     if (!def)
     {
         int usedTree = (specOverride >= 0) ? specOverride : GetDominantTalentTree(player);
@@ -911,7 +932,7 @@ void ItemAffixMgr::RemoveTalentAffixes(Player* player, Item* item)
 //    that has invested the Unlock Class Affixes node.
 //  - ClassAffixMaxPerItem: class/spellmod affixes stop rolling for an item once
 //    it already has this many APPLIED (pending-but-unchosen doesn't count). 0 = unlimited.
-bool ItemAffixMgr::IsClassAffixesBlocked(Player* player, Item* item)
+bool ItemAffixMgr::IsClassAffixesBlocked(Player* player, Item* item, bool ignoreMaxPerItem)
 {
     if (!player)
         return true;
@@ -922,7 +943,14 @@ bool ItemAffixMgr::IsClassAffixesBlocked(Player* player, Item* item)
         uint64 guid = player->GetGUID().GetRawValue();
         classAffixesBlocked = sPlayerProgressionMgr->GetNodeRank(guid, NODE_UNLOCK_CLASS_AFFIXES) == 0;
     }
-    if (!classAffixesBlocked && _classAffixMaxPerItem > 0 && item)
+    // ignoreMaxPerItem: D3 mode only. ClassAffixMaxPerItem exists to cap how many
+    // class affixes a *manually rolled* item can accumulate across separate player
+    // picks; in D3 mode the prefix/suffix slot split (see AutoRollD3Item) is
+    // already the authoritative count of how many class affixes an item gets, so
+    // this cap would just fight that split (observed: a purple 2H weapon capped
+    // to 1 prefix instead of its intended 2, silently falling back to extra
+    // suffixes). The Progression gate above still fully applies either way.
+    if (!classAffixesBlocked && !ignoreMaxPerItem && _classAffixMaxPerItem > 0 && item)
     {
         uint32 appliedClassAffixCount = 0;
         for (AffixSlotInfo const& slot : LoadAffixSlots(item->GetGUID().GetRawValue()))
@@ -943,7 +971,7 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
                                   bool genericsOnly, uint8 classBoost,
                                   bool classOnly,
                                   uint8 preferredRole, uint8 preferredMainStat,
-                                  int8 spec)
+                                  int8 spec, uint32 ownSpecWeight, bool ignoreClassAffixMaxPerItem)
 {
     uint8 playerClass = player->getClass();
     uint8 itemCat   = item ? GetItemCategory(item) : ITEM_CAT_ANY;
@@ -963,7 +991,7 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
     // Resolve the player's active spec once — needed to bucket own-spec vs. other-spec.
     int8 resolvedSpec = (spec >= 0) ? spec : static_cast<int8>(GetDominantTalentTree(player));
 
-    bool classAffixesBlocked = IsClassAffixesBlocked(player, item);
+    bool classAffixesBlocked = IsClassAffixesBlocked(player, item, ignoreClassAffixMaxPerItem);
 
     for (uint32 id : _pool)
     {
@@ -1064,9 +1092,13 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
     if (wantClass)
     {
         // Own-spec entries are doubled when classBoost >= 1 (nudge, not a guarantee).
+        // ownSpecWeight adds further copies on top -- D3 mode only, default 1 = no
+        // extra effect so every other call site keeps today's behavior unchanged.
         std::vector<uint32> classBucket;
         classBucket.insert(classBucket.end(), knownSpecClass.begin(), knownSpecClass.end());
         if (classBoost >= 1)
+            classBucket.insert(classBucket.end(), knownSpecClass.begin(), knownSpecClass.end());
+        for (uint32 i = 1; i < ownSpecWeight; ++i)
             classBucket.insert(classBucket.end(), knownSpecClass.begin(), knownSpecClass.end());
         classBucket.insert(classBucket.end(), knownOtherSpec.begin(), knownOtherSpec.end());
         if (!classBucket.empty())
@@ -1329,6 +1361,17 @@ void ItemAffixMgr::InitItemSlots(Player* player, Item* item)
         existingCount = 0;
     }
 
+    bool skipAutoRollForQuestReward = _d3ExcludeQuestRewards &&
+        IsQuestRewardInProgress(player->GetGUID().GetRawValue());
+
+    if (_lootMode == LOOT_MODE_D3 && !skipAutoRollForQuestReward)
+    {
+        // D3 mode: roll and APPLY every new slot immediately, no picker UI.
+        // See docs/D3_LOOT_MODE_PLAN.md for the full design.
+        AutoRollD3Item(player, item, static_cast<uint8>(existingCount), numSlots, isGem);
+        return;
+    }
+
     // existingCount < numSlots: add only the missing slots so already-rolled affixes survive.
     for (uint8 slot = static_cast<uint8>(existingCount); slot < numSlots; ++slot)
         CharacterDatabase.Execute(
@@ -1344,7 +1387,143 @@ void ItemAffixMgr::InitItemSlots(Player* player, Item* item)
         msg += Acore::StringFormat("|s{}:U:", i);
     if (isGem)
         msg += "|isGem";
+    // Same check SendItemStatus uses -- without this, a brand-new item's very
+    // first DATA message never carried this flag at all, so the addon's Class
+    // Skills selector always started out clickable regardless of whether the
+    // player could actually use it, only self-correcting after some later
+    // event happened to trigger a SendItemStatus refresh for that item.
+    if (!isGem && IsClassAffixesBlocked(player, item))
+        msg += "|classSkillsBlocked";
     SendAddonMsg(player, msg);
+}
+
+// ---------------------------------------------------------------------------
+// AutoRollD3Item — LootMode=1 only. Rolls and immediately APPLIES every new
+// affix slot for an item the instant it's picked up: no PENDING state, no
+// picker UI. Slots [0, prefixCount) roll from the class/SpellMod ("prefix")
+// pool, the rest from the stat ("suffix") pool -- prefixCount = ceil(numSlots
+// / 2), so display order (ascending affix_slot) naturally reads prefix(es)
+// then suffix(es) with no separate sort step. Gems always get a single
+// suffix (they can only roll stat affixes -- see InitItemSlots above).
+// Talent affixes and Imprints still roll off their own independent settings,
+// layered on top, same as manual mode. Full design: docs/D3_LOOT_MODE_PLAN.md.
+//
+// Uses DirectExecute (synchronous) for every write in this function because
+// SyncAffixes/SendItemStatus at the end both immediately re-read item_affix
+// via a synchronous Query -- same class of race documented elsewhere in this
+// file for InitTalentAffix and HandlePickOption's APPLIED update.
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::AutoRollD3Item(Player* player, Item* item, uint8 existingCount, uint8 numSlots, bool isGem)
+{
+    if (existingCount >= numSlots)
+        return;
+
+    uint64 itemGuid    = item->GetGUID().GetRawValue();
+    uint8  quality     = static_cast<uint8>(item->GetTemplate()->Quality);
+    uint8  playerClass = player->getClass();
+
+    uint8 prefixCount = isGem ? 0 : static_cast<uint8>((numSlots + 1) / 2);
+
+    int   resolvedSpec   = GetDominantTalentTree(player);
+    uint8 roleForRoll     = GetAutoRole(playerClass, resolvedSpec);
+    uint8 mainStatForRoll = GetAutoMainStat(playerClass, resolvedSpec);
+
+    float itemBudget = ComputeItemBudget(item->GetTemplate()->ItemLevel)
+                     * GetSlotBudgetMod(item->GetTemplate()->InventoryType)
+                     * GetQualityFraction(quality);
+    bool is2H = !isGem && Is2HWeapon(item);
+
+    uint32 effectiveCritChance = std::min<uint32>(_critRollChance +
+        uint32(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_CRIT_ROLL_CHANCE)), 100);
+
+    for (uint8 slot = existingCount; slot < numSlots; ++slot)
+    {
+        bool wantPrefix = !isGem && (slot < prefixCount);
+
+        // Imprint roll: only ever considered for a prefix slot (same rule as
+        // manual mode -- Imprints are a super-version of a class ability, never
+        // a substitute for a stat roll). Applies immediately if eligible, then
+        // falls through to roll this same slot's real affix right after --
+        // D3 mode never leaves a slot unrolled the way manual mode does.
+        if (wantPrefix && urand(0, 99) < _imprintRollChance)
+        {
+            if (ImprintDef const* impDef = sImprintMgr->GetEligibleImprintForRoll(player, item, static_cast<int8>(resolvedSpec)))
+                sImprintMgr->ApplyImprintFromRoll(player, item, impDef->id);
+        }
+
+        // D3OverrideClassAffixMaxPerItem controls whether ClassAffixMaxPerItem still
+        // caps prefix rolls in D3 mode (default false = it does, same as manual
+        // mode -- see the comment on IsClassAffixesBlocked and on the config
+        // member itself). ProgressionGateClassAffixes always fully applies either
+        // way (confirmed correct via live testing: with the Unlock Class Affixes
+        // node unspent, every slot correctly falls back to suffix).
+        uint32 id = wantPrefix
+            ? RollAffixId(quality, player, item, /*genericsOnly*/false, /*classBoost*/0,
+                           /*classOnly*/true, roleForRoll, mainStatForRoll, -1, _d3DominantSpecWeight + 1,
+                           _d3OverrideClassAffixMaxPerItem)
+            : 0;
+        // Empty prefix pool (or a suffix slot to begin with): fall back to the
+        // suffix/generic pool rather than leaving the slot unrolled.
+        if (!id)
+            id = RollAffixId(quality, player, item, /*genericsOnly*/true, /*classBoost*/0,
+                              /*classOnly*/false, roleForRoll, mainStatForRoll, -1);
+
+        if (!id)
+        {
+            // Truly nothing eligible -- leave UNROLLED so the row still exists
+            // and the slot count invariant InitItemSlots checks stays correct.
+            CharacterDatabase.DirectExecute(
+                "INSERT INTO item_affix (item_guid, affix_slot, affix_id, rolled_value, roll_state, pending_opts) "
+                "VALUES ({}, {}, 0, 0, {}, '')",
+                itemGuid, slot, uint8(AFFIX_ROLL_UNROLLED));
+            continue;
+        }
+
+        auto const* def = GetAffixDef(id);
+        int32 rolledValue = (def && def->affixType == AFFIX_TYPE_STAT)
+            ? RollBudgetStatValue(def->statOp, itemBudget, _budgetMinRoll)
+            : 0;
+
+        // 2H weapon bonus, same scaling as manual mode's option generation.
+        if (is2H && def)
+        {
+            if (def->affixType == AFFIX_TYPE_STAT)
+                rolledValue = (rolledValue * 3 + 1) / 2;
+            else if (def->affixType == AFFIX_TYPE_SPELLMOD)
+                rolledValue = 150;
+        }
+
+        // Crit roll, evaluated independently per slot, same chance/effect as manual mode.
+        if (def && _critRollEnabled && urand(0, 99) < effectiveCritChance)
+        {
+            if (def->affixType == AFFIX_TYPE_STAT)
+                rolledValue = (rolledValue * 3 + 1) / 2;
+            else if (def->affixType == AFFIX_TYPE_SPELLMOD)
+                rolledValue = (rolledValue == 150) ? 250 : 200;
+        }
+
+        CharacterDatabase.DirectExecute(
+            "INSERT INTO item_affix (item_guid, affix_slot, affix_id, rolled_value, roll_state, pending_opts) "
+            "VALUES ({}, {}, {}, {}, {}, '') "
+            "ON DUPLICATE KEY UPDATE affix_id = {}, rolled_value = {}, roll_state = {}, pending_opts = ''",
+            itemGuid, slot, id, rolledValue, uint8(AFFIX_ROLL_APPLIED),
+            id, rolledValue, uint8(AFFIX_ROLL_APPLIED));
+
+        sPlayerProgressionMgr->GrantAffixXP(player, quality);
+
+        if (_enableTalentAffixes)
+            InitTalentAffix(player, item, -1, slot, /*includeOtherSpecWeighted*/true, _d3DominantSpecWeight + 1);
+    }
+
+    // Sync immediately if the item is already equipped (e.g. bought-and-equipped
+    // straight from a vendor, or an offhand auto-equipped after a 2H swap).
+    uint8 bagSlot  = item->GetBagSlot();
+    uint8 itemSlot = item->GetSlot();
+    if (bagSlot == INVENTORY_SLOT_BAG_0 && itemSlot < EQUIPMENT_SLOT_END)
+        SyncAffixes(player);
+
+    SendItemStatus(player, item);
 }
 
 // ---------------------------------------------------------------------------
@@ -1463,6 +1642,12 @@ void ItemAffixMgr::ApplyAffixes(Player* player, Item* item)
     {
         auto const* def = GetAffixDef(rec.affixId);
         if (!def)
+            // Dangling affix_id (its affix_template row was removed/renamed) --
+            // silently grants nothing forever, with no way to reroll the slot.
+            // No affix has ever been retired yet so this hasn't bitten anyone,
+            // but if one ever is, the fix belongs here: detect the missing def
+            // and revert this row to UNROLLED (state=0) instead of skipping,
+            // so the slot becomes rollable again. See docs/ROADMAP.md.
             continue;
 
         if (def->affixType == AFFIX_TYPE_SPELLMOD)
@@ -2887,6 +3072,24 @@ bool ItemAffixMgr::IsPendingReroll(uint64 playerGuid) const
 void ItemAffixMgr::ClearPendingReroll(uint64 playerGuid)
 {
     _pendingReroll.erase(playerGuid);
+}
+
+// ---------------------------------------------------------------------------
+// Quest-reward-in-progress flag helpers -- see the comment on the header
+// declaration for the core hooks that drive this.
+// ---------------------------------------------------------------------------
+
+void ItemAffixMgr::SetQuestRewardInProgress(uint64 playerGuid, bool inProgress)
+{
+    if (inProgress)
+        _questRewardInProgress.insert(playerGuid);
+    else
+        _questRewardInProgress.erase(playerGuid);
+}
+
+bool ItemAffixMgr::IsQuestRewardInProgress(uint64 playerGuid) const
+{
+    return _questRewardInProgress.count(playerGuid) != 0;
 }
 
 // ---------------------------------------------------------------------------
