@@ -55,6 +55,9 @@ mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_IMPR
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_IMPRINTS/holy_nova_beacon_creature.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_IMPRINTS/imprint_ancient_tiger_creature.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_IMPRINTS/stampede_rhino_creature.sql"
+
+echo "Applying Reforge Master NPC to $DB_WORLD..."
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_WORLD" < "$SQL_WORLD/reforge_master_npc.sql"
 echo "  All data applied."
 echo
 

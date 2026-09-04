@@ -53,14 +53,3 @@ PREPARE _s FROM @add_ps; EXECUTE _s; DEALLOCATE PREPARE _s;
 
 -- Migrate existing applied affixes to roll_state=2
 UPDATE `item_affix` SET `roll_state` = 2 WHERE `affix_id` != 0 AND `roll_state` = 0;
-
--- Clear legacy PERM_ENCHANTMENT_SLOT (positions 0-2 in the 36-value enchantments blob)
--- from any item that has affix rows.  Preserves real enchants (weapon enchants sit in
--- slot 2+; gems in slots 3-5) by only zeroing the first three space-separated tokens.
-UPDATE `item_instance` ii
-INNER JOIN `item_affix` ia ON ia.`item_guid` = ii.`guid`
-SET ii.`enchantments` = CONCAT(
-    '0 0 0 ',
-    SUBSTRING_INDEX(ii.`enchantments`, ' ', -33)
-)
-WHERE CAST(SUBSTRING_INDEX(ii.`enchantments`, ' ', 1) AS UNSIGNED) != 0;

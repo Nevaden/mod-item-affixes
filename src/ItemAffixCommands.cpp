@@ -25,11 +25,18 @@ public:
             { "reset",      HandleAffixProgressionResetCommand,      rbac::RBAC_PERM_COMMAND_GM, Console::No },
             { "bossdebug",  HandleAffixProgressionBossDebugCommand,  rbac::RBAC_PERM_COMMAND_GM, Console::No },
         };
+        static ChatCommandTable reforgeCommandTable =
+        {
+            { "status",  HandleAffixReforgeStatusCommand,  rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "roll",    HandleAffixReforgeRollCommand,    rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "pick",    HandleAffixReforgePickCommand,    rbac::RBAC_PERM_COMMAND_GM, Console::No },
+        };
         static ChatCommandTable affixCommandTable =
         {
             { "reroll",       HandleAffixRerollCommand, rbac::RBAC_PERM_COMMAND_GM, Console::No },
             { "info",         HandleAffixInfoCommand,   rbac::RBAC_PERM_COMMAND_GM, Console::No },
             { "progression",  progressionCommandTable },
+            { "reforge",      reforgeCommandTable },
         };
         static ChatCommandTable commandTable =
         {
@@ -185,6 +192,109 @@ public:
         handler->PSendSysMessage("  lootid:         {}", target->GetCreatureTemplate() ? target->GetCreatureTemplate()->lootid : 0);
         handler->PSendSysMessage("  Would trigger:  {}", (target->isWorldBoss() || target->IsDungeonBoss()) ? "YES" : "NO");
         handler->PSendSysMessage("  Your Boss Drops rank: {} (bonus rolls this character contributes: {})", rank, rank);
+        return true;
+    }
+
+    // Reforge NPC test commands (docs/REFORGE_PLAN.md, Stage 2) -- exercise
+    // the engine and protocol handlers before the real addon UI (Stage 4)
+    // exists. equipSlot is a normal equipment slot index (0-18).
+
+    // .affix reforge status <equipSlot>
+    static bool HandleAffixReforgeStatusCommand(ChatHandler* handler, uint8 equipSlot)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, equipSlot);
+        if (!item)
+        {
+            handler->SendSysMessage("No item in that equip slot.");
+            return true;
+        }
+
+        uint64 itemGuid = item->GetGUID().GetRawValue();
+        ItemTemplate const* proto = item->GetTemplate();
+        handler->PSendSysMessage("|cffFFFF00[Reforge]|r {} (GUID {})",
+            proto ? proto->Name1.c_str() : "?", item->GetGUID().GetCounter());
+
+        ReforgeState state = sItemAffixMgr->GetReforgeState(itemGuid);
+        if (state.exists)
+            handler->PSendSysMessage("  Locked to slot {} (reforged {} time(s)).", state.lockedSlot, state.rerollCount);
+        else
+            handler->SendSysMessage("  Not yet reforged -- any APPLIED line below is eligible.");
+
+        QueryResult result = CharacterDatabase.Query(
+            "SELECT affix_slot, roll_state, affix_id, rolled_value FROM item_affix "
+            "WHERE item_guid = {} ORDER BY affix_slot", itemGuid);
+        if (result)
+        {
+            do
+            {
+                Field* f = result->Fetch();
+                uint8  affixSlot = f[0].Get<uint8>();
+                uint8  rollState = f[1].Get<uint8>();
+                uint32 affixId   = f[2].Get<uint32>();
+                int32  rolled    = f[3].Get<int32>();
+                if (rollState == 2 && affixId)
+                {
+                    auto const* def = sItemAffixMgr->GetAffixDef(affixId);
+                    handler->PSendSysMessage("  [{}] APPLIED - {} (val {})",
+                        affixSlot, def ? def->name.c_str() : "?", rolled);
+                }
+                else
+                {
+                    handler->PSendSysMessage("  [{}] not applied (roll_state={})", affixSlot, rollState);
+                }
+            } while (result->NextRow());
+        }
+        return true;
+    }
+
+    // .affix reforge roll <equipSlot> <affixSlot> -- the paid, committing step.
+    static bool HandleAffixReforgeRollCommand(ChatHandler* handler, uint8 equipSlot, uint8 affixSlot)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, equipSlot);
+        if (!item)
+        {
+            handler->SendSysMessage("No item in that equip slot.");
+            return true;
+        }
+
+        std::vector<PendingOpt> opts;
+        ReforgeRollResult result = sItemAffixMgr->RollReforgeOptions(player, item, affixSlot, &opts);
+        if (result != ReforgeRollResult::OK)
+        {
+            handler->PSendSysMessage("|cffFF0000[Reforge]|r Failed (code {}) -- nothing charged.", uint32(result));
+            return true;
+        }
+
+        handler->SendSysMessage("|cffFFFF00[Reforge]|r Options:");
+        for (size_t i = 0; i < opts.size(); ++i)
+        {
+            auto const* def = sItemAffixMgr->GetAffixDef(opts[i].affixId);
+            handler->PSendSysMessage("  [{}] {} (val {}){}",
+                i, def ? def->name.c_str() : "?", opts[i].rolledValue,
+                (i == 0) ? " -- current" : "");
+        }
+        handler->SendSysMessage("Use .affix reforge pick <equipSlot> <affixSlot> <optIdx> to commit.");
+        return true;
+    }
+
+    // .affix reforge pick <equipSlot> <affixSlot> <optIdx>
+    static bool HandleAffixReforgePickCommand(ChatHandler* handler, uint8 equipSlot, uint8 affixSlot, uint32 optIdx)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, equipSlot);
+        if (!item)
+        {
+            handler->SendSysMessage("No item in that equip slot.");
+            return true;
+        }
+
+        ReforgePickResult result = sItemAffixMgr->CommitReforgePick(player, item, affixSlot, optIdx);
+        if (result != ReforgePickResult::OK)
+            handler->PSendSysMessage("|cffFF0000[Reforge]|r Failed (code {}).", uint32(result));
+        else
+            handler->SendSysMessage("|cffFFFF00[Reforge]|r Applied.");
         return true;
     }
 };

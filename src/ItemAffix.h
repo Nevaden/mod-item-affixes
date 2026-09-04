@@ -224,6 +224,41 @@ struct AffixSlotInfo
     int8                    pendingSpec      = -1; // spec tree from addon at roll time; -1=dominant tree
 };
 
+// Output of BuildEligibleAffixPools -- the three candidate buckets RollAffixId
+// picks from, and also what the Reforge preview panel enumerates directly
+// (no picking) instead of rolling. See ItemAffix.h::BuildEligibleAffixPools.
+struct EligibleAffixPools
+{
+    std::vector<uint32> knownSpecClass;  // class affixes for the resolved spec (or specTree=255), spell known
+    std::vector<uint32> knownOtherSpec;  // class affixes for other specs of the same class, spell known
+    std::vector<uint32> knownGeneric;    // stat/generic affixes, always usable
+};
+
+// Reforge NPC lock-in state for one item (item_reforge_state). See
+// docs/REFORGE_PLAN.md.
+struct ReforgeState
+{
+    bool   exists      = false;  // false = item never reforged; any currently-APPLIED prefix/suffix slot is eligible
+    uint8  lockedSlot   = 0;      // only meaningful when exists=true
+    uint32 rerollCount  = 0;      // times already reforged; only meaningful when exists=true
+};
+
+enum class ReforgeRollResult : uint8
+{
+    OK = 0,
+    ERR_NOT_APPLIED,          // affixSlot isn't a currently-APPLIED prefix/suffix slot
+    ERR_WRONG_SLOT,           // item is already locked to a different slot
+    ERR_INSUFFICIENT_GOLD,
+};
+
+enum class ReforgePickResult : uint8
+{
+    OK = 0,
+    ERR_NO_PENDING,           // no candidates on file (never rolled, or already picked)
+    ERR_WRONG_SLOT,           // affixSlot doesn't match the item's locked slot
+    ERR_INVALID_INDEX,        // optIdx out of range for the persisted candidate list
+};
+
 class ItemAffixMgr
 {
 public:
@@ -299,6 +334,11 @@ public:
     // Addon message protocol entry point.  Called from OnPlayerBeforeSendChatMessage.
     void HandleAddonMessage(Player* player, std::string const& payload);
 
+    // Generic "send this raw payload as an AFXM addon message" helper. Public
+    // so external scripts (e.g. the Reforge NPC's gossip handler) can push a
+    // client-bound message without duplicating the addon-message plumbing.
+    void SendAddonMsg(Player* player, std::string const& payload);
+
     // Push current affix slot state for one item to the client.
     void SendItemStatus(Player* player, Item* item, std::string const& extraTalentLine = "");
 
@@ -307,6 +347,37 @@ public:
     // classSkillsBlocked) update live on invest/respec instead of only at next
     // login. Called from PlayerProgressionMgr's INVEST/RESPEC handlers.
     void RefreshAllItemStatus(Player* player);
+
+    // --- Reforge NPC (docs/REFORGE_PLAN.md). Stage 1: core engine (done).
+    // Stage 2: network protocol, below IsClassAffixesBlocked-adjacent code
+    // in ItemAffixScripts-style HandleAddonMessage dispatch. ---
+
+    // Reads item_reforge_state for this item. exists=false means never
+    // reforged -- any currently-APPLIED prefix/suffix slot is eligible.
+    ReforgeState GetReforgeState(uint64 itemGuid) const;
+
+    // cost = baseCost{itemQuality} * (1 + timesAlreadyReforged * 0.5).
+    uint32 GetReforgeCost(uint32 itemQuality, uint32 timesAlreadyReforged) const;
+
+    // The paid, committing step (see "Cost & commit timing" in the plan
+    // doc). Charges GetReforgeCost, then creates/updates item_reforge_state
+    // (locks the slot on first call, increments reroll_count on later
+    // calls), then generates and persists candidate options (current value
+    // first, then fresh rolls from the same bucket) to
+    // item_reforge_state.pending_opts -- also returned via outOptions so
+    // the protocol layer doesn't need a second query to report them.
+    // Non-OK results charge nothing and change nothing.
+    ReforgeRollResult RollReforgeOptions(Player* player, Item* item, uint8 affixSlot,
+                                          std::vector<PendingOpt>* outOptions = nullptr);
+
+    // The only step that writes a new value to item_affix. Reads back the
+    // candidates RollReforgeOptions persisted, verifies affixSlot matches
+    // the locked slot and optIdx is in range (never trusts a
+    // client-supplied affix_id/value directly), writes the chosen
+    // candidate, clears pending_opts. If this is never called at all,
+    // item_affix simply keeps its current value -- no separate cancel
+    // path needed.
+    ReforgePickResult CommitReforgePick(Player* player, Item* item, uint8 affixSlot, uint32 optIdx);
 
     // Reset all affix rows for an item and re-initialize with UNROLLED slots.
     // Called by .affix reroll command.
@@ -347,6 +418,17 @@ private:
                        int8 spec = -1, uint32 ownSpecWeight = 1,
                        bool ignoreClassAffixMaxPerItem = false);
 
+    // Eligibility-filtering core shared by RollAffixId (which then picks one)
+    // and the Reforge preview panel (which lists all of them). resolvedSpec
+    // and classAffixesBlocked are pre-resolved by the caller (RollAffixId
+    // already does this itself before calling in; the preview panel does the
+    // same resolution independently) rather than re-derived here, so this
+    // function has no player-state-resolution side effects of its own.
+    EligibleAffixPools BuildEligibleAffixPools(uint32 itemQuality, Player* player, Item* item,
+                       bool genericsOnly, bool classOnly,
+                       uint8 preferredRole, uint8 preferredMainStat,
+                       int8 resolvedSpec, bool classAffixesBlocked);
+
     // LootMode=1 only -- called from InitItemSlots. Rolls and APPLIES every
     // new slot in [existingCount, numSlots) immediately, split into a
     // prefix/suffix bucket. See docs/D3_LOOT_MODE_PLAN.md.
@@ -361,7 +443,6 @@ private:
     std::vector<ItemAffixRecord> LoadItemAffixes(uint64 itemGuid);
     void PersistAffix(uint64 itemGuid, uint8 slot, uint32 affixId, int32 rolledValue);
 
-    void SendAddonMsg(Player* player, std::string const& payload);
     std::string BuildAffixDisplayString(AffixDefinition const* def, int32 rolledValue);
     void SendRollOptions(Player* player, Item* item, uint8 affixSlot, std::vector<PendingOpt> const& opts,
                          uint8 rerolls, uint8 lockedMask);
@@ -454,6 +535,11 @@ private:
                                               // the cap fall back to suffix. true = the prefix/suffix formula
                                               // in AutoRollD3Item is authoritative instead; the item always
                                               // gets its full prefixCount regardless of the manual-mode cap.
+    // Reforge NPC (docs/REFORGE_PLAN.md). cost = base * (1 + timesAlreadyReforged * 0.5).
+    uint32 _reforgeBaseCostGreen     = 5000;    // 50s
+    uint32 _reforgeBaseCostBlue      = 20000;   // 2g
+    uint32 _reforgeBaseCostPurple    = 75000;   // 7g50s
+    uint32 _reforgeBaseCostLegendary = 250000;  // 25g
     // WotLK item budget fractions — share of total item budget allocated to one affix roll
     float _budgetFractionGreen      = 0.18f;  // green quality     (1 affix)
     float _budgetFractionBlue       = 0.13f;  // blue quality      (2 affixes)

@@ -27,7 +27,8 @@ mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_talent_affix.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_imprint.sql"
 mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_gem_affix.sql"
-echo "  item_affix, item_talent_affix, item_imprint, item_gem_affix created."
+mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASS" "$DB_CHAR" < "$SQL_CHARS/item_reforge_state.sql"
+echo "  item_affix, item_talent_affix, item_imprint, item_gem_affix, item_reforge_state created."
 echo
 
 echo "Creating Player Progression tables..."

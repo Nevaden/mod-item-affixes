@@ -55,6 +55,12 @@ for %%f in ("%SQL_IMPRINTS%\*.sql") do (
 echo   Imprint data applied.
 echo.
 
+echo Applying Reforge Master NPC to %DB_WORLD%...
+%MYSQL% -h %MYSQL_HOST% -u %USER% -p%PASS% %DB_WORLD% < "%SQL_WORLD%\reforge_master_npc.sql"
+if %ERRORLEVEL% neq 0 ( echo ERROR: reforge_master_npc.sql failed & pause & exit /b 1 )
+echo   Reforge Master NPC applied.
+echo.
+
 echo ============================================================
 echo  Step 2 complete.
 echo  Next: run install\3-patch-client.bat  (Windows client patch)

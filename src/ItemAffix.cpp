@@ -544,7 +544,11 @@ void ItemAffixMgr::LoadAffixTemplates()
         "DELETE ita FROM item_talent_affix ita "
         "LEFT JOIN item_instance ii ON (ita.item_guid & 0xFFFFFFFF) = ii.guid "
         "WHERE ii.guid IS NULL");
-    LOG_INFO("module", "mod-item-affixes: purged orphaned affix rows.");
+    CharacterDatabase.Execute(
+        "DELETE irs FROM item_reforge_state irs "
+        "LEFT JOIN item_instance ii ON (irs.item_guid & 0xFFFFFFFF) = ii.guid "
+        "WHERE ii.guid IS NULL");
+    LOG_INFO("module", "mod-item-affixes: purged orphaned affix and reforge-state rows.");
 
     _enableClassSkillAffixes        = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableClassSkillAffixes",        true);
     _enableClassSkillAffixSelection = sConfigMgr->GetOption<bool>  ("ItemAffixes.EnableClassSkillAffixSelection", false);
@@ -568,6 +572,10 @@ void ItemAffixMgr::LoadAffixTemplates()
     _d3DominantSpecWeight  = sConfigMgr->GetOption<uint32>("ItemAffixes.D3DominantSpecWeight", 0u);
     _d3ExcludeQuestRewards = sConfigMgr->GetOption<bool>("ItemAffixes.D3ExcludeQuestRewards", true);
     _d3OverrideClassAffixMaxPerItem = sConfigMgr->GetOption<bool>("ItemAffixes.D3OverrideClassAffixMaxPerItem", false);
+    _reforgeBaseCostGreen     = sConfigMgr->GetOption<uint32>("ItemAffixes.ReforgeBaseCostGreen",     5000);
+    _reforgeBaseCostBlue      = sConfigMgr->GetOption<uint32>("ItemAffixes.ReforgeBaseCostBlue",      20000);
+    _reforgeBaseCostPurple    = sConfigMgr->GetOption<uint32>("ItemAffixes.ReforgeBaseCostPurple",    75000);
+    _reforgeBaseCostLegendary = sConfigMgr->GetOption<uint32>("ItemAffixes.ReforgeBaseCostLegendary", 250000);
     _budgetFractionLegendary = sConfigMgr->GetOption<float>("ItemAffixes.BudgetFractionLegendary", 0.09f);
     _enableRoleSelection     = sConfigMgr->GetOption<bool> ("ItemAffixes.EnableRoleSelection",     false);
     _enableMainStatSelection = sConfigMgr->GetOption<uint8>("ItemAffixes.EnableMainStatSelection", 0);
@@ -967,12 +975,13 @@ bool ItemAffixMgr::IsClassAffixesBlocked(Player* player, Item* item, bool ignore
     return classAffixesBlocked;
 }
 
-uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
-                                  bool genericsOnly, uint8 classBoost,
-                                  bool classOnly,
-                                  uint8 preferredRole, uint8 preferredMainStat,
-                                  int8 spec, uint32 ownSpecWeight, bool ignoreClassAffixMaxPerItem)
+EligibleAffixPools ItemAffixMgr::BuildEligibleAffixPools(uint32 itemQuality, Player* player, Item* item,
+                                                          bool genericsOnly, bool classOnly,
+                                                          uint8 preferredRole, uint8 preferredMainStat,
+                                                          int8 resolvedSpec, bool classAffixesBlocked)
 {
+    EligibleAffixPools pools;
+
     uint8 playerClass = player->getClass();
     uint8 itemCat   = item ? GetItemCategory(item) : ITEM_CAT_ANY;
     // Pre-compute item budget for stat affix eligibility (avoid recomputing per affix).
@@ -980,18 +989,6 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
         ? ComputeItemBudget(item->GetTemplate()->ItemLevel) * GetSlotBudgetMod(item->GetTemplate()->InventoryType)
         : ComputeItemBudget(static_cast<uint32>(player->GetLevel()) * 5) * 0.74f;  // fallback
     float itemBudget = itemBudgetBase * GetQualityFraction(itemQuality);
-
-    // Three buckets — only affixes the player can currently use (spell known):
-    //   knownSpecClass : class affixes for the chosen spec (or specTree=255), spell learned
-    //   knownOtherSpec : class affixes for other specs of the same class, spell learned
-    //   knownGeneric   : stat/generic affixes (always usable)
-    // Affixes for spells the player hasn't learned are never returned.
-    std::vector<uint32> knownSpecClass, knownOtherSpec, knownGeneric;
-
-    // Resolve the player's active spec once — needed to bucket own-spec vs. other-spec.
-    int8 resolvedSpec = (spec >= 0) ? spec : static_cast<int8>(GetDominantTalentTree(player));
-
-    bool classAffixesBlocked = IsClassAffixesBlocked(player, item, ignoreClassAffixMaxPerItem);
 
     for (uint32 id : _pool)
     {
@@ -1058,7 +1055,7 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
             continue;
         if (bucketClass == 0)
         {
-            knownGeneric.push_back(id);
+            pools.knownGeneric.push_back(id);
         }
         else
         {
@@ -1067,11 +1064,32 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
             bool isOwnSpec = (def->specTree == 255) ||
                              (resolvedSpec >= 0 && def->specTree == static_cast<uint8>(resolvedSpec));
             if (isOwnSpec)
-                knownSpecClass.push_back(id);
+                pools.knownSpecClass.push_back(id);
             else
-                knownOtherSpec.push_back(id);
+                pools.knownOtherSpec.push_back(id);
         }
     }
+
+    return pools;
+}
+
+uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
+                                  bool genericsOnly, uint8 classBoost,
+                                  bool classOnly,
+                                  uint8 preferredRole, uint8 preferredMainStat,
+                                  int8 spec, uint32 ownSpecWeight, bool ignoreClassAffixMaxPerItem)
+{
+    // Resolve the player's active spec once — needed to bucket own-spec vs. other-spec.
+    int8 resolvedSpec = (spec >= 0) ? spec : static_cast<int8>(GetDominantTalentTree(player));
+
+    bool classAffixesBlocked = IsClassAffixesBlocked(player, item, ignoreClassAffixMaxPerItem);
+
+    EligibleAffixPools pools = BuildEligibleAffixPools(itemQuality, player, item, genericsOnly, classOnly,
+                                                        preferredRole, preferredMainStat,
+                                                        resolvedSpec, classAffixesBlocked);
+    std::vector<uint32>& knownSpecClass = pools.knownSpecClass;
+    std::vector<uint32>& knownOtherSpec = pools.knownOtherSpec;
+    std::vector<uint32>& knownGeneric   = pools.knownGeneric;
 
     // classBoost=2 (streak insurance): guarantee a class affix this slot.
     // Prefer own-spec; fall back to other-spec. If no class affixes known, fall through.
@@ -3056,6 +3074,218 @@ void ItemAffixMgr::RerollItem(Player* player, Item* item)
 }
 
 // ---------------------------------------------------------------------------
+// Reforge NPC (docs/REFORGE_PLAN.md) -- Stage 1: core engine only, no
+// network protocol yet (that's Stage 2).
+// ---------------------------------------------------------------------------
+
+ReforgeState ItemAffixMgr::GetReforgeState(uint64 itemGuid) const
+{
+    ReforgeState state;
+    QueryResult result = CharacterDatabase.Query(
+        "SELECT locked_slot, reroll_count FROM item_reforge_state WHERE item_guid = {}", itemGuid);
+    if (result)
+    {
+        Field* f = result->Fetch();
+        state.exists      = true;
+        state.lockedSlot  = f[0].Get<uint8>();
+        state.rerollCount = f[1].Get<uint32>();
+    }
+    return state;
+}
+
+uint32 ItemAffixMgr::GetReforgeCost(uint32 itemQuality, uint32 timesAlreadyReforged) const
+{
+    uint32 baseCost;
+    if      (itemQuality >= ITEM_QUALITY_LEGENDARY) baseCost = _reforgeBaseCostLegendary;
+    else if (itemQuality >= ITEM_QUALITY_EPIC)      baseCost = _reforgeBaseCostPurple;
+    else if (itemQuality == ITEM_QUALITY_RARE)      baseCost = _reforgeBaseCostBlue;
+    else                                             baseCost = _reforgeBaseCostGreen;
+    return static_cast<uint32>(baseCost * (1.0 + timesAlreadyReforged * 0.5));
+}
+
+// Serializes exactly like item_affix.pending_opts ("id:val:crit,..."), so a
+// future shared helper is trivial if one ever gets factored out.
+static std::string SerializeReforgeOpts(std::vector<PendingOpt> const& opts)
+{
+    std::string out;
+    for (size_t i = 0; i < opts.size(); ++i)
+    {
+        if (i > 0) out += ',';
+        out += std::to_string(opts[i].affixId) + ':'
+             + std::to_string(opts[i].rolledValue) + ':'
+             + (opts[i].isCrit ? '1' : '0');
+    }
+    return out;
+}
+
+static std::vector<PendingOpt> ParseReforgeOpts(std::string const& raw)
+{
+    std::vector<PendingOpt> opts;
+    if (raw.empty())
+        return opts;
+    for (auto part : Acore::Tokenize(raw, ',', false))
+    {
+        auto colon = part.find(':');
+        if (colon == std::string_view::npos)
+            continue;
+        auto id = Acore::StringTo<uint32>(part.substr(0, colon));
+        if (!id)
+            continue;
+        auto rest   = part.substr(colon + 1);
+        auto colon2 = rest.find(':');
+        int32 val   = Acore::StringTo<int32>(
+            colon2 != std::string_view::npos ? rest.substr(0, colon2) : rest
+        ).value_or(0);
+        bool isCrit = (colon2 != std::string_view::npos && rest.substr(colon2 + 1) == "1");
+        opts.push_back({ *id, val, isCrit });
+    }
+    return opts;
+}
+
+ReforgeRollResult ItemAffixMgr::RollReforgeOptions(Player* player, Item* item, uint8 affixSlot,
+                                                    std::vector<PendingOpt>* outOptions)
+{
+    if (!player || !item)
+        return ReforgeRollResult::ERR_NOT_APPLIED;
+
+    ItemTemplate const* proto = item->GetTemplate();
+    if (!proto)
+        return ReforgeRollResult::ERR_NOT_APPLIED;
+
+    uint64 itemGuid = item->GetGUID().GetRawValue();
+    auto slots = LoadAffixSlots(itemGuid);
+    if (affixSlot >= slots.size() || slots[affixSlot].rollState != AFFIX_ROLL_APPLIED || slots[affixSlot].affixId == 0)
+        return ReforgeRollResult::ERR_NOT_APPLIED;
+
+    auto const* currentDef = GetAffixDef(slots[affixSlot].affixId);
+    if (!currentDef)
+        return ReforgeRollResult::ERR_NOT_APPLIED;
+
+    ReforgeState state = GetReforgeState(itemGuid);
+    if (state.exists && state.lockedSlot != affixSlot)
+        return ReforgeRollResult::ERR_WRONG_SLOT;  // permanently locked to a different slot
+
+    uint32 quality = proto->Quality;
+    uint32 cost = GetReforgeCost(quality, state.exists ? state.rerollCount : 0);
+    if (!player->HasEnoughMoney(cost))
+        return ReforgeRollResult::ERR_INSUFFICIENT_GOLD;
+
+    player->ModifyMoney(-int32(cost));
+
+    uint32 newRerollCount = state.exists ? state.rerollCount + 1 : 1;
+    CharacterDatabase.DirectExecute(
+        "INSERT INTO item_reforge_state (item_guid, locked_slot, reroll_count, pending_opts) "
+        "VALUES ({}, {}, {}, '') "
+        "ON DUPLICATE KEY UPDATE reroll_count = {}, pending_opts = ''",
+        itemGuid, uint32(affixSlot), newRerollCount, newRerollCount);
+
+    // Candidate 0, always first: the item's current value, verbatim.
+    std::vector<PendingOpt> opts;
+    opts.push_back({ slots[affixSlot].affixId, slots[affixSlot].rolledValue, false });
+
+    // Bucket is whatever the *current* affix already is, not slot position --
+    // this works uniformly for Manual-mode items (no inherent prefix/suffix
+    // slot identity) and D3-mode items (slot position implies bucket, but
+    // reading it off the current affix gives the same answer either way).
+    bool wantPrefix = (currentDef->affixType != AFFIX_TYPE_STAT);
+
+    uint8 numOpts;
+    if      (quality >= ITEM_QUALITY_LEGENDARY) numOpts = _optionsCountLegendary;
+    else if (quality >= ITEM_QUALITY_EPIC)      numOpts = _optionsCountPurple;
+    else if (quality == ITEM_QUALITY_RARE)      numOpts = _optionsCountBlue;
+    else                                         numOpts = _optionsCountGreen;
+    uint8 optionsBonus = uint8(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_OPTIONS_TIER));
+    numOpts = std::min<uint8>(numOpts + optionsBonus, 6);
+
+    uint8 playerClass = player->getClass();
+    int   resolvedSpec = GetDominantTalentTree(player);
+    uint8 roleForRoll     = GetAutoRole(playerClass, resolvedSpec);
+    uint8 mainStatForRoll = GetAutoMainStat(playerClass, resolvedSpec);
+    float itemBudget = ComputeItemBudget(proto->ItemLevel) * GetSlotBudgetMod(proto->InventoryType)
+                     * GetQualityFraction(quality);
+    bool is2H = Is2HWeapon(item);
+
+    // ClassAffixMaxPerItem is bypassed unconditionally here (independent of
+    // ItemAffixes.D3OverrideClassAffixMaxPerItem, which only governs
+    // AutoRollD3Item): this slot already holds a class affix, so it's
+    // already counted toward the cap. Without the bypass, rerolling an
+    // item's *only* class affix slot would be blocked by its own cap.
+    for (uint8 i = 0; i < numOpts; ++i)
+    {
+        uint32 id = wantPrefix
+            ? RollAffixId(quality, player, item, /*genericsOnly*/false, /*classBoost*/0,
+                           /*classOnly*/true, roleForRoll, mainStatForRoll, -1, /*ownSpecWeight*/1,
+                           /*ignoreClassAffixMaxPerItem*/true)
+            : RollAffixId(quality, player, item, /*genericsOnly*/true, /*classBoost*/0,
+                           /*classOnly*/false, roleForRoll, mainStatForRoll, -1, /*ownSpecWeight*/1,
+                           /*ignoreClassAffixMaxPerItem*/true);
+        if (!id)
+            continue;
+
+        auto const* def = GetAffixDef(id);
+        int32 val = (def && def->affixType == AFFIX_TYPE_STAT)
+            ? RollBudgetStatValue(def->statOp, itemBudget, _budgetMinRoll)
+            : 0;
+        if (is2H && def)
+        {
+            if (def->affixType == AFFIX_TYPE_STAT)
+                val = (val * 3 + 1) / 2;
+            else if (def->affixType == AFFIX_TYPE_SPELLMOD)
+                val = 150;
+        }
+        opts.push_back({ id, val, false });
+    }
+
+    CharacterDatabase.DirectExecute(
+        "UPDATE item_reforge_state SET pending_opts = '{}' WHERE item_guid = {}",
+        SerializeReforgeOpts(opts), itemGuid);
+
+    if (outOptions)
+        *outOptions = opts;
+    return ReforgeRollResult::OK;
+}
+
+ReforgePickResult ItemAffixMgr::CommitReforgePick(Player* player, Item* item, uint8 affixSlot, uint32 optIdx)
+{
+    if (!player || !item)
+        return ReforgePickResult::ERR_NO_PENDING;
+
+    uint64 itemGuid = item->GetGUID().GetRawValue();
+    QueryResult result = CharacterDatabase.Query(
+        "SELECT locked_slot, pending_opts FROM item_reforge_state WHERE item_guid = {}", itemGuid);
+    if (!result)
+        return ReforgePickResult::ERR_NO_PENDING;
+
+    Field* f = result->Fetch();
+    uint8 lockedSlot = f[0].Get<uint8>();
+    std::string pendingOptsStr = f[1].Get<std::string>();
+    if (lockedSlot != affixSlot)
+        return ReforgePickResult::ERR_WRONG_SLOT;
+    if (pendingOptsStr.empty())
+        return ReforgePickResult::ERR_NO_PENDING;
+
+    std::vector<PendingOpt> opts = ParseReforgeOpts(pendingOptsStr);
+    if (optIdx >= opts.size())
+        return ReforgePickResult::ERR_INVALID_INDEX;
+
+    PendingOpt const& chosen = opts[optIdx];
+
+    CharacterDatabase.DirectExecute(
+        "UPDATE item_affix SET affix_id = {}, rolled_value = {} WHERE item_guid = {} AND affix_slot = {}",
+        chosen.affixId, chosen.rolledValue, itemGuid, uint32(affixSlot));
+    CharacterDatabase.DirectExecute(
+        "UPDATE item_reforge_state SET pending_opts = '' WHERE item_guid = {}", itemGuid);
+
+    uint8 bagSlot  = item->GetBagSlot();
+    uint8 itemSlot = item->GetSlot();
+    if (bagSlot == INVENTORY_SLOT_BAG_0 && itemSlot < EQUIPMENT_SLOT_END)
+        SyncAffixes(player);
+
+    SendItemStatus(player, item);
+    return ReforgePickResult::OK;
+}
+
+// ---------------------------------------------------------------------------
 // Pending-reroll flag helpers
 // ---------------------------------------------------------------------------
 
@@ -3622,5 +3852,85 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
         {
             SendItemStatus(player, item);
         }
+    }
+    else if (cmd == "REFORGE_STATUS")
+    {
+        auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+        auto slots = LoadAffixSlots(item->GetGUID().GetRawValue());
+        ReforgeState state = GetReforgeState(item->GetGUID().GetRawValue());
+
+        std::string msg = Acore::StringFormat("REFORGESTATUS|{}|{}|{}|{}",
+            uint32(luaBag), uint32(luaSlot), uint32(slots.size()),
+            state.exists ? uint32(state.lockedSlot) : 255u);
+        for (uint8 i = 0; i < static_cast<uint8>(slots.size()); ++i)
+        {
+            std::string text;
+            char stateChar = 'X';
+            if (slots[i].rollState == AFFIX_ROLL_APPLIED && slots[i].affixId != 0)
+            {
+                if (auto const* def = GetAffixDef(slots[i].affixId))
+                {
+                    stateChar = 'A';
+                    text = BuildAffixDisplayString(def, slots[i].rolledValue);
+                }
+            }
+            msg += Acore::StringFormat("|s{}:{}:{}", i, stateChar, text);
+        }
+        SendAddonMsg(player, msg);
+    }
+    else if (cmd == "REFORGE_ROLL" && parts.size() >= 4)
+    {
+        auto affixSlotOpt = Acore::StringTo<uint8>(parts[3]);
+        if (!affixSlotOpt) return;
+        auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+
+        std::vector<PendingOpt> opts;
+        ReforgeRollResult result = RollReforgeOptions(player, item, *affixSlotOpt, &opts);
+        if (result != ReforgeRollResult::OK)
+        {
+            char const* reason = "Unable to reforge this item right now.";
+            switch (result)
+            {
+                case ReforgeRollResult::ERR_NOT_APPLIED:        reason = "That line hasn't been rolled yet."; break;
+                case ReforgeRollResult::ERR_WRONG_SLOT:         reason = "This item is already locked to a different line."; break;
+                case ReforgeRollResult::ERR_INSUFFICIENT_GOLD:  reason = "You don't have enough gold."; break;
+                default: break;
+            }
+            SendAddonMsg(player, Acore::StringFormat("ERR|{}|{}|{}", uint32(luaBag), uint32(luaSlot), reason));
+            return;
+        }
+
+        std::string msg = Acore::StringFormat("REFORGEOPTS|{}|{}|{}",
+            uint32(luaBag), uint32(luaSlot), uint32(*affixSlotOpt));
+        for (PendingOpt const& opt : opts)
+        {
+            std::string text;
+            if (auto const* def = GetAffixDef(opt.affixId))
+                text = BuildAffixDisplayString(def, opt.rolledValue);
+            msg += "|" + text;
+        }
+        SendAddonMsg(player, msg);
+    }
+    else if (cmd == "REFORGE_PICK" && parts.size() >= 5)
+    {
+        auto affixSlotOpt = Acore::StringTo<uint8>(parts[3]);
+        auto optIdxOpt     = Acore::StringTo<uint32>(parts[4]);
+        if (!affixSlotOpt || !optIdxOpt) return;
+        auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+
+        ReforgePickResult result = CommitReforgePick(player, item, *affixSlotOpt, *optIdxOpt);
+        if (result != ReforgePickResult::OK)
+        {
+            char const* reason = "Unable to apply that choice.";
+            switch (result)
+            {
+                case ReforgePickResult::ERR_NO_PENDING:    reason = "Nothing to pick -- roll first."; break;
+                case ReforgePickResult::ERR_WRONG_SLOT:    reason = "This item is locked to a different line."; break;
+                case ReforgePickResult::ERR_INVALID_INDEX: reason = "That option is no longer valid."; break;
+                default: break;
+            }
+            SendAddonMsg(player, Acore::StringFormat("ERR|{}|{}|{}", uint32(luaBag), uint32(luaSlot), reason));
+        }
+        // On success, CommitReforgePick already called SendItemStatus.
     }
 }

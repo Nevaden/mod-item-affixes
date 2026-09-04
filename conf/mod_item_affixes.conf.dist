@@ -57,6 +57,17 @@ ItemAffixes.D3ExcludeQuestRewards = 1
 ItemAffixes.D3OverrideClassAffixMaxPerItem = 0
 
 # ---------------------------------------------------------------------------
+# Reforge NPC — pick one APPLIED prefix/suffix line, pay to reroll it
+# (docs/REFORGE_PLAN.md). Works regardless of LootMode. Cost escalates per
+# reforge already done to THIS item: cost = baseCost * (1 + timesAlreadyReforged * 0.5).
+# Never resets. In copper (100 copper = 1 silver, 10000 copper = 1 gold).
+# ---------------------------------------------------------------------------
+ItemAffixes.ReforgeBaseCostGreen     = 5000
+ItemAffixes.ReforgeBaseCostBlue      = 20000
+ItemAffixes.ReforgeBaseCostPurple    = 75000
+ItemAffixes.ReforgeBaseCostLegendary = 250000
+
+# ---------------------------------------------------------------------------
 # Core features — what rolls and how often
 # ---------------------------------------------------------------------------
 
