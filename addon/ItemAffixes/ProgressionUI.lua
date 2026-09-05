@@ -404,10 +404,15 @@ function AFXM:UpdateProgressionFrame()
         for _, nodeId in ipairs(NODES_BY_CATEGORY[category]) do
             local row = f._rows[nodeId]
             local node = s.nodes[nodeId]
+            -- Reroll Tier (node 1) is meaningless in D3 loot mode -- there's
+            -- no interactive reroll at all outside the Reforge Master, so
+            -- investing here would buy something with no effect.
+            local hiddenByLootMode = (nodeId == 1 and AFX_CFG_LOOTMODE == 1)
             if row then
-                if not node or node.maxRank == 0 then
-                    -- Not yet received, or disabled via MaxRank=0 config -- hide
-                    -- and don't consume a visible slot (no gap left behind).
+                if not node or node.maxRank == 0 or hiddenByLootMode then
+                    -- Not yet received, disabled via MaxRank=0 config, or hidden
+                    -- for this loot mode -- hide and don't consume a visible
+                    -- slot (no gap left behind).
                     SetRowShown(row, false)
                 else
                     SetRowPosition(row, visibleY)

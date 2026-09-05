@@ -51,5 +51,11 @@ SET @add_ps = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
     'SELECT 1');
 PREPARE _s FROM @add_ps; EXECUTE _s; DEALLOCATE PREPARE _s;
 
+SET @add_ic = IF((SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='item_affix' AND COLUMN_NAME='is_crit')=0,
+    'ALTER TABLE `item_affix` ADD COLUMN `is_crit` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT ''1 if rolled_value came from a crit roll -- the only way to tell a crit STAT roll from a normal one, since STAT values carry no reserved sentinel the way SPELLMOD 150/200/250 do''',
+    'SELECT 1');
+PREPARE _s FROM @add_ic; EXECUTE _s; DEALLOCATE PREPARE _s;
+
 -- Migrate existing applied affixes to roll_state=2
 UPDATE `item_affix` SET `roll_state` = 2 WHERE `affix_id` != 0 AND `roll_state` = 0;

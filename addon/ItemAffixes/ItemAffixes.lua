@@ -13,6 +13,7 @@ AFX_CFG_TYPE = 1   -- 1=class skill affixes enabled; shows "Stats vs Class Skill
 AFX_CFG_SPEC = 1   -- 1=show spec tree selector; on when class skills OR talent affixes are enabled
 AFX_CFG_ROLE = 1   -- 1=show stat family selector
 AFX_CFG_MAIN = 1   -- 1=show main stat selector (Str/Agi/Int/Spirit)
+AFX_CFG_LOOTMODE = 0 -- 0=Manual (player picks via roll UI), 1=D3-style auto-roll (no interactive reroll)
 
 -- Per-session roll preferences (persist across frame close, reset on logout)
 AFX_PREF_TYPE = 0   -- 0=any 1=stats 2=skills
@@ -650,10 +651,12 @@ function AFXM:OnServerMsg(msg)
         AFX_CFG_SPEC = tonumber(parts[3]) or 1
         AFX_CFG_ROLE = tonumber(parts[4]) or 1
         AFX_CFG_MAIN = tonumber(parts[5]) or 1
+        AFX_CFG_LOOTMODE = tonumber(parts[6]) or 0
+        if AFXM.UpdateProgressionFrame then AFXM:UpdateProgressionFrame() end
         if AFX_DEBUG then
             print("|cff44DDFF[ItemAffixes]|r CONFIG type=" .. AFX_CFG_TYPE
                 .. " spec=" .. AFX_CFG_SPEC .. " role=" .. AFX_CFG_ROLE
-                .. " main=" .. AFX_CFG_MAIN)
+                .. " main=" .. AFX_CFG_MAIN .. " lootMode=" .. AFX_CFG_LOOTMODE)
         end
 
     elseif cmd == "PROG" then
@@ -949,6 +952,9 @@ function AFXM:OnServerMsg(msg)
     elseif cmd == "REFORGE_OPEN" then
         AFXM:ShowReforgeFrame()
 
+    elseif cmd == "PROG_OPEN" then
+        if AFXM.ShowProgressionFrame then AFXM:ShowProgressionFrame() end
+
     elseif cmd == "REFORGESTATUS" then
         local bag        = tonumber(parts[2])
         local slot       = tonumber(parts[3])
@@ -973,6 +979,29 @@ function AFXM:OnServerMsg(msg)
                 optionTexts[#optionTexts + 1] = parts[i]
             end
             AFXM:HandleReforgeOpts(bag, slot, affixSlot, optionTexts)
+        end
+
+    elseif cmd == "REFORGEPREVIEW" then
+        local bag         = tonumber(parts[2])
+        local slot        = tonumber(parts[3])
+        local affixSlot   = tonumber(parts[4])
+        local totalChunks = tonumber(parts[5])
+        if bag and slot and affixSlot and totalChunks then
+            AFXM:HandleReforgePreviewHeader(bag, slot, affixSlot, totalChunks)
+        end
+
+    elseif cmd == "REFORGEPREVIEWDATA" then
+        local bag         = tonumber(parts[2])
+        local slot        = tonumber(parts[3])
+        local affixSlot   = tonumber(parts[4])
+        local chunkIdx    = tonumber(parts[5])
+        local totalChunks = tonumber(parts[6])
+        if bag and slot and affixSlot and chunkIdx and totalChunks then
+            local texts = {}
+            for i = 7, #parts do
+                texts[#texts + 1] = parts[i]
+            end
+            AFXM:HandleReforgePreviewData(bag, slot, affixSlot, chunkIdx, totalChunks, texts)
         end
     end
 end
@@ -2508,6 +2537,17 @@ SLASH_AFXPROGRESSION1 = "/prog"
 SlashCmdList["AFXPROGRESSION"] = function()
     if AFXM.ShowProgressionFrame then
         AFXM:ShowProgressionFrame()
+    end
+end
+
+-- ============================================================================
+-- /reforge — open the Reforge Master frame from anywhere, no NPC visit needed
+-- ============================================================================
+
+SLASH_AFXREFORGE1 = "/reforge"
+SlashCmdList["AFXREFORGE"] = function()
+    if AFXM.ShowReforgeFrame then
+        AFXM:ShowReforgeFrame()
     end
 end
 

@@ -112,7 +112,10 @@ local function BuildFrame()
 
     local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
     closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -4, -4)
-    closeBtn:SetScript("OnClick", function() f:Hide() end)
+    closeBtn:SetScript("OnClick", function()
+        f:Hide()
+        if AFXReforgePreviewFrame then AFXReforgePreviewFrame:Hide() end
+    end)
 
     -- Item socket. Not a real container slot -- the item never actually
     -- leaves its bag/equipment slot, this just displays a reference to it.
@@ -140,6 +143,7 @@ local function BuildFrame()
     local socketBorder = socket:CreateTexture(nil, "OVERLAY")
     socketBorder:SetAllPoints(socket)
     socketBorder:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    socket._border = socketBorder
     socket:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
 
     socket:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -159,15 +163,30 @@ local function BuildFrame()
             f:ClearItem()
         end
     end)
-    socket:SetScript("OnEnter", function(self)
-        if f.itemLink then
+    -- Named so SetItem can re-trigger it below when an item is dropped in
+    -- while the cursor is already hovering the socket -- OnEnter alone
+    -- doesn't fire again in that case, so the tooltip would otherwise keep
+    -- showing whatever item was there before until the mouse actually
+    -- leaves and re-enters.
+    local function ShowSocketTooltip(self)
+        if f.itemLink and f.bag and f.slot then
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetHyperlink(f.itemLink)
+            -- SetHyperlink only shows the link's own encoded data -- it doesn't
+            -- go through the SetBagItem/SetInventoryItem hooks that append affix
+            -- lines to every other item tooltip in this addon. Use the same
+            -- calls a real bag/equipment slot makes so those hooks fire here too.
+            if f.bag == 255 then
+                GameTooltip:SetInventoryItem("player", f.slot)
+            else
+                GameTooltip:SetBagItem(f.bag, f.slot)
+            end
             GameTooltip:Show()
         end
-    end)
+    end
+    socket:SetScript("OnEnter", ShowSocketTooltip)
     socket:SetScript("OnLeave", function() GameTooltip:Hide() end)
     f._socket = socket
+    f._showSocketTooltip = ShowSocketTooltip
 
     local socketHint = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     socketHint:SetPoint("TOP", socket, "BOTTOM", 0, -4)
@@ -179,16 +198,34 @@ local function BuildFrame()
     f._statusText:SetPoint("TOP", socketHint, "BOTTOM", 0, -10)
     f._statusText:SetTextColor(0.9, 0.9, 0.6)
 
-    -- Pre-built line rows (current APPLIED prefix/suffix lines).
+    -- Pre-built line rows (current APPLIED prefix/suffix lines). Narrower
+    -- than before (326 instead of 360) to leave room for the "?" preview
+    -- button (Stage 5) next to each one.
     f._lineRows = {}
     for i = 1, MAX_LINES do
         local btn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-        btn:SetSize(360, 26)
+        btn:SetSize(326, 26)
         btn:SetPoint("TOP", f._statusText, "BOTTOM", 0, -10 - (i - 1) * 30)
         btn:SetScript("OnClick", function(self)
             f:SelectLine(self._affixSlot)
         end)
         btn:Hide()
+
+        -- "?" preview button: read-only, no cost -- lists every affix this
+        -- line's bucket could become. Reads _affixSlot off this same row at
+        -- click time since ShowLineRows sets that dynamically per reply.
+        local previewBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+        previewBtn:SetSize(24, 26)
+        previewBtn:SetPoint("LEFT", btn, "RIGHT", 4, 0)
+        previewBtn:SetText("?")
+        previewBtn:SetScript("OnClick", function()
+            if btn._affixSlot and f.bag and f.slot then
+                AFXM:SendToServer("REFORGE_PREVIEW|" .. f.bag .. "|" .. f.slot .. "|" .. btn._affixSlot)
+            end
+        end)
+        previewBtn:Hide()
+        btn._previewBtn = previewBtn
+
         f._lineRows[i] = btn
     end
 
@@ -231,8 +268,10 @@ function AFXReforgeFrame:ShowLineRows()
             btn:Enable()
             btn._affixSlot = line.affixSlot
             btn:Show()
+            btn._previewBtn:Show()
         else
             btn:Hide()
+            btn._previewBtn:Hide()
         end
     end
     self._reforgeBtn:Show()
@@ -272,8 +311,22 @@ function AFXReforgeFrame:SetItem(itemLink, hintBag, hintSlot)
         self._socket._icon:SetTexture(texture)
         self._socket._icon:Show()
     end
+    -- Hide the empty-slot background art AND the quickslot border overlay
+    -- now that a real icon covers the socket -- both are the same size as
+    -- the icon and were showing through/around it (the border draws in the
+    -- OVERLAY layer, on top of everything, so it stayed visible even after
+    -- the background alone was hidden).
+    self._socket._bg:Hide()
+    self._socket._border:Hide()
     self._socketHint:Hide()
     self._statusText:SetText("Loading...")
+
+    -- If the cursor is still sitting over the socket from the drop that just
+    -- happened, OnEnter won't fire again on its own -- refresh the tooltip
+    -- in place so it doesn't keep showing whatever item was here before.
+    if self._socket:IsMouseOver() then
+        self._showSocketTooltip(self._socket)
+    end
 
     AFXM:SendToServer("REFORGE_STATUS|" .. bag .. "|" .. slot)
 end
@@ -283,12 +336,19 @@ function AFXReforgeFrame:ClearItem()
     self.bag, self.slot = nil, nil
     self.selectedAffixSlot = nil
     self._lines = nil
+    self._previewPending = nil
     self._socket._icon:Hide()
+    self._socket._bg:Show()
+    self._socket._border:Show()
     self._socketHint:Show()
     self._statusText:SetText("")
-    for _, btn in ipairs(self._lineRows) do btn:Hide() end
+    for _, btn in ipairs(self._lineRows) do
+        btn:Hide()
+        btn._previewBtn:Hide()
+    end
     for _, btn in ipairs(self._optRows) do btn:Hide() end
     self._reforgeBtn:Hide()
+    if AFXReforgePreviewFrame then AFXReforgePreviewFrame:Hide() end
 end
 
 -- Free -- just highlights the choice and enables the Reforge button.
@@ -344,7 +404,7 @@ function AFXM:HandleReforgeStatus(bag, slot, numSlots, lockedSlot, cost, linePar
                 local eligible = (state == "A") and (not locked or lockedSlot == idx)
                 f._lines[i] = {
                     affixSlot = idx,
-                    text      = string.format("[%d] %s", idx, text ~= "" and text or "(empty)"),
+                    text      = text ~= "" and text or "(empty)",
                     eligible  = eligible,
                 }
             end
@@ -365,13 +425,27 @@ function AFXM:HandleReforgeOpts(bag, slot, affixSlot, optionTexts)
     local f = AFXReforgeFrame
     if not f or not f:IsShown() or f.bag ~= bag or f.slot ~= slot then return end
 
-    for _, btn in ipairs(f._lineRows) do btn:Hide() end
+    -- Also hide each row's "?" preview button -- the option rows reuse this
+    -- same screen space, and the buttons (siblings of the line rows, not
+    -- children) don't hide just because the line row itself does. The
+    -- preview PANEL, if one happens to already be open, is left alone --
+    -- there's just nothing left on this page that can open a new one.
+    for _, btn in ipairs(f._lineRows) do
+        btn:Hide()
+        btn._previewBtn:Hide()
+    end
     f._reforgeBtn:Hide()
 
     for i, btn in ipairs(f._optRows) do
         local text = optionTexts[i]
         if text then
-            local label = text
+            -- "!" prefix marks a crit option -- same convention the roll UI
+            -- uses (ItemAffixRollUI.lua), stripped and re-styled here too.
+            local isCrit = text:sub(1, 1) == "!"
+            local label = isCrit and text:sub(2) or text
+            if isCrit then
+                label = "|cffFFD700** " .. label .. " **|r"
+            end
             if i == 1 then label = label .. "  |cff888888(current)|r" end
             btn:SetText(label)
             btn:SetScript("OnClick", function()
@@ -384,5 +458,122 @@ function AFXM:HandleReforgeOpts(bag, slot, affixSlot, optionTexts)
         else
             btn:Hide()
         end
+    end
+end
+
+-- ============================================================================
+-- Preview panel ("?") -- Stage 5. Read-only, no cost, no side effects: lists
+-- every affix eligible for one line's bucket (prefix/suffix) right now, so
+-- the player can see what a reroll of that line *could* produce before
+-- ever paying for one. Reachable at any time a line is shown -- before the
+-- item is ever reforged, and (once locked) for the one remaining line.
+-- ============================================================================
+
+-- One-time build, separate frame anchored beside the main Reforge frame.
+local PREVIEW_CONTENT_WIDTH = 260
+
+local function BuildPreviewFrame()
+    local p = CreateFrame("Frame", "AFXReforgePreviewFrame", UIParent)
+    p:SetSize(320, 380)
+    p:SetFrameStrata("DIALOG")
+    p:EnableMouse(true)
+    p:Hide()
+    p:SetBackdrop({
+        bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = { left = 11, right = 12, top = 12, bottom = 11 },
+    })
+    p:SetBackdropColor(0, 0, 0, 1)
+    local solidBg = p:CreateTexture(nil, "BACKGROUND", nil, -8)
+    solidBg:SetAllPoints(p)
+    solidBg:SetTexture(0, 0, 0, 1)
+
+    p._title = p:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    p._title:SetPoint("TOP", p, "TOP", 0, -14)
+    p._title:SetText("Possible Rolls")
+    p._title:SetTextColor(1, 0.82, 0)
+
+    local closeBtn = CreateFrame("Button", nil, p, "UIPanelCloseButton")
+    closeBtn:SetPoint("TOPRIGHT", p, "TOPRIGHT", -4, -4)
+    closeBtn:SetScript("OnClick", function() p:Hide() end)
+
+    -- Scrollable body -- the eligible-pool list has no fixed size (a wide
+    -- generic bucket can easily run to a few dozen entries), so this can't
+    -- just be a fixed set of pre-built rows the way the line/option rows are.
+    --
+    -- Anchored to the PANEL's own corners, not the title's rendered
+    -- bottom-left -- a single-point "TOP" anchor on the title auto-centers
+    -- it, so its bottom-left X shifts with however wide "Possible Rolls"
+    -- happens to render. That made the scrollframe's actual left edge
+    -- drift inward while its right edge stayed pinned to the panel, so the
+    -- real viewport ended up narrower than PREVIEW_CONTENT_WIDTH -- the
+    -- text had wrapped correctly within its own logical width, but the
+    -- scrollframe clipped anything past its (narrower) true viewport,
+    -- which is what actually caused longer lines to look cut off.
+    local scroll = CreateFrame("ScrollFrame", "AFXReforgePreviewScroll", p, "UIPanelScrollFrameTemplate")
+    scroll:SetPoint("TOPLEFT", p, "TOPLEFT", 16, -44)
+    scroll:SetPoint("BOTTOMRIGHT", p, "BOTTOMRIGHT", -30, 16)
+
+    local content = CreateFrame("Frame", nil, scroll)
+    content:SetSize(PREVIEW_CONTENT_WIDTH, 1)
+    scroll:SetScrollChild(content)
+
+    local text = content:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    text:SetPoint("TOPLEFT", content, "TOPLEFT", 0, 0)
+    text:SetWidth(PREVIEW_CONTENT_WIDTH)  -- explicit, not anchor-derived -- fixes the wrap width directly
+    text:SetJustifyH("LEFT")
+    text:SetWordWrap(true)
+    content._text = text
+    p._content = content
+
+    return p
+end
+
+-- Renders the (already fully-assembled) list of preview-option display
+-- strings sent by the server for one affix slot.
+function AFXReforgeFrame:ShowPreviewPanel(affixSlot, texts)
+    local p = AFXReforgePreviewFrame or BuildPreviewFrame()
+    p:ClearAllPoints()
+    p:SetPoint("LEFT", self, "RIGHT", 8, 0)
+
+    local body
+    if #texts == 0 then
+        body = "|cff888888No other options for this line right now.|r"
+    else
+        local lines = {}
+        for _, t in ipairs(texts) do lines[#lines + 1] = "- " .. t end
+        body = table.concat(lines, "\n")
+    end
+    p._content._text:SetText(body)
+    p._content:SetHeight(math.max(1, p._content._text:GetStringHeight() + 10))
+    p:Show()
+end
+
+-- REFORGEPREVIEW|bag|slot|affixSlot|totalChunks -- header only; the actual
+-- option text arrives in separate REFORGEPREVIEWDATA chunks (same 255-char
+-- addon-message cap and buffer-then-commit pattern as PROG|STATE/PROG|NODES).
+function AFXM:HandleReforgePreviewHeader(bag, slot, affixSlot, totalChunks)
+    local f = AFXReforgeFrame
+    if not f or not f:IsShown() or f.bag ~= bag or f.slot ~= slot then return end
+    f._previewPending = { affixSlot = affixSlot, totalChunks = totalChunks, chunksSeen = 0, texts = {} }
+    if totalChunks == 0 then
+        f._previewPending = nil
+        f:ShowPreviewPanel(affixSlot, {})
+    end
+end
+
+-- REFORGEPREVIEWDATA|bag|slot|affixSlot|chunkIdx|totalChunks|text0|text1|...
+function AFXM:HandleReforgePreviewData(bag, slot, affixSlot, chunkIdx, totalChunks, texts)
+    local f = AFXReforgeFrame
+    if not f or not f:IsShown() or f.bag ~= bag or f.slot ~= slot then return end
+    local pending = f._previewPending
+    if not pending or pending.affixSlot ~= affixSlot then return end
+
+    for _, t in ipairs(texts) do pending.texts[#pending.texts + 1] = t end
+    pending.chunksSeen = pending.chunksSeen + 1
+    if pending.chunksSeen >= pending.totalChunks then
+        f._previewPending = nil
+        f:ShowPreviewPanel(affixSlot, pending.texts)
     end
 end

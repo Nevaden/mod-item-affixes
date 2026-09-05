@@ -222,6 +222,7 @@ struct AffixSlotInfo
     uint8                   rerollsRemaining = 0;  // rerolls left for this pending slot
     uint8                   lockedMask       = 0;  // bitmask: bit N = option N is locked
     int8                    pendingSpec      = -1; // spec tree from addon at roll time; -1=dominant tree
+    bool                    isCrit           = false; // true if rolledValue came from a crit roll (persisted -- see item_affix.is_crit)
 };
 
 // Output of BuildEligibleAffixPools -- the three candidate buckets RollAffixId
@@ -378,6 +379,16 @@ public:
     // item_affix simply keeps its current value -- no separate cancel
     // path needed.
     ReforgePickResult CommitReforgePick(Player* player, Item* item, uint8 affixSlot, uint32 optIdx);
+
+    // Stage 5 (preview panel): every affix eligible for this slot's bucket
+    // (wantPrefix=true = class/spellmod bucket, false = stat/generic bucket)
+    // given this exact player+item context right now -- deduped, no
+    // picking, no rolling, no cost, no side effects. Resolves spec/role/
+    // mainStat/classAffixesBlocked the same way RollReforgeOptions does
+    // (including the ignoreClassAffixMaxPerItem bypass) so the preview
+    // always matches what a real reroll of this slot could actually
+    // produce.
+    std::vector<uint32> GetEligibleAffixesForPreview(Player* player, Item* item, bool wantPrefix);
 
     // Reset all affix rows for an item and re-initialize with UNROLLED slots.
     // Called by .affix reroll command.

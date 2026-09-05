@@ -142,6 +142,63 @@ local function ParseOptsMessage(parts)
 end
 
 -- ----------------------------------------------------------------------------
+-- Independent REFORGEOPTS parsing -- Reforge Master's reroll never reused
+-- OPTS (different message, no lockedMask concept -- every REFORGE_ROLL
+-- generates an entirely fresh candidate set each time, nothing carried over
+-- to skip), so it never triggered this addon's OPTS hook at all.
+-- REFORGEOPTS|bag|slot|affixSlot|text0|text1|...  (text0 is always the
+-- current, carried-over value -- not a fresh roll, so it's skipped the same
+-- way OPTS skips locked options: rerolling an already-crit item shouldn't
+-- re-toast for the crit it already had.)
+-- ----------------------------------------------------------------------------
+
+local function ParseReforgeOptsMessage(parts)
+    local bag  = tonumber(parts[2])
+    local slot = tonumber(parts[3])
+    if not bag or not slot then return end
+
+    for i = 6, #parts do
+        local raw       = parts[i]
+        local prefix    = raw:sub(1, 1)
+        local isImprint = prefix == "~"
+        local isCrit    = prefix == "!"
+        if isImprint or isCrit then
+            local dispText = raw:sub(2)
+            if isImprint then
+                ShowToast("|cffA335EEImprint Rolled!|r\n" .. dispText)
+            else
+                ShowToast("|cffFFD700Critical Roll!|r\n" .. dispText)
+            end
+        end
+    end
+end
+
+-- ----------------------------------------------------------------------------
+-- Independent D3ROLL parsing -- D3 loot mode's equivalent of an OPTS crit/
+-- imprint event. D3 items arrive pre-resolved with no picker step at all, so
+-- there's no OPTS message to hook the way manual mode's roll/reroll gets one;
+-- the server sends this one purpose-built notification instead, one per
+-- crit or Imprint hit, right when AutoRollD3Item resolves the item.
+-- D3ROLL|bag|slot|!text (crit) or D3ROLL|bag|slot|~text (imprint)
+-- ----------------------------------------------------------------------------
+
+local function ParseD3RollMessage(parts)
+    local raw = parts[4]
+    if not raw then return end
+    local prefix    = raw:sub(1, 1)
+    local isImprint = prefix == "~"
+    local isCrit    = prefix == "!"
+    if not (isImprint or isCrit) then return end
+
+    local dispText = raw:sub(2)
+    if isImprint then
+        ShowToast("|cffA335EEImprint Rolled!|r\n" .. dispText)
+    else
+        ShowToast("|cffFFD700Critical Roll!|r\n" .. dispText)
+    end
+end
+
+-- ----------------------------------------------------------------------------
 -- Independent DATA parsing -- for the "still has rolls to do" equip alert.
 -- DATA|bag|slot|slotCount|s0:STATE:text|s1:STATE:text|...
 -- ----------------------------------------------------------------------------
@@ -219,6 +276,10 @@ hooksecurefunc(AFXM, "OnServerMsg", function(_, msg)
     local cmd = parts[1]
     if cmd == "OPTS" then
         ParseOptsMessage(parts)
+    elseif cmd == "REFORGEOPTS" then
+        ParseReforgeOptsMessage(parts)
+    elseif cmd == "D3ROLL" then
+        ParseD3RollMessage(parts)
     elseif cmd == "DATA" then
         ParseDataMessage(parts)
     elseif cmd == "PROG" then

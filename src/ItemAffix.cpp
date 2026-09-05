@@ -20,6 +20,7 @@
 #include "StringFormat.h"
 #include "Tokenize.h"
 #include "WorldPacket.h"
+#include <algorithm>
 #include <cstring>
 #include <sstream>
 
@@ -182,6 +183,22 @@ static float GetSlotBudgetMod(uint32 inventoryType)
     }
 }
 
+// Shared by BuildAffixDisplayString and BuildStatRangeDisplayString so the
+// two display paths (single value vs. preview range) can never drift apart.
+static const char* const kStatNames[] = {
+    "Stamina", "Strength", "Agility", "Intellect", "Spirit",       // 0-4
+    "Attack Power", "Ranged Attack Power", "Spell Power", "Mp5",   // 5-8
+    "Armor", "Crit Rating", "Haste Rating", "Hit Rating",          // 9-12
+    "Dodge Rating", "Defense Rating", "Parry Rating",              // 13-15
+    "Expertise Rating", "Armor Pen Rating",                        // 16-17
+    "Move Speed", "Life Leech", "Hp5", "Damage Reduction",        // 18-21
+};
+
+static char const* GetStatName(uint8 statOp)
+{
+    return (statOp < sizeof(kStatNames) / sizeof(kStatNames[0])) ? kStatNames[statOp] : "Unknown";
+}
+
 // WotLK stat exchange rates: AP is cheap (0.5), SP is slightly cheap (0.86),
 // everything else costs 1.0 per point.
 static float GetStatCost(uint8 statOp)
@@ -226,6 +243,62 @@ static int32 RollBudgetStatValue(uint8 statOp, float budget, float minRoll)
     if (minVal < 1) minVal = 1;
     if (minVal > maxVal) minVal = maxVal;
     return irand(minVal, maxVal);
+}
+
+// Stage 5 preview panel: same logic as RollBudgetStatValue, but returns the
+// [min, max] range instead of picking one random point in it.
+struct StatValueRange { int32 minVal; int32 maxVal; };
+
+static StatValueRange GetBudgetStatValueRange(uint8 statOp, float budget, float minRoll)
+{
+    if (statOp == static_cast<uint8>(GSTAT_MOVE_SPEED))           return {3, 12};
+    if (statOp == static_cast<uint8>(GSTAT_DAMAGE_REDUCTION_PCT)) return {1, 3};
+    if (statOp == static_cast<uint8>(GSTAT_PET_COOLDOWN_PCT))     return {10, 25};
+    if (statOp == static_cast<uint8>(GSTAT_PET_HEALTH_PCT))       return {5, 15};
+    if (statOp == static_cast<uint8>(GSTAT_PET_DAMAGE_PCT))       return {5, 15};
+    if (statOp == static_cast<uint8>(GSTAT_PET_DMGRED_PCT))       return {1, 3};
+    if (statOp == static_cast<uint8>(GSTAT_PET_ATTACKSPEED_PCT))  return {3, 8};
+
+    float cost   = GetStatCost(statOp);
+    int32 maxVal = static_cast<int32>(std::floor(budget / cost));
+    if (maxVal < 1) maxVal = 1;
+    int32 minVal = static_cast<int32>(std::floor(budget * minRoll / cost));
+    if (minVal < 1) minVal = 1;
+    if (minVal > maxVal) minVal = maxVal;
+    return {minVal, maxVal};
+}
+
+// Mirrors BuildAffixDisplayString's STAT branch, but with a value range
+// instead of one rolled number. Collapses to a single value when the range
+// happens to be a single point, so a fixed-range stat (e.g. Move Speed)
+// doesn't render as a redundant "12-12".
+static std::string BuildStatRangeDisplayString(AffixDefinition const* def, int32 minVal, int32 maxVal)
+{
+    auto fmt = [minVal, maxVal](char const* single, char const* range) -> std::string
+    {
+        return minVal == maxVal ? Acore::StringFormat(single, minVal)
+                                 : Acore::StringFormat(range, minVal, maxVal);
+    };
+
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_MOVE_SPEED)
+        return fmt("+{}% Move Speed", "+{}-{}% Move Speed");
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_DAMAGE_REDUCTION_PCT)
+        return fmt("-{}% Damage Taken", "-{}-{}% Damage Taken");
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_COOLDOWN_PCT)
+        return fmt("-{}% Pet Cooldowns", "-{}-{}% Pet Cooldowns");
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_HEALTH_PCT)
+        return fmt("+{}% Pet Health", "+{}-{}% Pet Health");
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_DAMAGE_PCT)
+        return fmt("+{}% Pet Damage", "+{}-{}% Pet Damage");
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_DMGRED_PCT)
+        return fmt("-{}% Pet Dmg Taken", "-{}-{}% Pet Dmg Taken");
+    if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_ATTACKSPEED_PCT)
+        return fmt("+{}% Pet Atk Speed", "+{}-{}% Pet Atk Speed");
+
+    char const* statName = GetStatName(def->statOp);
+    if (minVal == maxVal)
+        return Acore::StringFormat("+{} {}", minVal, statName);
+    return Acore::StringFormat("+{}-{} {}", minVal, maxVal, statName);
 }
 
 float ItemAffixMgr::GetQualityFraction(uint32 quality) const
@@ -1129,6 +1202,45 @@ uint32 ItemAffixMgr::RollAffixId(uint32 itemQuality, Player* player, Item* item,
     return 0;
 }
 
+std::vector<uint32> ItemAffixMgr::GetEligibleAffixesForPreview(Player* player, Item* item, bool wantPrefix)
+{
+    if (!player || !item || !item->GetTemplate())
+        return {};
+
+    uint32 quality = item->GetTemplate()->Quality;
+
+    // Same resolution RollAffixId does internally when called with spec=-1
+    // (as RollReforgeOptions always does) -- the preview has to reproduce
+    // it independently since it calls BuildEligibleAffixPools directly
+    // rather than going through RollAffixId.
+    int8  resolvedSpec = static_cast<int8>(GetDominantTalentTree(player));
+    // ignoreMaxPerItem=true matches RollReforgeOptions's own bypass: the
+    // slot being previewed already holds a class affix and is already
+    // counted toward the cap, so without the bypass the preview would
+    // wrongly show an empty class bucket for exactly the slot being reforged.
+    bool  classAffixesBlocked = IsClassAffixesBlocked(player, item, /*ignoreMaxPerItem*/true);
+    uint8 playerClass    = player->getClass();
+    uint8 roleForRoll     = GetAutoRole(playerClass, resolvedSpec);
+    uint8 mainStatForRoll = GetAutoMainStat(playerClass, resolvedSpec);
+
+    EligibleAffixPools pools = BuildEligibleAffixPools(quality, player, item,
+        /*genericsOnly*/!wantPrefix, /*classOnly*/wantPrefix,
+        roleForRoll, mainStatForRoll, resolvedSpec, classAffixesBlocked);
+
+    std::vector<uint32> out;
+    out.reserve(pools.knownSpecClass.size() + pools.knownOtherSpec.size() + pools.knownGeneric.size());
+    std::unordered_set<uint32> seen;
+    for (auto const* bucket : { &pools.knownSpecClass, &pools.knownOtherSpec, &pools.knownGeneric })
+    {
+        for (uint32 id : *bucket)
+        {
+            if (seen.insert(id).second)
+                out.push_back(id);
+        }
+    }
+    return out;
+}
+
 // ---------------------------------------------------------------------------
 // Database helpers
 // ---------------------------------------------------------------------------
@@ -1137,7 +1249,7 @@ std::vector<AffixSlotInfo> ItemAffixMgr::LoadAffixSlots(uint64 itemGuid)
 {
     QueryResult result = CharacterDatabase.Query(
         "SELECT affix_slot, roll_state, affix_id, rolled_value, pending_opts, "
-        "rerolls_remaining, locked_mask, pending_spec "
+        "rerolls_remaining, locked_mask, pending_spec, is_crit "
         "FROM item_affix WHERE item_guid = {} ORDER BY affix_slot",
         itemGuid);
 
@@ -1155,6 +1267,7 @@ std::vector<AffixSlotInfo> ItemAffixMgr::LoadAffixSlots(uint64 itemGuid)
         s.rerollsRemaining = f[5].Get<uint8>();
         s.lockedMask       = f[6].Get<uint8>();
         s.pendingSpec      = f[7].Get<int8>();
+        s.isCrit           = f[8].Get<uint8>() != 0;
         std::string opts   = f[4].Get<std::string>();
         if (!opts.empty())
             for (auto part : Acore::Tokenize(opts, ',', false))
@@ -1455,6 +1568,16 @@ void ItemAffixMgr::AutoRollD3Item(Player* player, Item* item, uint8 existingCoun
     uint32 effectiveCritChance = std::min<uint32>(_critRollChance +
         uint32(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_CRIT_ROLL_CHANCE)), 100);
 
+    // D3ROLL|bag|slot|!text / D3ROLL|bag|slot|~text -- purely a notification
+    // for the optional ItemAffixesToast companion addon. Manual mode's
+    // interactive OPTS message already gives that addon a crit/imprint event
+    // to hook; D3 mode has no equivalent message at all since items arrive
+    // pre-resolved with no picker step, so without this a drop that crits or
+    // grants an Imprint toasts nothing. ItemAffixes.lua's own dispatcher
+    // ignores unrecognized commands, so this is a no-op for anyone not
+    // running the toast addon.
+    auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+
     for (uint8 slot = existingCount; slot < numSlots; ++slot)
     {
         bool wantPrefix = !isGem && (slot < prefixCount);
@@ -1467,7 +1590,11 @@ void ItemAffixMgr::AutoRollD3Item(Player* player, Item* item, uint8 existingCoun
         if (wantPrefix && urand(0, 99) < _imprintRollChance)
         {
             if (ImprintDef const* impDef = sImprintMgr->GetEligibleImprintForRoll(player, item, static_cast<int8>(resolvedSpec)))
+            {
                 sImprintMgr->ApplyImprintFromRoll(player, item, impDef->id);
+                SendAddonMsg(player, Acore::StringFormat("D3ROLL|{}|{}|~{}",
+                    uint32(luaBag), uint32(luaSlot), impDef->name));
+            }
         }
 
         // D3OverrideClassAffixMaxPerItem controls whether ClassAffixMaxPerItem still
@@ -1513,20 +1640,29 @@ void ItemAffixMgr::AutoRollD3Item(Player* player, Item* item, uint8 existingCoun
         }
 
         // Crit roll, evaluated independently per slot, same chance/effect as manual mode.
-        if (def && _critRollEnabled && urand(0, 99) < effectiveCritChance)
+        // Persisted via is_crit below -- STAT values have no reserved sentinel
+        // the way SPELLMOD's 150/200/250 does, so without a real column a
+        // crit-boosted stat would be visually indistinguishable from a normal
+        // high roll (confirmed via temp logging: the roll was firing correctly
+        // all along, it just never got the "!" -> gold-color treatment).
+        bool critHit = def && _critRollEnabled && urand(0, 99) < effectiveCritChance;
+        if (critHit)
         {
             if (def->affixType == AFFIX_TYPE_STAT)
                 rolledValue = (rolledValue * 3 + 1) / 2;
             else if (def->affixType == AFFIX_TYPE_SPELLMOD)
                 rolledValue = (rolledValue == 150) ? 250 : 200;
+
+            SendAddonMsg(player, Acore::StringFormat("D3ROLL|{}|{}|!{}",
+                uint32(luaBag), uint32(luaSlot), BuildAffixDisplayString(def, rolledValue)));
         }
 
         CharacterDatabase.DirectExecute(
-            "INSERT INTO item_affix (item_guid, affix_slot, affix_id, rolled_value, roll_state, pending_opts) "
-            "VALUES ({}, {}, {}, {}, {}, '') "
-            "ON DUPLICATE KEY UPDATE affix_id = {}, rolled_value = {}, roll_state = {}, pending_opts = ''",
-            itemGuid, slot, id, rolledValue, uint8(AFFIX_ROLL_APPLIED),
-            id, rolledValue, uint8(AFFIX_ROLL_APPLIED));
+            "INSERT INTO item_affix (item_guid, affix_slot, affix_id, rolled_value, roll_state, pending_opts, is_crit) "
+            "VALUES ({}, {}, {}, {}, {}, '', {}) "
+            "ON DUPLICATE KEY UPDATE affix_id = {}, rolled_value = {}, roll_state = {}, pending_opts = '', is_crit = {}",
+            itemGuid, slot, id, rolledValue, uint8(AFFIX_ROLL_APPLIED), uint8(critHit),
+            id, rolledValue, uint8(AFFIX_ROLL_APPLIED), uint8(critHit));
 
         sPlayerProgressionMgr->GrantAffixXP(player, quality);
 
@@ -2191,11 +2327,12 @@ void ItemAffixMgr::SendConfig(Player* player)
     bool showType = _enableClassSkillAffixes && _enableClassSkillAffixSelection;
     bool showSpec = showType || (_enableTalentAffixes && _enableTalentAffixSelection);
 
-    SendAddonMsg(player, Acore::StringFormat("CONFIG|{}|{}|{}|{}",
+    SendAddonMsg(player, Acore::StringFormat("CONFIG|{}|{}|{}|{}|{}",
         showType     ? 1 : 0,
         showSpec     ? 1 : 0,
         showRole     ? 1 : 0,
-        showMainStat ? 1 : 0));
+        showMainStat ? 1 : 0,
+        uint32(_lootMode)));
 }
 
 // ---------------------------------------------------------------------------
@@ -2247,17 +2384,7 @@ std::string ItemAffixMgr::BuildAffixDisplayString(AffixDefinition const* def, in
         if (static_cast<GenericStatOp>(def->statOp) == GSTAT_PET_ATTACKSPEED_PCT)
             return Acore::StringFormat("+{}% Pet Atk Speed", rolledValue);
 
-        static const char* statNames[] = {
-            "Stamina", "Strength", "Agility", "Intellect", "Spirit",       // 0-4
-            "Attack Power", "Ranged Attack Power", "Spell Power", "Mp5",   // 5-8
-            "Armor", "Crit Rating", "Haste Rating", "Hit Rating",          // 9-12
-            "Dodge Rating", "Defense Rating", "Parry Rating",              // 13-15
-            "Expertise Rating", "Armor Pen Rating",                        // 16-17
-            "Move Speed", "Life Leech", "Hp5", "Damage Reduction",        // 18-21
-        };
-        const char* statName = (def->statOp < sizeof(statNames) / sizeof(statNames[0]))
-                             ? statNames[def->statOp] : "Unknown";
-        return Acore::StringFormat("+{} {}", rolledValue, statName);
+        return Acore::StringFormat("+{} {}", rolledValue, GetStatName(def->statOp));
     }
 
     // Spellmod affix: name is human-readable; scale numeric values for 2H/crit boost.
@@ -2383,7 +2510,7 @@ void ItemAffixMgr::SendItemStatus(Player* player, Item* item, std::string const&
                 if (auto const* def = GetAffixDef(s.affixId))
                 {
                     text = BuildAffixDisplayString(def, s.rolledValue);
-                    if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
+                    if (s.isCrit)
                         text = "!" + text;
                 }
                 break;
@@ -2744,7 +2871,7 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
         sImprintMgr->ApplyImprintFromRoll(player, item, chosen.GetImprintId());
 
         CharacterDatabase.Execute(
-            "UPDATE item_affix SET roll_state = {}, affix_id = 0, rolled_value = 0, pending_opts = '' "
+            "UPDATE item_affix SET roll_state = {}, affix_id = 0, rolled_value = 0, pending_opts = '', is_crit = 0 "
             "WHERE item_guid = {} AND affix_slot = {}",
             uint8(AFFIX_ROLL_UNROLLED), itemGuid, uint32(affixSlot));
 
@@ -2764,9 +2891,9 @@ void ItemAffixMgr::HandlePickOption(Player* player, Item* item, uint8 affixSlot,
     // a plain async Execute here would race those reads, same class of bug
     // documented for InitTalentAffix elsewhere in this file.
     CharacterDatabase.DirectExecute(
-        "UPDATE item_affix SET roll_state = {}, affix_id = {}, rolled_value = {}, pending_opts = '' "
+        "UPDATE item_affix SET roll_state = {}, affix_id = {}, rolled_value = {}, pending_opts = '', is_crit = {} "
         "WHERE item_guid = {} AND affix_slot = {}",
-        uint8(AFFIX_ROLL_APPLIED), chosen.affixId, rolledValue, itemGuid, uint32(affixSlot));
+        uint8(AFFIX_ROLL_APPLIED), chosen.affixId, rolledValue, uint8(chosen.isCrit), itemGuid, uint32(affixSlot));
 
     // Player Progression: PENDING -> APPLIED is the one-shot per-affix XP trigger.
     if (ItemTemplate const* proto = item->GetTemplate())
@@ -3179,9 +3306,11 @@ ReforgeRollResult ItemAffixMgr::RollReforgeOptions(Player* player, Item* item, u
         "ON DUPLICATE KEY UPDATE reroll_count = {}, pending_opts = ''",
         itemGuid, uint32(affixSlot), newRerollCount, newRerollCount);
 
-    // Candidate 0, always first: the item's current value, verbatim.
+    // Candidate 0, always first: the item's current value, verbatim -- including
+    // whether it was itself a crit, so picking "keep current" doesn't silently
+    // erase an existing crit's is_crit flag.
     std::vector<PendingOpt> opts;
-    opts.push_back({ slots[affixSlot].affixId, slots[affixSlot].rolledValue, false });
+    opts.push_back({ slots[affixSlot].affixId, slots[affixSlot].rolledValue, slots[affixSlot].isCrit });
 
     // Bucket is whatever the *current* affix already is, not slot position --
     // this works uniformly for Manual-mode items (no inherent prefix/suffix
@@ -3236,6 +3365,27 @@ ReforgeRollResult ItemAffixMgr::RollReforgeOptions(Player* player, Item* item, u
         opts.push_back({ id, val, false });
     }
 
+    // Crit roll: same per-option chance/effect as HandleRollRequest and
+    // AutoRollD3Item -- this was simply never ported here before, so a
+    // Reforge reroll could never produce a crit option no matter how high
+    // CritRollChance was configured. opts[0] (the current value) is
+    // deliberately skipped -- it's never re-rolled, so it can't crit.
+    uint32 effectiveCritChance = std::min<uint32>(_critRollChance +
+        uint32(sPlayerProgressionMgr->GetNodeBonus(player->GetGUID().GetRawValue(), NODE_CRIT_ROLL_CHANCE)), 100);
+    for (size_t i = 1; i < opts.size(); ++i)
+    {
+        if (!_critRollEnabled || urand(0, 99) >= effectiveCritChance)
+            continue;
+        PendingOpt& opt = opts[i];
+        opt.isCrit = true;
+        auto const* d = GetAffixDef(opt.affixId);
+        if (!d) continue;
+        if (d->affixType == AFFIX_TYPE_STAT)
+            opt.rolledValue = (opt.rolledValue * 3 + 1) / 2;
+        else if (d->affixType == AFFIX_TYPE_SPELLMOD)
+            opt.rolledValue = (opt.rolledValue == 150) ? 250 : 200;
+    }
+
     CharacterDatabase.DirectExecute(
         "UPDATE item_reforge_state SET pending_opts = '{}' WHERE item_guid = {}",
         SerializeReforgeOpts(opts), itemGuid);
@@ -3271,8 +3421,8 @@ ReforgePickResult ItemAffixMgr::CommitReforgePick(Player* player, Item* item, ui
     PendingOpt const& chosen = opts[optIdx];
 
     CharacterDatabase.DirectExecute(
-        "UPDATE item_affix SET affix_id = {}, rolled_value = {} WHERE item_guid = {} AND affix_slot = {}",
-        chosen.affixId, chosen.rolledValue, itemGuid, uint32(affixSlot));
+        "UPDATE item_affix SET affix_id = {}, rolled_value = {}, is_crit = {} WHERE item_guid = {} AND affix_slot = {}",
+        chosen.affixId, chosen.rolledValue, uint8(chosen.isCrit), itemGuid, uint32(affixSlot));
     CharacterDatabase.DirectExecute(
         "UPDATE item_reforge_state SET pending_opts = '' WHERE item_guid = {}", itemGuid);
 
@@ -3347,7 +3497,7 @@ void ItemAffixMgr::AppendAffixPayload(std::string& msg, uint64 rawGuid,
                 if (auto const* def = GetAffixDef(s.affixId))
                 {
                     text = BuildAffixDisplayString(def, s.rolledValue);
-                    if (def->affixType == AFFIX_TYPE_SPELLMOD && (s.rolledValue == 200 || s.rolledValue == 250))
+                    if (s.isCrit)
                         text = "!" + text;
                 }
                 break;
@@ -3914,6 +4064,10 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
             std::string text;
             if (auto const* def = GetAffixDef(opt.affixId))
                 text = BuildAffixDisplayString(def, opt.rolledValue);
+            // "!" prefix marks a crit option -- same convention SendRollOptions
+            // uses, stripped and re-styled client-side.
+            if (opt.isCrit)
+                text = "!" + text;
             msg += "|" + text;
         }
         SendAddonMsg(player, msg);
@@ -3939,5 +4093,86 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
             SendAddonMsg(player, Acore::StringFormat("ERR|{}|{}|{}", uint32(luaBag), uint32(luaSlot), reason));
         }
         // On success, CommitReforgePick already called SendItemStatus.
+    }
+    else if (cmd == "REFORGE_PREVIEW" && parts.size() >= 4)
+    {
+        auto affixSlotOpt = Acore::StringTo<uint8>(parts[3]);
+        if (!affixSlotOpt) return;
+        auto [luaBag, luaSlot] = GetLuaBagSlot(item);
+
+        auto slots = LoadAffixSlots(item->GetGUID().GetRawValue());
+        if (*affixSlotOpt >= slots.size() || slots[*affixSlotOpt].rollState != AFFIX_ROLL_APPLIED
+            || slots[*affixSlotOpt].affixId == 0)
+        {
+            SendAddonMsg(player, Acore::StringFormat("ERR|{}|{}|{}",
+                uint32(luaBag), uint32(luaSlot), "That line hasn't been rolled yet."));
+            return;
+        }
+        auto const* currentDef = GetAffixDef(slots[*affixSlotOpt].affixId);
+        if (!currentDef)
+            return;
+        bool wantPrefix = (currentDef->affixType != AFFIX_TYPE_STAT);
+
+        std::vector<uint32> ids = GetEligibleAffixesForPreview(player, item, wantPrefix);
+
+        ItemTemplate const* proto = item->GetTemplate();
+        float itemBudget = proto
+            ? ComputeItemBudget(proto->ItemLevel) * GetSlotBudgetMod(proto->InventoryType) * GetQualityFraction(proto->Quality)
+            : 0.0f;
+        bool is2H = Is2HWeapon(item);
+
+        std::vector<std::string> texts;
+        texts.reserve(ids.size());
+        for (uint32 id : ids)
+        {
+            auto const* def = GetAffixDef(id);
+            if (!def)
+                continue;
+            if (def->affixType == AFFIX_TYPE_STAT)
+            {
+                StatValueRange range = GetBudgetStatValueRange(def->statOp, itemBudget, _budgetMinRoll);
+                if (is2H)
+                {
+                    range.minVal = (range.minVal * 3 + 1) / 2;
+                    range.maxVal = (range.maxVal * 3 + 1) / 2;
+                }
+                texts.push_back(BuildStatRangeDisplayString(def, range.minVal, range.maxVal));
+            }
+            else
+            {
+                // Base/plain value only -- not attempting the 2H/crit double-range
+                // notation D3 uses for these, same as the existing roll-option UI.
+                texts.push_back(BuildAffixDisplayString(def, 0));
+            }
+        }
+        std::sort(texts.begin(), texts.end());
+
+        // Same 255-char addon-message cap as everywhere else in this protocol
+        // (see PlayerProgressionMgr::SendProgState) -- a full eligible pool can
+        // easily run past that inline, so it's split into a tiny header plus
+        // one or more REFORGEPREVIEWDATA chunks the client buffers and commits
+        // once all have arrived.
+        static constexpr size_t kChunkBudget = 180;
+        std::vector<std::string> chunks;
+        std::string current;
+        for (std::string const& text : texts)
+        {
+            if (!current.empty() && current.size() + 1 + text.size() > kChunkBudget)
+            {
+                chunks.push_back(current);
+                current.clear();
+            }
+            if (!current.empty())
+                current += "|";
+            current += text;
+        }
+        if (!current.empty())
+            chunks.push_back(current);
+
+        SendAddonMsg(player, Acore::StringFormat("REFORGEPREVIEW|{}|{}|{}|{}",
+            uint32(luaBag), uint32(luaSlot), uint32(*affixSlotOpt), chunks.size()));
+        for (size_t i = 0; i < chunks.size(); ++i)
+            SendAddonMsg(player, Acore::StringFormat("REFORGEPREVIEWDATA|{}|{}|{}|{}|{}|{}",
+                uint32(luaBag), uint32(luaSlot), uint32(*affixSlotOpt), i, chunks.size(), chunks[i]));
     }
 }
