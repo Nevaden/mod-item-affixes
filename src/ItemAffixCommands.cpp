@@ -33,8 +33,9 @@ public:
         };
         static ChatCommandTable affixCommandTable =
         {
-            { "reroll",       HandleAffixRerollCommand, rbac::RBAC_PERM_COMMAND_GM, Console::No },
-            { "info",         HandleAffixInfoCommand,   rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "reroll",       HandleAffixRerollCommand,   rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "info",         HandleAffixInfoCommand,     rbac::RBAC_PERM_COMMAND_GM, Console::No },
+            { "talents",      HandleAffixTalentsCommand,  rbac::RBAC_PERM_COMMAND_GM, Console::No },
             { "progression",  progressionCommandTable },
             { "reforge",      reforgeCommandTable },
         };
@@ -125,6 +126,37 @@ public:
         if (!anyItem)
             handler->SendSysMessage("No equipped items have affix data.");
 
+        return true;
+    }
+
+    // .affix talents -- debug: dumps the SERVER-SIDE state of currently-active
+    // talent-affix SpellModifiers (activeTalentMods), independent of any
+    // client display. Use this to check whether a talent affix's SpellModifier
+    // is genuinely still attached after removing an item, since the character
+    // pane's crit % display can lag behind the real server state until an
+    // unrelated stat recompute happens to trigger a repaint.
+    static bool HandleAffixTalentsCommand(ChatHandler* handler)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        ItemAffixPlayerData* data = player->CustomData.GetDefault<ItemAffixPlayerData>("ItemAffixData");
+
+        if (data->activeTalentMods.empty())
+        {
+            handler->SendSysMessage("No active talent-affix SpellModifiers.");
+            return true;
+        }
+
+        for (auto const& [guid, mods] : data->activeTalentMods)
+        {
+            Item* item = player->GetItemByGuid(ObjectGuid(guid));
+            handler->PSendSysMessage("|cffFFFF00[item guid {}]|r {}",
+                guid, (item && item->GetTemplate()) ? item->GetTemplate()->Name1.c_str() : "(NOT currently equipped)");
+            for (SpellModifier const* mod : mods)
+            {
+                handler->PSendSysMessage("  spellId={} op={} type={} value={}",
+                    mod->spellId, static_cast<int>(mod->op), static_cast<int>(mod->type), mod->value);
+            }
+        }
         return true;
     }
 
