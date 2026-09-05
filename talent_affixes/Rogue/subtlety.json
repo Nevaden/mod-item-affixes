@@ -139,7 +139,7 @@
       "class": "ROGUE", "spec_tree": 2, "max_rank": 3,
       "spell_family": "ROGUE", "family_flags": [512, 0, 0],
       "carrier_spell": 8676, "carrier_name": "Ambush",
-      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 1500,
+      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 15,
       "notes": "Ambush crit +15% per bonus rank. Ambush=0x00800200 (bits 9,23) — using unique bit9 only (0x00000200=512). Bit 23 excluded — shared with SS/Backstab/Eviscerate/Hemorrhage.",
       "verified": true, "verify_command": ".spellinfo all 8676"
     },

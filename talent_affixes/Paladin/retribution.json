@@ -74,7 +74,7 @@
       "carrier_name": "Crusader Strike",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 100,
+      "value_per_rank": 1,
       "notes": "All paladin spell crit +1% per rank — all-ones mask matches every Paladin family spell. Carrier Crusader Strike(35395) confirmed Paladin family.",
       "verified": true, "verify_command": ".spellinfo all 35395"
     },
@@ -99,7 +99,7 @@
       "carrier_name": "Seal of Righteousness",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 100,
+      "value_per_rank": 1,
       "notes": "flags=[134217728,536870912,0]: same as Holy id=200 Seals of the Pure — SoR mask0 bit27|mask1 bit29. NOTE: Seal of Vengeance(31801) not yet run. Seal crit +1%/rank (CRIT_CHANCE FLAT: 100=1%). Dispel resistance not implementable.",
       "verified": true
     },

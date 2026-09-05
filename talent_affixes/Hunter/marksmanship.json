@@ -61,7 +61,7 @@
       "carrier_name": "Arcane Shot",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 100,
+      "value_per_rank": 1,
       "notes": "All-ones — ranged attack crits cannot be targeted as a Hunter SpellMod sub-type; all-ones is the only viable scope. Carrier Arcane Shot(3044) confirmed SPELLFAMILY_HUNTER. Hunter spell crit +1%/rank.",
       "verified": true
     },

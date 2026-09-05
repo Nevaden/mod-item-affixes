@@ -243,7 +243,7 @@
       "carrier_name": "Flash Heal",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 400,
+      "value_per_rank": 4,
       "notes": "flags=[6144,8388608,0]: Flash Heal(2061) mask0 bit11(0x800=2048) | Greater Heal(2060) mask0 bit12(0x1000=4096)=6144; Penance(47540) mask1 bit23(0x800000=8388608). Crit +4%/rank (CRIT_CHANCE FLAT: 400=4%).",
       "verified": true
     },

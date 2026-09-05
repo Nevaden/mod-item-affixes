@@ -127,7 +127,7 @@
       "carrier_name": "Holy Light",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 200,
+      "value_per_rank": 2,
       "notes": "flags=[2149580800,0,0]=0x80200000: HL(635) mask0 bit31(0x80000000=2147483648)|HS(20473) mask0 bit21(0x200000=2097152). No shared Paladin marker bits. Crit chance +2%/rank (CRIT_CHANCE FLAT: 200=2%).",
       "verified": true
     },

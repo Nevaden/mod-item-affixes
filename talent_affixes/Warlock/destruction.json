@@ -101,7 +101,7 @@
       "carrier_name": "Searing Pain",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 400,
+      "value_per_rank": 4,
       "notes": "flags=[256,0,0]=0x00000100 (mask0 bit8). No shared Warlock marker bits. Searing Pain crit chance +4%/rank (CRIT_CHANCE FLAT: 400=4%).",
       "verified": true
     },

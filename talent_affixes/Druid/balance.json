@@ -73,7 +73,7 @@
       "carrier_name": "Starfire",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 200,
+      "value_per_rank": 2,
       "notes": "flags=[37,33554432,0]: OR of Wrath(5176) mask0 bit0(0x1=1)|Starfire(2912) mask0 bit2(0x4=4)|HealingTouch(5185) mask0 bit5(0x20=32)|Nourish(50464) mask1 bit25(0x2000000=33554432). Starfall not yet included — OR in once flags confirmed. Crit +2%/rank (CRIT_CHANCE FLAT: 200=2%).",
       "verified": true
     },

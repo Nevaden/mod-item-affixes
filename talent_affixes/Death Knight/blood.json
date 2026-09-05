@@ -75,7 +75,7 @@
       "carrier_name": "Blood Strike",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 300,
+      "value_per_rank": 3,
       "notes": "flags=[20971520,131072,0]. mask0: BloodStrike(45902) bit22(4194304)|HeartStrike(55050) bit24(16777216)=20971520 (0x01400000). mask1: Obliterate(49020) bit17(131072). No shared bits across all three spells. Carrier BloodStrike(45902) confirmed SPELLFAMILY_DK. Blood Strike, Heart Strike, and Obliterate crit chance +3%/rank (CRIT_CHANCE FLAT: 300). WotLK: 3r at +3/+6/+9%.",
       "verified": true
     },

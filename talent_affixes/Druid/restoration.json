@@ -95,7 +95,7 @@
       "carrier_name": "Regrowth",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 1000,
+      "value_per_rank": 10,
       "notes": "flags=[64,0,0]=0x00000040 (mask0 bit6). No shared Druid marker bits. Regrowth crit chance +10%/rank (CRIT_CHANCE FLAT: 1000=10%).",
       "verified": true
     },

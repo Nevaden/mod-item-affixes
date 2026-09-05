@@ -58,7 +58,7 @@
       "carrier_name": "Power Word: Shield",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 100,
+      "value_per_rank": 1,
       "notes": "Holy spell crit +1%/rank (CRIT_CHANCE FLAT: 100=1%). All-ones matches every Priest spell.",
       "verified": true
     },

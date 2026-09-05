@@ -80,7 +80,7 @@
       "carrier_name": "Lightning Bolt",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 100,
+      "value_per_rank": 1,
       "notes": "flags=[3,0,0]=0x00000003. OR of LightningBolt(403) bit0(1)|ChainLightning(421) bit1(2). No shared bits. Carrier Lightning Bolt(403) confirmed SPELLFAMILY_SHAMAN. LB and CL crit chance +1%/rank (CRIT_CHANCE FLAT: 100). WotLK: 5r at +1/+2/+3/+4/+5%.",
       "verified": true
     },

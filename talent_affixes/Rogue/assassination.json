@@ -68,7 +68,7 @@
       "class": "ROGUE", "spec_tree": 0, "max_rank": 5,
       "spell_family": "ROGUE", "family_flags": [4294967295, 4294967295, 4294967295],
       "carrier_spell": 1752, "carrier_name": "Sinister Strike",
-      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 100,
+      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 1,
       "notes": "All Rogue ability crit +1% per bonus rank — all-ones mask matches every Rogue family spell",
       "verified": true, "verify_command": ".spellinfo all 1752"
     },
@@ -133,7 +133,7 @@
       "class": "ROGUE", "spec_tree": 0, "max_rank": 3,
       "spell_family": "ROGUE", "family_flags": [4, 2097152, 0],
       "carrier_spell": 53, "carrier_name": "Backstab",
-      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 1000,
+      "spellmod_op": "CRIT_CHANCE", "spellmod_type": "FLAT", "value_per_rank": 10,
       "item_category": 8,
       "notes": "Backstab + Mutilate crit +10% per bonus rank. flags=[4,2097152,0] confirmed: Backstab=0x00000004, Mutilate=0x00200000 (mask1)",
       "verified": true, "verify_command": ".spellinfo all 53 then .spellinfo all 1329"

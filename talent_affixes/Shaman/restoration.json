@@ -73,7 +73,7 @@
       "carrier_name": "Healing Wave",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 100,
+      "value_per_rank": 1,
       "notes": "flags=[449,0,0]=0x000001C1. OR of HealingWave(331) bit6(64)|LesserHW(8004) bit7(128)|ChainHeal(1064) bit8(256)|LightningBolt(403) bit0(1). No shared bits — all four spells have unique SHAMAN family bits. Carrier Healing Wave(331) confirmed SPELLFAMILY_SHAMAN. Crit chance of healing spells and Lightning Bolt +1%/rank (CRIT_CHANCE FLAT: 100). WotLK: 5r at +1/+2/+3/+4/+5%.",
       "verified": true
     },

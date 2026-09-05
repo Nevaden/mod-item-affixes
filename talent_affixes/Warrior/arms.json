@@ -99,7 +99,7 @@
       "carrier_name": "Overpower",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 2500,
+      "value_per_rank": 25,
       "notes": "flags=[4,0,0]=0x00000004 (mask0 bit2). Overpower crit chance +25%/rank (CRIT_CHANCE FLAT: 2500=25%).",
       "verified": true
     },

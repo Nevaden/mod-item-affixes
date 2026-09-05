@@ -60,7 +60,7 @@
       "carrier_name": "Fire Blast",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 200,
+      "value_per_rank": 2,
       "notes": "flags=[18,0,0]=0x00000012. OR of FireBlast(2136) mask0 bit1(2)|Scorch(2948) mask0 bit4(16). No shared bits between these two spells. Fire Blast and Scorch crit chance +2%/rank (CRIT_CHANCE FLAT: 200 = 2%). WotLK: 2r at +2/+4%.",
       "verified": true
     },
@@ -99,7 +99,7 @@
       "carrier_name": "Fireball",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 200,
+      "value_per_rank": 2,
       "notes": "All-ones — Fire spell sub-family not isolatable via SpellMod (no confirmed shared Fire-only bit). Acceptable scope for Fire spec affix. Carrier Fireball(133) confirmed SPELLFAMILY_MAGE. All Mage spell crit chance +2%/rank (CRIT_CHANCE FLAT: 200 = 2%). WotLK: 3r at +2/+4/+6%.",
       "verified": true
     },

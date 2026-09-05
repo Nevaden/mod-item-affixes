@@ -42,7 +42,7 @@
       "carrier_name": "Plague Strike",
       "spellmod_op": "CRIT_CHANCE",
       "spellmod_type": "FLAT",
-      "value_per_rank": 500,
+      "value_per_rank": 5,
       "notes": "flags=[1,134217728,0]. mask0: PlagueStrike(45462) bit0(1) (0x00000001). mask1: ScourgeStrike(55090) bit27(134217728) (0x08000000). No shared bits across different masks. Carrier PlagueStrike(45462) confirmed SPELLFAMILY_DK. Plague Strike and Scourge Strike crit chance +5%/rank (CRIT_CHANCE FLAT: 500). WotLK: 2r at +5/+10%.",
       "verified": true
     },
