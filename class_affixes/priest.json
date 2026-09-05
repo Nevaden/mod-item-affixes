@@ -125,7 +125,7 @@
                     },
                     {
                         "id":  1004,
-                        "name":  "Smite: +20% Dmg, -750ms",
+                        "name":  "Smite: +20% Damage, -750ms",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -157,7 +157,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3894,
-                                        "display_name":  "Smite: +20% Dmg, -750ms"
+                                        "display_name":  "Smite: +20% Damage, -750ms"
                                     }
                     },
                     {
@@ -222,7 +222,7 @@
                     },
                     {
                         "id":  1007,
-                        "name":  "Psychic Scream: -10s CD, +3s Duration",
+                        "name":  "Psychic Scream: -10s Cooldown, +3s Duration",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -254,7 +254,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3897,
-                                        "display_name":  "Psychic Scream: -10s CD, +3s Duration"
+                                        "display_name":  "Psychic Scream: -10s Cooldown, +3s Duration"
                                     }
                     },
                     {
@@ -319,7 +319,7 @@
                     },
                     {
                         "id":  1010,
-                        "name":  "Desperate Prayer: +25% Heal, -15s CD",
+                        "name":  "Desperate Prayer: +25% Heal, -15s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -351,7 +351,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3900,
-                                        "display_name":  "Desperate Prayer: +25% Heal, -15s CD"
+                                        "display_name":  "Desperate Prayer: +25% Heal, -15s Cooldown"
                                     }
                     },
                     {
@@ -476,7 +476,7 @@
                     },
                     {
                         "id":  1015,
-                        "name":  "Holy Fire: +20% Dmg, -5s CD",
+                        "name":  "Holy Fire: +20% Damage, -5s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -508,7 +508,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3905,
-                                        "display_name":  "Holy Fire: +20% Dmg, -5s CD"
+                                        "display_name":  "Holy Fire: +20% Damage, -5s Cooldown"
                                     }
                     },
                     {
@@ -573,7 +573,7 @@
                     },
                     {
                         "id":  1018,
-                        "name":  "Holy Nova: +20% Dmg, +5% Crit",
+                        "name":  "Holy Nova: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -605,7 +605,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3908,
-                                        "display_name":  "Holy Nova: +20% Dmg, +5% Crit"
+                                        "display_name":  "Holy Nova: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -790,7 +790,7 @@
                     },
                     {
                         "id":  1025,
-                        "name":  "Mind Blast: +20% Dmg, -3s CD",
+                        "name":  "Mind Blast: +20% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -822,7 +822,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3915,
-                                        "display_name":  "Mind Blast: +20% Dmg, -3s CD"
+                                        "display_name":  "Mind Blast: +20% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -887,7 +887,7 @@
                     },
                     {
                         "id":  1028,
-                        "name":  "Mind Sear: +20% Dmg, -500ms Channel",
+                        "name":  "Mind Sear: +20% Damage, -500ms Channel",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -919,7 +919,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3918,
-                                        "display_name":  "Mind Sear: +20% Dmg, -500ms Channel"
+                                        "display_name":  "Mind Sear: +20% Damage, -500ms Channel"
                                     }
                     },
                     {
@@ -984,7 +984,7 @@
                     },
                     {
                         "id":  1031,
-                        "name":  "Penance: +20% Power, -3s CD",
+                        "name":  "Penance: +20% Power, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1016,7 +1016,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3921,
-                                        "display_name":  "Penance: +20% Power, -3s CD"
+                                        "display_name":  "Penance: +20% Power, -3s Cooldown"
                                     }
                     },
                     {
@@ -1238,7 +1238,7 @@
                     },
                     {
                         "id":  1039,
-                        "name":  "Circle of Healing: +20% Heal, -2s CD",
+                        "name":  "Circle of Healing: +20% Heal, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1270,7 +1270,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3929,
-                                        "display_name":  "Circle of Healing: +20% Heal, -2s CD"
+                                        "display_name":  "Circle of Healing: +20% Heal, -2s Cooldown"
                                     }
                     },
                     {
@@ -1649,7 +1649,7 @@
                     },
                     {
                         "id":  1052,
-                        "name":  "Prayer of Mending: +20% Heal, -3s CD",
+                        "name":  "Prayer of Mending: +20% Heal, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1681,7 +1681,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3942,
-                                        "display_name":  "Prayer of Mending: +20% Heal, -3s CD"
+                                        "display_name":  "Prayer of Mending: +20% Heal, -3s Cooldown"
                                     }
                     },
                     {
@@ -1873,7 +1873,7 @@
                     },
                     {
                         "id":  1059,
-                        "name":  "Divine Hymn: +25% Heal, -1min CD",
+                        "name":  "Divine Hymn: +25% Heal, -1min Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1905,7 +1905,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3949,
-                                        "display_name":  "Divine Hymn: +25% Heal, -1min CD"
+                                        "display_name":  "Divine Hymn: +25% Heal, -1min Cooldown"
                                     }
                     }
                 ],

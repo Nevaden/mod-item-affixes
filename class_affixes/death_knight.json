@@ -65,7 +65,7 @@
                     },
                     {
                         "id":  10002,
-                        "name":  "Icy Touch: +20% Dmg, +5% Crit",
+                        "name":  "Icy Touch: +20% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -97,7 +97,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4262,
-                                        "display_name":  "Icy Touch: +20% Dmg, +5% Crit"
+                                        "display_name":  "Icy Touch: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -162,7 +162,7 @@
                     },
                     {
                         "id":  10005,
-                        "name":  "Death Coil: +20% Dmg, +5% Crit",
+                        "name":  "Death Coil: +20% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -194,7 +194,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4265,
-                                        "display_name":  "Death Coil: +20% Dmg, +5% Crit"
+                                        "display_name":  "Death Coil: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -259,7 +259,7 @@
                     },
                     {
                         "id":  10008,
-                        "name":  "Obliterate: +20% Dmg, +5% Crit",
+                        "name":  "Obliterate: +20% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -291,7 +291,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4268,
-                                        "display_name":  "Obliterate: +20% Dmg, +5% Crit"
+                                        "display_name":  "Obliterate: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -386,7 +386,7 @@
                     },
                     {
                         "id":  10012,
-                        "name":  "Howling Blast: +20% Dmg, -3s CD",
+                        "name":  "Howling Blast: +20% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -418,7 +418,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4272,
-                                        "display_name":  "Howling Blast: +20% Dmg, -3s CD"
+                                        "display_name":  "Howling Blast: +20% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -483,7 +483,7 @@
                     },
                     {
                         "id":  10015,
-                        "name":  "Death and Decay: +20% Dmg, -5s CD",
+                        "name":  "Death and Decay: +20% Damage, -5s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -515,7 +515,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4275,
-                                        "display_name":  "Death and Decay: +20% Dmg, -5s CD"
+                                        "display_name":  "Death and Decay: +20% Damage, -5s Cooldown"
                                     }
                     },
                     {
@@ -580,7 +580,7 @@
                     },
                     {
                         "id":  10018,
-                        "name":  "Frost Strike: +20% Dmg, +5% Crit",
+                        "name":  "Frost Strike: +20% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -612,7 +612,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4278,
-                                        "display_name":  "Frost Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Frost Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -677,7 +677,7 @@
                     },
                     {
                         "id":  10021,
-                        "name":  "Scourge Strike: +20% Dmg, +5% Crit",
+                        "name":  "Scourge Strike: +20% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -709,7 +709,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4281,
-                                        "display_name":  "Scourge Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Scourge Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -774,7 +774,7 @@
                     },
                     {
                         "id":  10024,
-                        "name":  "Blood Strike: +20% Dmg, +5% Crit",
+                        "name":  "Blood Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -806,7 +806,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4284,
-                                        "display_name":  "Blood Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Blood Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -901,7 +901,7 @@
                     },
                     {
                         "id":  10028,
-                        "name":  "Heart Strike: +20% Dmg, +5% Crit",
+                        "name":  "Heart Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -933,7 +933,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4288,
-                                        "display_name":  "Heart Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Heart Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -998,7 +998,7 @@
                     },
                     {
                         "id":  10031,
-                        "name":  "Blood Boil: +15% DoT, -2s CD",
+                        "name":  "Blood Boil: +15% DoT, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1030,7 +1030,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4291,
-                                        "display_name":  "Blood Boil: +15% DoT, -2s CD"
+                                        "display_name":  "Blood Boil: +15% DoT, -2s Cooldown"
                                     }
                     },
                     {
@@ -1095,7 +1095,7 @@
                     },
                     {
                         "id":  10034,
-                        "name":  "Death Strike: +20% Dmg, +5% Crit",
+                        "name":  "Death Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1127,7 +1127,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4294,
-                                        "display_name":  "Death Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Death Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1289,7 +1289,7 @@
                     },
                     {
                         "id":  10040,
-                        "name":  "Rune Strike: +20% Dmg, +5% Crit",
+                        "name":  "Rune Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1321,7 +1321,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4300,
-                                        "display_name":  "Rune Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Rune Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {

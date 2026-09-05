@@ -95,7 +95,7 @@
                     },
                     {
                         "id":  5003,
-                        "name":  "Arcane Shot: +20% Dmg, +5% Crit",
+                        "name":  "Arcane Shot: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -127,7 +127,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4097,
-                                        "display_name":  "Arcane Shot: +20% Dmg, +5% Crit"
+                                        "display_name":  "Arcane Shot: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -222,7 +222,7 @@
                     },
                     {
                         "id":  5007,
-                        "name":  "Multi-Shot: +20% Dmg, -1s CD",
+                        "name":  "Multi-Shot: +20% Damage, -1s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -254,7 +254,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4101,
-                                        "display_name":  "Multi-Shot: +20% Dmg, -1s CD"
+                                        "display_name":  "Multi-Shot: +20% Damage, -1s Cooldown"
                                     }
                     },
                     {
@@ -499,7 +499,7 @@
                     },
                     {
                         "id":  5020,
-                        "name":  "Kill Shot: +25% Dmg, +5% Crit",
+                        "name":  "Kill Shot: +25% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -531,7 +531,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4114,
-                                        "display_name":  "Kill Shot: +25% Dmg, +5% Crit"
+                                        "display_name":  "Kill Shot: +25% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -626,7 +626,7 @@
                     },
                     {
                         "id":  5024,
-                        "name":  "Explosive Shot: +20% Dmg, -2s CD",
+                        "name":  "Explosive Shot: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -658,7 +658,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4118,
-                                        "display_name":  "Explosive Shot: +20% Dmg, -2s CD"
+                                        "display_name":  "Explosive Shot: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -820,7 +820,7 @@
                     },
                     {
                         "id":  5030,
-                        "name":  "Black Arrow: +20% DoT, -3s CD",
+                        "name":  "Black Arrow: +20% DoT, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -852,7 +852,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4124,
-                                        "display_name":  "Black Arrow: +20% DoT, -3s CD"
+                                        "display_name":  "Black Arrow: +20% DoT, -3s Cooldown"
                                     }
                     },
                     {
@@ -917,7 +917,7 @@
                     },
                     {
                         "id":  5033,
-                        "name":  "Raptor Strike: +20% Dmg, +5% Crit",
+                        "name":  "Raptor Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -949,7 +949,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4127,
-                                        "display_name":  "Raptor Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Raptor Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1044,7 +1044,7 @@
                     },
                     {
                         "id":  5037,
-                        "name":  "Chimera Shot: +20% Dmg, +5% Crit",
+                        "name":  "Chimera Shot: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1076,7 +1076,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4362,
-                                        "display_name":  "Chimera Shot: +20% Dmg, +5% Crit"
+                                        "display_name":  "Chimera Shot: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1171,7 +1171,7 @@
                     },
                     {
                         "id":  5041,
-                        "name":  "Kill Command: +20% Dmg, +5% Crit",
+                        "name":  "Kill Command: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1203,7 +1203,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4366,
-                                        "display_name":  "Kill Command: +20% Dmg, +5% Crit"
+                                        "display_name":  "Kill Command: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1365,7 +1365,7 @@
                     },
                     {
                         "id":  5047,
-                        "name":  "Counterattack: +20% Dmg, +5% Crit",
+                        "name":  "Counterattack: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1397,7 +1397,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4372,
-                                        "display_name":  "Counterattack: +20% Dmg, +5% Crit"
+                                        "display_name":  "Counterattack: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1462,7 +1462,7 @@
                     },
                     {
                         "id":  5050,
-                        "name":  "Mongoose Bite: +20% Dmg, +5% Crit",
+                        "name":  "Mongoose Bite: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1494,12 +1494,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4375,
-                                        "display_name":  "Mongoose Bite: +20% Dmg, +5% Crit"
+                                        "display_name":  "Mongoose Bite: +20% Damage, +5% Crit"
                                     }
                     },
                     {
                         "id":  5051,
-                        "name":  "Aimed Shot: +20% Dmg, +5% Crit",
+                        "name":  "Aimed Shot: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1531,7 +1531,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4376,
-                                        "display_name":  "Aimed Shot: +20% Dmg, +5% Crit"
+                                        "display_name":  "Aimed Shot: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1665,7 +1665,7 @@
                     },
                     {
                         "id":  5063,
-                        "name":  "Pet: Dmg Reduction",
+                        "name":  "Pet: Damage Reduction",
                         "affix_type":  1,
                         "weight":  60,
                         "spec_tree":  0,
@@ -2150,7 +2150,7 @@
                            },
                            {
                                "id":  5017,
-                               "name":  "Aimed Shot: +20% Dmg, Instant Cast",
+                               "name":  "Aimed Shot: +20% Damage, Instant Cast",
                                "weight":  5,
                                "min_quality":  3,
                                "target":  {
@@ -2181,7 +2181,7 @@
                                            },
                                "tooltip":  {
                                                "enchant_id":  4111,
-                                               "display_name":  "Aimed Shot: +20% Dmg, Instant Cast"
+                                               "display_name":  "Aimed Shot: +20% Damage, Instant Cast"
                                            }
                            }
                        ]

@@ -95,7 +95,7 @@
                     },
                     {
                         "id":  9003,
-                        "name":  "Shadow Bolt: +20% Dmg, -750ms Cast",
+                        "name":  "Shadow Bolt: +20% Damage, -750ms Cast",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -127,7 +127,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4233,
-                                        "display_name":  "Shadow Bolt: +20% Dmg, -750ms Cast"
+                                        "display_name":  "Shadow Bolt: +20% Damage, -750ms Cast"
                                     }
                     },
                     {
@@ -222,7 +222,7 @@
                     },
                     {
                         "id":  9007,
-                        "name":  "Incinerate: +20% Dmg, -500ms Cast",
+                        "name":  "Incinerate: +20% Damage, -500ms Cast",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -254,7 +254,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4237,
-                                        "display_name":  "Incinerate: +20% Dmg, -500ms Cast"
+                                        "display_name":  "Incinerate: +20% Damage, -500ms Cast"
                                     }
                     },
                     {
@@ -416,7 +416,7 @@
                     },
                     {
                         "id":  9013,
-                        "name":  "Immolate: +20% Dmg, -500ms Cast",
+                        "name":  "Immolate: +20% Damage, -500ms Cast",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -448,7 +448,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4243,
-                                        "display_name":  "Immolate: +20% Dmg, -500ms Cast"
+                                        "display_name":  "Immolate: +20% Damage, -500ms Cast"
                                     }
                     },
                     {
@@ -610,7 +610,7 @@
                     },
                     {
                         "id":  9019,
-                        "name":  "Haunt: +20% Dmg, -3s CD",
+                        "name":  "Haunt: +20% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -642,7 +642,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4249,
-                                        "display_name":  "Haunt: +20% Dmg, -3s CD"
+                                        "display_name":  "Haunt: +20% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -834,7 +834,7 @@
                     },
                     {
                         "id":  9026,
-                        "name":  "Conflagrate: +20% Dmg, -3s CD",
+                        "name":  "Conflagrate: +20% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -866,7 +866,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4256,
-                                        "display_name":  "Conflagrate: +20% Dmg, -3s CD"
+                                        "display_name":  "Conflagrate: +20% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -1021,7 +1021,7 @@
                     },
                     {
                         "id":  9032,
-                        "name":  "Drain Life: +15% Dmg, +2s Duration",
+                        "name":  "Drain Life: +15% Damage, +2s Duration",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1053,7 +1053,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4262,
-                                        "display_name":  "Drain Life: +15% Dmg, +2s Duration"
+                                        "display_name":  "Drain Life: +15% Damage, +2s Duration"
                                     }
                     },
                     {
@@ -1215,7 +1215,7 @@
                     },
                     {
                         "id":  9038,
-                        "name":  "Drain Soul: +20% Dmg, +3s Duration",
+                        "name":  "Drain Soul: +20% Damage, +3s Duration",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1247,7 +1247,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4268,
-                                        "display_name":  "Drain Soul: +20% Dmg, +3s Duration"
+                                        "display_name":  "Drain Soul: +20% Damage, +3s Duration"
                                     }
                     },
                     {
@@ -1291,7 +1291,7 @@
                     },
                     {
                         "id":  9063,
-                        "name":  "Pet: Dmg Reduction",
+                        "name":  "Pet: Damage Reduction",
                         "affix_type":  1,
                         "weight":  60,
                         "spec_tree":  1,
@@ -1541,7 +1541,7 @@
                     },
                     {
                         "id":  9048,
-                        "name":  "Chaos Bolt: +20% Dmg, -500ms Cast",
+                        "name":  "Chaos Bolt: +20% Damage, -500ms Cast",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1573,7 +1573,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4278,
-                                        "display_name":  "Chaos Bolt: +20% Dmg, -500ms Cast"
+                                        "display_name":  "Chaos Bolt: +20% Damage, -500ms Cast"
                                     }
                     },
                     {
@@ -1638,7 +1638,7 @@
                     },
                     {
                         "id":  9051,
-                        "name":  "Rain of Fire: +20% Dmg, +25% Radius",
+                        "name":  "Rain of Fire: +20% Damage, +25% Radius",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1670,7 +1670,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4281,
-                                        "display_name":  "Rain of Fire: +20% Dmg, +25% Radius"
+                                        "display_name":  "Rain of Fire: +20% Damage, +25% Radius"
                                     }
                     },
                     {
@@ -1885,7 +1885,7 @@
                     },
                     {
                         "id":  9054,
-                        "name":  "Hellfire: +20% Dmg, -10% Mana Cost",
+                        "name":  "Hellfire: +20% Damage, -10% Mana Cost",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1917,7 +1917,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4284,
-                                        "display_name":  "Hellfire: +20% Dmg, -10% Mana Cost"
+                                        "display_name":  "Hellfire: +20% Damage, -10% Mana Cost"
                                     }
                     }
                 ],

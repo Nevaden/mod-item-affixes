@@ -155,7 +155,7 @@
                     },
                     {
                         "id":  2005,
-                        "name":  "Scorch: +15% Dmg, -500ms",
+                        "name":  "Scorch: +15% Damage, -500ms",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -187,7 +187,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3955,
-                                        "display_name":  "Scorch: +15% Dmg, -500ms"
+                                        "display_name":  "Scorch: +15% Damage, -500ms"
                                     }
                     },
                     {
@@ -252,7 +252,7 @@
                     },
                     {
                         "id":  2008,
-                        "name":  "Pyroblast: +20% Dmg, -2000ms",
+                        "name":  "Pyroblast: +20% Damage, -2000ms",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -284,7 +284,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3958,
-                                        "display_name":  "Pyroblast: +20% Dmg, -2000ms"
+                                        "display_name":  "Pyroblast: +20% Damage, -2000ms"
                                     }
                     },
                     {
@@ -349,7 +349,7 @@
                     },
                     {
                         "id":  2011,
-                        "name":  "Fire Blast: +15% Dmg, -3s CD",
+                        "name":  "Fire Blast: +15% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -381,7 +381,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3961,
-                                        "display_name":  "Fire Blast: +15% Dmg, -3s CD"
+                                        "display_name":  "Fire Blast: +15% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -446,7 +446,7 @@
                     },
                     {
                         "id":  2014,
-                        "name":  "Flamestrike: +20% Dmg, -500ms",
+                        "name":  "Flamestrike: +20% Damage, -500ms",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -478,7 +478,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3964,
-                                        "display_name":  "Flamestrike: +20% Dmg, -500ms"
+                                        "display_name":  "Flamestrike: +20% Damage, -500ms"
                                     }
                     },
                     {
@@ -515,7 +515,7 @@
                     {
                         "id":  2016,
                         "name":  "Blast Wave: -5s Cooldown",
-                        "_purpose":  "Flags shared with Ice Lance Ã¢â‚¬â€ cooldown mod has no effect on Ice Lance (no CD), harmless overlap.",
+                        "_purpose":  "Flags shared with Ice Lance Ã¢â‚¬â€ cooldown mod has no effect on Ice Lance (no Cooldown), harmless overlap.",
                         "weight":  100,
                         "spec_tree":  1,
                         "min_quality":  1,
@@ -545,7 +545,7 @@
                     },
                     {
                         "id":  2017,
-                        "name":  "Blast Wave: +15% Dmg, -5s CD",
+                        "name":  "Blast Wave: +15% Damage, -5s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -577,7 +577,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3967,
-                                        "display_name":  "Blast Wave: +15% Dmg, -5s CD"
+                                        "display_name":  "Blast Wave: +15% Damage, -5s Cooldown"
                                     }
                     },
                     {
@@ -642,7 +642,7 @@
                     },
                     {
                         "id":  2020,
-                        "name":  "Dragon\u0027s Breath: +15% Dmg, -5s CD",
+                        "name":  "Dragon\u0027s Breath: +15% Damage, -5s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -674,7 +674,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3970,
-                                        "display_name":  "Dragon\u0027s Breath: +15% Dmg, -5s CD"
+                                        "display_name":  "Dragon\u0027s Breath: +15% Damage, -5s Cooldown"
                                     }
                     },
                     {
@@ -739,7 +739,7 @@
                     },
                     {
                         "id":  2023,
-                        "name":  "Arcane Missiles: +20% Dmg, +5% Crit",
+                        "name":  "Arcane Missiles: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -771,7 +771,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3973,
-                                        "display_name":  "Arcane Missiles: +20% Dmg, +5% Crit"
+                                        "display_name":  "Arcane Missiles: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -806,7 +806,7 @@
                     },
                     {
                         "id":  2080,
-                        "name":  "Arcane Missiles: +2s Channel, +20% Dmg",
+                        "name":  "Arcane Missiles: +2s Channel, +20% Damage",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -838,7 +838,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4332,
-                                        "display_name":  "Arcane Missiles: +2s Channel, +20% Dmg"
+                                        "display_name":  "Arcane Missiles: +2s Channel, +20% Damage"
                                     }
                     },
                     {
@@ -903,7 +903,7 @@
                     },
                     {
                         "id":  2026,
-                        "name":  "Arcane Blast: +20% Dmg, -750ms",
+                        "name":  "Arcane Blast: +20% Damage, -750ms",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -935,7 +935,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3976,
-                                        "display_name":  "Arcane Blast: +20% Dmg, -750ms"
+                                        "display_name":  "Arcane Blast: +20% Damage, -750ms"
                                     }
                     },
                     {
@@ -1000,7 +1000,7 @@
                     },
                     {
                         "id":  2029,
-                        "name":  "Arcane Barrage: +15% Dmg, -1s CD",
+                        "name":  "Arcane Barrage: +15% Damage, -1s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1032,7 +1032,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  3979,
-                                        "display_name":  "Arcane Barrage: +15% Dmg, -1s CD"
+                                        "display_name":  "Arcane Barrage: +15% Damage, -1s Cooldown"
                                     }
                     },
                     {
@@ -1754,7 +1754,7 @@
                     },
                     {
                         "id":  2053,
-                        "name":  "Frostbolt: +20% Dmg, -750ms Cast",
+                        "name":  "Frostbolt: +20% Damage, -750ms Cast",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1791,7 +1791,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4003,
-                                        "display_name":  "Frostbolt: +20% Dmg, -750ms Cast"
+                                        "display_name":  "Frostbolt: +20% Damage, -750ms Cast"
                                     }
                     },
                     {
@@ -2006,7 +2006,7 @@
                     },
                     {
                         "id":  2062,
-                        "name":  "Cone of Cold: +20% Dmg, -1s CD",
+                        "name":  "Cone of Cold: +20% Damage, -1s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2038,7 +2038,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4314,
-                                        "display_name":  "Cone of Cold: +20% Dmg, -1s CD"
+                                        "display_name":  "Cone of Cold: +20% Damage, -1s Cooldown"
                                     }
                     },
                     {
@@ -2103,7 +2103,7 @@
                     },
                     {
                         "id":  2065,
-                        "name":  "Frost Nova: +25% Dur, -3s CD",
+                        "name":  "Frost Nova: +25% Duration, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2135,7 +2135,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4317,
-                                        "display_name":  "Frost Nova: +25% Dur, -3s CD"
+                                        "display_name":  "Frost Nova: +25% Duration, -3s Cooldown"
                                     }
                     },
                     {
@@ -2170,7 +2170,7 @@
                     },
                     {
                         "id":  2067,
-                        "name":  "Blizzard: +20% Dmg, +5% Crit",
+                        "name":  "Blizzard: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2202,12 +2202,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4319,
-                                        "display_name":  "Blizzard: +20% Dmg, +5% Crit"
+                                        "display_name":  "Blizzard: +20% Damage, +5% Crit"
                                     }
                     },
                     {
                         "id":  2068,
-                        "name":  "Blizzard: +15% Dmg, +25% Radius",
+                        "name":  "Blizzard: +15% Damage, +25% Radius",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2239,12 +2239,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4320,
-                                        "display_name":  "Blizzard: +15% Dmg, +25% Radius"
+                                        "display_name":  "Blizzard: +15% Damage, +25% Radius"
                                     }
                     },
                     {
                         "id":  2069,
-                        "name":  "Ice Lance: +20% Dmg, +5% Crit",
+                        "name":  "Ice Lance: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2276,12 +2276,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4321,
-                                        "display_name":  "Ice Lance: +20% Dmg, +5% Crit"
+                                        "display_name":  "Ice Lance: +20% Damage, +5% Crit"
                                     }
                     },
                     {
                         "id":  2070,
-                        "name":  "Ice Block: -30s CD, +5s Dur",
+                        "name":  "Ice Block: -30s Cooldown, +5s Duration",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2313,12 +2313,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4322,
-                                        "display_name":  "Ice Block: -30s CD, +5s Dur"
+                                        "display_name":  "Ice Block: -30s Cooldown, +5s Duration"
                                     }
                     },
                     {
                         "id":  2071,
-                        "name":  "Icy Veins: -15s CD, +5s Dur",
+                        "name":  "Icy Veins: -15s Cooldown, +5s Duration",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2350,12 +2350,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4323,
-                                        "display_name":  "Icy Veins: -15s CD, +5s Dur"
+                                        "display_name":  "Icy Veins: -15s Cooldown, +5s Duration"
                                     }
                     },
                     {
                         "id":  2072,
-                        "name":  "Water Elemental: -15s CD, +15s Dur",
+                        "name":  "Water Elemental: -15s Cooldown, +15s Duration",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -2387,12 +2387,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4324,
-                                        "display_name":  "Water Elemental: -15s CD, +15s Dur"
+                                        "display_name":  "Water Elemental: -15s Cooldown, +15s Duration"
                                     }
                     },
                     {
                         "id":  2073,
-                        "name":  "Arcane Explosion: +20% Dmg, +5% Crit",
+                        "name":  "Arcane Explosion: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -2424,12 +2424,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4325,
-                                        "display_name":  "Arcane Explosion: +20% Dmg, +5% Crit"
+                                        "display_name":  "Arcane Explosion: +20% Damage, +5% Crit"
                                     }
                     },
                     {
                         "id":  2074,
-                        "name":  "Arcane Power: -15s CD, +15s Dur",
+                        "name":  "Arcane Power: -15s Cooldown, +15s Duration",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -2461,7 +2461,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4326,
-                                        "display_name":  "Arcane Power: -15s CD, +15s Dur"
+                                        "display_name":  "Arcane Power: -15s Cooldown, +15s Duration"
                                     }
                     },
                     {
@@ -2526,7 +2526,7 @@
                     },
                     {
                         "id":  2077,
-                        "name":  "Evocation: -60s CD, +2s Dur",
+                        "name":  "Evocation: -60s Cooldown, +2s Duration",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -2558,7 +2558,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4329,
-                                        "display_name":  "Evocation: -60s CD, +2s Dur"
+                                        "display_name":  "Evocation: -60s Cooldown, +2s Duration"
                                     }
                     },
                     {

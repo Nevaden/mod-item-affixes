@@ -95,7 +95,7 @@
                     },
                     {
                         "id":  8003,
-                        "name":  "Lightning Bolt: +20% Dmg, -500ms Cast",
+                        "name":  "Lightning Bolt: +20% Damage, -500ms Cast",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -127,7 +127,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4200,
-                                        "display_name":  "Lightning Bolt: +20% Dmg, -500ms Cast"
+                                        "display_name":  "Lightning Bolt: +20% Damage, -500ms Cast"
                                     }
                     },
                     {
@@ -222,7 +222,7 @@
                     },
                     {
                         "id":  8007,
-                        "name":  "Chain Lightning: +20% Dmg, -2s CD",
+                        "name":  "Chain Lightning: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -254,7 +254,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4204,
-                                        "display_name":  "Chain Lightning: +20% Dmg, -2s CD"
+                                        "display_name":  "Chain Lightning: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -349,7 +349,7 @@
                     },
                     {
                         "id":  8011,
-                        "name":  "Lava Burst: +20% Dmg, -3s CD",
+                        "name":  "Lava Burst: +20% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -381,7 +381,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4208,
-                                        "display_name":  "Lava Burst: +20% Dmg, -3s CD"
+                                        "display_name":  "Lava Burst: +20% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -476,7 +476,7 @@
                     },
                     {
                         "id":  8015,
-                        "name":  "Earth Shock: +20% Dmg, -2s CD",
+                        "name":  "Earth Shock: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -508,7 +508,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4212,
-                                        "display_name":  "Earth Shock: +20% Dmg, -2s CD"
+                                        "display_name":  "Earth Shock: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -573,7 +573,7 @@
                     },
                     {
                         "id":  8018,
-                        "name":  "Flame Shock: +20% Dmg, +3s Duration",
+                        "name":  "Flame Shock: +20% Damage, +3s Duration",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -605,7 +605,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4215,
-                                        "display_name":  "Flame Shock: +20% Dmg, +3s Duration"
+                                        "display_name":  "Flame Shock: +20% Damage, +3s Duration"
                                     }
                     },
                     {
@@ -924,7 +924,7 @@
                     },
                     {
                         "id":  8029,
-                        "name":  "Riptide: +20% Heal, -2s CD",
+                        "name":  "Riptide: +20% Heal, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -956,7 +956,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4226,
-                                        "display_name":  "Riptide: +20% Heal, -2s CD"
+                                        "display_name":  "Riptide: +20% Heal, -2s Cooldown"
                                     }
                     },
                     {
@@ -1021,7 +1021,7 @@
                     },
                     {
                         "id":  8032,
-                        "name":  "Hex: +25% Duration, -10s CD",
+                        "name":  "Hex: +25% Duration, -10s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1053,7 +1053,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4229,
-                                        "display_name":  "Hex: +25% Duration, -10s CD"
+                                        "display_name":  "Hex: +25% Duration, -10s Cooldown"
                                     }
                     },
                     {
@@ -1148,7 +1148,7 @@
                     },
                     {
                         "id":  8036,
-                        "name":  "Lava Lash: +20% Dmg, -2s CD",
+                        "name":  "Lava Lash: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1180,7 +1180,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4233,
-                                        "display_name":  "Lava Lash: +20% Dmg, -2s CD"
+                                        "display_name":  "Lava Lash: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1275,7 +1275,7 @@
                     },
                     {
                         "id":  8040,
-                        "name":  "Stormstrike: +20% Dmg, -2s CD",
+                        "name":  "Stormstrike: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1307,7 +1307,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4237,
-                                        "display_name":  "Stormstrike: +20% Dmg, -2s CD"
+                                        "display_name":  "Stormstrike: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1372,7 +1372,7 @@
                     },
                     {
                         "id":  8043,
-                        "name":  "Heroism: -60s CD, +8s Duration",
+                        "name":  "Heroism: -60s Cooldown, +8s Duration",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1404,7 +1404,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4240,
-                                        "display_name":  "Heroism: -60s CD, +8s Duration"
+                                        "display_name":  "Heroism: -60s Cooldown, +8s Duration"
                                     }
                     },
                     {
@@ -1469,7 +1469,7 @@
                     },
                     {
                         "id":  8046,
-                        "name":  "Feral Spirit: -30s CD, +10s Duration",
+                        "name":  "Feral Spirit: -30s Cooldown, +10s Duration",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1501,7 +1501,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4243,
-                                        "display_name":  "Feral Spirit: -30s CD, +10s Duration"
+                                        "display_name":  "Feral Spirit: -30s Cooldown, +10s Duration"
                                     }
                     },
                     {
@@ -1596,7 +1596,7 @@
                     },
                     {
                         "id":  8050,
-                        "name":  "Frost Shock: +20% Dmg, -2s CD",
+                        "name":  "Frost Shock: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1628,7 +1628,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4293,
-                                        "display_name":  "Frost Shock: +20% Dmg, -2s CD"
+                                        "display_name":  "Frost Shock: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1850,7 +1850,7 @@
                     },
                     {
                         "id":  8058,
-                        "name":  "Thunderstorm: +20% Dmg, -15s CD",
+                        "name":  "Thunderstorm: +20% Damage, -15s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1882,7 +1882,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4301,
-                                        "display_name":  "Thunderstorm: +20% Dmg, -15s CD"
+                                        "display_name":  "Thunderstorm: +20% Damage, -15s Cooldown"
                                     }
                     },
                     {

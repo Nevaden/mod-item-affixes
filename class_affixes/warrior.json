@@ -95,7 +95,7 @@
                     },
                     {
                         "id":  3003,
-                        "name":  "Bloodthirst: +20% Dmg, +5% Crit",
+                        "name":  "Bloodthirst: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -127,12 +127,12 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4008,
-                                        "display_name":  "Bloodthirst: +20% Dmg, +5% Crit"
+                                        "display_name":  "Bloodthirst: +20% Damage, +5% Crit"
                                     }
                     },
                     {
                         "id":  3004,
-                        "name":  "Bloodthirst: +15% Dmg, -1s CD",
+                        "name":  "Bloodthirst: +15% Damage, -1s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -164,7 +164,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4009,
-                                        "display_name":  "Bloodthirst: +15% Dmg, -1s CD"
+                                        "display_name":  "Bloodthirst: +15% Damage, -1s Cooldown"
                                     }
                     },
                     {
@@ -259,7 +259,7 @@
                     },
                     {
                         "id":  3008,
-                        "name":  "Mortal Strike: +20% Dmg, -2s CD",
+                        "name":  "Mortal Strike: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -291,7 +291,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4013,
-                                        "display_name":  "Mortal Strike: +20% Dmg, -2s CD"
+                                        "display_name":  "Mortal Strike: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -356,7 +356,7 @@
                     },
                     {
                         "id":  3011,
-                        "name":  "Heroic Strike: +20% Dmg, +5% Crit",
+                        "name":  "Heroic Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -388,7 +388,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4016,
-                                        "display_name":  "Heroic Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Heroic Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -453,7 +453,7 @@
                     },
                     {
                         "id":  3014,
-                        "name":  "Execute: +25% Dmg, +5% Crit",
+                        "name":  "Execute: +25% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  1,
                         "min_quality":  3,
@@ -485,7 +485,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4019,
-                                        "display_name":  "Execute: +25% Dmg, +5% Crit"
+                                        "display_name":  "Execute: +25% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -580,7 +580,7 @@
                     },
                     {
                         "id":  3018,
-                        "name":  "Whirlwind: +20% Dmg, -3s CD",
+                        "name":  "Whirlwind: +20% Damage, -3s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -612,7 +612,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4023,
-                                        "display_name":  "Whirlwind: +20% Dmg, -3s CD"
+                                        "display_name":  "Whirlwind: +20% Damage, -3s Cooldown"
                                     }
                     },
                     {
@@ -677,7 +677,7 @@
                     },
                     {
                         "id":  3021,
-                        "name":  "Overpower: +20% Dmg, +5% Crit",
+                        "name":  "Overpower: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -709,7 +709,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4026,
-                                        "display_name":  "Overpower: +20% Dmg, +5% Crit"
+                                        "display_name":  "Overpower: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -804,7 +804,7 @@
                     },
                     {
                         "id":  3025,
-                        "name":  "Revenge: +20% Dmg, -2s CD",
+                        "name":  "Revenge: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -836,7 +836,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4030,
-                                        "display_name":  "Revenge: +20% Dmg, -2s CD"
+                                        "display_name":  "Revenge: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1051,7 +1051,7 @@
                     },
                     {
                         "id":  3034,
-                        "name":  "Thunder Clap: +20% Dmg, -2s CD",
+                        "name":  "Thunder Clap: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1083,7 +1083,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4039,
-                                        "display_name":  "Thunder Clap: +20% Dmg, -2s CD"
+                                        "display_name":  "Thunder Clap: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1148,7 +1148,7 @@
                     },
                     {
                         "id":  3037,
-                        "name":  "Devastate: +20% Dmg, +5% Crit",
+                        "name":  "Devastate: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1180,7 +1180,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4042,
-                                        "display_name":  "Devastate: +20% Dmg, +5% Crit"
+                                        "display_name":  "Devastate: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1342,7 +1342,7 @@
                     },
                     {
                         "id":  3043,
-                        "name":  "Shield Slam: +20% Dmg, -2s CD",
+                        "name":  "Shield Slam: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1374,7 +1374,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4048,
-                                        "display_name":  "Shield Slam: +20% Dmg, -2s CD"
+                                        "display_name":  "Shield Slam: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1439,7 +1439,7 @@
                     },
                     {
                         "id":  3046,
-                        "name":  "Victory Rush: +20% Dmg, +5% Crit",
+                        "name":  "Victory Rush: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1471,7 +1471,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4306,
-                                        "display_name":  "Victory Rush: +20% Dmg, +5% Crit"
+                                        "display_name":  "Victory Rush: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1536,7 +1536,7 @@
                     },
                     {
                         "id":  3049,
-                        "name":  "Cleave: +20% Dmg, +5% Crit",
+                        "name":  "Cleave: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1568,7 +1568,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4309,
-                                        "display_name":  "Cleave: +20% Dmg, +5% Crit"
+                                        "display_name":  "Cleave: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1663,7 +1663,7 @@
                     },
                     {
                         "id":  3053,
-                        "name":  "Shockwave: +20% Dmg, -2s CD",
+                        "name":  "Shockwave: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -1695,7 +1695,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4313,
-                                        "display_name":  "Shockwave: +20% Dmg, -2s CD"
+                                        "display_name":  "Shockwave: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1790,7 +1790,7 @@
                     },
                     {
                         "id":  3057,
-                        "name":  "Bladestorm: +20% Dmg, +5% Crit",
+                        "name":  "Bladestorm: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1822,7 +1822,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4317,
-                                        "display_name":  "Bladestorm: +20% Dmg, +5% Crit"
+                                        "display_name":  "Bladestorm: +20% Damage, +5% Crit"
                                     }
                     },
                     {

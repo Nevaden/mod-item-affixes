@@ -95,7 +95,7 @@
                     },
                     {
                         "id":  4003,
-                        "name":  "Crusader Strike: +20% Dmg, -2s CD",
+                        "name":  "Crusader Strike: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -127,7 +127,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4053,
-                                        "display_name":  "Crusader Strike: +20% Dmg, -2s CD"
+                                        "display_name":  "Crusader Strike: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -222,7 +222,7 @@
                     },
                     {
                         "id":  4007,
-                        "name":  "Divine Storm: +20% Dmg, -2s CD",
+                        "name":  "Divine Storm: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -254,7 +254,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4057,
-                                        "display_name":  "Divine Storm: +20% Dmg, -2s CD"
+                                        "display_name":  "Divine Storm: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -349,7 +349,7 @@
                     },
                     {
                         "id":  4011,
-                        "name":  "Holy Shock: +20% Dmg, +5% Crit",
+                        "name":  "Holy Shock: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -381,7 +381,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4061,
-                                        "display_name":  "Holy Shock: +20% Dmg, +5% Crit"
+                                        "display_name":  "Holy Shock: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -566,7 +566,7 @@
                     },
                     {
                         "id":  4019,
-                        "name":  "Hammer of Wrath: +25% Dmg, +5% Crit",
+                        "name":  "Hammer of Wrath: +25% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  2,
                         "min_quality":  3,
@@ -598,7 +598,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4069,
-                                        "display_name":  "Hammer of Wrath: +25% Dmg, +5% Crit"
+                                        "display_name":  "Hammer of Wrath: +25% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -663,7 +663,7 @@
                     },
                     {
                         "id":  4022,
-                        "name":  "Consecration: +20% Dmg, -2s CD",
+                        "name":  "Consecration: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -695,7 +695,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4072,
-                                        "display_name":  "Consecration: +20% Dmg, -2s CD"
+                                        "display_name":  "Consecration: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -790,7 +790,7 @@
                     },
                     {
                         "id":  4026,
-                        "name":  "Judgement: +20% Dmg, -2s CD",
+                        "name":  "Judgement: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -822,7 +822,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4076,
-                                        "display_name":  "Judgement: +20% Dmg, -2s CD"
+                                        "display_name":  "Judgement: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1141,7 +1141,7 @@
                     },
                     {
                         "id":  4037,
-                        "name":  "Avenger\u0027s Shield: +20% Dmg, -2s CD",
+                        "name":  "Avenger\u0027s Shield: +20% Damage, -2s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1173,7 +1173,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4087,
-                                        "display_name":  "Avenger\u0027s Shield: +20% Dmg, -2s CD"
+                                        "display_name":  "Avenger\u0027s Shield: +20% Damage, -2s Cooldown"
                                     }
                     },
                     {
@@ -1238,7 +1238,7 @@
                     },
                     {
                         "id":  4040,
-                        "name":  "Shield of Righteousness: +20% Dmg, +5% Crit",
+                        "name":  "Shield of Righteousness: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1270,7 +1270,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4090,
-                                        "display_name":  "Shield of Righteousness: +20% Dmg, +5% Crit"
+                                        "display_name":  "Shield of Righteousness: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1335,7 +1335,7 @@
                     },
                     {
                         "id":  4043,
-                        "name":  "Hammer of the Righteous: +20% Dmg, +5% Crit",
+                        "name":  "Hammer of the Righteous: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1367,7 +1367,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4093,
-                                        "display_name":  "Hammer of the Righteous: +20% Dmg, +5% Crit"
+                                        "display_name":  "Hammer of the Righteous: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1522,7 +1522,7 @@
                     },
                     {
                         "id":  4049,
-                        "name":  "Holy Wrath: +20% Dmg, +5% Crit",
+                        "name":  "Holy Wrath: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1554,7 +1554,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4327,
-                                        "display_name":  "Holy Wrath: +20% Dmg, +5% Crit"
+                                        "display_name":  "Holy Wrath: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1709,7 +1709,7 @@
                     },
                     {
                         "id":  4055,
-                        "name":  "Sacred Shield: +25% Duration, -15s CD",
+                        "name":  "Sacred Shield: +25% Duration, -15s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1741,7 +1741,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4333,
-                                        "display_name":  "Sacred Shield: +25% Duration, -15s CD"
+                                        "display_name":  "Sacred Shield: +25% Duration, -15s Cooldown"
                                     }
                     },
                     {

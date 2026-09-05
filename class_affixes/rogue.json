@@ -127,7 +127,7 @@
                     },
                     {
                         "id":  6004,
-                        "name":  "Sinister Strike: +20% Dmg, +5% Crit",
+                        "name":  "Sinister Strike: +20% Damage, +5% Crit",
                         "weight":  10,
                         "min_quality":  2,
                         "spec_tree":  1,
@@ -159,7 +159,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4132,
-                                        "display_name":  "Sinister Strike: +20% Dmg, +5% Crit"
+                                        "display_name":  "Sinister Strike: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -288,7 +288,7 @@
                     },
                     {
                         "id":  6009,
-                        "name":  "Backstab: +20% Dmg, +5% Crit",
+                        "name":  "Backstab: +20% Damage, +5% Crit",
                         "weight":  10,
                         "min_quality":  2,
                         "spec_tree":  1,
@@ -321,7 +321,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4137,
-                                        "display_name":  "Backstab: +20% Dmg, +5% Crit"
+                                        "display_name":  "Backstab: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -450,7 +450,7 @@
                     },
                     {
                         "id":  6014,
-                        "name":  "Ambush: +20% Dmg, +5% Crit",
+                        "name":  "Ambush: +20% Damage, +5% Crit",
                         "weight":  5,
                         "min_quality":  3,
                         "spec_tree":  0,
@@ -483,7 +483,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4142,
-                                        "display_name":  "Ambush: +20% Dmg, +5% Crit"
+                                        "display_name":  "Ambush: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -728,7 +728,7 @@
                     },
                     {
                         "id":  6023,
-                        "name":  "Eviscerate: +25% Dmg, +5% Crit",
+                        "name":  "Eviscerate: +25% Damage, +5% Crit",
                         "weight":  5,
                         "min_quality":  3,
                         "spec_tree":  0,
@@ -760,7 +760,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4151,
-                                        "display_name":  "Eviscerate: +25% Dmg, +5% Crit"
+                                        "display_name":  "Eviscerate: +25% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1065,7 +1065,7 @@
                     },
                     {
                         "id":  6034,
-                        "name":  "Mutilate: +20% Dmg, +5% Crit",
+                        "name":  "Mutilate: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1097,7 +1097,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4340,
-                                        "display_name":  "Mutilate: +20% Dmg, +5% Crit"
+                                        "display_name":  "Mutilate: +20% Damage, +5% Crit"
                                     }
                     },
                     {

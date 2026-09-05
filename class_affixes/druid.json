@@ -95,7 +95,7 @@
                     },
                     {
                         "id":  7003,
-                        "name":  "Wrath: +20% Dmg, -500ms Cast",
+                        "name":  "Wrath: +20% Damage, -500ms Cast",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -127,7 +127,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4165,
-                                        "display_name":  "Wrath: +20% Dmg, -500ms Cast"
+                                        "display_name":  "Wrath: +20% Damage, -500ms Cast"
                                     }
                     },
                     {
@@ -312,7 +312,7 @@
                     },
                     {
                         "id":  7010,
-                        "name":  "Moonfire: +20% Dmg, +5% Crit",
+                        "name":  "Moonfire: +20% Damage, +5% Crit",
                         "weight":  5,
                         "spec_tree":  0,
                         "min_quality":  3,
@@ -344,7 +344,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4172,
-                                        "display_name":  "Moonfire: +20% Dmg, +5% Crit"
+                                        "display_name":  "Moonfire: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -409,7 +409,7 @@
                     },
                     {
                         "id":  7013,
-                        "name":  "Starfall: +20% Dmg, -20s CD",
+                        "name":  "Starfall: +20% Damage, -20s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -441,7 +441,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4175,
-                                        "display_name":  "Starfall: +20% Dmg, -20s CD"
+                                        "display_name":  "Starfall: +20% Damage, -20s Cooldown"
                                     }
                     },
                     {
@@ -1388,7 +1388,7 @@
                     },
                     {
                         "id":  7044,
-                        "name":  "Typhoon: +20% Dmg, -10s CD",
+                        "name":  "Typhoon: +20% Damage, -10s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1420,7 +1420,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4206,
-                                        "display_name":  "Typhoon: +20% Dmg, -10s CD"
+                                        "display_name":  "Typhoon: +20% Damage, -10s Cooldown"
                                     }
                     },
                     {
@@ -1515,7 +1515,7 @@
                     },
                     {
                         "id":  7048,
-                        "name":  "Force of Nature: +20% Dmg, -30s CD",
+                        "name":  "Force of Nature: +20% Damage, -30s Cooldown",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1547,7 +1547,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4210,
-                                        "display_name":  "Force of Nature: +20% Dmg, -30s CD"
+                                        "display_name":  "Force of Nature: +20% Damage, -30s Cooldown"
                                     }
                     },
                     {
@@ -1769,7 +1769,7 @@
                     },
                     {
                         "id":  7056,
-                        "name":  "Faerie Fire: +20% Dmg, +5% Crit",
+                        "name":  "Faerie Fire: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  0,
                         "min_quality":  2,
@@ -1801,7 +1801,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4218,
-                                        "display_name":  "Faerie Fire: +20% Dmg, +5% Crit"
+                                        "display_name":  "Faerie Fire: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1866,7 +1866,7 @@
                     },
                     {
                         "id":  7059,
-                        "name":  "Shred: +20% Dmg, +5% Crit",
+                        "name":  "Shred: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1898,7 +1898,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4221,
-                                        "display_name":  "Shred: +20% Dmg, +5% Crit"
+                                        "display_name":  "Shred: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -1963,7 +1963,7 @@
                     },
                     {
                         "id":  7062,
-                        "name":  "Ferocious Bite: +20% Dmg, +5% Crit",
+                        "name":  "Ferocious Bite: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -1995,7 +1995,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4224,
-                                        "display_name":  "Ferocious Bite: +20% Dmg, +5% Crit"
+                                        "display_name":  "Ferocious Bite: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -2060,7 +2060,7 @@
                     },
                     {
                         "id":  7065,
-                        "name":  "Mangle: +20% Dmg, +5% Crit",
+                        "name":  "Mangle: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -2092,7 +2092,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4227,
-                                        "display_name":  "Mangle: +20% Dmg, +5% Crit"
+                                        "display_name":  "Mangle: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -2157,7 +2157,7 @@
                     },
                     {
                         "id":  7068,
-                        "name":  "Swipe: +20% Dmg, +5% Crit",
+                        "name":  "Swipe: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -2189,7 +2189,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4230,
-                                        "display_name":  "Swipe: +20% Dmg, +5% Crit"
+                                        "display_name":  "Swipe: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -2254,7 +2254,7 @@
                     },
                     {
                         "id":  7071,
-                        "name":  "Maul: +20% Dmg, +5% Crit",
+                        "name":  "Maul: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -2286,7 +2286,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4233,
-                                        "display_name":  "Maul: +20% Dmg, +5% Crit"
+                                        "display_name":  "Maul: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -2351,7 +2351,7 @@
                     },
                     {
                         "id":  7074,
-                        "name":  "Ravage: +20% Dmg, +5% Crit",
+                        "name":  "Ravage: +20% Damage, +5% Crit",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -2383,7 +2383,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4236,
-                                        "display_name":  "Ravage: +20% Dmg, +5% Crit"
+                                        "display_name":  "Ravage: +20% Damage, +5% Crit"
                                     }
                     },
                     {
@@ -2545,7 +2545,7 @@
                     },
                     {
                         "id":  7080,
-                        "name":  "Tiger's Fury: +25% Duration, -15s CD",
+                        "name":  "Tiger's Fury: +25% Duration, -15s Cooldown",
                         "weight":  10,
                         "spec_tree":  1,
                         "min_quality":  2,
@@ -2577,7 +2577,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4242,
-                                        "display_name":  "Tiger's Fury: +25% Duration, -15s CD"
+                                        "display_name":  "Tiger's Fury: +25% Duration, -15s Cooldown"
                                     }
                     },
                     {
@@ -3136,7 +3136,7 @@
                     },
                     {
                         "id":  7099,
-                        "name":  "Tranquility: +20% Heal, -60s CD",
+                        "name":  "Tranquility: +20% Heal, -60s Cooldown",
                         "weight":  10,
                         "spec_tree":  2,
                         "min_quality":  2,
@@ -3168,7 +3168,7 @@
                                     },
                         "tooltip":  {
                                         "enchant_id":  4261,
-                                        "display_name":  "Tranquility: +20% Heal, -60s CD"
+                                        "display_name":  "Tranquility: +20% Heal, -60s Cooldown"
                                     }
                     }
                 ],
