@@ -303,3 +303,40 @@ eventFrame:SetScript("OnEvent", function(self, event, slot)
         pendingEquipAlertSlots[slot] = true
     end
 end)
+
+-- ----------------------------------------------------------------------------
+-- CharPaneRefresh -- keeps the Character Pane's spell crit % display current.
+--
+-- The client only recomputes paper-doll stats on a narrow set of events
+-- (UNIT_STATS, UNIT_ATTACK, etc.), not on every equipment change. A gear
+-- swap that grants crit % without touching a tracked stat -- like a talent
+-- affix on a plain bracer -- never triggers that recompute, so the panel
+-- shows a stale value until something else happens to touch a tracked stat.
+--
+-- On PLAYER_EQUIPMENT_CHANGED, wait briefly (the server's own update needs
+-- a moment to arrive) then force a recompute via PaperDollFrame_UpdateStats.
+-- ----------------------------------------------------------------------------
+
+local CHARPANE_REFRESH_DELAY = 0.1 -- seconds
+
+local charPaneFrame = CreateFrame("Frame")
+charPaneFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+
+local charPaneRefreshPending = false
+local charPaneElapsed = 0
+
+charPaneFrame:SetScript("OnEvent", function()
+    charPaneRefreshPending = true
+    charPaneElapsed = 0
+end)
+
+charPaneFrame:SetScript("OnUpdate", function(self, elapsed)
+    if not charPaneRefreshPending then return end
+    charPaneElapsed = charPaneElapsed + elapsed
+    if charPaneElapsed >= CHARPANE_REFRESH_DELAY then
+        charPaneRefreshPending = false
+        if PaperDollFrame and PaperDollFrame:IsVisible() and PaperDollFrame_UpdateStats then
+            PaperDollFrame_UpdateStats()
+        end
+    end
+end)
