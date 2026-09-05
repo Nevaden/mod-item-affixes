@@ -309,18 +309,24 @@ ItemAffixes.ProgressionEnabled = 1
 # way. Independent of ClassAffixMaxPerItem above; combine as you like.
 ItemAffixes.ProgressionGateClassAffixes = 1
 
-# % of every character XP gain (kills/quests/exploration/BG) skimmed into the
-# account-wide meta-progression pool. Does not reduce the character XP granted.
-ItemAffixes.ProgressionTricklePct = 2
+# Percentage (0-100) of every character XP gain (kills/quests/exploration/BG)
+# skimmed into the account-wide meta-progression pool. Does not reduce the
+# character XP granted -- this is a bonus pool on top, not a tax.
+# 0 = disabled (default) -- meta-XP is meant to come from affix-system actions
+# (rolling/rerolling items via the settings below), not passive character
+# leveling. Raise this only if you deliberately want a passive trickle on top
+# of that; 2 = roughly 1/50th of every character XP gain also becomes meta-XP.
+ItemAffixes.ProgressionTricklePct = 0
 
 # Meta-XP granted when a slot commits PENDING -> APPLIED (player picks an
-# option), scaled by the item's quality. Green is intentionally tiny relative
-# to blue/purple/legendary so vendoring greens for XP is a bad trade, not a
-# hard-blocked farm.
-ItemAffixes.ProgressionXpGreen     = 1
-ItemAffixes.ProgressionXpBlue      = 10
-ItemAffixes.ProgressionXpPurple    = 25
-ItemAffixes.ProgressionXpLegendary = 50
+# option in Manual mode, or an item auto-rolls in D3 mode), or when a Reforge
+# reroll is paid for (docs/REFORGE_PLAN.md) -- scaled by the item's quality
+# in all three cases. Green is intentionally tiny relative to blue/purple/
+# legendary so vendoring greens for XP is a bad trade, not a hard-blocked farm.
+ItemAffixes.ProgressionXpGreen     = 10
+ItemAffixes.ProgressionXpBlue      = 30
+ItemAffixes.ProgressionXpPurple    = 60
+ItemAffixes.ProgressionXpLegendary = 200
 
 # Flat lifetime XP cost per talent point (points_total = xp / this value).
 ItemAffixes.ProgressionXpPerPoint = 500

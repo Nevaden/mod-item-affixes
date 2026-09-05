@@ -52,9 +52,13 @@ public:
     // account's meta-XP pool (after ApplyCharacterXpBonus below has already run,
     // so trickle is a % of the boosted amount — the character-XP boost and the
     // trickle skim compose naturally). Does not modify characterXpAmount.
+    // Defaults to 0 (disabled) — meta-XP is meant to come from affix-system
+    // actions (rolling/rerolling items), not passive character leveling; raise
+    // this only if you deliberately want a passive trickle on top of that.
     void GrantTrickleXP(Player* player, uint32 characterXpAmount);
 
-    // Grants per-quality meta-XP for a slot that just committed PENDING -> APPLIED.
+    // Grants per-quality meta-XP for a slot that just committed PENDING -> APPLIED
+    // (manual roll pick, D3 auto-roll), or for a paid Reforge reroll.
     void GrantAffixXP(Player* player, uint32 itemQuality);
 
     // Applies the Character XP % node to a character's own kill/quest/explore/BG
@@ -146,11 +150,11 @@ private:
     void ApplySpellPowerDynamicBonus(Player* player); // assumes no dynamic bonus is currently applied
 
     bool   _enabled               = true;
-    uint32 _tricklePct            = 2;
-    uint32 _xpGreen                = 1;
-    uint32 _xpBlue                 = 10;
-    uint32 _xpPurple                 = 25;
-    uint32 _xpLegendary               = 50;
+    uint32 _tricklePct            = 0;
+    uint32 _xpGreen                = 10;
+    uint32 _xpBlue                 = 30;
+    uint32 _xpPurple                 = 60;
+    uint32 _xpLegendary               = 200;
     uint32 _xpPerPoint               = 500;
     uint32 _respecBaseCopper          = 10000;
     uint32 _respecPerLevelCopper       = 500;

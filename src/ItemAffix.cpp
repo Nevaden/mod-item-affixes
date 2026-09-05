@@ -1601,8 +1601,8 @@ void ItemAffixMgr::AutoRollD3Item(Player* player, Item* item, uint8 existingCoun
         // caps prefix rolls in D3 mode (default false = it does, same as manual
         // mode -- see the comment on IsClassAffixesBlocked and on the config
         // member itself). ProgressionGateClassAffixes always fully applies either
-        // way (confirmed correct via live testing: with the Unlock Class Affixes
-        // node unspent, every slot correctly falls back to suffix).
+        // way -- with the Unlock Class Affixes node unspent, every slot falls
+        // back to suffix.
         uint32 id = wantPrefix
             ? RollAffixId(quality, player, item, /*genericsOnly*/false, /*classBoost*/0,
                            /*classOnly*/true, roleForRoll, mainStatForRoll, -1, _d3DominantSpecWeight + 1,
@@ -1640,11 +1640,9 @@ void ItemAffixMgr::AutoRollD3Item(Player* player, Item* item, uint8 existingCoun
         }
 
         // Crit roll, evaluated independently per slot, same chance/effect as manual mode.
-        // Persisted via is_crit below -- STAT values have no reserved sentinel
-        // the way SPELLMOD's 150/200/250 does, so without a real column a
-        // crit-boosted stat would be visually indistinguishable from a normal
-        // high roll (confirmed via temp logging: the roll was firing correctly
-        // all along, it just never got the "!" -> gold-color treatment).
+        // Persisted via is_crit below -- STAT values have no reserved sentinel the
+        // way SPELLMOD's 150/200/250 does, so without a real column a crit-boosted
+        // stat would be visually indistinguishable from a normal high roll.
         bool critHit = def && _critRollEnabled && urand(0, 99) < effectiveCritChance;
         if (critHit)
         {
@@ -3298,6 +3296,11 @@ ReforgeRollResult ItemAffixMgr::RollReforgeOptions(Player* player, Item* item, u
         return ReforgeRollResult::ERR_INSUFFICIENT_GOLD;
 
     player->ModifyMoney(-int32(cost));
+
+    // Same per-quality meta-XP as any other affix roll/pick -- a paid Reforge
+    // reroll is exactly the kind of "getting and rolling more items" action
+    // meta-XP is meant to reward, regardless of loot mode.
+    sPlayerProgressionMgr->GrantAffixXP(player, quality);
 
     uint32 newRerollCount = state.exists ? state.rerollCount + 1 : 1;
     CharacterDatabase.DirectExecute(

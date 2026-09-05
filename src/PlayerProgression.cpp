@@ -49,9 +49,8 @@ static constexpr uint32 SPELL_PROGRESSION_HASTE_CAST_PCT   = 699112; // SPELL_AU
 // Attack Power's % component needs a second spell for the same reason as Crit/Haste
 // above: SPELL_AURA_MOD_ATTACK_POWER_PCT (melee) and SPELL_AURA_MOD_RANGED_ATTACK_POWER_PCT
 // (ranged) are independent auras touching different UnitMods (UNIT_MOD_ATTACK_POWER vs
-// UNIT_MOD_ATTACK_POWER_RANGED) — confirmed via SpellAuraEffects.cpp. Missed on the initial
-// v3 pass since the flat component's explicit dual ApplyPlayerStat call (melee + GSTAT_RANGED_AP)
-// made it easy to assume the % component composed the same way; it doesn't, auras don't share.
+// UNIT_MOD_ATTACK_POWER_RANGED) — unlike the flat component, which composes across both
+// via an explicit dual ApplyPlayerStat call (melee + GSTAT_RANGED_AP), these auras don't share.
 static constexpr uint32 SPELL_PROGRESSION_RANGED_AP_PCT    = 699113; // SPELL_AURA_MOD_RANGED_ATTACK_POWER_PCT
 
 
@@ -147,11 +146,11 @@ namespace
 void PlayerProgressionMgr::LoadConfig()
 {
     _enabled              = sConfigMgr->GetOption<bool>("ItemAffixes.ProgressionEnabled", true);
-    _tricklePct           = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionTricklePct", 2);
-    _xpGreen              = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpGreen", 1);
-    _xpBlue               = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpBlue", 10);
-    _xpPurple             = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpPurple", 25);
-    _xpLegendary          = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpLegendary", 50);
+    _tricklePct           = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionTricklePct", 0);
+    _xpGreen              = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpGreen", 10);
+    _xpBlue               = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpBlue", 30);
+    _xpPurple             = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpPurple", 60);
+    _xpLegendary          = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpLegendary", 200);
     _xpPerPoint           = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionXpPerPoint", 500);
     _respecBaseCopper     = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionRespecBaseCopper", 10000);
     _respecPerLevelCopper = sConfigMgr->GetOption<uint32>("ItemAffixes.ProgressionRespecPerLevelCopper", 500);
@@ -556,13 +555,12 @@ void PlayerProgressionMgr::RemoveProgressionStats(Player* player)
 // ApplyProgressionStats/RemoveProgressionStats in PlayerProgression.h for the
 // full rationale. Short version: unlike every other stat, there is no native
 // aura that multiplies EXISTING spell power (SPELL_AURA_MOD_DAMAGE_DONE, the
-// aura backing spell power, is purely additive — confirmed via
-// Unit::SpellBaseDamageBonusDone in Unit.cpp before building this). So the %
+// aura backing spell power, is purely additive — see
+// Unit::SpellBaseDamageBonusDone in Unit.cpp). So the %
 // component is computed here in C++ instead of granted as a static aura, and
 // deliberately recomputed ONLY on gear equip/unequip (never on a timer, never
-// on buff gain/loss) per explicit design decision: including buffs would let
-// players game the node via buff-stacking, and the player explicitly said
-// gear+spec-only is fine — buffs never need to move this number live.
+// on buff gain/loss) — including buffs would let players game the node via
+// buff-stacking, and gear+spec-only is the intended scope for this bonus.
 //
 // Player::GetBaseSpellPowerBonus() is the key primitive this whole mechanism
 // leans on: it's incremented ONLY by ITEM_MOD_SPELL_POWER (gear stats),
