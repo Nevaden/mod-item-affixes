@@ -283,6 +283,129 @@ ApplyPatch "Patch 5: ChatHandler - suppress addon-message suppression-sentinel l
            $p5_file $p5_detect $p5_search $p5_replace
 
 # ---------------------------------------------------------------------------
+# Patch 6: OnPlayerBeforeQuestReward hook
+#
+# Fires a ScriptMgr event at the very top of Player::RewardQuest, before either
+# reward-item loop runs, so a module's OnPlayerStoreNewItem/
+# OnPlayerAfterStoreOrEquipNewItem handler can tell a quest-reward item apart
+# from any other newly-stored item (this module uses it for
+# ItemAffixes.D3ExcludeQuestRewards). Deliberately NOT the same as the native
+# OnPlayerBeforeQuestComplete hook -- that one fires from Player::CompleteQuest,
+# a separate, often much earlier step (the "complete quest" dialog) than
+# RewardQuest (the "pick a reward" step where items actually get stored) for
+# any non-auto-rewarded quest. Substituting OnPlayerBeforeQuestComplete here
+# would set/clear the exclusion flag around the wrong window entirely.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Patch 6a: PlayerHook enum value
+# File: src/server/game/Scripting/ScriptDefines/PlayerScript.h
+# ---------------------------------------------------------------------------
+
+$p6a_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptDefines\PlayerScript.h"
+$p6a_detect = "PLAYERHOOK_ON_BEFORE_QUEST_REWARD"
+$p6a_search = @'
+    PLAYERHOOK_ON_SOCKET_GEM,
+'@
+$p6a_replace = @'
+    PLAYERHOOK_ON_SOCKET_GEM,
+    PLAYERHOOK_ON_BEFORE_QUEST_REWARD,
+'@
+
+ApplyPatch "Patch 6a: PlayerHook enum value PLAYERHOOK_ON_BEFORE_QUEST_REWARD" `
+           $p6a_file $p6a_detect $p6a_search $p6a_replace
+
+# ---------------------------------------------------------------------------
+# Patch 6b: PlayerScript virtual method
+# File: src/server/game/Scripting/ScriptDefines/PlayerScript.h
+# ---------------------------------------------------------------------------
+
+$p6b_detect = "virtual void OnPlayerBeforeQuestReward"
+$p6b_search = @'
+    // After a gem is socketed into an item (before the gem item is destroyed)
+    virtual void OnPlayerSocketGem(Player* /*player*/, Item* /*item*/, Item* /*gem*/, uint8 /*slot*/) { }
+'@
+$p6b_replace = @'
+    // After a gem is socketed into an item (before the gem item is destroyed)
+    virtual void OnPlayerSocketGem(Player* /*player*/, Item* /*item*/, Item* /*gem*/, uint8 /*slot*/) { }
+
+    // Just before RewardQuest stores any reward item(s) -- fires once per quest
+    // turn-in, before both reward-item loops run. Lets a module distinguish a
+    // quest-reward item from any other newly-stored item at the point its own
+    // OnPlayerStoreNewItem/OnPlayerAfterStoreOrEquipNewItem hook fires for it.
+    virtual void OnPlayerBeforeQuestReward(Player* /*player*/, Quest const* /*quest*/) { }
+'@
+
+ApplyPatch "Patch 6b: PlayerScript virtual OnPlayerBeforeQuestReward method" `
+           $p6a_file $p6b_detect $p6b_search $p6b_replace
+
+# ---------------------------------------------------------------------------
+# Patch 6c: ScriptMgr dispatcher
+# File: src/server/game/Scripting/ScriptDefines/PlayerScript.cpp
+# ---------------------------------------------------------------------------
+
+$p6c_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptDefines\PlayerScript.cpp"
+$p6c_detect = "ScriptMgr::OnPlayerBeforeQuestReward"
+$p6c_search = "template class AC_GAME_API ScriptRegistry<PlayerScript>;"
+$p6c_replace = @'
+void ScriptMgr::OnPlayerBeforeQuestReward(Player* player, Quest const* quest)
+{
+    CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_BEFORE_QUEST_REWARD, script->OnPlayerBeforeQuestReward(player, quest));
+}
+
+template class AC_GAME_API ScriptRegistry<PlayerScript>;
+'@
+
+ApplyPatch "Patch 6c: ScriptMgr OnPlayerBeforeQuestReward dispatcher" `
+           $p6c_file $p6c_detect $p6c_search $p6c_replace
+
+# ---------------------------------------------------------------------------
+# Patch 6d: ScriptMgr declaration
+# File: src/server/game/Scripting/ScriptMgr.h
+# ---------------------------------------------------------------------------
+
+$p6d_file   = Join-Path $AzerothCoreRoot "src\server\game\Scripting\ScriptMgr.h"
+$p6d_detect = "void OnPlayerBeforeQuestReward("
+$p6d_search = "    void OnPlayerSocketGem(Player* player, Item* item, Item* gem, uint8 slot);"
+$p6d_replace = @'
+    void OnPlayerSocketGem(Player* player, Item* item, Item* gem, uint8 slot);
+    void OnPlayerBeforeQuestReward(Player* player, Quest const* quest);
+'@
+
+ApplyPatch "Patch 6d: ScriptMgr.h OnPlayerBeforeQuestReward declaration" `
+           $p6d_file $p6d_detect $p6d_search $p6d_replace
+
+# ---------------------------------------------------------------------------
+# Patch 6e: Player::RewardQuest call site
+# File: src/server/game/Entities/Player/PlayerQuest.cpp
+# ---------------------------------------------------------------------------
+
+$p6e_file   = Join-Path $AzerothCoreRoot "src\server\game\Entities\Player\PlayerQuest.cpp"
+$p6e_detect = "OnPlayerBeforeQuestReward"
+$p6e_search = @'
+void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, bool announce, bool isLFGReward)
+{
+    //this THING should be here to protect code from quest, which cast on player far teleport as a reward
+    //should work fine, cause far teleport will be executed in Player::Update()
+    SetMustDelayTeleport(true);
+'@
+$p6e_replace = @'
+void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, bool announce, bool isLFGReward)
+{
+    //this THING should be here to protect code from quest, which cast on player far teleport as a reward
+    //should work fine, cause far teleport will be executed in Player::Update()
+    SetMustDelayTeleport(true);
+
+    // Fires before any reward item is stored, so a module's own
+    // OnPlayerStoreNewItem/OnPlayerAfterStoreOrEquipNewItem handler can tell
+    // a quest-reward item apart from any other newly-stored item.
+    sScriptMgr->OnPlayerBeforeQuestReward(this, quest);
+'@
+
+ApplyPatch "Patch 6e: Player::RewardQuest OnPlayerBeforeQuestReward call site" `
+           $p6e_file $p6e_detect $p6e_search $p6e_replace
+
+# ---------------------------------------------------------------------------
 # Done
 # ---------------------------------------------------------------------------
 
