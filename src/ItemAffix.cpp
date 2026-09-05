@@ -3859,9 +3859,16 @@ void ItemAffixMgr::HandleAddonMessage(Player* player, std::string const& payload
         auto slots = LoadAffixSlots(item->GetGUID().GetRawValue());
         ReforgeState state = GetReforgeState(item->GetGUID().GetRawValue());
 
-        std::string msg = Acore::StringFormat("REFORGESTATUS|{}|{}|{}|{}",
+        // Cost doesn't depend on which slot ends up picked -- only on item
+        // quality and how many times this item has already been reforged --
+        // so one value up front covers the whole item; the UI needs to show
+        // this before the player commits to a Reroll, not just after.
+        ItemTemplate const* proto = item->GetTemplate();
+        uint32 cost = proto ? GetReforgeCost(proto->Quality, state.exists ? state.rerollCount : 0) : 0;
+
+        std::string msg = Acore::StringFormat("REFORGESTATUS|{}|{}|{}|{}|{}",
             uint32(luaBag), uint32(luaSlot), uint32(slots.size()),
-            state.exists ? uint32(state.lockedSlot) : 255u);
+            state.exists ? uint32(state.lockedSlot) : 255u, cost);
         for (uint8 i = 0; i < static_cast<uint8>(slots.size()); ++i)
         {
             std::string text;

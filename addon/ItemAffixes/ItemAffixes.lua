@@ -945,6 +945,35 @@ function AFXM:OnServerMsg(msg)
                 ExecuteActionBarSwap(oldSpell, newSpell)
             end
         end
+
+    elseif cmd == "REFORGE_OPEN" then
+        AFXM:ShowReforgeFrame()
+
+    elseif cmd == "REFORGESTATUS" then
+        local bag        = tonumber(parts[2])
+        local slot       = tonumber(parts[3])
+        local numSlots   = tonumber(parts[4])
+        local lockedSlot = tonumber(parts[5])
+        local cost       = tonumber(parts[6])
+        if bag and slot and numSlots and lockedSlot and cost then
+            local lineParts = {}
+            for i = 1, numSlots do
+                lineParts[i] = parts[6 + i]
+            end
+            AFXM:HandleReforgeStatus(bag, slot, numSlots, lockedSlot, cost, lineParts)
+        end
+
+    elseif cmd == "REFORGEOPTS" then
+        local bag       = tonumber(parts[2])
+        local slot      = tonumber(parts[3])
+        local affixSlot = tonumber(parts[4])
+        if bag and slot and affixSlot then
+            local optionTexts = {}
+            for i = 5, #parts do
+                optionTexts[#optionTexts + 1] = parts[i]
+            end
+            AFXM:HandleReforgeOpts(bag, slot, affixSlot, optionTexts)
+        end
     end
 end
 
