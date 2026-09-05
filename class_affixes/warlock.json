@@ -379,6 +379,13 @@
                                        "modifier_name":  "PCT",
                                        "value":  15
                                    },
+                        "effect2":  {
+                                        "op":  22,
+                                        "op_name":  "DOT",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  15
+                                    },
                         "tooltip":  {
                                         "enchant_id":  4241,
                                         "display_name":  "Immolate: +15% Damage"
@@ -445,6 +452,13 @@
                                         "modifier":  107,
                                         "modifier_name":  "FLAT",
                                         "value":  -500
+                                    },
+                        "effect3":  {
+                                        "op":  22,
+                                        "op_name":  "DOT",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  20
                                     },
                         "tooltip":  {
                                         "enchant_id":  4243,

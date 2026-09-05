@@ -275,6 +275,13 @@
                                        "modifier_name":  "PCT",
                                        "value":  15
                                    },
+                        "effect2":  {
+                                        "op":  22,
+                                        "op_name":  "DOT",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  15
+                                    },
                         "tooltip":  {
                                         "enchant_id":  4170,
                                         "display_name":  "Moonfire: +15% Damage"
@@ -342,6 +349,13 @@
                                         "modifier_name":  "FLAT",
                                         "value":  5
                                     },
+                        "effect3":  {
+                                        "op":  22,
+                                        "op_name":  "DOT",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  20
+                                    },
                         "tooltip":  {
                                         "enchant_id":  4172,
                                         "display_name":  "Moonfire: +20% Damage, +5% Crit"
@@ -356,14 +370,14 @@
                         "target":  {
                                        "family":  7,
                                        "family_name":  "DRUID",
-                                       "carrier_spell_id":  48505,
+                                       "carrier_spell_id":  50288,
                                        "flags":  [
                                                      0,
                                                      128,
                                                      0
                                                  ],
-                                       "verified":  false,
-                                       "verify_command":  ".spellinfo all 48505"
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50288"
                                    },
                         "effect":  {
                                        "op":  0,
@@ -416,14 +430,14 @@
                         "target":  {
                                        "family":  7,
                                        "family_name":  "DRUID",
-                                       "carrier_spell_id":  48505,
+                                       "carrier_spell_id":  50288,
                                        "flags":  [
                                                      0,
                                                      128,
                                                      0
                                                  ],
-                                       "verified":  false,
-                                       "verify_command":  ".spellinfo all 48505"
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 50288"
                                    },
                         "effect":  {
                                        "op":  0,
@@ -453,14 +467,14 @@
                         "target":  {
                                        "family":  7,
                                        "family_name":  "DRUID",
-                                       "carrier_spell_id":  16914,
+                                       "carrier_spell_id":  42231,
                                        "flags":  [
                                                      0,
                                                      16,
                                                      0
                                                  ],
-                                       "verified":  false,
-                                       "verify_command":  ".spellinfo all 16914"
+                                       "verified":  true,
+                                       "verify_command":  ".spellinfo all 42231"
                                    },
                         "effect":  {
                                        "op":  0,
@@ -650,8 +664,8 @@
                                        "verify_command":  ".spellinfo all 774"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -710,8 +724,8 @@
                                        "verify_command":  ".spellinfo all 774"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  20
@@ -874,8 +888,8 @@
                                        "verify_command":  ".spellinfo all 33763"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -934,8 +948,8 @@
                                        "verify_command":  ".spellinfo all 33763"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  20
@@ -1074,6 +1088,13 @@
                                        "modifier_name":  "PCT",
                                        "value":  15
                                    },
+                        "effect2":  {
+                                        "op":  22,
+                                        "op_name":  "DOT",
+                                        "modifier":  108,
+                                        "modifier_name":  "PCT",
+                                        "value":  15
+                                    },
                         "tooltip":  {
                                         "enchant_id":  4195,
                                         "display_name":  "Rake: +15% Damage"
@@ -2659,8 +2680,8 @@
                                        "verify_command":  ".spellinfo all 48438"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -2749,8 +2770,8 @@
                                        "verify_command":  ".spellinfo all 48438"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  20
@@ -3093,8 +3114,8 @@
                                        "verify_command":  ".spellinfo all 740"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  15
@@ -3153,8 +3174,8 @@
                                        "verify_command":  ".spellinfo all 740"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  20

@@ -1703,8 +1703,8 @@
                                        "verify_command":  ".spellinfo all 139"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  20
@@ -1793,8 +1793,8 @@
                                        "verify_command":  ".spellinfo all 139"
                                    },
                         "effect":  {
-                                       "op":  0,
-                                       "op_name":  "DAMAGE",
+                                       "op":  22,
+                                       "op_name":  "DOT",
                                        "modifier":  108,
                                        "modifier_name":  "PCT",
                                        "value":  25
